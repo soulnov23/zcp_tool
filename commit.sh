@@ -15,7 +15,11 @@ main()
 	git pull
 	git add .
 	local note=$1
-	git commit -m "${note}" 
+	if [ -z "$note" ];then
+		git commit -m "null"
+	else
+		git commit -m "${note}"
+	fi
 	git push -u origin master
 }
 
