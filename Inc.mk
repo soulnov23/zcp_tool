@@ -1,81 +1,36 @@
-# mms server Makefileπ´π≤πÊ‘Ú∂®“Â
-#
-# 2002-07-19 Song
-
-CC = g++
+CC = gcc
 CXX = g++
-RANLIB = ranlib
-AR = ar
-AROPT=-scurv
 
 #==============================================================================
-#	BUILD:	±‡“Î¿‡–Õ
+#	BUILD:	ÁºñËØëÁ±ªÂûã
 #------------------------------------------------------------------------------
-#		BUILD_DEV:		ø™∑¢∞Ê±æ
-#		BUILD_DEBUG:		≤‚ ‘∞Ê±æ
-#		BUILD_NORMAL:		“ª∞„ø™∑¢∞Ê±æ
-#		BUILD_RELEASE:		∑¢––∞Ê±æ
+#		BUILD_DEV:			ÂºÄÂèëÁâàÊú¨
+#		BUILD_DEBUG:		ÊµãËØïÁâàÊú¨
+#		BUILD_NORMAL:		‰∏ÄËà¨ÂºÄÂèëÁâàÊú¨
+#		BUILD_RELEASE:		ÂèëË°åÁâàÊú¨
 #------------------------------------------------------------------------------
 #BUILD=BUILD_NORMAL
 BUILD=BUILD_DEV
 
-AAADEF= -DSYSTEM_Q -D_MODULE_APP 
-
 ifeq ($(BUILD), BUILD_DEV)
-CFLAGS =  -Wall -fPIC -g -DDEBUG $(AAADEF)
+CFLAGS =  -Wall -fPIC -g -DDEBUG
 endif
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS =  -Wall -fPIC -g -DDEBUG $(AAADEF)
+CFLAGS =  -Wall -fPIC -g -DDEBUG
 endif
 ifeq ($(BUILD), BUILD_NORMAL)
-CFLAGS =  -Wall -fPIC -g -DINFO  $(AAADEF)
+CFLAGS =  -Wall -fPIC -g -DINFO
 endif
 ifeq ($(BUILD), BUILD_RELEASE)
-CFLAGS =  -Wall -fPIC -O2 -g -DINFO  $(AAADEF)
+CFLAGS =  -Wall -fPIC -O2 -g -DINFO
 endif
 
+PROJ_PATH=/home/zcp_tools
+PROJ_LIB=$(PROJ_PATH)/lib
+SCONS_PATH=$(PROJ_PATH)/dep/scons-2.1.0
 
+CURL_PATH=$(PROJ_PATH)/dep/curl-7.63.0
+CURL_INC=$(CURL_PATH)/include
 
-COMM_PROJECT_PATH=/data/home/kevintzhang/179/kevintzhang/comm_project_r043
-#COMM_PROJECT_PATH=/data/home/harlylei/publiclib
-MYSQL_PATH=$(COMM_PROJECT_PATH)/mysql-5.0.33
-GNP_PATH=$(COMM_PROJECT_PATH)/gnp_oss
-PNG_PATH=$(COMM_PROJECT_PATH)/png_oss
-#PNG_PATH=$(COMM_PROJECT_PATH)/png
-WBL_PATH=$(COMM_PROJECT_PATH)/wbl_oss
-TTC_PATH=$(COMM_PROJECT_PATH)/ttc-4.1.3-suse32
-DNS_PATH=$(COMM_PROJECT_PATH)/dns_suse_32_4.1.2
-
-WBL_PATH=$(COMM_PROJECT_PATH)/wbl_oss
-WBL_INC=$(WBL_PATH)/include
-WBL_LIB=$(WBL_PATH)/lib/$(BUILD_ARCH)
-
-NCS_PATH=$(COMM_PROJECT_PATH)/ncs_api
-NCS_INC=$(NCS_PATH)/include
-NCS_LIB=$(NCS_PATH)/lib
-
-SSP_PATH=$(COMM_PROJECT_PATH)/ssp_api
-SSP_INC=$(SSP_PATH)/include
-SSP_LIB=$(SSP_PATH)/$(BUILD_ARCH)
-
-PNG_PATH=$(COMM_PROJECT_PATH)/png_oss
-PNG_INC=$(PNG_PATH)/include
-PNG_LIB=$(PNG_PATH)/lib
-
-
-# ◊‘∂Øº∆À„Œƒº˛µƒ“¿¿µπÿœµ
-.%.d: %.cpp
-	$(CC) $(INCLUDE) -MM $< > $@
-	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
-                sed s/"\.o"/"\.d"/  >> $@
-%.o: %.cpp 
-	$(CXX) $(CFLAGS) $(INCLUDE) -c $<
-
-.%.d: %.c
-	$(CC) $(INCLUDE) -MM $< > $@
-	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
-                sed s/"\.o"/"\.d"/  >> $@
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -c $<
-
-
+JSON_PATH=$(PROJ_PATH)/dep/jsoncpp-src-0.5.0
+JSON_INC=$(JSON_PATH)/include
