@@ -13,7 +13,7 @@ main()
 {
 	make clean
 	git pull
-	git add .
+	git add -A
 	local note=$1
 	if [ -z "$note" ];then
 		git commit -a -m "null"
