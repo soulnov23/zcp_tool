@@ -1,6 +1,3 @@
-CC = gcc
-CXX = g++
-
 #==============================================================================
 #	BUILD:	编译类型
 #------------------------------------------------------------------------------
@@ -10,23 +7,44 @@ CXX = g++
 #		BUILD_RELEASE:		发行版本
 #------------------------------------------------------------------------------
 #BUILD=BUILD_NORMAL
-BUILD=BUILD_DEV
+BUILD=BUILD_DEBUG
 
-ifeq ($(BUILD), BUILD_DEV)
-CFLAGS =  -Wall -fPIC -g -DDEBUG
-endif
+CC = gcc
+CXX = g++
+
+CFLAGS ?=
+CXXFLAGS ?=
+LDFLAGS ?=
+INCLUDE ?=
+
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS =  -Wall -fPIC -g -DDEBUG
+CFLAGS   += -Wall -g -fPIC -DDEBUG 
+CXXFLAGS += -Wall -g -fPIC -DDEBUG 
+LDFLAGS  += 
+endif
+ifeq ($(BUILD), BUILD_DEV)
+CFLAGS   += -Wall -g -fPIC -DDEBUG -Werror 
+CXXFLAGS += -Wall -g -fPIC -DDEBUG -Werror
+LDFLAGS  +=  
 endif
 ifeq ($(BUILD), BUILD_NORMAL)
-CFLAGS =  -Wall -fPIC -g -DINFO
+CFLAGS   += -Wall -g -fPIC -O
+CXXFLAGS += -Wall -g -fPIC -O
+LDFLAGS  += 
 endif
 ifeq ($(BUILD), BUILD_RELEASE)
-CFLAGS =  -Wall -fPIC -O2 -g -DINFO
+CFLAGS   += -Wall -g -fPIC -O3 
+CXXFLAGS += -Wall -g -fPIC -O3 
+LDFLAGS  +=  
 endif
 
 PROJ_PATH=/home/zcp_tools
-PROJ_LIB=$(PROJ_PATH)/lib
+BIN_DIR=$(PROJ_PATH)/bin
+LIB_DIR=$(PROJ_PATH)/lib
+OBJ_DIR=$(PROJ_PATH)/obj
+
+COMM_PATH=$(PROJ_PATH)/comm
+
 SCONS_PATH=$(PROJ_PATH)/dep/scons-2.1.0
 
 CURL_PATH=$(PROJ_PATH)/dep/curl-7.63.0
@@ -34,3 +52,28 @@ CURL_INC=$(CURL_PATH)/include
 
 JSON_PATH=$(PROJ_PATH)/dep/jsoncpp-src-0.5.0
 JSON_INC=$(JSON_PATH)/include
+
+
+#自动计算文件的依赖关系
+.%.d: %.cpp
+	$(CC) $(INCLUDE) -MM $< > $@
+	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
+                sed s/"\.o"/"\.d"/  >> $@
+%.o: %.cpp 
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $<
+	
+$(OBJ_DIR)%.o:%.cpp
+	$(CXX) -o $(OBJ_DIR)$*.o $(CXXFLAGS) $(INCLUDE) -c $<
+
+.%.d: %.c
+	$(CC) $(INCLUDE) -MM $< > $@
+	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
+                sed s/"\.o"/"\.d"/  >> $@
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDE) -c $<
+	
+$(OBJ_DIR)%.o:%.c
+	$(CC) $(CFLAGS) $(INCLUDE) -c $<
+
+$(OBJ_DIR)%.o : %.S
+	$(CXX) $(CXXFLAGS) -D__WITH_FLOAT_SUPPORT -o $@ -c $^

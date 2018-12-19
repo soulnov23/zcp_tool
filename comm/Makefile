@@ -1,21 +1,17 @@
-CC = g++
-TARGET_CXXFLAGS = -g -Wall
-TARGET_INCLUDE = -I/usr/local/include
-MODULE := lib
+include ../Inc.mk
 
 SRC := $(wildcard *.cpp)
-OBJ := $(patsubst %.cpp, %.o, $(SRC))
+OBJS := $(patsubst %.cpp, %.o, $(SRC))
+SO_NAME = libcomm.so
+BIN = $(LIB_DIR)/$(SO_NAME)
 
-all : $(MODULE)
-	@echo "compile lib!"
+INCLUDE +=
+LDFLAGS += -lpthread
 
-$(MODULE) : $(OBJ)
-	@cp $(OBJ) $(OBJ_DIR)
+all : clean $(BIN)
 
-%.o : %.cpp
-	$(CC) $(TARGET_CXXFLAGS) -c $^ $(TARGET_INCLUDE)
-
-.PHONY : clean
+$(BIN) : $(OBJS)
+	$(CXX) -z defs -shared -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
 
 clean :
-	rm -rf $(OBJ) *.bak
+	rm -rf $(OBJS) $(BIN)
