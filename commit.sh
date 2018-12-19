@@ -16,9 +16,9 @@ main()
 	git add .
 	local note=$1
 	if [ -z "$note" ];then
-		git commit -m "null"
+		git commit -a -m "null"
 	else
-		git commit -m "${note}"
+		git commit -a -m "${note}"
 	fi
 	git push -u origin master
 }
