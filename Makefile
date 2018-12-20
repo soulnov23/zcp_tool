@@ -3,6 +3,9 @@ include Inc.mk
 DIR_DEP=dep
 
 DIR_MODULES=comm \
+			example \
+			lib \
+			obj \
 			src
 
 all:

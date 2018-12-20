@@ -1,21 +1,16 @@
-CC = g++
-TARGET_CXXFLAGS = -g -Wall
-TARGET_INCLUDE = -I/usr/local/include
-MODULE := src
+include ../Inc.mk
 
 SRC := $(wildcard *.cpp)
-OBJ := $(patsubst %.cpp, %.o, $(SRC))
+OBJS := $(patsubst %.cpp, %.o, $(SRC))
+BIN = $(BIN_DIR)/test
 
-all : $(MODULE)
-	@echo "compile src!"
+INCLUDE += -I$(CURL_INC) -I$(JSON_INC) -I$(COMM_PATH)
+LDFLAGS += -L$(LIB_DIR) -lcurl -ljson
 
-$(MODULE) : $(OBJ)
-	@cp $(OBJ) $(OBJ_DIR)
+all : clean $(BIN)
 
-%.o : %.cpp
-	$(CC) $(TARGET_CXXFLAGS) -c $^ $(TARGET_INCLUDE)
-
-.PHONY : clean
+$(BIN) : $(OBJS)
+	$(CXX) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 clean :
-	rm -rf $(OBJ) *.bak
+	rm -rf $(OBJS) $(BIN)

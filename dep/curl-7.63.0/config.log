@@ -309,7 +309,7 @@ configure:6689: $? = 0
 configure:6768: gcc -o conftest    conftest.c  >&5
 configure:6768: $? = 0
 configure:6847: gcc -o conftest    conftest.c  >&5
-/tmp/cc5bEZAM.o: In function `main':
+/tmp/ccSS5MwR.o: In function `main':
 conftest.c:(.text+0xa): undefined reference to `inet_ntoa_r'
 collect2: error: ld returned 1 exit status
 configure:6847: $? = 1
@@ -2635,7 +2635,7 @@ configure:25532: WARNING: SSL disabled, you will not be able to use HTTPS, FTPS,
 configure:25534: WARNING: Use --with-ssl, --with-gnutls, --with-polarssl, --with-cyassl, --with-nss, --with-winssl, --with-darwinssl, or --with-mesalink to address this.
 configure:25752: checking for library containing psl_builtin
 configure:25780: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccCS1szK.o: In function `main':
+/tmp/cchRm1pU.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `psl_builtin'
 collect2: error: ld returned 1 exit status
 configure:25780: $? = 1
@@ -37631,7 +37631,7 @@ configure:34580: checking for arpa/inet.h
 configure:34580: result: yes
 configure:34600: checking if inet_ntoa_r can be linked
 configure:34629: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/cchIfnLa.o: In function `main':
+/tmp/ccyr5onL.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `inet_ntoa_r'
 collect2: error: ld returned 1 exit status
 configure:34629: $? = 1
@@ -38382,7 +38382,7 @@ configure:35751: checking if ioctlsocket might be used
 configure:35840: result: no
 configure:35852: checking if IoctlSocket can be linked
 configure:35881: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccid9i6T.o: In function `main':
+/tmp/ccpql89s.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `IoctlSocket'
 collect2: error: ld returned 1 exit status
 configure:35881: $? = 1
@@ -38964,7 +38964,7 @@ configure:37391: checking for setjmp.h
 configure:37391: result: yes
 configure:37411: checking if sigsetjmp can be linked
 configure:37440: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccdH5MEx.o: In function `main':
+/tmp/ccWqoOV5.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `sigsetjmp'
 collect2: error: ld returned 1 exit status
 configure:37440: $? = 1
@@ -39256,7 +39256,7 @@ configure:38019: checking if strcasecmp might be used
 configure:38025: result: yes
 configure:38046: checking if strcmpi can be linked
 configure:38075: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccdx81N4.o: In function `main':
+/tmp/ccjWQS9u.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `strcmpi'
 collect2: error: ld returned 1 exit status
 configure:38075: $? = 1
@@ -40275,7 +40275,7 @@ configure:38703: checking if strerror_r might be used
 configure:38709: result: yes
 configure:38766: checking if stricmp can be linked
 configure:38795: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccLOgLas.o: In function `main':
+/tmp/cchSYR32.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `stricmp'
 collect2: error: ld returned 1 exit status
 configure:38795: $? = 1
@@ -40537,7 +40537,7 @@ configure:39037: checking if strncasecmp might be used
 configure:39043: result: yes
 configure:39064: checking if strncmpi can be linked
 configure:39093: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccELBhsE.o: In function `main':
+/tmp/ccPBvkzh.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `strncmpi'
 collect2: error: ld returned 1 exit status
 configure:39093: $? = 1
@@ -40783,7 +40783,7 @@ configure:39186: checking if strncmpi might be used
 configure:39201: result: no
 configure:39213: checking if strnicmp can be linked
 configure:39242: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccgQrPBG.o: In function `main':
+/tmp/ccSaUe1i.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `strnicmp'
 collect2: error: ld returned 1 exit status
 configure:39242: $? = 1
@@ -41104,7 +41104,7 @@ configure:40027: $? = 0
 configure:40027: result: yes
 configure:40027: checking for getpass_r
 configure:40027: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccAlHTfj.o: In function `main':
+/tmp/ccOWQGqZ.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `getpass_r'
 collect2: error: ld returned 1 exit status
 configure:40027: $? = 1
@@ -41622,7 +41622,7 @@ configure:40027: $? = 0
 configure:40027: result: yes
 configure:40027: checking for mach_absolute_time
 configure:40027: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccnD6g9R.o: In function `main':
+/tmp/ccEQiPHs.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `mach_absolute_time'
 collect2: error: ld returned 1 exit status
 configure:40027: $? = 1
@@ -42136,7 +42136,7 @@ configure:40027: $? = 0
 configure:40027: result: yes
 configure:40027: checking for setmode
 configure:40027: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccAR1T66.o: In function `main':
+/tmp/ccmfJJ4J.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `setmode'
 collect2: error: ld returned 1 exit status
 configure:40027: $? = 1
@@ -42682,7 +42682,7 @@ configure:40734: checking for pthread.h
 configure:40734: result: yes
 configure:40741: checking for pthread_create
 configure:40741: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers   conftest.c  >&5
-/tmp/ccwF1Pru.o: In function `main':
+/tmp/ccp6s5vX.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `pthread_create'
 collect2: error: ld returned 1 exit status
 configure:40741: $? = 1
