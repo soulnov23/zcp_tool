@@ -1,14 +1,13 @@
-include ../Inc.mk
+include ../../Inc.mk
 
-SRC := $(wildcard *.cpp)
-OBJS := $(patsubst %.cpp, %.o, $(SRC))
-SO_NAME = libcomm.so
+OBJS := tinyxml2.o
+SO_NAME = libtinyxml2.so
 SO_BIN = $(LIB_DIR)/$(SO_NAME)
-A_NAME = libcomm.a
+A_NAME = libtinyxml2.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
 INCLUDE +=
-LDFLAGS += -lpthread
+LDFLAGS +=
 
 all : clean $(SO_BIN) $(A_BIN)
 
@@ -20,4 +19,4 @@ $(A_BIN) : $(OBJS)
 	$(RANLIB) $@
 
 clean :
-	rm -rf $(OBJS) $(SO_BIN) $(A_BIN)
+	rm -rf $(OBJS)

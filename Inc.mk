@@ -11,6 +11,9 @@ BUILD=BUILD_DEBUG
 
 CC = gcc
 CXX = g++
+AR ?= ar
+ARFLAGS = -scurv
+RANLIB ?= ranlib
 
 CFLAGS ?=
 CXXFLAGS ?=
@@ -53,6 +56,7 @@ CURL_INC=$(CURL_PATH)/include
 JSON_PATH=$(PROJ_PATH)/dep/jsoncpp-src-0.5.0
 JSON_INC=$(JSON_PATH)/include
 
+XML_PATH=$(PROJ_PATH)/dep/tinyxml2
 
 #自动计算文件的依赖关系
 .%.d: %.cpp
