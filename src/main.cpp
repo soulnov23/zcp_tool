@@ -1,21 +1,24 @@
-#include "server.h"
-#include "client.h"
-#include <string.h>
+#include "config.h"
+#include "printf.h"
+#include "daemon.h"
+#include <iostream>
+using namespace std;
 
 int main(int argc, char *argv[])
-{
-	char *pos = strrchr(argv[0], '/');
-	if (pos)
+{	
+	if (argc < 2)
 	{
-		pos++;
+		cerr << "Usage: " << argv[0] << " conf_file" << endl;
+		cerr << "Sample: " << argv[0] << " ../conf/test.conf.xml" << endl;
+		return -1;
 	}
-	if (strcmp(pos, "server") == 0)
+	PRINTF_DEBUG("server start success");
+	//init_daemon(NULL);
+	
+	config conf;
+	if (conf.get_conf(argv[1]) != 0)
 	{
-		server::get_instance()->start();
-	}
-	else if (strcmp(pos, "client") == 0)
-	{
-		client::get_instance()->start();
+		PRINTF_ERROR("get_conf error");
 	}
 	return 0;
 }

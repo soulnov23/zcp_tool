@@ -21,7 +21,7 @@
 #
 ###########################################################################
 
-prefix=/usr/local
+prefix=/usr/local/curl
 exec_prefix=${prefix}
 includedir=${prefix}/include
 cppflag_curl_staticlib=
@@ -72,7 +72,7 @@ while test $# -gt 0; do
         ;;
 
     --ca)
-        echo 
+        echo "/etc/pki/tls/certs/ca-bundle.crt"
         ;;
 
     --cc)
@@ -84,13 +84,13 @@ while test $# -gt 0; do
         ;;
 
     --feature|--features)
-        for feature in IPv6 UnixSockets AsynchDNS ""; do
+        for feature in SSL IPv6 UnixSockets AsynchDNS NTLM NTLM_WB TLS-SRP HTTPS-proxy ""; do
             test -n "$feature" && echo "$feature"
         done
         ;;
 
     --protocols)
-        for protocol in DICT FILE FTP GOPHER HTTP IMAP POP3 RTSP SMTP TELNET TFTP; do
+        for protocol in DICT FILE FTP FTPS GOPHER HTTP HTTPS IMAP IMAPS POP3 POP3S RTSP SMB SMBS SMTP SMTPS TELNET TFTP; do
             echo "$protocol"
         done
         ;;
@@ -155,24 +155,24 @@ while test $# -gt 0; do
         ;;
 
     --libs)
-        if test "X/home/zcp_tools/lib" != "X/usr/lib" -a "X/home/zcp_tools/lib" != "X/usr/lib64"; then
-           CURLLIBDIR="-L/home/zcp_tools/lib "
+        if test "X${exec_prefix}/lib" != "X/usr/lib" -a "X${exec_prefix}/lib" != "X/usr/lib64"; then
+           CURLLIBDIR="-L${exec_prefix}/lib "
         else
            CURLLIBDIR=""
         fi
         if test "Xno" = "Xyes"; then
-          echo ${CURLLIBDIR}-lcurl 
+          echo ${CURLLIBDIR}-lcurl -lssl -lcrypto -lssl -lcrypto
         else
           echo ${CURLLIBDIR}-lcurl
         fi
         ;;
     --ssl-backends)
-        echo ""
+        echo "OpenSSL"
         ;;
 
     --static-libs)
         if test "Xyes" != "Xno" ; then
-          echo /home/zcp_tools/lib/libcurl.a  
+          echo ${exec_prefix}/lib/libcurl.a -L/usr/local/ssl/lib -lssl -lcrypto -lssl -lcrypto
         else
           echo "curl was built with static libraries disabled" >&2
           exit 1
@@ -180,7 +180,7 @@ while test $# -gt 0; do
         ;;
 
     --configure)
-        echo " '--libdir=/home/zcp_tools/lib'"
+        echo " '--prefix=/usr/local/curl' '--with-ssl=/usr/local/ssl'"
         ;;
 
     *)

@@ -61,8 +61,8 @@ libcurl_la-transfer.lo: transfer.c /usr/include/stdc-predef.h \
  pingpong.h curl_sasl.h pop3.h smtp.h ftp.h file.h ssh.h http.h rtsp.h \
  smb.h wildcard.h multihandle.h conncache.h netrc.h content_encoding.h \
  transfer.h sendf.h speedcheck.h progress.h url.h getinfo.h vtls/vtls.h \
- ../lib/curl_setup.h vtls/openssl.h vtls/gtls.h vtls/nssg.h vtls/gskit.h \
- ../lib/urldata.h vtls/polarssl.h vtls/cyassl.h vtls/schannel.h \
+ ../lib/curl_setup.h vtls/openssl.h ../lib/urldata.h vtls/gtls.h \
+ vtls/nssg.h vtls/gskit.h vtls/polarssl.h vtls/cyassl.h vtls/schannel.h \
  vtls/darwinssl.h vtls/mbedtls.h vtls/mesalink.h select.h \
  /usr/include/poll.h /usr/include/sys/poll.h /usr/include/bits/poll.h \
  multiif.h connect.h nonblock.h sockaddr.h non-ascii.h http2.h strcase.h \
@@ -383,13 +383,13 @@ vtls/vtls.h:
 
 vtls/openssl.h:
 
+../lib/urldata.h:
+
 vtls/gtls.h:
 
 vtls/nssg.h:
 
 vtls/gskit.h:
-
-../lib/urldata.h:
 
 vtls/polarssl.h:
 

@@ -41,9 +41,8 @@ libcurl_la-rand.lo: rand.c /usr/include/stdc-predef.h curl_setup.h \
  /usr/include/bits/environments.h /usr/include/bits/confname.h \
  /usr/include/getopt.h curl_ctype.h /usr/include/fcntl.h \
  /usr/include/bits/fcntl.h /usr/include/bits/fcntl-linux.h vtls/vtls.h \
- ../lib/curl_setup.h vtls/openssl.h vtls/gtls.h vtls/nssg.h vtls/gskit.h \
- ../lib/urldata.h ../lib/curl_setup.h ../lib/cookie.h ../lib/psl.h \
- ../lib/formdata.h /usr/include/netinet/in.h \
+ ../lib/curl_setup.h vtls/openssl.h ../lib/urldata.h ../lib/curl_setup.h \
+ ../lib/cookie.h ../lib/psl.h ../lib/formdata.h /usr/include/netinet/in.h \
  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/bits/in.h \
  ../lib/timeval.h ../lib/http_chunks.h ../lib/hostip.h ../lib/hash.h \
@@ -54,9 +53,9 @@ libcurl_la-rand.lo: rand.c /usr/include/stdc-predef.h curl_setup.h \
  ../lib/pingpong.h ../lib/curl_sasl.h ../lib/pop3.h ../lib/smtp.h \
  ../lib/ftp.h ../lib/file.h ../lib/ssh.h ../lib/http.h ../lib/rtsp.h \
  ../lib/smb.h ../lib/wildcard.h ../lib/multihandle.h ../lib/conncache.h \
- vtls/polarssl.h vtls/cyassl.h vtls/schannel.h vtls/darwinssl.h \
- vtls/mbedtls.h vtls/mesalink.h sendf.h rand.h curl_printf.h \
- ../include/curl/mprintf.h curl_memory.h memdebug.h
+ vtls/gtls.h vtls/nssg.h vtls/gskit.h vtls/polarssl.h vtls/cyassl.h \
+ vtls/schannel.h vtls/darwinssl.h vtls/mbedtls.h vtls/mesalink.h sendf.h \
+ rand.h curl_printf.h ../include/curl/mprintf.h curl_memory.h memdebug.h
 
 /usr/include/stdc-predef.h:
 
@@ -238,12 +237,6 @@ vtls/vtls.h:
 
 vtls/openssl.h:
 
-vtls/gtls.h:
-
-vtls/nssg.h:
-
-vtls/gskit.h:
-
 ../lib/urldata.h:
 
 ../lib/curl_setup.h:
@@ -321,6 +314,12 @@ vtls/gskit.h:
 ../lib/multihandle.h:
 
 ../lib/conncache.h:
+
+vtls/gtls.h:
+
+vtls/nssg.h:
+
+vtls/gskit.h:
 
 vtls/polarssl.h:
 

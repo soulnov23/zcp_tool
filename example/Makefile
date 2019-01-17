@@ -4,8 +4,8 @@ SRC := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp, %.o, $(SRC))
 BIN = $(BIN_DIR)/test
 
-INCLUDE += -I$(CURL_INC) -I$(JSON_INC) -I$(COMM_PATH)
-LDFLAGS += -L$(LIB_DIR) -lcurl -ljson
+INCLUDE += -I$(CURL_INC) -I$(JSON_INC) -I$(XML_PATH) -I$(COMM_PATH)
+LDFLAGS += -L$(LIB_DIR) -lcurl -ljson -ltinyxml2 -lcrypto -lssl -lcomm
 
 all : clean $(BIN)
 

@@ -53,7 +53,7 @@ libcurl_la-http_proxy.lo: http_proxy.c /usr/include/stdc-predef.h \
  /usr/include/sys/poll.h /usr/include/bits/poll.h progress.h non-ascii.h \
  connect.h nonblock.h sockaddr.h curlx.h ../include/curl/mprintf.h \
  strcase.h strtoofft.h warnless.h vtls/vtls.h ../lib/curl_setup.h \
- vtls/openssl.h vtls/gtls.h vtls/nssg.h vtls/gskit.h ../lib/urldata.h \
+ vtls/openssl.h ../lib/urldata.h vtls/gtls.h vtls/nssg.h vtls/gskit.h \
  vtls/polarssl.h vtls/cyassl.h vtls/schannel.h vtls/darwinssl.h \
  vtls/mbedtls.h vtls/mesalink.h curl_printf.h curl_memory.h memdebug.h
 
@@ -341,13 +341,13 @@ vtls/vtls.h:
 
 vtls/openssl.h:
 
+../lib/urldata.h:
+
 vtls/gtls.h:
 
 vtls/nssg.h:
 
 vtls/gskit.h:
-
-../lib/urldata.h:
 
 vtls/polarssl.h:
 

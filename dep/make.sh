@@ -2,12 +2,28 @@
 
 set -x
 
+function make_open_ssl()
+{
+	cd $1
+	./config shared --prefix=/usr/local/ssl
+	make
+	make install
+	cp -f /usr/local/ssl/lib/libcrypto.* /usr/local/ssl/lib/libssl.* $2
+}
+
+function clean_open_ssl()
+{
+	cd $1
+	make clean
+}
+
 function make_curl()
 {
 	cd $1
-	./configure --libdir=$2
+	./configure --prefix=/usr/local/curl --with-ssl=/usr/local/ssl
 	make
 	make install
+	cp -f /usr/local/curl/lib/libcurl.* $2
 }
 
 function clean_curl()
@@ -48,6 +64,12 @@ function clean_json()
 main()
 {
 	case $1 in
+	make_open_ssl)
+		make_open_ssl $2 $3
+		;;
+	clean_open_ssl)
+		clean_open_ssl $2
+		;;
 	make_curl)
 		make_curl $2 $3
 		;;

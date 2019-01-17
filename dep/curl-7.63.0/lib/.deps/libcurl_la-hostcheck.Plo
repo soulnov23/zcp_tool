@@ -40,7 +40,11 @@ libcurl_la-hostcheck.lo: hostcheck.c /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdbool.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/getopt.h curl_ctype.h
+ /usr/include/getopt.h curl_ctype.h /usr/include/netinet/in.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/bits/in.h \
+ hostcheck.h strcase.h inet_pton.h /usr/include/arpa/inet.h curl_memory.h \
+ memdebug.h
 
 /usr/include/stdc-predef.h:
 
@@ -209,3 +213,25 @@ curl_setup_once.h:
 /usr/include/getopt.h:
 
 curl_ctype.h:
+
+/usr/include/netinet/in.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/bits/in.h:
+
+hostcheck.h:
+
+strcase.h:
+
+inet_pton.h:
+
+/usr/include/arpa/inet.h:
+
+curl_memory.h:
+
+memdebug.h:

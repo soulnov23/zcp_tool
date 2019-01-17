@@ -66,7 +66,7 @@ libcurl_la-connect.lo: connect.c /usr/include/stdc-predef.h curl_setup.h \
  connect.h nonblock.h sockaddr.h select.h /usr/include/poll.h \
  /usr/include/sys/poll.h /usr/include/bits/poll.h url.h multiif.h \
  inet_ntop.h inet_pton.h vtls/vtls.h ../lib/curl_setup.h vtls/openssl.h \
- vtls/gtls.h vtls/nssg.h vtls/gskit.h ../lib/urldata.h vtls/polarssl.h \
+ ../lib/urldata.h vtls/gtls.h vtls/nssg.h vtls/gskit.h vtls/polarssl.h \
  vtls/cyassl.h vtls/schannel.h vtls/darwinssl.h vtls/mbedtls.h \
  vtls/mesalink.h progress.h warnless.h system_win32.h curl_printf.h \
  ../include/curl/mprintf.h curl_memory.h memdebug.h
@@ -409,13 +409,13 @@ vtls/vtls.h:
 
 vtls/openssl.h:
 
+../lib/urldata.h:
+
 vtls/gtls.h:
 
 vtls/nssg.h:
 
 vtls/gskit.h:
-
-../lib/urldata.h:
 
 vtls/polarssl.h:
 

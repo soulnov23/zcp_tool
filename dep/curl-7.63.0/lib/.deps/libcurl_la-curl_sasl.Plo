@@ -50,10 +50,10 @@ libcurl_la-curl_sasl.lo: curl_sasl.c /usr/include/stdc-predef.h \
  /usr/include/bits/setjmp.h splay.h mime.h imap.h pingpong.h curl_sasl.h \
  pop3.h smtp.h ftp.h file.h ssh.h http.h rtsp.h smb.h wildcard.h \
  multihandle.h conncache.h curl_base64.h curl_md5.h curl_hmac.h \
- vauth/vauth.h vtls/vtls.h ../lib/curl_setup.h vtls/openssl.h vtls/gtls.h \
- vtls/nssg.h vtls/gskit.h ../lib/urldata.h vtls/polarssl.h vtls/cyassl.h \
- vtls/schannel.h vtls/darwinssl.h vtls/mbedtls.h vtls/mesalink.h \
- warnless.h strtok.h sendf.h non-ascii.h curl_printf.h \
+ vauth/vauth.h vtls/vtls.h ../lib/curl_setup.h vtls/openssl.h \
+ ../lib/urldata.h vtls/gtls.h vtls/nssg.h vtls/gskit.h vtls/polarssl.h \
+ vtls/cyassl.h vtls/schannel.h vtls/darwinssl.h vtls/mbedtls.h \
+ vtls/mesalink.h warnless.h strtok.h sendf.h non-ascii.h curl_printf.h \
  ../include/curl/mprintf.h curl_memory.h memdebug.h
 
 /usr/include/stdc-predef.h:
@@ -314,13 +314,13 @@ vtls/vtls.h:
 
 vtls/openssl.h:
 
+../lib/urldata.h:
+
 vtls/gtls.h:
 
 vtls/nssg.h:
 
 vtls/gskit.h:
-
-../lib/urldata.h:
 
 vtls/polarssl.h:
 

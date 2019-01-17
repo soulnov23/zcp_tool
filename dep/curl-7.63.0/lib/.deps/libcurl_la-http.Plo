@@ -60,7 +60,7 @@ libcurl_la-http.lo: http.c /usr/include/stdc-predef.h curl_setup.h \
  pingpong.h curl_sasl.h pop3.h smtp.h ftp.h file.h ssh.h http.h rtsp.h \
  smb.h wildcard.h multihandle.h conncache.h transfer.h sendf.h progress.h \
  curl_base64.h vauth/vauth.h vtls/vtls.h ../lib/curl_setup.h \
- vtls/openssl.h vtls/gtls.h vtls/nssg.h vtls/gskit.h ../lib/urldata.h \
+ vtls/openssl.h ../lib/urldata.h vtls/gtls.h vtls/nssg.h vtls/gskit.h \
  vtls/polarssl.h vtls/cyassl.h vtls/schannel.h vtls/darwinssl.h \
  vtls/mbedtls.h vtls/mesalink.h http_digest.h http_ntlm.h curl_ntlm_wb.h \
  http_negotiate.h url.h share.h select.h /usr/include/poll.h \
@@ -375,13 +375,13 @@ vtls/vtls.h:
 
 vtls/openssl.h:
 
+../lib/urldata.h:
+
 vtls/gtls.h:
 
 vtls/nssg.h:
 
 vtls/gskit.h:
-
-../lib/urldata.h:
 
 vtls/polarssl.h:
 

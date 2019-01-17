@@ -39,7 +39,11 @@ libcurl_la-sha256.lo: sha256.c /usr/include/stdc-predef.h curl_setup.h \
  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdbool.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/getopt.h curl_ctype.h warnless.h curl_sha256.h
+ /usr/include/getopt.h curl_ctype.h warnless.h curl_sha256.h \
+ /usr/local/ssl/include/openssl/opensslv.h \
+ /usr/local/ssl/include/openssl/sha.h \
+ /usr/local/ssl/include/openssl/e_os2.h \
+ /usr/local/ssl/include/openssl/opensslconf.h
 
 /usr/include/stdc-predef.h:
 
@@ -212,3 +216,11 @@ curl_ctype.h:
 warnless.h:
 
 curl_sha256.h:
+
+/usr/local/ssl/include/openssl/opensslv.h:
+
+/usr/local/ssl/include/openssl/sha.h:
+
+/usr/local/ssl/include/openssl/e_os2.h:
+
+/usr/local/ssl/include/openssl/opensslconf.h:

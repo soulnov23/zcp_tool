@@ -7,8 +7,8 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libcomm.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE +=
-LDFLAGS += -lpthread
+INCLUDE += -I$(XML_PATH)
+LDFLAGS += -lpthread -L$(LIB_DIR) -ltinyxml2
 
 all : clean $(SO_BIN) $(A_BIN)
 

@@ -50,8 +50,12 @@ libcurl_la-conncache.lo: conncache.c /usr/include/stdc-predef.h \
  /usr/include/bits/setjmp.h splay.h mime.h imap.h pingpong.h curl_sasl.h \
  pop3.h smtp.h ftp.h file.h ssh.h http.h rtsp.h smb.h wildcard.h \
  multihandle.h conncache.h url.h progress.h multiif.h sendf.h share.h \
- sigpipe.h connect.h nonblock.h sockaddr.h curl_printf.h \
- ../include/curl/mprintf.h curl_memory.h memdebug.h
+ sigpipe.h /usr/include/signal.h /usr/include/bits/signum.h \
+ /usr/include/bits/siginfo.h /usr/include/bits/sigaction.h \
+ /usr/include/bits/sigcontext.h /usr/include/bits/sigstack.h \
+ /usr/include/sys/ucontext.h /usr/include/bits/sigthread.h connect.h \
+ nonblock.h sockaddr.h curl_printf.h ../include/curl/mprintf.h \
+ curl_memory.h memdebug.h
 
 /usr/include/stdc-predef.h:
 
@@ -308,6 +312,22 @@ sendf.h:
 share.h:
 
 sigpipe.h:
+
+/usr/include/signal.h:
+
+/usr/include/bits/signum.h:
+
+/usr/include/bits/siginfo.h:
+
+/usr/include/bits/sigaction.h:
+
+/usr/include/bits/sigcontext.h:
+
+/usr/include/bits/sigstack.h:
+
+/usr/include/sys/ucontext.h:
+
+/usr/include/bits/sigthread.h:
 
 connect.h:
 

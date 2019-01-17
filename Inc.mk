@@ -50,6 +50,9 @@ COMM_PATH=$(PROJ_PATH)/comm
 
 SCONS_PATH=$(PROJ_PATH)/dep/scons-2.1.0
 
+OPEN_SSL_PATH=$(PROJ_PATH)/dep/openssl-1.0.2q
+OPEN_SSL_INC=$(PROJ_PATH)/dep/openssl-1.0.2q/include
+
 CURL_PATH=$(PROJ_PATH)/dep/curl-7.63.0
 CURL_INC=$(CURL_PATH)/include
 
@@ -63,9 +66,10 @@ XML_PATH=$(PROJ_PATH)/dep/tinyxml2
 	$(CC) $(INCLUDE) -MM $< > $@
 	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
                 sed s/"\.o"/"\.d"/  >> $@
+
 %.o: %.cpp 
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $<
-	
+
 $(OBJ_DIR)%.o:%.cpp
 	$(CXX) -o $(OBJ_DIR)$*.o $(CXXFLAGS) $(INCLUDE) -c $<
 
@@ -73,9 +77,10 @@ $(OBJ_DIR)%.o:%.cpp
 	$(CC) $(INCLUDE) -MM $< > $@
 	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
                 sed s/"\.o"/"\.d"/  >> $@
+
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $<
-	
+
 $(OBJ_DIR)%.o:%.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $<
 

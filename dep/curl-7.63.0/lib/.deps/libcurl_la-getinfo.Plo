@@ -49,7 +49,7 @@ libcurl_la-getinfo.lo: getinfo.c /usr/include/stdc-predef.h curl_setup.h \
  /usr/include/bits/setjmp.h splay.h mime.h imap.h pingpong.h curl_sasl.h \
  pop3.h smtp.h ftp.h file.h ssh.h http.h rtsp.h smb.h wildcard.h \
  multihandle.h conncache.h getinfo.h vtls/vtls.h ../lib/curl_setup.h \
- vtls/openssl.h vtls/gtls.h vtls/nssg.h vtls/gskit.h ../lib/urldata.h \
+ vtls/openssl.h ../lib/urldata.h vtls/gtls.h vtls/nssg.h vtls/gskit.h \
  vtls/polarssl.h vtls/cyassl.h vtls/schannel.h vtls/darwinssl.h \
  vtls/mbedtls.h vtls/mesalink.h connect.h nonblock.h sockaddr.h \
  progress.h curl_memory.h memdebug.h
@@ -306,13 +306,13 @@ vtls/vtls.h:
 
 vtls/openssl.h:
 
+../lib/urldata.h:
+
 vtls/gtls.h:
 
 vtls/nssg.h:
 
 vtls/gskit.h:
-
-../lib/urldata.h:
 
 vtls/polarssl.h:
 
