@@ -13,7 +13,7 @@ LDFLAGS += -lpthread -L$(LIB_DIR) -ltinyxml2
 all : clean $(SO_BIN) $(A_BIN)
 
 $(SO_BIN) : $(OBJS)
-	$(CXX) -z defs -shared -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
+	$(CXX) -z defs -shared -fPIC -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
 	
 $(A_BIN) : $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?
