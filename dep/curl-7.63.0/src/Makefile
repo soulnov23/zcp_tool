@@ -434,9 +434,9 @@ CODE_COVERAGE_CXXFLAGS =
 CODE_COVERAGE_ENABLED = no
 CODE_COVERAGE_LDFLAGS = 
 CODE_COVERAGE_LIBS = 
-CONFIGURE_OPTIONS = " '--prefix=/usr/local/curl' '--with-ssl=/usr/local/ssl'"
+CONFIGURE_OPTIONS = " '--prefix=/tmp/curl' '--with-ssl=/tmp/ssl'"
 CPP = gcc -E
-CPPFLAGS = -I/usr/local/ssl/include
+CPPFLAGS = -I/tmp/ssl/include
 CPPFLAG_CURL_STATICLIB = 
 CURLVERSION = 7.63.0
 CURL_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"
@@ -481,7 +481,7 @@ GREP = /usr/bin/grep
 HAVE_BROTLI = 
 HAVE_GNUTLS_SRP = 
 HAVE_LDAP_SSL = 1
-HAVE_LIBZ = 
+HAVE_LIBZ = 1
 HAVE_OPENSSL_SRP = 1
 IDN_ENABLED = 
 INSTALL = /usr/bin/install -c
@@ -492,8 +492,8 @@ INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 IPV6_ENABLED = 1
 LCOV = 
 LD = /usr/bin/ld -m elf_x86_64
-LDFLAGS = -L/usr/local/ssl/lib
-LIBCURL_LIBS = -lssl -lcrypto -lssl -lcrypto
+LDFLAGS = -L/tmp/ssl/lib
+LIBCURL_LIBS = -lssl -lcrypto -lssl -lcrypto -lz
 LIBMETALINK_CPPFLAGS = 
 LIBMETALINK_LDFLAGS = 
 LIBMETALINK_LIBS = 
@@ -544,7 +544,7 @@ SSL_BACKENDS = OpenSSL
 SSL_ENABLED = 1
 SSL_LIBS = -lssl -lcrypto  
 STRIP = strip
-SUPPORT_FEATURES = SSL IPv6 UnixSockets AsynchDNS NTLM NTLM_WB TLS-SRP HTTPS-proxy
+SUPPORT_FEATURES = SSL IPv6 UnixSockets libz AsynchDNS NTLM NTLM_WB TLS-SRP HTTPS-proxy
 SUPPORT_PROTOCOLS = DICT FILE FTP FTPS GOPHER HTTP HTTPS IMAP IMAPS POP3 POP3S RTSP SMB SMBS SMTP SMTPS TELNET TFTP
 USE_ARES = 
 USE_CYASSL = 
@@ -565,7 +565,7 @@ USE_UNIX_SOCKETS = 1
 USE_WINDOWS_SSPI = 
 VERSION = -
 VERSIONNUM = 073f00
-ZLIB_LIBS = 
+ZLIB_LIBS = -lz
 ZSH_FUNCTIONS_DIR = ${prefix}/share/zsh/site-functions
 abs_builddir = /home/zcp_tools/dep/curl-7.63.0/src
 abs_srcdir = /home/zcp_tools/dep/curl-7.63.0/src
@@ -609,7 +609,7 @@ mandir = ${datarootdir}/man
 mkdir_p = $(MKDIR_P)
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local/curl
+prefix = /tmp/curl
 program_transform_name = s,x,x,
 psdir = ${docdir}
 runstatedir = ${localstatedir}/run
@@ -768,8 +768,8 @@ CURL_FILES = $(CURL_CFILES) $(CURLX_CFILES) $(CURL_HFILES)
 
 # CURL_FILES comes from Makefile.inc
 curl_SOURCES = $(CURL_FILES)
-curl_LDADD = $(top_builddir)/lib/libcurl.la   -lssl -lcrypto    
-#curl_LDADD = $(top_builddir)/lib/libcurl.la  -lssl -lcrypto -lssl -lcrypto
+curl_LDADD = $(top_builddir)/lib/libcurl.la   -lssl -lcrypto   -lz 
+#curl_LDADD = $(top_builddir)/lib/libcurl.la  -lssl -lcrypto -lssl -lcrypto -lz
 curl_LDFLAGS =  $(CODE_COVERAGE_LDFLAGS)
 curl_CPPFLAGS = $(AM_CPPFLAGS) $(LIBMETALINK_CPPFLAGS)
 
@@ -18523,17 +18523,17 @@ $(MANPAGE):
 
 # This generates the tool_hugehelp.c file in both uncompressed and
 # compressed formats.
-#$(HUGE): $(MANPAGE) $(README) $(MKHELP)
-#	echo '#include "tool_setup.h"' > $(HUGE)
-#	echo '#ifndef HAVE_LIBZ' >> $(HUGE)
-#	$(NROFF) $(MANPAGE) | $(PERL) $(MKHELP) $(README) >> $(HUGE)
-#	echo '#else' >> $(HUGE)
-#	$(NROFF) $(MANPAGE) | $(PERL) $(MKHELP) -c $(README) >> $(HUGE)
-#	echo '#endif /* HAVE_LIBZ */' >> $(HUGE)
-# This generates the tool_hugehelp.c file uncompressed only
 $(HUGE): $(MANPAGE) $(README) $(MKHELP)
 	echo '#include "tool_setup.h"' > $(HUGE)
+	echo '#ifndef HAVE_LIBZ' >> $(HUGE)
 	$(NROFF) $(MANPAGE) | $(PERL) $(MKHELP) $(README) >> $(HUGE)
+	echo '#else' >> $(HUGE)
+	$(NROFF) $(MANPAGE) | $(PERL) $(MKHELP) -c $(README) >> $(HUGE)
+	echo '#endif /* HAVE_LIBZ */' >> $(HUGE)
+# This generates the tool_hugehelp.c file uncompressed only
+#$(HUGE): $(MANPAGE) $(README) $(MKHELP)
+#	echo '#include "tool_setup.h"' > $(HUGE)
+#	$(NROFF) $(MANPAGE) | $(PERL) $(MKHELP) $(README) >> $(HUGE)
 
 # built-in manual has been disabled, make a blank file
 #$(HUGE):

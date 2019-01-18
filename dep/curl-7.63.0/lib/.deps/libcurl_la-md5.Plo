@@ -40,9 +40,8 @@ libcurl_la-md5.lo: md5.c /usr/include/stdc-predef.h curl_setup.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/environments.h /usr/include/bits/confname.h \
  /usr/include/getopt.h curl_ctype.h curl_md5.h curl_hmac.h warnless.h \
- /usr/local/ssl/include/openssl/md5.h \
- /usr/local/ssl/include/openssl/e_os2.h \
- /usr/local/ssl/include/openssl/opensslconf.h curl_memory.h memdebug.h
+ /tmp/ssl/include/openssl/md5.h /tmp/ssl/include/openssl/e_os2.h \
+ /tmp/ssl/include/openssl/opensslconf.h curl_memory.h memdebug.h
 
 /usr/include/stdc-predef.h:
 
@@ -218,11 +217,11 @@ curl_hmac.h:
 
 warnless.h:
 
-/usr/local/ssl/include/openssl/md5.h:
+/tmp/ssl/include/openssl/md5.h:
 
-/usr/local/ssl/include/openssl/e_os2.h:
+/tmp/ssl/include/openssl/e_os2.h:
 
-/usr/local/ssl/include/openssl/opensslconf.h:
+/tmp/ssl/include/openssl/opensslconf.h:
 
 curl_memory.h:
 

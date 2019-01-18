@@ -61,53 +61,32 @@ vtls/libcurl_la-openssl.lo: vtls/openssl.c /usr/include/stdc-predef.h \
  vtls/nssg.h vtls/gskit.h vtls/polarssl.h vtls/cyassl.h vtls/schannel.h \
  vtls/darwinssl.h vtls/mbedtls.h vtls/mesalink.h ../lib/strcase.h \
  ../lib/hostcheck.h ../lib/curl_printf.h ../include/curl/mprintf.h \
- /usr/local/ssl/include/openssl/ssl.h \
- /usr/local/ssl/include/openssl/e_os2.h \
- /usr/local/ssl/include/openssl/opensslconf.h \
- /usr/local/ssl/include/openssl/comp.h \
- /usr/local/ssl/include/openssl/crypto.h \
- /usr/local/ssl/include/openssl/stack.h \
- /usr/local/ssl/include/openssl/safestack.h \
- /usr/local/ssl/include/openssl/opensslv.h \
- /usr/local/ssl/include/openssl/ossl_typ.h \
- /usr/local/ssl/include/openssl/symhacks.h \
- /usr/local/ssl/include/openssl/bio.h \
- /usr/local/ssl/include/openssl/x509.h \
- /usr/local/ssl/include/openssl/buffer.h \
- /usr/local/ssl/include/openssl/evp.h \
- /usr/local/ssl/include/openssl/objects.h \
- /usr/local/ssl/include/openssl/obj_mac.h \
- /usr/local/ssl/include/openssl/asn1.h \
- /usr/local/ssl/include/openssl/bn.h /usr/local/ssl/include/openssl/ec.h \
- /usr/local/ssl/include/openssl/ecdsa.h \
- /usr/local/ssl/include/openssl/ecdh.h \
- /usr/local/ssl/include/openssl/rsa.h \
- /usr/local/ssl/include/openssl/dsa.h /usr/local/ssl/include/openssl/dh.h \
- /usr/local/ssl/include/openssl/sha.h \
- /usr/local/ssl/include/openssl/x509_vfy.h \
- /usr/local/ssl/include/openssl/lhash.h \
- /usr/local/ssl/include/openssl/pkcs7.h \
- /usr/local/ssl/include/openssl/pem.h \
- /usr/local/ssl/include/openssl/pem2.h \
- /usr/local/ssl/include/openssl/hmac.h \
- /usr/local/ssl/include/openssl/kssl.h \
- /usr/local/ssl/include/openssl/ssl2.h \
- /usr/local/ssl/include/openssl/ssl3.h \
- /usr/local/ssl/include/openssl/tls1.h \
- /usr/local/ssl/include/openssl/dtls1.h \
- /usr/local/ssl/include/openssl/pqueue.h \
- /usr/local/ssl/include/openssl/ssl23.h \
- /usr/local/ssl/include/openssl/srtp.h \
- /usr/local/ssl/include/openssl/rand.h \
- /usr/local/ssl/include/openssl/x509v3.h \
- /usr/local/ssl/include/openssl/conf.h \
- /usr/local/ssl/include/openssl/err.h \
- /usr/local/ssl/include/openssl/md5.h \
- /usr/local/ssl/include/openssl/pkcs12.h \
- /usr/local/ssl/include/openssl/ocsp.h \
- /usr/local/ssl/include/openssl/engine.h \
- /usr/local/ssl/include/openssl/ui.h ../lib/warnless.h ../lib/non-ascii.h \
- ../lib/curl_memory.h ../lib/memdebug.h
+ /tmp/ssl/include/openssl/ssl.h /tmp/ssl/include/openssl/e_os2.h \
+ /tmp/ssl/include/openssl/opensslconf.h /tmp/ssl/include/openssl/comp.h \
+ /tmp/ssl/include/openssl/crypto.h /tmp/ssl/include/openssl/stack.h \
+ /tmp/ssl/include/openssl/safestack.h /tmp/ssl/include/openssl/opensslv.h \
+ /tmp/ssl/include/openssl/ossl_typ.h /tmp/ssl/include/openssl/symhacks.h \
+ /tmp/ssl/include/openssl/bio.h /tmp/ssl/include/openssl/x509.h \
+ /tmp/ssl/include/openssl/buffer.h /tmp/ssl/include/openssl/evp.h \
+ /tmp/ssl/include/openssl/objects.h /tmp/ssl/include/openssl/obj_mac.h \
+ /tmp/ssl/include/openssl/asn1.h /tmp/ssl/include/openssl/bn.h \
+ /tmp/ssl/include/openssl/ec.h /tmp/ssl/include/openssl/ecdsa.h \
+ /tmp/ssl/include/openssl/ecdh.h /tmp/ssl/include/openssl/rsa.h \
+ /tmp/ssl/include/openssl/dsa.h /tmp/ssl/include/openssl/dh.h \
+ /tmp/ssl/include/openssl/sha.h /tmp/ssl/include/openssl/x509_vfy.h \
+ /tmp/ssl/include/openssl/lhash.h /tmp/ssl/include/openssl/pkcs7.h \
+ /tmp/ssl/include/openssl/pem.h /tmp/ssl/include/openssl/pem2.h \
+ /tmp/ssl/include/openssl/hmac.h /tmp/ssl/include/openssl/kssl.h \
+ /tmp/ssl/include/openssl/ssl2.h /tmp/ssl/include/openssl/ssl3.h \
+ /tmp/ssl/include/openssl/tls1.h /tmp/ssl/include/openssl/dtls1.h \
+ /tmp/ssl/include/openssl/pqueue.h /tmp/ssl/include/openssl/ssl23.h \
+ /tmp/ssl/include/openssl/srtp.h /tmp/ssl/include/openssl/rand.h \
+ /tmp/ssl/include/openssl/x509v3.h /tmp/ssl/include/openssl/conf.h \
+ /tmp/ssl/include/openssl/err.h /tmp/ssl/include/openssl/md5.h \
+ /tmp/ssl/include/openssl/pkcs12.h /tmp/ssl/include/openssl/ocsp.h \
+ /tmp/ssl/include/openssl/engine.h /tmp/ssl/include/openssl/ui.h \
+ ../lib/warnless.h ../lib/non-ascii.h ../lib/curl_memory.h \
+ ../lib/memdebug.h
 
 /usr/include/stdc-predef.h:
 
@@ -409,101 +388,101 @@ vtls/mesalink.h:
 
 ../include/curl/mprintf.h:
 
-/usr/local/ssl/include/openssl/ssl.h:
+/tmp/ssl/include/openssl/ssl.h:
 
-/usr/local/ssl/include/openssl/e_os2.h:
+/tmp/ssl/include/openssl/e_os2.h:
 
-/usr/local/ssl/include/openssl/opensslconf.h:
+/tmp/ssl/include/openssl/opensslconf.h:
 
-/usr/local/ssl/include/openssl/comp.h:
+/tmp/ssl/include/openssl/comp.h:
 
-/usr/local/ssl/include/openssl/crypto.h:
+/tmp/ssl/include/openssl/crypto.h:
 
-/usr/local/ssl/include/openssl/stack.h:
+/tmp/ssl/include/openssl/stack.h:
 
-/usr/local/ssl/include/openssl/safestack.h:
+/tmp/ssl/include/openssl/safestack.h:
 
-/usr/local/ssl/include/openssl/opensslv.h:
+/tmp/ssl/include/openssl/opensslv.h:
 
-/usr/local/ssl/include/openssl/ossl_typ.h:
+/tmp/ssl/include/openssl/ossl_typ.h:
 
-/usr/local/ssl/include/openssl/symhacks.h:
+/tmp/ssl/include/openssl/symhacks.h:
 
-/usr/local/ssl/include/openssl/bio.h:
+/tmp/ssl/include/openssl/bio.h:
 
-/usr/local/ssl/include/openssl/x509.h:
+/tmp/ssl/include/openssl/x509.h:
 
-/usr/local/ssl/include/openssl/buffer.h:
+/tmp/ssl/include/openssl/buffer.h:
 
-/usr/local/ssl/include/openssl/evp.h:
+/tmp/ssl/include/openssl/evp.h:
 
-/usr/local/ssl/include/openssl/objects.h:
+/tmp/ssl/include/openssl/objects.h:
 
-/usr/local/ssl/include/openssl/obj_mac.h:
+/tmp/ssl/include/openssl/obj_mac.h:
 
-/usr/local/ssl/include/openssl/asn1.h:
+/tmp/ssl/include/openssl/asn1.h:
 
-/usr/local/ssl/include/openssl/bn.h:
+/tmp/ssl/include/openssl/bn.h:
 
-/usr/local/ssl/include/openssl/ec.h:
+/tmp/ssl/include/openssl/ec.h:
 
-/usr/local/ssl/include/openssl/ecdsa.h:
+/tmp/ssl/include/openssl/ecdsa.h:
 
-/usr/local/ssl/include/openssl/ecdh.h:
+/tmp/ssl/include/openssl/ecdh.h:
 
-/usr/local/ssl/include/openssl/rsa.h:
+/tmp/ssl/include/openssl/rsa.h:
 
-/usr/local/ssl/include/openssl/dsa.h:
+/tmp/ssl/include/openssl/dsa.h:
 
-/usr/local/ssl/include/openssl/dh.h:
+/tmp/ssl/include/openssl/dh.h:
 
-/usr/local/ssl/include/openssl/sha.h:
+/tmp/ssl/include/openssl/sha.h:
 
-/usr/local/ssl/include/openssl/x509_vfy.h:
+/tmp/ssl/include/openssl/x509_vfy.h:
 
-/usr/local/ssl/include/openssl/lhash.h:
+/tmp/ssl/include/openssl/lhash.h:
 
-/usr/local/ssl/include/openssl/pkcs7.h:
+/tmp/ssl/include/openssl/pkcs7.h:
 
-/usr/local/ssl/include/openssl/pem.h:
+/tmp/ssl/include/openssl/pem.h:
 
-/usr/local/ssl/include/openssl/pem2.h:
+/tmp/ssl/include/openssl/pem2.h:
 
-/usr/local/ssl/include/openssl/hmac.h:
+/tmp/ssl/include/openssl/hmac.h:
 
-/usr/local/ssl/include/openssl/kssl.h:
+/tmp/ssl/include/openssl/kssl.h:
 
-/usr/local/ssl/include/openssl/ssl2.h:
+/tmp/ssl/include/openssl/ssl2.h:
 
-/usr/local/ssl/include/openssl/ssl3.h:
+/tmp/ssl/include/openssl/ssl3.h:
 
-/usr/local/ssl/include/openssl/tls1.h:
+/tmp/ssl/include/openssl/tls1.h:
 
-/usr/local/ssl/include/openssl/dtls1.h:
+/tmp/ssl/include/openssl/dtls1.h:
 
-/usr/local/ssl/include/openssl/pqueue.h:
+/tmp/ssl/include/openssl/pqueue.h:
 
-/usr/local/ssl/include/openssl/ssl23.h:
+/tmp/ssl/include/openssl/ssl23.h:
 
-/usr/local/ssl/include/openssl/srtp.h:
+/tmp/ssl/include/openssl/srtp.h:
 
-/usr/local/ssl/include/openssl/rand.h:
+/tmp/ssl/include/openssl/rand.h:
 
-/usr/local/ssl/include/openssl/x509v3.h:
+/tmp/ssl/include/openssl/x509v3.h:
 
-/usr/local/ssl/include/openssl/conf.h:
+/tmp/ssl/include/openssl/conf.h:
 
-/usr/local/ssl/include/openssl/err.h:
+/tmp/ssl/include/openssl/err.h:
 
-/usr/local/ssl/include/openssl/md5.h:
+/tmp/ssl/include/openssl/md5.h:
 
-/usr/local/ssl/include/openssl/pkcs12.h:
+/tmp/ssl/include/openssl/pkcs12.h:
 
-/usr/local/ssl/include/openssl/ocsp.h:
+/tmp/ssl/include/openssl/ocsp.h:
 
-/usr/local/ssl/include/openssl/engine.h:
+/tmp/ssl/include/openssl/engine.h:
 
-/usr/local/ssl/include/openssl/ui.h:
+/tmp/ssl/include/openssl/ui.h:
 
 ../lib/warnless.h:
 

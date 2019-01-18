@@ -18,6 +18,6 @@ use vars qw(
     $Cpreprocessor
     );
 
-$Cpreprocessor = 'gcc -E -I/usr/local/ssl/include';
+$Cpreprocessor = 'gcc -E -I/tmp/ssl/include';
 
 1;

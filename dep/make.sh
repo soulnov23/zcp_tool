@@ -5,31 +5,33 @@ set -x
 function make_open_ssl()
 {
 	cd $1
-	./config shared --prefix=/usr/local/ssl
+	./config shared --prefix=/tmp/ssl
 	make
 	make install
-	cp -f /usr/local/ssl/lib/libcrypto.* /usr/local/ssl/lib/libssl.* $2
+	cp -f /tmp/ssl/lib/libcrypto.* /tmp/ssl/lib/libssl.* $2
 }
 
 function clean_open_ssl()
 {
 	cd $1
 	make clean
+	rm -rf /tmp/ssl
 }
 
 function make_curl()
 {
 	cd $1
-	./configure --prefix=/usr/local/curl --with-ssl=/usr/local/ssl
+	./configure --prefix=/tmp/curl --with-ssl=/tmp/ssl
 	make
 	make install
-	cp -f /usr/local/curl/lib/libcurl.* $2
+	cp -f /tmp/curl/lib/libcurl.* $2
 }
 
 function clean_curl()
 {
 	cd $1
 	make clean
+	rm -rf /tmp/curl
 }
 
 function make_scons()

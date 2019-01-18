@@ -49,8 +49,8 @@ libcurl_la-content_encoding.lo: content_encoding.c \
  /usr/include/arpa/inet.h asyn.h /usr/include/setjmp.h \
  /usr/include/bits/setjmp.h splay.h mime.h imap.h pingpong.h curl_sasl.h \
  pop3.h smtp.h ftp.h file.h ssh.h http.h rtsp.h smb.h wildcard.h \
- multihandle.h conncache.h sendf.h content_encoding.h strdup.h strcase.h \
- curl_memory.h memdebug.h
+ multihandle.h conncache.h /usr/include/zlib.h /usr/include/zconf.h \
+ sendf.h content_encoding.h strdup.h strcase.h curl_memory.h memdebug.h
 
 /usr/include/stdc-predef.h:
 
@@ -295,6 +295,10 @@ wildcard.h:
 multihandle.h:
 
 conncache.h:
+
+/usr/include/zlib.h:
+
+/usr/include/zconf.h:
 
 sendf.h:
 

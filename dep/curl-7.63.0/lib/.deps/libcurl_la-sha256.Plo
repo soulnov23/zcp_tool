@@ -40,10 +40,8 @@ libcurl_la-sha256.lo: sha256.c /usr/include/stdc-predef.h curl_setup.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/environments.h /usr/include/bits/confname.h \
  /usr/include/getopt.h curl_ctype.h warnless.h curl_sha256.h \
- /usr/local/ssl/include/openssl/opensslv.h \
- /usr/local/ssl/include/openssl/sha.h \
- /usr/local/ssl/include/openssl/e_os2.h \
- /usr/local/ssl/include/openssl/opensslconf.h
+ /tmp/ssl/include/openssl/opensslv.h /tmp/ssl/include/openssl/sha.h \
+ /tmp/ssl/include/openssl/e_os2.h /tmp/ssl/include/openssl/opensslconf.h
 
 /usr/include/stdc-predef.h:
 
@@ -217,10 +215,10 @@ warnless.h:
 
 curl_sha256.h:
 
-/usr/local/ssl/include/openssl/opensslv.h:
+/tmp/ssl/include/openssl/opensslv.h:
 
-/usr/local/ssl/include/openssl/sha.h:
+/tmp/ssl/include/openssl/sha.h:
 
-/usr/local/ssl/include/openssl/e_os2.h:
+/tmp/ssl/include/openssl/e_os2.h:
 
-/usr/local/ssl/include/openssl/opensslconf.h:
+/tmp/ssl/include/openssl/opensslconf.h:
