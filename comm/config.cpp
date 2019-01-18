@@ -14,6 +14,7 @@ config::~config()
 	
 }
 
+/*
 static get_node(XMLDocument &doc, map<string, string> &record)
 {
 	XMLElement *node = doc.FirstChildElement();
@@ -30,6 +31,7 @@ static get_node(XMLDocument &doc, map<string, string> &record)
 		node = node->NextSiblingElement();
 	}
 }
+*/
 
 int config::get_conf(const char *file_path)
 {

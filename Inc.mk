@@ -1,10 +1,10 @@
 #==============================================================================
-#	BUILD:	编译类型
+#       BUILD:              编译类型
 #------------------------------------------------------------------------------
-#		BUILD_DEV:		开发版本
-#		BUILD_DEBUG:		测试版本
-#		BUILD_NORMAL:		一般开发版本
-#		BUILD_RELEASE:		发行版本
+#       BUILD_DEV:          开发版本
+#       BUILD_DEBUG:        测试版本
+#       BUILD_NORMAL:       一般开发版本
+#       BUILD_RELEASE:      发行版本
 #------------------------------------------------------------------------------
 #BUILD=BUILD_NORMAL
 BUILD=BUILD_DEBUG
@@ -17,28 +17,32 @@ RANLIB ?= ranlib
 
 CFLAGS ?=
 CXXFLAGS ?=
-LDFLAGS ?=
 INCLUDE ?=
+LDFLAGS ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS   += -Wall -g -fPIC -DDEBUG 
-CXXFLAGS += -Wall -g -fPIC -DDEBUG 
-LDFLAGS  += 
+CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
+CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
+INCLUDE  +=
+LDFLAGS  +=
 endif
 ifeq ($(BUILD), BUILD_DEV)
-CFLAGS   += -Wall -g -fPIC -DDEBUG -Werror 
-CXXFLAGS += -Wall -g -fPIC -DDEBUG -Werror
-LDFLAGS  +=  
+CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -Werror
+CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -Werror
+INCLUDE  +=
+LDFLAGS  +=
 endif
 ifeq ($(BUILD), BUILD_NORMAL)
-CFLAGS   += -Wall -g -fPIC -O
-CXXFLAGS += -Wall -g -fPIC -O
-LDFLAGS  += 
+CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -O
+CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -O
+INCLUDE  +=
+LDFLAGS  +=
 endif
 ifeq ($(BUILD), BUILD_RELEASE)
-CFLAGS   += -Wall -g -fPIC -O3 
-CXXFLAGS += -Wall -g -fPIC -O3 
-LDFLAGS  +=  
+CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -O3
+CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -O3
+INCLUDE  +=
+LDFLAGS  +=
 endif
 
 PROJ_PATH=/home/zcp_tools
@@ -47,6 +51,7 @@ LIB_DIR=$(PROJ_PATH)/lib
 OBJ_DIR=$(PROJ_PATH)/obj
 
 COMM_PATH=$(PROJ_PATH)/comm
+COMM_INC=$(PROJ_PATH)/comm
 
 SCONS_PATH=$(PROJ_PATH)/dep/scons-2.1.0
 
@@ -60,6 +65,10 @@ JSON_PATH=$(PROJ_PATH)/dep/jsoncpp-src-0.5.0
 JSON_INC=$(JSON_PATH)/include
 
 XML_PATH=$(PROJ_PATH)/dep/tinyxml2
+XML_INC=$(PROJ_PATH)/dep/tinyxml2
+
+SPD_LOG_PATH=$(PROJ_PATH)/dep/spdlog-1.x
+SPD_LOG_INC=$(PROJ_PATH)/dep/spdlog-1.x/include
 
 #自动计算文件的依赖关系
 .%.d: %.cpp

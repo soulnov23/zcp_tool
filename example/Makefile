@@ -10,7 +10,7 @@ LDFLAGS += -L$(LIB_DIR) -lcurl -ljson -ltinyxml2 -lcrypto -lssl -lcomm
 all : clean $(BIN)
 
 $(BIN) : $(OBJS)
-	$(CXX) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 clean :
 	rm -rf $(OBJS) $(BIN)
