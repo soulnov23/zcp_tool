@@ -1,57 +1,39 @@
 #include "json_parser.h"
 #include "printf.h"
 #include "json/reader.h"
-#include "json/writer.h"
-#include "json/elements.h"
+#include <fstream>
+using namespace std;
 
-int get_conf(XMLDocument &doc, const char *file_path)
+int file_to_json(string &data, const char *file_path)
 {
-	XMLError ret = doc.LoadFile(file_path);
-	if (ret != XML_SUCCESS)
+	ifstream file;
+	file.exceptions(ifstream::failbit | ifstream::badbit);
+	try
 	{
-		PRINTF_ERROR("load file failed : %s", file_path);
+		file.open(file_path);
+		getline(file, data, (char)EOF);
+	}
+	catch (ifstream::failure e)
+	{
+		PRINTF_ERROR("open file failed : %s", file_path);
 		return -1;
 	}
 	return 0;
 }
 
-int get_conf(XMLDocument &doc, const char *data, size_t len)
+int json_to_map(map<string, string> &record, string &data)
 {
-	XMLError ret = doc.Parse(data, len);
-	if (ret != XML_SUCCESS)
+	Json::Reader reader;
+	Json::Value value;
+	if (!reader.parse(data, value))
 	{
-		PRINTF_ERROR("parse data failed : %s", data);
+		PRINTF_ERROR("parse data failed : %s", data.c_str());
 		return -1;
 	}
+	Json::Value::Members member = value.getMemberNames();
+	for (Json::Value::Members::iterator it = member.begin(); it != member.end(); it++)
+	{
+		record.insert(pair<string, string>(*it, value[*it].asString()));
+	}
 	return 0;
-}
-
-void get_node(map<string, XMLElement*> &record, XMLDocument &doc)
-{
-	XMLElement *node = doc.FirstChildElement();
-	while (node != NULL)
-	{
-		record.insert(pair<string, XMLElement*>(node->Name(), node));
-		node = node->NextSiblingElement();
-	}
-}
-
-void get_node(map<string, XMLElement*> &record, XMLElement *node)
-{
-	XMLElement *child_node = node->FirstChildElement();
-	while (child_node != NULL)
-	{
-		record.insert(pair<string, XMLElement*>(child_node->Name(), child_node));
-		child_node = child_node->NextSiblingElement();
-	}
-}
-
-void get_attri(map<string, string> &record, XMLElement *node)
-{
-	const XMLAttribute *attri = node->FirstAttribute();
-	while (attri != NULL)
-	{
-		record.insert(pair<string, string>(attri->Name(), attri->Value()));
-		attri = attri->Next();
-	}	
 }

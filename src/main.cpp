@@ -1,4 +1,5 @@
 #include "printf.h"
+#include "stl_tool.h"
 #include "daemon.h"
 #include <iostream>
 using namespace std;
