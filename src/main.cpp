@@ -43,12 +43,8 @@ int main(int argc, char *argv[])
 					cout << it_2->first << endl;
 					map<string, string> record_3;
 					get_attri(record_3, it_2->second);
-					map<string, string>::iterator it_3 = record_3.begin();
-					while (it_3 != record_3.end())
-					{
-						cout << it_3->first << ":" << it_3->second << endl;
-						it_3++;
-					}
+					map<string, string>::iterator it_3;
+					PRINTF_MAP(record_3, it_3);
 					it_2++;
 				}
 			}
