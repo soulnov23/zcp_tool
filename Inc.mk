@@ -53,8 +53,6 @@ OBJ_DIR=$(PROJ_PATH)/obj
 COMM_PATH=$(PROJ_PATH)/comm
 COMM_INC=$(PROJ_PATH)/comm
 
-SCONS_PATH=$(PROJ_PATH)/dep/scons-2.1.0
-
 OPEN_SSL_PATH=$(PROJ_PATH)/dep/openssl-1.0.2q
 OPEN_SSL_INC=$(PROJ_PATH)/dep/openssl-1.0.2q/include
 

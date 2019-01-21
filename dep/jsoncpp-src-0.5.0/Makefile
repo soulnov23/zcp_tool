@@ -1,12 +1,13 @@
 include ../../Inc.mk
 
-OBJS := tinyxml2.o
-SO_NAME = libtinyxml2.so
+SRC := $(wildcard *.cpp)
+OBJS := $(patsubst %.cpp, %.o, $(SRC))
+SO_NAME = libjson.so
 SO_BIN = $(LIB_DIR)/$(SO_NAME)
-A_NAME = libtinyxml2.a
+A_NAME = libjson.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE +=
+INCLUDE += -I$(JSON_INC)
 LDFLAGS +=
 
 all : clean $(SO_BIN) $(A_BIN)

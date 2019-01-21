@@ -14,7 +14,7 @@ all : clean $(SO_BIN) $(A_BIN)
 
 $(SO_BIN) : $(OBJS)
 	$(CXX) $(CXXFLAGS) -shared -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
-	
+
 $(A_BIN) : $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?
 	$(RANLIB) $@
