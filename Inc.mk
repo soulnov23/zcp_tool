@@ -68,6 +68,9 @@ XML_INC=$(PROJ_PATH)/dep/tinyxml2
 SPD_LOG_PATH=$(PROJ_PATH)/dep/spdlog-1.x
 SPD_LOG_INC=$(PROJ_PATH)/dep/spdlog-1.x/include
 
+LIBCO_PATH=$(PROJ_PATH)/dep/libco
+LIBCO_INC=$(PROJ_PATH)/dep/libco
+
 #自动计算文件的依赖关系
 .%.d: %.cpp
 	$(CC) $(INCLUDE) -MM $< > $@
