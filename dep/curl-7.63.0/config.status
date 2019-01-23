@@ -429,7 +429,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/zcp_tools/dep/curl-7.63.0'
+ac_pwd='/home/zcp_tool/dep/curl-7.63.0'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/usr/bin/mkdir -p'
@@ -989,12 +989,12 @@ S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/usr/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
-S["install_sh"]="${SHELL} /home/zcp_tools/dep/curl-7.63.0/install-sh"
-S["MAKEINFO"]="${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing automake-1.16"
-S["AUTOCONF"]="${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing autoconf"
-S["ACLOCAL"]="${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing aclocal-1.16"
+S["install_sh"]="${SHELL} /home/zcp_tool/dep/curl-7.63.0/install-sh"
+S["MAKEINFO"]="${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing automake-1.16"
+S["AUTOCONF"]="${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing autoconf"
+S["ACLOCAL"]="${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing aclocal-1.16"
 S["VERSION"]="-"
 S["PACKAGE"]="curl"
 S["CYGPATH_W"]="echo"

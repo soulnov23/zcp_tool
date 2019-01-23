@@ -194,8 +194,8 @@ configure:5632: checking whether make sets $(MAKE)
 configure:5654: result: yes
 configure:5676: checking whether make supports the include directive
 configure:5691: make -f confmf.GNU && cat confinc.out
-make[2]: Entering directory `/home/zcp_tools/dep/curl-7.63.0'
-make[2]: Leaving directory `/home/zcp_tools/dep/curl-7.63.0'
+make[2]: Entering directory `/home/zcp_tool/dep/curl-7.63.0'
+make[2]: Leaving directory `/home/zcp_tool/dep/curl-7.63.0'
 this is the am__doit target
 configure:5694: $? = 0
 configure:5713: result: yes (GNU style)
@@ -309,7 +309,7 @@ configure:6689: $? = 0
 configure:6768: gcc -o conftest    conftest.c  >&5
 configure:6768: $? = 0
 configure:6847: gcc -o conftest    conftest.c  >&5
-/tmp/ccFls2be.o: In function `main':
+/tmp/ccu87g5I.o: In function `main':
 conftest.c:(.text+0xa): undefined reference to `inet_ntoa_r'
 collect2: error: ld returned 1 exit status
 configure:6847: $? = 1
@@ -2547,7 +2547,7 @@ configure:23014: $? = 0
 configure:23076: result: 1.0.2 - 0x1000211fL
 configure:23085: checking for OpenSSL library version
 configure:23115: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccttFMzb.o: In function `main':
+/tmp/ccRDTqO9.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `ERR_clear_last_mark'
 collect2: error: ld returned 1 exit status
 configure:23115: $? = 1
@@ -2627,7 +2627,7 @@ configure: failed program was:
 | }
 | 
 configure:23189: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccxIimKi.o: In function `main':
+/tmp/ccHmolyb.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `SSL_CTX_set_not_resumable_session_callback'
 collect2: error: ld returned 1 exit status
 configure:23189: $? = 1
@@ -2724,7 +2724,7 @@ configure:25713: checking whether to use builtin CA store of SSL library
 configure:25727: result: no
 configure:25752: checking for library containing psl_builtin
 configure:25780: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccljoUXt.o: In function `main':
+/tmp/ccdbdLcq.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `psl_builtin'
 collect2: error: ld returned 1 exit status
 configure:25780: $? = 1
@@ -42319,7 +42319,7 @@ configure:34580: checking for arpa/inet.h
 configure:34580: result: yes
 configure:34600: checking if inet_ntoa_r can be linked
 configure:34629: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccP5Uwlt.o: In function `main':
+/tmp/ccj6J8Ch.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `inet_ntoa_r'
 collect2: error: ld returned 1 exit status
 configure:34629: $? = 1
@@ -43133,7 +43133,7 @@ configure:35751: checking if ioctlsocket might be used
 configure:35840: result: no
 configure:35852: checking if IoctlSocket can be linked
 configure:35881: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/cc4X1a6q.o: In function `main':
+/tmp/ccdGH941.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `IoctlSocket'
 collect2: error: ld returned 1 exit status
 configure:35881: $? = 1
@@ -43757,7 +43757,7 @@ configure:37391: checking for setjmp.h
 configure:37391: result: yes
 configure:37411: checking if sigsetjmp can be linked
 configure:37440: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/cc4bFRM4.o: In function `main':
+/tmp/ccLqRKcr.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `sigsetjmp'
 collect2: error: ld returned 1 exit status
 configure:37440: $? = 1
@@ -44070,7 +44070,7 @@ configure:38019: checking if strcasecmp might be used
 configure:38025: result: yes
 configure:38046: checking if strcmpi can be linked
 configure:38075: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccRSWnwH.o: In function `main':
+/tmp/ccI9o7LU.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `strcmpi'
 collect2: error: ld returned 1 exit status
 configure:38075: $? = 1
@@ -45173,7 +45173,7 @@ configure:38703: checking if strerror_r might be used
 configure:38709: result: yes
 configure:38766: checking if stricmp can be linked
 configure:38795: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/cc5tyVve.o: In function `main':
+/tmp/ccKxXh9h.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `stricmp'
 collect2: error: ld returned 1 exit status
 configure:38795: $? = 1
@@ -45456,7 +45456,7 @@ configure:39037: checking if strncasecmp might be used
 configure:39043: result: yes
 configure:39064: checking if strncmpi can be linked
 configure:39093: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccqeTsEq.o: In function `main':
+/tmp/cc4Jzesu.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `strncmpi'
 collect2: error: ld returned 1 exit status
 configure:39093: $? = 1
@@ -45723,7 +45723,7 @@ configure:39186: checking if strncmpi might be used
 configure:39201: result: no
 configure:39213: checking if strnicmp can be linked
 configure:39242: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/cclGJGsx.o: In function `main':
+/tmp/cc7gmaAB.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `strnicmp'
 collect2: error: ld returned 1 exit status
 configure:39242: $? = 1
@@ -46065,7 +46065,7 @@ configure:40027: $? = 0
 configure:40027: result: yes
 configure:40027: checking for getpass_r
 configure:40027: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccpA2Hbg.o: In function `main':
+/tmp/ccApISXj.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `getpass_r'
 collect2: error: ld returned 1 exit status
 configure:40027: $? = 1
@@ -46625,7 +46625,7 @@ configure:40027: $? = 0
 configure:40027: result: yes
 configure:40027: checking for mach_absolute_time
 configure:40027: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccgwlqUT.o: In function `main':
+/tmp/cc70cuxC.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `mach_absolute_time'
 collect2: error: ld returned 1 exit status
 configure:40027: $? = 1
@@ -47181,7 +47181,7 @@ configure:40027: $? = 0
 configure:40027: result: yes
 configure:40027: checking for setmode
 configure:40027: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccTqS1W3.o: In function `main':
+/tmp/ccfeiRYP.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `setmode'
 collect2: error: ld returned 1 exit status
 configure:40027: $? = 1
@@ -47769,7 +47769,7 @@ configure:40734: checking for pthread.h
 configure:40734: result: yes
 configure:40741: checking for pthread_create
 configure:40741: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccSuQmww.o: In function `main':
+/tmp/ccASKgGj.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `pthread_create'
 collect2: error: ld returned 1 exit status
 configure:40741: $? = 1
@@ -48123,34 +48123,34 @@ config.status:1565: creating lib/curl_config.h
 config.status:1746: lib/curl_config.h is unchanged
 config.status:1794: executing depfiles commands
 config.status:1871: cd docs/examples       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make[2]: Entering directory `/home/zcp_tools/dep/curl-7.63.0/docs/examples'
+make[2]: Entering directory `/home/zcp_tool/dep/curl-7.63.0/docs/examples'
 make[2]: Nothing to be done for `am--depfiles'.
-make[2]: Leaving directory `/home/zcp_tools/dep/curl-7.63.0/docs/examples'
+make[2]: Leaving directory `/home/zcp_tool/dep/curl-7.63.0/docs/examples'
 config.status:1876: $? = 0
 config.status:1871: cd src       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make[2]: Entering directory `/home/zcp_tools/dep/curl-7.63.0/src'
+make[2]: Entering directory `/home/zcp_tool/dep/curl-7.63.0/src'
 make[2]: Nothing to be done for `am--depfiles'.
-make[2]: Leaving directory `/home/zcp_tools/dep/curl-7.63.0/src'
+make[2]: Leaving directory `/home/zcp_tool/dep/curl-7.63.0/src'
 config.status:1876: $? = 0
 config.status:1871: cd lib       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make[2]: Entering directory `/home/zcp_tools/dep/curl-7.63.0/lib'
+make[2]: Entering directory `/home/zcp_tool/dep/curl-7.63.0/lib'
 make[2]: Nothing to be done for `am--depfiles'.
-make[2]: Leaving directory `/home/zcp_tools/dep/curl-7.63.0/lib'
+make[2]: Leaving directory `/home/zcp_tool/dep/curl-7.63.0/lib'
 config.status:1876: $? = 0
 config.status:1871: cd tests/server       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make[2]: Entering directory `/home/zcp_tools/dep/curl-7.63.0/tests/server'
+make[2]: Entering directory `/home/zcp_tool/dep/curl-7.63.0/tests/server'
 make[2]: Nothing to be done for `am--depfiles'.
-make[2]: Leaving directory `/home/zcp_tools/dep/curl-7.63.0/tests/server'
+make[2]: Leaving directory `/home/zcp_tool/dep/curl-7.63.0/tests/server'
 config.status:1876: $? = 0
 config.status:1871: cd tests/libtest       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make[2]: Entering directory `/home/zcp_tools/dep/curl-7.63.0/tests/libtest'
+make[2]: Entering directory `/home/zcp_tool/dep/curl-7.63.0/tests/libtest'
 make[2]: Nothing to be done for `am--depfiles'.
-make[2]: Leaving directory `/home/zcp_tools/dep/curl-7.63.0/tests/libtest'
+make[2]: Leaving directory `/home/zcp_tool/dep/curl-7.63.0/tests/libtest'
 config.status:1876: $? = 0
 config.status:1871: cd tests/unit       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make[2]: Entering directory `/home/zcp_tools/dep/curl-7.63.0/tests/unit'
+make[2]: Entering directory `/home/zcp_tool/dep/curl-7.63.0/tests/unit'
 make[2]: Nothing to be done for `am--depfiles'.
-make[2]: Leaving directory `/home/zcp_tools/dep/curl-7.63.0/tests/unit'
+make[2]: Leaving directory `/home/zcp_tool/dep/curl-7.63.0/tests/unit'
 config.status:1876: $? = 0
 config.status:1794: executing libtool commands
 configure:44060: amending lib/Makefile
@@ -48567,7 +48567,7 @@ $(if $(CODE_COVERAGE_BRANCH_COVERAGE),\
 --rc genhtml_branch_coverage=$(CODE_COVERAGE_BRANCH_COVERAGE))
 --rc lcov_branch_coverage=$(CODE_COVERAGE_BRANCH_COVERAGE))
 .PHONY: check-code-coverage code-coverage-capture code-coverage-capture-hook code-coverage-clean
-ACLOCAL='${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing aclocal-1.16'
+ACLOCAL='${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing aclocal-1.16'
 AMDEPBACKSLASH='\'
 AMDEP_FALSE='#'
 AMDEP_TRUE=''
@@ -48581,9 +48581,9 @@ AM_V='$(V)'
 AR='/usr/bin/ar'
 AR_FLAGS='cr'
 AS='as'
-AUTOCONF='${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing autoconf'
-AUTOHEADER='${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing autoheader'
-AUTOMAKE='${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing automake-1.16'
+AUTOCONF='${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing autoconf'
+AUTOHEADER='${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing autoheader'
+AUTOMAKE='${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing automake-1.16'
 AWK='gawk'
 BLANK_AT_MAKETIME=''
 BUILD_LIBHOSTNAME_FALSE='#'
@@ -48711,7 +48711,7 @@ LT_SYS_LIBRARY_PATH=''
 MAINT='#'
 MAINTAINER_MODE_FALSE=''
 MAINTAINER_MODE_TRUE='#'
-MAKEINFO='${SHELL} /home/zcp_tools/dep/curl-7.63.0/missing makeinfo'
+MAKEINFO='${SHELL} /home/zcp_tool/dep/curl-7.63.0/missing makeinfo'
 MANIFEST_TOOL=':'
 MANOPT='-man'
 MKDIR_P='/usr/bin/mkdir -p'
@@ -48828,7 +48828,7 @@ host_vendor='pc'
 htmldir='${docdir}'
 includedir='${prefix}/include'
 infodir='${datarootdir}/info'
-install_sh='${SHELL} /home/zcp_tools/dep/curl-7.63.0/install-sh'
+install_sh='${SHELL} /home/zcp_tool/dep/curl-7.63.0/install-sh'
 libdir='${exec_prefix}/lib'
 libexecdir='${exec_prefix}/libexec'
 libext='a'

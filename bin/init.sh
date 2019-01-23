@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+#set -x
 
 chmod 777 ./*
 ulimit -c unlimited

@@ -2,5 +2,5 @@ all:
 	@echo "lib nothing"
 
 clean:
-	rm -rf pkgconfig
-	rm -rf lib*
+	@echo "lib nothing"
+	#rm -rf lib*
