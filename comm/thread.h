@@ -1,24 +1,28 @@
-#ifndef __BASE_THREAD_H__
-#define __BASE_THREAD_H__
+#ifndef __THREAD_H__
+#define __THREAD_H__
 
 #include <pthread.h>
 
-class base_thread
+typedef void *(*THREAD_FUNC)(void *);
+
+namespace zcp_tool
+{
+
+class thread
 {
 public:
-	base_thread();
-	virtual ~base_thread();
+	thread();
+	~thread();
 
-	bool create();
-	void wait();
-	virtual void run() = 0;
-
-	static void *thread_func(void *arg);
+   bool create(THREAD_FUNC thread_func, void *arg);
+   pthread_t get_id();
+	void join();
 
 protected:
 	pthread_t m_thread_t;
 };
 
+}
 #endif
 /*
                        ::
