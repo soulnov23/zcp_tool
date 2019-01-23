@@ -45,7 +45,7 @@ INCLUDE  +=
 LDFLAGS  +=
 endif
 
-PROJ_PATH=/home/zcp_tools
+PROJ_PATH=/home/zcp_tool
 BIN_DIR=$(PROJ_PATH)/bin
 LIB_DIR=$(PROJ_PATH)/lib
 OBJ_DIR=$(PROJ_PATH)/obj

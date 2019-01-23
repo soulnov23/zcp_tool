@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
 	string data;
-	if (file_to_json(data, "/home/zcp_tools/conf/server.json") != 0)
+	if (file_to_json(data, "/home/zcp_tool/conf/server.json") != 0)
 	{
 		PRINTF_ERROR("file_to_json error");
 		return -1;
