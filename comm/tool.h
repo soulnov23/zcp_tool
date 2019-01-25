@@ -1,17 +1,13 @@
 #ifndef __TOOL_H__
 #define __TOOL_H__
 
-#include <map>
-#include <iostream>
 #include <string>
+#include <map>
 using namespace std;
 
-typedef map<string, string> Data;
+typedef map<string, string> record_t;
 
-template <typename T1, typename T2, typename T3>
-void PRINTF_MAP(map<T1, T2> &record, T3 &it);
-
-void map2str(string &url, const Data &data);
-void str2map(string &buf, Data &data);
+void map2str(string &url, const record_t &record);
+void str2map(string &buf, record_t &record);
 
 #endif

@@ -2,18 +2,7 @@
 #include <string.h>
 
 #define FIELD_FLAG     "&"    
-#define VALUE_FLAG     "=" 
-
-template <typename T1, typename T2, typename T3>
-void PRINTF_MAP(map<T1, T2> &record, T3 &it)
-{
-	it = record.begin();
-	while (it != record.end())
-	{
-		cout << it->first << ":" << it->second << endl;
-		it++;
-	}
-}
+#define VALUE_FLAG     "="
  
 static int get_field(string &str, string &value)
 {   
@@ -59,9 +48,9 @@ static int get_value(const string &str, string &name, string &value)
 }
 
 
-void map2str(string &url, const Data &data)
+void map2str(string &url, const record_t &record)
 {
-    for(Data::iterator it = data.begin(); it != data.end(); it++)
+    for(record_t::const_iterator it = record.begin(); it != record.end(); it++)
     {
 		url += it->first.c_str();
 		url += VALUE_FLAG;
@@ -76,7 +65,7 @@ void map2str(string &url, const Data &data)
     }
 }
 
-void str2map(string &buf, Data &data)
+void str2map(string &buf, record_t &record)
 {
     string bvalue, fname, fvalue;
  
@@ -87,6 +76,6 @@ void str2map(string &buf, Data &data)
 		{
 			continue;
 		}
-		data[fname]=fvalue; 
+		record[fname]=fvalue; 
     }
-}
+}  

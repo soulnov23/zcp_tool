@@ -1,11 +1,10 @@
 #include "xml_parser.h"
 #include "printf.h"
-using namespace tinyxml2;
 
-int get_conf(XMLDocument &doc, const char *file_path)
+int get_conf(tinyxml2::XMLDocument &doc, const char *file_path)
 {
-	XMLError ret = doc.LoadFile(file_path);
-	if (ret != XML_SUCCESS)
+	tinyxml2::XMLError ret = doc.LoadFile(file_path);
+	if (ret != tinyxml2::XML_SUCCESS)
 	{
 		PRINTF_ERROR("load file failed : %s", file_path);
 		return -1;
@@ -13,10 +12,10 @@ int get_conf(XMLDocument &doc, const char *file_path)
 	return 0;
 }
 
-int get_conf(XMLDocument &doc, const char *data, size_t len)
+int get_conf(tinyxml2::XMLDocument &doc, const char *data, size_t len)
 {
-	XMLError ret = doc.Parse(data, len);
-	if (ret != XML_SUCCESS)
+	tinyxml2::XMLError ret = doc.Parse(data, len);
+	if (ret != tinyxml2::XML_SUCCESS)
 	{
 		PRINTF_ERROR("parse data failed : %s", data);
 		return -1;
@@ -24,29 +23,29 @@ int get_conf(XMLDocument &doc, const char *data, size_t len)
 	return 0;
 }
 
-void get_node(map<string, XMLElement*> &record, XMLDocument &doc)
+void get_node(map<string, tinyxml2::XMLElement*> &record, tinyxml2::XMLDocument &doc)
 {
-	XMLElement *node = doc.FirstChildElement();
+	tinyxml2::XMLElement *node = doc.FirstChildElement();
 	while (node != NULL)
 	{
-		record.insert(pair<string, XMLElement*>(node->Name(), node));
+		record.insert(pair<string, tinyxml2::XMLElement*>(node->Name(), node));
 		node = node->NextSiblingElement();
 	}
 }
 
-void get_node(map<string, XMLElement*> &record, XMLElement *node)
+void get_node(map<string, tinyxml2::XMLElement*> &record, tinyxml2::XMLElement *node)
 {
-	XMLElement *child_node = node->FirstChildElement();
+	tinyxml2::XMLElement *child_node = node->FirstChildElement();
 	while (child_node != NULL)
 	{
-		record.insert(pair<string, XMLElement*>(child_node->Name(), child_node));
+		record.insert(pair<string, tinyxml2::XMLElement*>(child_node->Name(), child_node));
 		child_node = child_node->NextSiblingElement();
 	}
 }
 
-void get_attri(map<string, string> &record, XMLElement *node)
+void get_attri(map<string, string> &record, tinyxml2::XMLElement *node)
 {
-	const XMLAttribute *attri = node->FirstAttribute();
+	const tinyxml2::XMLAttribute *attri = node->FirstAttribute();
 	while (attri != NULL)
 	{
 		record.insert(pair<string, string>(attri->Name(), attri->Value()));

@@ -1,6 +1,7 @@
 #include "json_parser.h"
 #include "printf.h"
 #include "json/reader.h"
+#include "json/writer.h"
 #include <fstream>
 using namespace std;
 
@@ -36,4 +37,16 @@ int json_to_map(map<string, string> &record, string &data)
 		record.insert(pair<string, string>(*it, value[*it].asString()));
 	}
 	return 0;
+}
+
+int map_to_json(string &data, const map<string, string> &record)
+{
+	Json::Value object;
+	map<string, string>::const_iterator it;
+	for (it = record.begin(); it != record.end(); it++)
+	{
+		object[it->first] = it->second;
+	}
+	Json::FastWriter writer;
+	data = writer.write(object);
 }

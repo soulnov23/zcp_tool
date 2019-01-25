@@ -309,7 +309,7 @@ configure:6689: $? = 0
 configure:6768: gcc -o conftest    conftest.c  >&5
 configure:6768: $? = 0
 configure:6847: gcc -o conftest    conftest.c  >&5
-/tmp/ccu87g5I.o: In function `main':
+/tmp/ccGJ41ev.o: In function `main':
 conftest.c:(.text+0xa): undefined reference to `inet_ntoa_r'
 collect2: error: ld returned 1 exit status
 configure:6847: $? = 1
@@ -2547,7 +2547,7 @@ configure:23014: $? = 0
 configure:23076: result: 1.0.2 - 0x1000211fL
 configure:23085: checking for OpenSSL library version
 configure:23115: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccRDTqO9.o: In function `main':
+/tmp/ccxHBQpT.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `ERR_clear_last_mark'
 collect2: error: ld returned 1 exit status
 configure:23115: $? = 1
@@ -2627,7 +2627,7 @@ configure: failed program was:
 | }
 | 
 configure:23189: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccHmolyb.o: In function `main':
+/tmp/ccxeSlWU.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `SSL_CTX_set_not_resumable_session_callback'
 collect2: error: ld returned 1 exit status
 configure:23189: $? = 1
@@ -2724,7 +2724,7 @@ configure:25713: checking whether to use builtin CA store of SSL library
 configure:25727: result: no
 configure:25752: checking for library containing psl_builtin
 configure:25780: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccdbdLcq.o: In function `main':
+/tmp/ccETSNNZ.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `psl_builtin'
 collect2: error: ld returned 1 exit status
 configure:25780: $? = 1
@@ -42319,7 +42319,7 @@ configure:34580: checking for arpa/inet.h
 configure:34580: result: yes
 configure:34600: checking if inet_ntoa_r can be linked
 configure:34629: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccj6J8Ch.o: In function `main':
+/tmp/ccoUMW4o.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `inet_ntoa_r'
 collect2: error: ld returned 1 exit status
 configure:34629: $? = 1
@@ -43133,7 +43133,7 @@ configure:35751: checking if ioctlsocket might be used
 configure:35840: result: no
 configure:35852: checking if IoctlSocket can be linked
 configure:35881: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccdGH941.o: In function `main':
+/tmp/cccOKaFb.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `IoctlSocket'
 collect2: error: ld returned 1 exit status
 configure:35881: $? = 1
@@ -43757,7 +43757,7 @@ configure:37391: checking for setjmp.h
 configure:37391: result: yes
 configure:37411: checking if sigsetjmp can be linked
 configure:37440: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccLqRKcr.o: In function `main':
+/tmp/ccw8xmmy.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `sigsetjmp'
 collect2: error: ld returned 1 exit status
 configure:37440: $? = 1
@@ -44070,7 +44070,7 @@ configure:38019: checking if strcasecmp might be used
 configure:38025: result: yes
 configure:38046: checking if strcmpi can be linked
 configure:38075: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccI9o7LU.o: In function `main':
+/tmp/ccMUR7L6.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `strcmpi'
 collect2: error: ld returned 1 exit status
 configure:38075: $? = 1
@@ -45173,7 +45173,7 @@ configure:38703: checking if strerror_r might be used
 configure:38709: result: yes
 configure:38766: checking if stricmp can be linked
 configure:38795: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccKxXh9h.o: In function `main':
+/tmp/ccux8tKB.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `stricmp'
 collect2: error: ld returned 1 exit status
 configure:38795: $? = 1
@@ -45456,7 +45456,7 @@ configure:39037: checking if strncasecmp might be used
 configure:39043: result: yes
 configure:39064: checking if strncmpi can be linked
 configure:39093: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/cc4Jzesu.o: In function `main':
+/tmp/ccPfHtkE.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `strncmpi'
 collect2: error: ld returned 1 exit status
 configure:39093: $? = 1
@@ -45723,7 +45723,7 @@ configure:39186: checking if strncmpi might be used
 configure:39201: result: no
 configure:39213: checking if strnicmp can be linked
 configure:39242: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/cc7gmaAB.o: In function `main':
+/tmp/cck5dYJF.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `strnicmp'
 collect2: error: ld returned 1 exit status
 configure:39242: $? = 1
@@ -46065,7 +46065,7 @@ configure:40027: $? = 0
 configure:40027: result: yes
 configure:40027: checking for getpass_r
 configure:40027: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccApISXj.o: In function `main':
+/tmp/ccZUyqFo.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `getpass_r'
 collect2: error: ld returned 1 exit status
 configure:40027: $? = 1
@@ -46625,7 +46625,7 @@ configure:40027: $? = 0
 configure:40027: result: yes
 configure:40027: checking for mach_absolute_time
 configure:40027: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/cc70cuxC.o: In function `main':
+/tmp/ccAfdLcL.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `mach_absolute_time'
 collect2: error: ld returned 1 exit status
 configure:40027: $? = 1
@@ -47181,7 +47181,7 @@ configure:40027: $? = 0
 configure:40027: result: yes
 configure:40027: checking for setmode
 configure:40027: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccfeiRYP.o: In function `main':
+/tmp/ccUEwhQ1.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `setmode'
 collect2: error: ld returned 1 exit status
 configure:40027: $? = 1
@@ -47769,7 +47769,7 @@ configure:40734: checking for pthread.h
 configure:40734: result: yes
 configure:40741: checking for pthread_create
 configure:40741: gcc -o conftest -Werror-implicit-function-declaration -O2 -Wno-system-headers    -I/tmp/ssl/include      -L/tmp/ssl/lib   conftest.c -lssl -lcrypto -lssl -lcrypto   -lz  >&5
-/tmp/ccASKgGj.o: In function `main':
+/tmp/ccoVMN4o.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `pthread_create'
 collect2: error: ld returned 1 exit status
 configure:40741: $? = 1
