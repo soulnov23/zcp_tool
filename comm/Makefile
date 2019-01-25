@@ -7,8 +7,8 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libcomm.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE += -I$(XML_PATH) -I$(JSON_INC)
-LDFLAGS += -lpthread -L$(LIB_DIR) -ltinyxml2 -ljson
+INCLUDE += -I$(XML_PATH) -I$(JSON_INC) -I$(OPEN_SSL_INC)
+LDFLAGS += -lpthread -L$(LIB_DIR) -ltinyxml2 -ljson -lcrypto
 
 all : clean $(SO_BIN) $(A_BIN)
 

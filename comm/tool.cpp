@@ -78,4 +78,23 @@ void str2map(string &buf, record_t &record)
 		}
 		record[fname]=fvalue; 
     }
-}  
+}
+
+int get_time_now(string &str_now)
+{
+	const string format = "%Y-%m-%d %H:%M:%S";
+	time_t t = time(NULL);
+	char buf[128];
+	struct tm *tm_time = localtime(&t);
+	if (!tm_time) 
+	{
+		return -1;
+	}
+	strftime(buf, sizeof(buf), format.c_str(), tm_time);
+	str_now = buf;
+	if (!str_now.length()) 
+	{
+		return -1;
+	}
+    return 0;
+}

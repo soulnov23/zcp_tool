@@ -6,8 +6,11 @@
 #       BUILD_NORMAL:       一般开发版本
 #       BUILD_RELEASE:      发行版本
 #------------------------------------------------------------------------------
-#BUILD=BUILD_NORMAL
 BUILD=BUILD_DEBUG
+#BUILD=BUILD_DEV
+#BUILD=BUILD_NORMAL
+#BUILD=BUILD_RELEASE
+
 
 CC = gcc
 CXX = g++ -std=c++11
@@ -21,8 +24,8 @@ INCLUDE ?=
 LDFLAGS ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
-CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
+CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -w
+CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -w
 INCLUDE  +=
 LDFLAGS  +=
 endif

@@ -3,3 +3,37 @@
 [Jan 23 2019 15:29:48] [DEBUG] main.cpp:14 main():server start success
 [Jan 25 2019 18:42:06] [DEBUG] main.cpp:14 main():server start success
 [Jan 25 2019 18:42:06] [DEBUG] main.cpp:14 main():server start success
+[Jan 25 2019 19:03:36] [DEBUG] main.cpp:15 main():server start success
+[Jan 25 2019 19:03:36] [DEBUG] main.cpp:21 main():
+[Jan 25 2019 19:03:59] [DEBUG] main.cpp:15 main():server start success
+[Jan 25 2019 19:03:59] [DEBUG] main.cpp:21 main():
+[Jan 25 2019 19:04:26] [DEBUG] main.cpp:15 main():server start success
+[Jan 25 2019 19:04:26] [ERROR]main.cpp:21: main():
+	error:Success[Jan 25 2019 19:04:26] [DEBUG] main.cpp:15 main():server start success
+[Jan 25 2019 19:04:26] [ERROR]main.cpp:21: main():
+	error:Success[ Jan 25 2019 19:11:25 ] [DEBUG] main.cpp:15 main():server start success
+[ Jan 25 2019 19:11:25 ] [ERROR] main.cpp:21: main(): [error:Success]
+[ Jan 25 2019 19:17:26 ] [DEBUG] main.cpp:15 main():server start success
+[ Jan 25 2019 19:17:26 ] [ERROR] main.cpp:21: main(): [error:Success]
+[ Jan 25 2019 19:17:45 ] [DEBUG] main.cpp:15 main():server start success
+[ Jan 25 2019 19:17:45 ] [ERROR] main.cpp:21: main(): [error:Success]
+[Jan 25 2019 19:18:34] [DEBUG] main.cpp:15 main() [server start success]
+[Jan 25 2019 19:18:34] [ERROR] main.cpp:21: main() [] [error:Success]
+[Jan 25 2019 19:20:04] [DEBUG] main.cpp:15 main():server start success]
+[Jan 25 2019 19:20:04] [ERROR] main.cpp:21 main():[error:Success]
+[Jan 25 2019 19:20:04] [DEBUG] main.cpp:15 main():server start success]
+[Jan 25 2019 19:20:04] [ERROR] main.cpp:21 main():[error:Success]
+[Jan 25 2019 19:21:00] [DEBUG] main.cpp:15 main():server start success
+[Jan 25 2019 19:21:00] [ERROR] main.cpp:21 main():time_now[error:2019-01-25 19:21:02]
+[Jan 25 2019 19:26:02] [DEBUG] main.cpp:15 main():server start success
+[Jan 25 2019 19:26:02] [ERROR] main.cpp:21 main():time_now:2019-01-25 19:26:09
+[Jan 25 2019 19:26:02] [ERROR] main.cpp:21 main():errno:0 err:Success
+[Jan 25 2019 19:26:02] [DEBUG] main.cpp:15 main():server start success
+[Jan 25 2019 19:26:02] [ERROR] main.cpp:21 main():time_now:2019-01-25 19:28:41
+[Jan 25 2019 19:26:02] [ERROR] main.cpp:21 main():errno:0 err:Success
+[Jan 25 2019 19:29:53] [DEBUG] main.cpp:15 main() server start success
+[Jan 25 2019 19:29:53] [ERROR] main.cpp:21 main() time_now:2019-01-25 19:30:24
+[Jan 25 2019 19:29:53] [ERROR] main.cpp:21 main() errno:0 err:Success
+[Jan 25 2019 19:29:53] [DEBUG] main.cpp:15 main() server start success
+[Jan 25 2019 19:29:53] [ERROR] main.cpp:21 main() time_now:2019-01-25 19:30:32
+[Jan 25 2019 19:29:53] [ERROR] main.cpp:21 main() errno:0 err:Success
