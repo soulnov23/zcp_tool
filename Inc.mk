@@ -10,7 +10,7 @@
 BUILD=BUILD_DEBUG
 
 CC = gcc
-CXX = g++
+CXX = g++ -std=c++11
 AR ?= ar
 ARFLAGS = -scurv
 RANLIB ?= ranlib

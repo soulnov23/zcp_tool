@@ -320,6 +320,6 @@ void co_epoll_res_free( struct co_epoll_res * ptr )
 #ifndef GZRD_SVN_ATTR
 #define GZRD_SVN_ATTR "0"
 #endif
-static char gzrd_Lib_CPP_Version_ID[] __attribute__((used))="$HeadURL: http://tc-svn.tencent.com/pub/pub_libco_rep/libco_proj/trunk/co_epoll.cpp $ $Id: co_epoll.cpp 39 2016-09-29 07:26:29Z leiffyli $ " GZRD_SVN_ATTR "__file__";
+static char gzrd_Lib_CPP_Version_ID[] __attribute__((used))="$HeadURL: https://tc-svn.tencent.com/pub/pub_libco_rep/libco_proj/trunk/co_epoll.cpp $ $Id: co_epoll.cpp 39 2016-09-29 07:26:29Z leiffyli $ " GZRD_SVN_ATTR "__file__";
 // gzrd_Lib_CPP_Version_ID--end
 
