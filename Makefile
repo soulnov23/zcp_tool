@@ -4,9 +4,9 @@ DIR_DEP=dep
 
 DIR_MODULES=comm    \
             example \
-	    lib     \
-	    obj     \
-	    src
+            lib     \
+            obj     \
+            src
 
 all:
 	@for dir in $(DIR_MODULES); do make -C $$dir; echo; done
