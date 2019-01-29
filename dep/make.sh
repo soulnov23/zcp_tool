@@ -24,6 +24,8 @@ function make_curl()
 	./configure --prefix=/tmp/curl --without-nss --with-ssl=/tmp/ssl
 	make
 	make install
+	cp -f /tmp/curl/bin/curl /usr/bin/
+	cp -f /tmp/curl/bin/curl-config /usr/bin/
 	cp -f /tmp/curl/lib/libcurl.* $2
 }
 
