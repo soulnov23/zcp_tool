@@ -56,10 +56,10 @@ OBJ_DIR=$(PROJ_PATH)/obj
 COMM_PATH=$(PROJ_PATH)/comm
 COMM_INC=$(PROJ_PATH)/comm
 
-OPEN_SSL_PATH=$(PROJ_PATH)/dep/openssl-1.0.2q
-OPEN_SSL_INC=$(PROJ_PATH)/dep/openssl-1.0.2q/include
+OPEN_SSL_PATH=$(PROJ_PATH)/dep/openssl-1.0.2k
+OPEN_SSL_INC=$(PROJ_PATH)/dep/openssl-1.0.2k/include
 
-CURL_PATH=$(PROJ_PATH)/dep/curl-7.63.0
+CURL_PATH=$(PROJ_PATH)/dep/curl-7.29.0
 CURL_INC=$(CURL_PATH)/include
 
 JSON_PATH=$(PROJ_PATH)/dep/jsoncpp-src-0.5.0

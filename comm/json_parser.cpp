@@ -1,5 +1,6 @@
 #include "json_parser.h"
 #include "printf.h"
+#include "tool.h"
 #include "json/reader.h"
 #include "json/writer.h"
 #include <fstream>
@@ -39,7 +40,7 @@ int json_to_map(map<string, string> &record, string &data)
 	return 0;
 }
 
-int map_to_json(string &data, const map<string, string> &record)
+void map_to_json(string &data, const map<string, string> &record)
 {
 	Json::Value object;
 	map<string, string>::const_iterator it;
@@ -49,4 +50,6 @@ int map_to_json(string &data, const map<string, string> &record)
 	}
 	Json::FastWriter writer;
 	data = writer.write(object);
+	string_replace(data, "\n", "");
+	string_replace(data, "\t", "");
 }

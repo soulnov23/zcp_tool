@@ -21,7 +21,7 @@ function clean_open_ssl()
 function make_curl()
 {
 	cd $1
-	./configure --prefix=/tmp/curl --with-ssl=/tmp/ssl
+	./configure --prefix=/tmp/curl --without-nss --with-ssl=/tmp/ssl
 	make
 	make install
 	cp -f /tmp/curl/lib/libcurl.* $2

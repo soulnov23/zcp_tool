@@ -1,8 +1,11 @@
 #include "tool.h"
 #include <string.h>
 
-#define FIELD_FLAG     "&"    
-#define VALUE_FLAG     "="
+#define FIELD_FLAG		"&"
+#define VALUE_FLAG		"="
+
+#define HEADER_FLAG		"\r\n"
+#define HEADER_VALUE	": "
  
 static int get_field(string &str, string &value)
 {   
@@ -65,6 +68,17 @@ void map2str(string &url, const record_t &record)
     }
 }
 
+void map2header(string &header, const record_t &record)
+{
+    for(record_t::const_iterator it = record.begin(); it != record.end(); it++)
+    {
+		header += it->first.c_str();
+		header += HEADER_VALUE;
+		header += it->second.c_str();	
+		header += HEADER_FLAG;
+    }
+}
+
 void str2map(string &buf, record_t &record)
 {
     string bvalue, fname, fvalue;
@@ -97,4 +111,36 @@ int get_time_now(string &str_now)
 		return -1;
 	}
     return 0;
+}
+
+void string_replace(string &data, const string &src, const string &dst)
+{
+	string::size_type pos=0;
+	string::size_type srclen=src.size();
+	string::size_type dstlen=dst.size();
+	while((pos=data.find(src, pos)) != string::npos)
+	{
+		data.replace(pos, srclen, dst);
+		pos += dstlen;
+	}
+}
+
+string lower(const string &src)
+{
+    string dst;
+    for(size_t i=0; i<src.length(); i++) 
+	{
+        dst += ((unsigned char)tolower(src.c_str()[i]));
+    }
+    return dst;
+}
+
+string upper(const string &src)
+{
+    string dst;
+    for(size_t i=0; i<src.length(); i++) 
+	{
+        dst += ((unsigned char)toupper(src.c_str()[i]));
+    }
+    return dst;
 }
