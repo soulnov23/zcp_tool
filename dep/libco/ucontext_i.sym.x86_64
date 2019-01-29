@@ -1,0 +1,27 @@
+#include <stddef.h>
+#include <signal.h>
+#include <sys/ucontext.h>
+
+
+#define ucontext(member)	offsetof (ucontext_t, member)
+#define mcontext(member)	ucontext (uc_mcontext.member)
+#define mreg(reg)		mcontext (gregs[REG_##reg])
+
+#include oRBP		mreg (RBP)
+#include oRSP		mreg (RSP)
+#include oRBX		mreg (RBX)
+#include oR8		mreg (R8)
+#include oR9		mreg (R9)
+#include oR10		mreg (R10)
+#include oR11		mreg (R11)
+#include oR12		mreg (R12)
+#include oR13		mreg (R13)
+#include oR14		mreg (R14)
+#include oR15		mreg (R15)
+#include oRDI		mreg (RDI)
+#include oRSI		mreg (RSI)
+#include oRDX		mreg (RDX)
+#include oRAX		mreg (RAX)
+#include oRCX		mreg (RCX)
+#include oRIP		mreg (RIP)
+#include oEFL		mreg (EFL)

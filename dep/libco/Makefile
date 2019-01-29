@@ -15,8 +15,6 @@
 # See the License for the specific language governing permissions and 
 # limitations under the License.
 #
-
-
 COMM_MAKE = 1
 COMM_ECHO = 1
 version=0.5
@@ -29,10 +27,9 @@ CFLAGS += -g -fno-strict-aliasing -O2 -Wall -export-dynamic \
 
 LINKS += -g -L./lib -lcolib -lpthread -ldl 
 
-COLIB_OBJS=co_epoll.o co_routine.o co_hook_sys_call.o coctx_swap.o coctx.o co_routine_pool.o
-#co_swapcontext.o
+COLIB_OBJS= co_aio.o co_comm.o coctx_mov.o coctx_swap_mov.o co_hook_sys_call.o co_routine.o co_routine_pool.o co_routine_specific.o co_swapcontext.o
 
-PROGS = colib example_poll example_echosvr example_echocli example_thread  example_cond example_specific example_copystack example_closure example_event example_timer 
+PROGS = colib
 
 all:$(PROGS)
 
@@ -41,38 +38,8 @@ colib:libcolib.a libcolib.so
 libcolib.a: $(COLIB_OBJS)
 	$(ARSTATICLIB) 
 libcolib.so: $(COLIB_OBJS)
-	$(BUILDSHARELIB) 
+	$(BUILDSHARELIB)
 
-example_echosvr:example_echosvr.o
-	$(BUILDEXE) 
-example_echocli:example_echocli.o
-	$(BUILDEXE) 
-example_thread:example_thread.o
-	$(BUILDEXE) 
-example_poll:example_poll.o
-	$(BUILDEXE) 
-example_exit:example_exit.o
-	$(BUILDEXE) 
-example_cond:example_cond.o
-	$(BUILDEXE)
-example_specific:example_specific.o
-	$(BUILDEXE)
-example_copystack:example_copystack.o
-	$(BUILDEXE)
-example_setenv:example_setenv.o
-	$(BUILDEXE)
-example_closure:example_closure.o
-	$(BUILDEXE)
-example_event:example_event.o
-	$(BUILDEXE)
-example_timer:example_timer.o
-	$(BUILDEXE)
-example_timeout:example_timeout.o
-	$(BUILDEXE)
-example_co_pool:example_co_pool.o
-	$(BUILDEXE)
-test_free:test_free.o
-	$(BUILDEXE)
 dist: clean libco-$(version).src.tar.gz
 
 libco-$(version).src.tar.gz:
@@ -84,4 +51,3 @@ libco-$(version).src.tar.gz:
 clean:
 	$(CLEAN) *.o $(PROGS)
 	rm -fr MANIFEST lib solib libco-$(version).src.tar.gz libco-$(version)
-

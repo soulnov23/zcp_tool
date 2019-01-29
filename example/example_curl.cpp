@@ -1,5 +1,4 @@
 #include "printf.h"
-#include "daemon.h"
 #include <iostream>
 #include <vector>
 #include <map>
@@ -30,15 +29,7 @@ void get_header(string sign, vector<string> &HeadInfo)
 }
 
 int main(int argc, char *argv[])
-{	
-	if (argc < 2)
-	{
-		cerr << "Usage: " << argv[0] << " conf_file" << endl;
-		cerr << "Sample: " << argv[0] << " ../conf/test.conf.xml" << endl;
-		return -1;
-	}
-	PRINTF_DEBUG("server start success");
-	//init_daemon(NULL);
+{
 	string private_key = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCc540quYC9xzCMZeFOe8UmE3W5LWrqFd/"
 						 "2DDSHQASxq8vmOiwFRSG2hsVXtjfmNLQNhtpTR0SGDUjkCsx+"
 "SJH0JDnOfQ2xXHasO65Rnv2wrHs64P6U0aUrMWjgapjkmLwzRV12AKNAX77MGIocpcB0KZhk+0AVc6oQCBybV65JTGu+"
