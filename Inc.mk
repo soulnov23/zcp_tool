@@ -24,14 +24,14 @@ INCLUDE ?=
 LDFLAGS ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -w
-CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -w
+CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
+CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
 INCLUDE  +=
 LDFLAGS  +=
 endif
 ifeq ($(BUILD), BUILD_DEV)
-CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -Werror
-CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -Werror
+CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -Werror
+CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -Werror
 INCLUDE  +=
 LDFLAGS  +=
 endif

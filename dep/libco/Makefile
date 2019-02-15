@@ -25,7 +25,7 @@ include co.mk
 CFLAGS += -g -fno-strict-aliasing -O2 -Wall -export-dynamic \
 	-Wall -pipe  -D_GNU_SOURCE -D_REENTRANT -fPIC -Wno-deprecated -m64
 
-LINKS += -g -L./lib -lcolib -lpthread -ldl 
+LINKS += -g -L./lib -lcolib -lpthread -ldl
 
 COLIB_OBJS= co_aio.o co_comm.o coctx_mov.o coctx_swap_mov.o co_hook_sys_call.o co_routine.o co_routine_pool.o co_routine_specific.o co_swapcontext.o
 
@@ -40,14 +40,6 @@ libcolib.a: $(COLIB_OBJS)
 libcolib.so: $(COLIB_OBJS)
 	$(BUILDSHARELIB)
 
-dist: clean libco-$(version).src.tar.gz
-
-libco-$(version).src.tar.gz:
-	@find . -type f | grep -v CVS | grep -v .svn | sed s:^./:libco-$(version)/: > MANIFEST
-	@(cd ..; ln -s libco_pub libco-$(version))
-	(cd ..; tar cvf - `cat libco_pub/MANIFEST` | gzip > libco_pub/libco-$(version).src.tar.gz)
-	@(cd ..; rm libco-$(version))
-
 clean:
 	$(CLEAN) *.o $(PROGS)
-	rm -fr MANIFEST lib solib libco-$(version).src.tar.gz libco-$(version)
+	rm -fr MANIFEST lib solib

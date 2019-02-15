@@ -38,6 +38,7 @@ function clean_curl()
 
 function make_libco()
 {
+	#yum -y install libaio libaio-devel
 	cd $1
 	make
 	cp ./lib/* $2
