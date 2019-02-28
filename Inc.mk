@@ -24,8 +24,8 @@ INCLUDE ?=
 LDFLAGS ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
-CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
+CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -Wliteral-suffix
+CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -Wliteral-suffix
 INCLUDE  +=
 LDFLAGS  +=
 endif
@@ -67,9 +67,6 @@ JSON_INC=$(JSON_PATH)/include
 
 XML_PATH=$(PROJ_PATH)/dep/tinyxml2
 XML_INC=$(PROJ_PATH)/dep/tinyxml2
-
-SPD_LOG_PATH=$(PROJ_PATH)/dep/spdlog-1.x
-SPD_LOG_INC=$(PROJ_PATH)/dep/spdlog-1.x/include
 
 LIBCO_PATH=$(PROJ_PATH)/dep/libco
 LIBCO_INC=$(PROJ_PATH)/dep/libco

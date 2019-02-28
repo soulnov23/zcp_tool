@@ -66,9 +66,9 @@ int http_proc(const std::string &strUrl,
 		curl_easy_setopt(curl, CURLOPT_COOKIE, strCookie.c_str());
 
 	curl_easy_setopt(curl, CURLOPT_URL, strUrl.c_str());
+	std::string strPostData;
 	if (mapPostData.size() != 0)
 	{
-		std::string strPostData;
 		std::map<std::string, std::string>::iterator pIt = mapPostData.begin();
 		for (;;)
 		{
@@ -330,7 +330,9 @@ int http_proc(const std::string &strUrl,
 
 	if (strPostData != "")
 	{
+		curl_easy_setopt(curl, CURLOPT_POST, 1);
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, strPostData.c_str());
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strPostData.size());
 	}
 
 	curl_easy_setopt(curl,   CURLOPT_WRITEFUNCTION,   recv_proc);

@@ -4,7 +4,7 @@ SRC := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp, %.o, $(SRC))
 BIN := test example_xml_parser example_json_parser example_curl
 
-INCLUDE += -I$(CURL_INC) -I$(JSON_INC) -I$(XML_INC) -I$(OPEN_SSL_INC) -I$(SPD_LOG_INC) -I$(LIBCO_INC) -I$(COMM_PATH)
+INCLUDE += -I$(CURL_INC) -I$(JSON_INC) -I$(XML_INC) -I$(OPEN_SSL_INC) -I$(LIBCO_INC) -I$(COMM_PATH)
 LDFLAGS += -L$(LIB_DIR) -lcurl -ljson -ltinyxml2 -lcrypto -lssl -lcolib -lcomm -laio
 
 all : clean $(BIN)
