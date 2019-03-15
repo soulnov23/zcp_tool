@@ -7,7 +7,7 @@ using namespace std;
 #include "tool.h"
 #include "json_parser.h"
 #include "rsa.h"
-#include "md5.h"
+#include "3des.h"
 
 int main(int argc, char *argv[])
 {	
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	}
 	PRINTF_DEBUG("server start success");
 	//init_daemon(NULL);
-	/*
+
 	map<string, string> params;
 	params["tranamt"] = "99";
 	params["account"] = "150426";
@@ -27,14 +27,13 @@ int main(int argc, char *argv[])
 	params["toaccount"] = "1000000";
 	params["thirdsystem"] = "cheshi";
 	params["thirdorderid"] = "20190129123456";
-	params["ordertype"] = "pc";
+	params["ordertype"] = "phone";
 	params["orderdesc"] = "iphone7";
-	params["praram1"] = "iphone7";
 	params["thirdurl"] = "http://dev.api.unipay.qq.com/cgi-bin/g_bank_cmb_provide.fcg";
 	string sign_param;
 	map2str(sign_param, params);
 	string new_sign_param;
-	Des3Str("MGY0MzVmYTRhYmRhNDUyODhhNjAwODMy", sign_param.c_str(), new_sign_param);
+	des3str("MGY0MzVmYTRhYmRhNDUyODhhNjAwODMy", sign_param.c_str(), new_sign_param);
 	string sign;
 	string private_key = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAL7UXJxVspeISrue"
 "E10yoFHXLyWjC7LFjBFzJiDMvkDoxR1KnSiTnkFBchHjuW3K6bVt0KEiVYTYy9b1"
@@ -50,11 +49,10 @@ int main(int argc, char *argv[])
 "Kb1EDQzeeMvA5aBdPplKdAjt54OKzFYoH9Exb/fK50UYbtwROlqqE7ECQC4vkwAE"
 "4sHrlAkfOpAU9w3tjAB3RK21dAmOJBtgM6YFvG1A64TgybrQZ3kf4268keFG2YKw"
 "pCj8Z+3aXW/Rvh4=";
-	calculate_rsa2_sign(new_sign_param, private_key, SIGN_CODE_BASE64, sign);
+	calculate_rsa_sign(new_sign_param, private_key, SIGN_CODE_BASE64, sign);
 	params["sign"] = sign;
 	string data;
 	map2str(data, params);
 	PRINTF_DEBUG("data:[%s]", data.c_str());
-	*/
 	return 0;
 }
