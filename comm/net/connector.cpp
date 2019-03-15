@@ -3,13 +3,13 @@
 #include <assert.h>
 #include <unistd.h>
 
-connector::connector(int fd, char *ip, void *arg)
+connector::connector(int fd, char *ip, arg *data)
 {
 	m_fd = fd;
 	m_buffer = new buffer;
 	assert(m_buffer != NULL);
 	strcpy(m_ip, ip);
-	m_arg = arg;
+	m_data = data;
 }
 
 connector::~connector()
@@ -27,10 +27,10 @@ void connector::free()
 		m_buffer = NULL;
 	}
 	memset(m_ip, 0, 20);
-	if (NULL != m_arg)
+	if (NULL != m_data)
 	{
-		delete m_arg;
-		m_arg = NULL;
+		delete m_data;
+		m_data = NULL;
 	}
 }
 

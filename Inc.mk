@@ -56,14 +56,23 @@ OBJ_DIR=$(PROJ_PATH)/obj
 COMM_PATH=$(PROJ_PATH)/comm
 COMM_INC=$(PROJ_PATH)/comm
 
+COMM_CRYPTO_PATH=$(PROJ_PATH)/comm/crypto
+COMM_CRYPTO_INC=$(PROJ_PATH)/comm/crypto
+
+COMM_NET_PATH=$(PROJ_PATH)/comm/net
+COMM_NET_INC=$(PROJ_PATH)/comm/net
+
 OPEN_SSL_PATH=$(PROJ_PATH)/dep/openssl-1.0.2k
-OPEN_SSL_INC=$(PROJ_PATH)/dep/openssl-1.0.2k/include
+OPEN_SSL_INC=$(OPEN_SSL_PATH)/include
 
 CURL_PATH=$(PROJ_PATH)/dep/curl-7.29.0
 CURL_INC=$(CURL_PATH)/include
 
-JSON_PATH=$(PROJ_PATH)/dep/jsoncpp-src-0.5.0
-JSON_INC=$(JSON_PATH)/include
+JSON_CPP_PATH=$(PROJ_PATH)/dep/jsoncpp-src-0.5.0
+JSON_CPP_INC=$(JSON_CPP_PATH)/include
+
+RAPID_JSON_PATH=$(PROJ_PATH)/dep/rapidjson
+RAPID_JSON_INC=$(PROJ_PATH)/dep/rapidjson
 
 XML_PATH=$(PROJ_PATH)/dep/tinyxml2
 XML_INC=$(PROJ_PATH)/dep/tinyxml2
