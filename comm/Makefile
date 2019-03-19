@@ -28,4 +28,9 @@ $(A_BIN) : $(OBJS)
 	$(RANLIB) $@
 
 clean :
+	@for dir in $(DIR_MODULES); \
+	do \
+		make -C $$dir clean; \
+		echo; \
+	done
 	rm -rf $(OBJS) $(SO_BIN) $(A_BIN)
