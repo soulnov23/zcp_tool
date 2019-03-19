@@ -481,7 +481,7 @@ CFLAGS = -O2 -Wno-system-headers
 CFLAG_CURL_SYMBOL_HIDING = -fvisibility=hidden
 CONFIGURE_OPTIONS = " '--prefix=/tmp/curl' '--without-nss' '--with-ssl=/tmp/ssl'"
 CPP = gcc -E
-CPPFLAGS = -I/tmp/ssl/include
+CPPFLAGS = 
 CPPFLAG_CURL_STATICLIB = 
 CURLVERSION = 7.29.0
 CURL_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"
@@ -520,7 +520,7 @@ HAVE_GNUTLS_SRP =
 HAVE_LDAP_SSL = 1
 HAVE_LIBZ = 1
 HAVE_NSS_INITCONTEXT = 
-HAVE_SSLEAY_SRP = 1
+HAVE_SSLEAY_SRP = 
 IDN_ENABLED = 
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
@@ -530,8 +530,8 @@ INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 IPV6_ENABLED = 1
 KRB4_ENABLED = 
 LD = /usr/bin/ld -m elf_x86_64
-LDFLAGS = -L/tmp/ssl/lib
-LIBCURL_LIBS = -lssl -lcrypto -lssl -lcrypto -lz
+LDFLAGS = 
+LIBCURL_LIBS = -lz
 LIBMETALINK_CPPFLAGS = 
 LIBMETALINK_LDFLAGS = 
 LIBMETALINK_LIBS = 
@@ -568,16 +568,16 @@ PKGADD_NAME = cURL - a client that groks URLs
 PKGADD_PKG = HAXXcurl
 PKGADD_VENDOR = curl.haxx.se
 PKGCONFIG = no
-RANDOM_FILE = /dev/urandom
+RANDOM_FILE = 
 RANLIB = ranlib
 REQUIRE_LIB_DEPS = no
 SED = /usr/bin/sed
 SET_MAKE = 
 SHELL = /bin/sh
-SSL_ENABLED = 1
+SSL_ENABLED = 
 STRIP = strip
-SUPPORT_FEATURES = SSL IPv6 libz NTLM NTLM_WB TLS-SRP
-SUPPORT_PROTOCOLS = DICT FILE FTP FTPS GOPHER HTTP HTTPS IMAP IMAPS POP3 POP3S RTSP SMTP SMTPS TELNET TFTP
+SUPPORT_FEATURES = IPv6 libz
+SUPPORT_PROTOCOLS = DICT FILE FTP GOPHER HTTP IMAP POP3 RTSP SMTP TELNET TFTP
 USE_ARES = 
 USE_AXTLS = 
 USE_CYASSL = 
@@ -590,7 +590,7 @@ USE_NSS =
 USE_OPENLDAP = 
 USE_POLARSSL = 
 USE_SCHANNEL = 
-USE_SSLEAY = 1
+USE_SSLEAY = 
 USE_WINDOWS_SSPI = 
 VERSION = -
 VERSIONED_FLAVOUR = 
@@ -671,7 +671,7 @@ LIBDIR = $(top_builddir)/lib
 LDADD = $(LIBDIR)/libcurl.la
 
 # Dependencies
-#LDADD = $(LIBDIR)/libcurl.la -lssl -lcrypto -lssl -lcrypto -lz
+#LDADD = $(LIBDIR)/libcurl.la -lz
 
 # These examples require external dependencies that may not be commonly
 # available on POSIX systems, so don't bother attempting to compile them here.

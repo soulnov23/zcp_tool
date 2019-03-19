@@ -83,13 +83,13 @@ while test $# -gt 0; do
 	;;
 
     --feature|--features)
-        for feature in SSL IPv6 libz NTLM NTLM_WB TLS-SRP ""; do
+        for feature in IPv6 libz ""; do
             test -n "$feature" && echo "$feature"
         done
 	;;
 
     --protocols)
-        for protocol in DICT FILE FTP FTPS GOPHER HTTP HTTPS IMAP IMAPS POP3 POP3S RTSP SMTP SMTPS TELNET TFTP; do
+        for protocol in DICT FILE FTP GOPHER HTTP IMAP POP3 RTSP SMTP TELNET TFTP; do
             echo "$protocol"
         done
 	;;
@@ -148,14 +148,14 @@ while test $# -gt 0; do
 	   CURLLIBDIR=""
 	fi
 	if test "Xno" = "Xyes"; then
-	  echo ${CURLLIBDIR}-lcurl -lssl -lcrypto -lssl -lcrypto -lz
+	  echo ${CURLLIBDIR}-lcurl -lz
 	else
 	  echo ${CURLLIBDIR}-lcurl
 	fi
 	;;
 
     --static-libs)
-	echo ${exec_prefix}/lib/libcurl.a -L/tmp/ssl/lib -lssl -lcrypto -lssl -lcrypto -lz
+	echo ${exec_prefix}/lib/libcurl.a  -lz
 	;;
 
     --configure)
