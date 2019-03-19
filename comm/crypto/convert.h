@@ -1,4 +1,4 @@
-﻿#ifndef __CONVERT_H__
+#ifndef __CONVERT_H__
 #define __CONVERT_H__
 
 #include <string>
@@ -53,3 +53,4 @@ std::string to_string(const T &value);
 */
 
 #endif
+if

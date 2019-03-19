@@ -1,4 +1,4 @@
-﻿#ifndef __CODER_H__
+#ifndef __CODER_H__
 #define __CODER_H__
 
 #include <string>
@@ -103,3 +103,4 @@ int url_encode(const std::string &str_in, std::string &str_out);
 int url_decode(const std::string &str_in, std::string &str_out);
 
 #endif
+if

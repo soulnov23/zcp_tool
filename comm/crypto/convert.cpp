@@ -1,4 +1,4 @@
-﻿#include <errno.h>
+#include <errno.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -53,4 +53,5 @@ std::string to_string(const T &value)
 	oss << value;
 	return oss.str();
 }
+*/
 */

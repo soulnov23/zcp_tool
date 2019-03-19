@@ -1,4 +1,4 @@
-﻿#ifndef __MD5_H__
+#ifndef __MD5_H__
 #define __MD5_H__
 
 #include <string>
@@ -23,3 +23,4 @@ enum md5_option
 std::string md5(const std::string &data_in, int mode = MD5_HEX);
 
 #endif
+f

@@ -52,9 +52,9 @@ void CoRoutinePool::WorkerRun(stWorker_t* worker) {
   }
 }
 
-//ÊäÈë£º»Øµ÷º¯ÊıÒÔ¼°²ÎÊı£¬»Øµ÷º¯ÊıÎŞ·µ»ØÖµ
-//·µ»ØÖµ£º 0 µ÷ÓÃĞ­³ÌÖ´ĞĞ
-//         -1 µ÷ÓÃÊ§°Ü£¬Ğ­³Ì³Ø¿Õ¼ä²»¹»
+//è¾“å…¥ï¼šå›è°ƒå‡½æ•°ä»¥åŠå‚æ•°ï¼Œå›è°ƒå‡½æ•°æ— è¿”å›å€¼
+//è¿”å›å€¼ï¼š 0 è°ƒç”¨åç¨‹æ‰§è¡Œ
+//         -1 è°ƒç”¨å¤±è´¥ï¼Œåç¨‹æ± ç©ºé—´ä¸å¤Ÿ
 int CoRoutinePool::Run(PfnWorkerCallBack func, void* args) {
   stTask_t worker(func, args);
   int ret = chn_task.PushToWait(worker);

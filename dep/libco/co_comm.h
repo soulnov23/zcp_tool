@@ -1,14 +1,14 @@
 #pragma once
 #include <vector>
 #include "co_routine.h"
-//Ð­³Ì»¥³âËø
+//åç¨‹äº’æ–¥é”
 class clsCoMutex {
  public:
   clsCoMutex();
   ~clsCoMutex();
 
-  //Ð­³ÌËøÎÞ·¨ÓÃÀ´×ö¹«Æ½µ÷¶È£¬Èç¹û±¾Ð­³ÌÒ»Ö±ÎÞÈÃ³ö²Ù×÷µÄ»°£¬ÊÇÓÐ¿ÉÄÜµ¼ÖÂÆäËüÐ­³Ì¶öËÀµÄ
-  //ÒµÎñ²»ÄÜÒÀÀµÐ­³ÌËøÊÍ·ÅÖ®ºó£¬ÆäËüÐ­³ÌÓÐ»ú»á±»µ÷¶È£¬Õâ¸öÐèÒªÒÀÀµ±¾Ð­³ÌÓÐÈÃ³ö²ÅÐÐ
+  //åç¨‹é”æ— æ³•ç”¨æ¥åšå…¬å¹³è°ƒåº¦ï¼Œå¦‚æžœæœ¬åç¨‹ä¸€ç›´æ— è®©å‡ºæ“ä½œçš„è¯ï¼Œæ˜¯æœ‰å¯èƒ½å¯¼è‡´å…¶å®ƒåç¨‹é¥¿æ­»çš„
+  //ä¸šåŠ¡ä¸èƒ½ä¾èµ–åç¨‹é”é‡Šæ”¾ä¹‹åŽï¼Œå…¶å®ƒåç¨‹æœ‰æœºä¼šè¢«è°ƒåº¦ï¼Œè¿™ä¸ªéœ€è¦ä¾èµ–æœ¬åç¨‹æœ‰è®©å‡ºæ‰è¡Œ
   void CoLock();
   void CoUnLock();
 

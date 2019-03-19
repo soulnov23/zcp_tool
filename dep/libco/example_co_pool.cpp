@@ -8,11 +8,11 @@
 using namespace std;
 
 /*
- * ʹ��Э�̳������������������ߵ�����
- * ProducerThread �������̣߳�ÿ100ms����һ��job������������circle queue��
- * TickFunc: eventloop�Ļص�������ÿһ�λص���ʱ�򣬼��circle
- * queue�����Ƿ���Ԫ�أ�����ͨ��co_routine_pool����Э��ִ��
- * DoJob�������û������ҵ���߼����������ջ���co_routine_pool�е�һ��Э����ִ�С���Ϊ��������Э��ִ�еģ�����Ҫע�ⲻ�����������á�
+ * 使用协程池来处理生产者消费者的问题
+ * ProducerThread 生产者线程，每100ms生产一个job，并放入无锁circle queue中
+ * TickFunc: eventloop的回调函数，每一次回调的时候，检查circle
+ * queue队列是否有元素，有则通过co_routine_pool调度协程执行
+ * DoJob函数：用户定义的业务逻辑函数，最终会在co_routine_pool中的一个协程中执行。因为本函数是协程执行的，所以要注意不可有阻塞调用。
  *
 */
 
