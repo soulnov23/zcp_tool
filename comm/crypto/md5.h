@@ -23,4 +23,3 @@ enum md5_option
 std::string md5(const std::string &data_in, int mode = MD5_HEX);
 
 #endif
-f

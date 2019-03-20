@@ -7,7 +7,7 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libjson.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE += -I$(JSON_INC)
+INCLUDE += -I$(JSON_CPP_INC)
 LDFLAGS +=
 
 all : clean $(SO_BIN) $(A_BIN)

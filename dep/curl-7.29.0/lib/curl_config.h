@@ -134,7 +134,7 @@
 #define HAVE_CONNECT 1
 
 /* Define to 1 if you have the `CRYPTO_cleanup_all_ex_data' function. */
-/* #undef HAVE_CRYPTO_CLEANUP_ALL_EX_DATA */
+#define HAVE_CRYPTO_CLEANUP_ALL_EX_DATA 1
 
 /* Define to 1 if you have the <crypto.h> header file. */
 /* #undef HAVE_CRYPTO_H */
@@ -146,10 +146,10 @@
 #define HAVE_DLFCN_H 1
 
 /* Define to 1 if you have the `ENGINE_cleanup' function. */
-/* #undef HAVE_ENGINE_CLEANUP */
+#define HAVE_ENGINE_CLEANUP 1
 
 /* Define to 1 if you have the `ENGINE_load_builtin_engines' function. */
-/* #undef HAVE_ENGINE_LOAD_BUILTIN_ENGINES */
+#define HAVE_ENGINE_LOAD_BUILTIN_ENGINES 1
 
 /* Define to 1 if you have the <errno.h> header file. */
 #define HAVE_ERRNO_H 1
@@ -417,7 +417,7 @@
 /* #undef HAVE_LIBSSH2_VERSION */
 
 /* Define to 1 if you have the `ssl' library (-lssl). */
-/* #undef HAVE_LIBSSL */
+#define HAVE_LIBSSL 1
 
 /* if zlib is available */
 #define HAVE_LIBZ 1
@@ -472,28 +472,28 @@
 /* #undef HAVE_OLD_GSSMIT */
 
 /* Define to 1 if you have the <openssl/crypto.h> header file. */
-/* #undef HAVE_OPENSSL_CRYPTO_H */
+#define HAVE_OPENSSL_CRYPTO_H 1
 
 /* Define to 1 if you have the <openssl/engine.h> header file. */
-/* #undef HAVE_OPENSSL_ENGINE_H */
+#define HAVE_OPENSSL_ENGINE_H 1
 
 /* Define to 1 if you have the <openssl/err.h> header file. */
-/* #undef HAVE_OPENSSL_ERR_H */
+#define HAVE_OPENSSL_ERR_H 1
 
 /* Define to 1 if you have the <openssl/pem.h> header file. */
-/* #undef HAVE_OPENSSL_PEM_H */
+#define HAVE_OPENSSL_PEM_H 1
 
 /* Define to 1 if you have the <openssl/pkcs12.h> header file. */
-/* #undef HAVE_OPENSSL_PKCS12_H */
+#define HAVE_OPENSSL_PKCS12_H 1
 
 /* Define to 1 if you have the <openssl/rsa.h> header file. */
-/* #undef HAVE_OPENSSL_RSA_H */
+#define HAVE_OPENSSL_RSA_H 1
 
 /* Define to 1 if you have the <openssl/ssl.h> header file. */
-/* #undef HAVE_OPENSSL_SSL_H */
+#define HAVE_OPENSSL_SSL_H 1
 
 /* Define to 1 if you have the <openssl/x509.h> header file. */
-/* #undef HAVE_OPENSSL_X509_H */
+#define HAVE_OPENSSL_X509_H 1
 
 /* Define to 1 if you have the <pem.h> header file. */
 /* #undef HAVE_PEM_H */
@@ -523,13 +523,13 @@
 #define HAVE_PWD_H 1
 
 /* Define to 1 if you have the `RAND_egd' function. */
-/* #undef HAVE_RAND_EGD */
+#define HAVE_RAND_EGD 1
 
 /* Define to 1 if you have the `RAND_screen' function. */
 /* #undef HAVE_RAND_SCREEN */
 
 /* Define to 1 if you have the `RAND_status' function. */
-/* #undef HAVE_RAND_STATUS */
+#define HAVE_RAND_STATUS 1
 
 /* Define to 1 if you have the recv function. */
 #define HAVE_RECV 1
@@ -604,13 +604,13 @@
 /* #undef HAVE_SPNEGO */
 
 /* if you have the function SRP_Calc_client_key */
-/* #undef HAVE_SSLEAY_SRP */
+#define HAVE_SSLEAY_SRP 1
 
 /* Define to 1 if you have the `SSLv2_client_method' function. */
-/* #undef HAVE_SSLV2_CLIENT_METHOD */
+#define HAVE_SSLV2_CLIENT_METHOD 1
 
 /* Define to 1 if you have the `SSL_get_shutdown' function. */
-/* #undef HAVE_SSL_GET_SHUTDOWN */
+#define HAVE_SSL_GET_SHUTDOWN 1
 
 /* Define to 1 if you have the <ssl.h> header file. */
 /* #undef HAVE_SSL_H */
@@ -818,10 +818,10 @@
 /* #undef NO_MINUS_C_MINUS_O */
 
 /* Define to enable NTLM delegation to winbind's ntlm_auth helper. */
-/* #undef NTLM_WB_ENABLED */
+#define NTLM_WB_ENABLED 1
 
 /* Define absolute filename for winbind's ntlm_auth helper. */
-/* #undef NTLM_WB_FILE */
+#define NTLM_WB_FILE "/usr/bin/ntlm_auth"
 
 /* cpu-machine-OS */
 #define OS "x86_64-unknown-linux-gnu"
@@ -848,7 +848,7 @@
 #define PACKAGE_VERSION "-"
 
 /* a suitable file to read random data from */
-/* #undef RANDOM_FILE */
+#define RANDOM_FILE "/dev/urandom"
 
 /* Define to the type qualifier pointed by arg 5 for recvfrom. */
 #define RECVFROM_QUAL_ARG5 
@@ -1001,7 +1001,7 @@
 /* #undef USE_OPENLDAP */
 
 /* if OpenSSL is in use */
-/* #undef USE_OPENSSL */
+#define USE_OPENSSL 1
 
 /* if PolarSSL is enabled */
 /* #undef USE_POLARSSL */
@@ -1010,13 +1010,13 @@
 /* #undef USE_SCHANNEL */
 
 /* if SSL is enabled */
-/* #undef USE_SSLEAY */
+#define USE_SSLEAY 1
 
 /* if you want POSIX threaded DNS lookup */
 /* #undef USE_THREADS_POSIX */
 
 /* Use TLS-SRP authentication */
-/* #undef USE_TLS_SRP */
+#define USE_TLS_SRP 1
 
 /* Define to 1 if you have the `normaliz' (WinIDN) library (-lnormaliz). */
 /* #undef USE_WIN32_IDN */
