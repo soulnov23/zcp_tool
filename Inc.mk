@@ -23,8 +23,8 @@ INCLUDE ?=
 LDFLAGS ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -Wliteral-suffix
-CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG -Wliteral-suffix
+CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
+CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
 INCLUDE  +=
 LDFLAGS  +=
 endif

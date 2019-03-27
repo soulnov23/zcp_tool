@@ -5,6 +5,9 @@
 #include <errno.h>
 #include <string.h>
 
+#define PRINTF_TEST(format, args...) \
+		printf("[%s %s] [DEBUG] %s:%d %s() " format"\n", __DATE__, __TIME__, __FILE__, __LINE__, __FUNCTION__, \
+		##args)
 #define PRINTF_DEBUG(format, ...) \
 		printf("[%s %s] [DEBUG] %s:%d %s() " format"\n", __DATE__, __TIME__, __FILE__, __LINE__, __FUNCTION__, \
 		##__VA_ARGS__)
