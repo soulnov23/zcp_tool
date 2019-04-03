@@ -9,6 +9,10 @@ int make_socket_reuseaddr(int fd);
 
 int make_socket_tcpnodelay(int fd);
 
+int make_socket_keepalive(int fd);
+
+int make_socket_cloexec(int fd);
+
 int set_socket_rcvbuf(int fd, int bufsize);
 
 int set_socket_sndbuf(int fd, int bufsize);
