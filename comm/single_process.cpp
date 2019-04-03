@@ -6,10 +6,10 @@
 #include <unistd.h>
 #include <string.h>
 
-#define PROCESS_SINGLE_SUCESS		0
-#define PROCESS_BEEN_RUNUING		-1
-#define PROCESS_NAME_ERROR			-2
-#define CREATE_LOCKFILE_FAILURE		-3
+#define PROCESS_SINGLE_SUCESS        0
+#define PROCESS_BEEN_RUNUING        -1
+#define PROCESS_NAME_ERROR          -2
+#define CREATE_LOCKFILE_FAILURE     -3
 
 int single_process(const char* proc_name)
 {
@@ -23,7 +23,7 @@ int single_process(const char* proc_name)
 	
 	strcat(file_lock_name,proc_name);
 
-	int	file =  open(file_lock_name, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
+	int file =  open(file_lock_name, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
 	if(-1 == file )
 	{
 		/*创建文件失败*/
