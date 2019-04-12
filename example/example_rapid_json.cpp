@@ -10,19 +10,23 @@ using namespace rapidjson;
 int main(int argc, char *argv[])
 {
 	Document document;
-    document.SetObject();
+    document.SetArray();
     Document::AllocatorType& allocator = document.GetAllocator();
-	string value = "200.00";
-	string currency = "RUB";
-	Value amount_object(kObjectType);
-	amount_object.AddMember("value", StringRef(value.c_str()), allocator);
-	amount_object.AddMember("currency", StringRef(currency.c_str()), allocator);
-	amount_object.AddMember("flag", true, allocator);
-	amount_object.AddMember("test", "yes", allocator);
 	//Value array(kArrayType);
-	//array.PushBack(amount_object, allocator);
-	//document.AddMember("amount", array, allocator);
-	document.AddMember("amount", amount_object, allocator);
+	for (int i = 0; i < 3; i++)
+	{
+		string value = "200.00";
+		string currency = "RUB";
+		bool flag = true;
+		Value amount_object(kObjectType);
+		amount_object.AddMember("value", StringRef(value.c_str()), allocator);
+		amount_object.AddMember("currency", StringRef(currency.c_str()), allocator);
+		amount_object.AddMember("flag", flag, allocator);
+		amount_object.AddMember("test", "yes", allocator);
+		document.PushBack(amount_object, allocator);		
+	}
+	//document.PushBack(array, allocator);
+	//document.AddMember("amount", amount_object, allocator);
 	StringBuffer buffer;
   	Writer<StringBuffer> writer(buffer);
   	document.Accept(writer);

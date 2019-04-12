@@ -26,8 +26,6 @@ function make_curl()
 	./configure --prefix=/tmp/curl --without-nss --with-ssl=/tmp/ssl
 	make
 	make install
-	cp -f /tmp/curl/bin/curl /usr/bin/
-	cp -f /tmp/curl/bin/curl-config /usr/bin/
 	cp -f /tmp/curl/lib/libcurl.* $2
 }
 
@@ -53,6 +51,26 @@ function clean_libco()
 	make clean
 }
 
+function make_gperf()
+{
+	#yum -y install autoconf automake gnome-common
+	cd $1
+	#./autogen.sh
+	./configure --prefix=/tmp/gperf --disable-cpu-profiler \
+	--disable-heap-profiler --disable-heap-checker \
+	--disable-debugalloc --enable-minimal
+	make
+	make install
+	cp -f /tmp/gperf/lib/libtcmalloc*.* $2/
+}
+
+function clean_gperf()
+{
+	cd $1
+	make clean
+	rm -rf /tmp/gperf
+}
+
 main()
 {
 	case $1 in
@@ -73,6 +91,12 @@ main()
 		;;
 	clean_libco)
 		clean_libco $2
+		;;
+	make_gperf)
+		make_gperf $2 $3
+		;;
+	clean_gperf)
+		clean_gperf $2
 		;;
 	*)
 		echo "error:argument is invalid"

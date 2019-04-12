@@ -29,7 +29,7 @@ int single_process(const char *proc_name)
 		/*创建文件失败*/
 		return CREATE_LOCKFILE_FAILURE;
 	}	
-	int	flag =  fcntl(file, F_GETFD);												
+	int flag =  fcntl(file, F_GETFD);												
 	flag |= FD_CLOEXEC;	
 	fcntl(file, F_SETFD, flag);	
 	struct flock file_lock;

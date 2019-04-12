@@ -23,26 +23,26 @@ INCLUDE ?=
 LDFLAGS ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
-CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -DDEBUG
+CFLAGS   += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
+CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
 INCLUDE  +=
 LDFLAGS  +=
 endif
 ifeq ($(BUILD), BUILD_DEV)
-CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -Werror
-CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -Werror
+CFLAGS   += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -Werror
+CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -Werror
 INCLUDE  +=
 LDFLAGS  +=
 endif
 ifeq ($(BUILD), BUILD_NORMAL)
-CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -O
-CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -O
+CFLAGS   += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O
+CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O
 INCLUDE  +=
 LDFLAGS  +=
 endif
 ifeq ($(BUILD), BUILD_RELEASE)
-CFLAGS   += -Wall -g -fPIC -Wl,-z -Wl,defs -O3
-CXXFLAGS += -Wall -g -fPIC -Wl,-z -Wl,defs -O3
+CFLAGS   += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O3
+CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O3
 INCLUDE  +=
 LDFLAGS  +=
 endif
@@ -78,6 +78,9 @@ XML_INC=$(PROJ_PATH)/dep/tinyxml2
 
 LIBCO_PATH=$(PROJ_PATH)/dep/libco
 LIBCO_INC=$(PROJ_PATH)/dep/libco
+
+GPERF_PATH=$(PROJ_PATH)/dep/gperftools
+GPERF_INC=$(GPERF_PATH)/src
 
 #自动计算文件的依赖关系
 .%.d: %.cpp
