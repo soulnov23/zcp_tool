@@ -14,7 +14,7 @@ public:
 
 int print(int n1, int n2)
 {
-	PRINTF_DEBUG("print %d %d", n1, n2);
+	PRINTF_ERROR("print %d %d", n1, n2);
 	return 0;
 }
 int main(int argc, char *argv[])

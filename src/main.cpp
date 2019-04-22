@@ -24,6 +24,6 @@ int main(int argc, char *argv[])
 	cout << str << endl;
 	int num = AND(8);
 	cout << num << endl;
-	PRINTF_TEST("TEST:%d", 10);
+	PRINTF_DEBUG("TEST:%d", 10);
 	return 0;
 }

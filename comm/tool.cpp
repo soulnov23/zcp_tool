@@ -1,5 +1,7 @@
 #include "tool.h"
 #include <string.h>
+#include <sys/time.h>
+#include <time.h>
 
 #define FIELD_FLAG		"&"
 #define VALUE_FLAG		"="
@@ -94,6 +96,7 @@ void str2map(string &buf, record_t &record)
 	}
 }
 
+/*localtime非线程安全
 int get_time_now(string &str_now)
 {
 	const string format = "%Y-%m-%d %H:%M:%S";
@@ -110,6 +113,31 @@ int get_time_now(string &str_now)
 	{
 		return -1;
 	}
+	return 0;
+}
+*/
+
+int get_time_now(string &str_now)
+{
+	struct timeval tv;
+	struct tm timestamp;
+	if (gettimeofday(&tv, NULL) == -1)
+    {
+		return -1;
+    }
+    time_t now = tv.tv_sec;
+    if (localtime_r(&now, &timestamp) == NULL)
+    {	
+		return -1;
+    }
+	char buf[128];
+	if (snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d %06d",
+             timestamp.tm_year + 1900, timestamp.tm_mon + 1, timestamp.tm_mday,
+             timestamp.tm_hour, timestamp.tm_min, timestamp.tm_sec, (int)(tv.tv_usec)) < 0)
+	{
+		return -1;
+    }
+	str_now = buf;
 	return 0;
 }
 

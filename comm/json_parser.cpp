@@ -50,6 +50,6 @@ void map_to_json(string &data, const map<string, string> &record)
 	}
 	Json::FastWriter writer;
 	data = writer.write(object);
-	string_replace(data, "\n", "");
-	string_replace(data, "\t", "");
+	//string_replace(data, "\n", "");
+	//string_replace(data, "\t", "");
 }
