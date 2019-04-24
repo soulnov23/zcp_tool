@@ -12,7 +12,6 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	/*
 	map<string, string> data;
 	data["appId"] 		= "24152";
 	data["requestId"]   = "123456789";
@@ -56,8 +55,8 @@ int main(int argc, char *argv[])
 		PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
 	}
 	PRINTF_DEBUG("recv_data:[%s]", recv_data.c_str());
-	*/
 
+/*
 	map<string, string> data;
 	data["appId"] 		= "24152";
 	data["requestId"]   = to_string(time(NULL));
@@ -101,5 +100,6 @@ int main(int argc, char *argv[])
 		PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
 	}
 	PRINTF_DEBUG("recv_data:[%s]", recv_data.c_str());
+*/
 	return 0;
 }
