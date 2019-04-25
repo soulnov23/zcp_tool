@@ -1,6 +1,7 @@
 #include "printf.h"
 #include <thread>
 using namespace std;
+#include "tool.h"
 
 class test
 {
@@ -23,5 +24,13 @@ int main(int argc, char *argv[])
 	thread t2(test::print, "hello", "world");
 	t1.join();
 	t2.join();
+	string str("ab,ac,ad");
+	vector_t vec;
+	str2vec(str, ",", vec);
+	vector_t::iterator it;
+	for (it = vec.begin(); it != vec.end(); it++)
+	{
+		PRINTF_ERROR("%s", (*it).c_str());
+	}
 	return 0;
 }

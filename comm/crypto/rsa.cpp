@@ -5,7 +5,6 @@
 #include "openssl/bio.h"
 #include "openssl/evp.h"
 #include "openssl/err.h"
-#include "convert.h"
 #include "coder.h"
 #include "rsa.h"
 #include "printf.h"

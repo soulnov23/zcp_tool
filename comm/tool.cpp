@@ -81,7 +81,7 @@ void map2header(string &header, const record_t &record)
 	}
 }
 
-void str2map(string &buf, record_t &record)
+void str2map(const string &buf, record_t &record)
 {
 	string bvalue, fname, fvalue;
 
@@ -93,6 +93,24 @@ void str2map(string &buf, record_t &record)
 			continue;
 		}
 		record[fname]=fvalue; 
+	}
+}
+
+void str2vec(const string &buf, const string &field, vector_t &vec)
+{
+	vec.clear();
+	size_t offset = 0;
+	size_t next = 0;
+	while (true)
+	{
+		next = buf.find_first_of(field, offset);
+		if (next == string::npos)
+		{
+			vec.push_back(buf.substr(offset));
+			break;
+		}
+		vec.push_back(buf.substr(offset, next-offset));
+		offset = next + 1;
 	}
 }
 
@@ -153,22 +171,25 @@ void string_replace(string &data, const string &src, const string &dst)
 	}
 }
 
-string lower(const string &src)
+void string_lower(string &str)
 {
-	string dst;
-	for(size_t i=0; i<src.length(); i++) 
+	for (string::iterator i = str.begin(); i != str.end(); i++)
 	{
-		dst += ((unsigned char)tolower(src.c_str()[i]));
+		*i = tolower(*i);		
 	}
-	return dst;
 }
 
-string upper(const string &src)
+void string_upper(string &str)
 {
-	string dst;
-	for(size_t i=0; i<src.length(); i++) 
+	for (string::iterator i = str.begin(); i != str.end(); i++)
 	{
-		dst += ((unsigned char)toupper(src.c_str()[i]));
+		*i = toupper(*i);		
 	}
-	return dst;
+}
+
+const string longlong_to_string(long long ll)
+{
+    char tmp[128] = {0};
+    snprintf(tmp, sizeof(tmp)-1, "%lld", ll);
+    return tmp;
 }
