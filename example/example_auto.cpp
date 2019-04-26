@@ -4,13 +4,27 @@
 using namespace std;
 
 template<typename T>
-void print_vec(T &t)
+void print_vector(T &t)
+{
+	for (auto it = t.begin(); it < t.end(); it++)
+	{
+		cout << *it << endl;
+	}
+}
+
+template<typename T>
+void print_map(T &t)
 {
 	for (auto it = t.begin(); it != t.end(); it++)
 	{
 		cout << it->first << ":" << it->second << endl;
 	}
 }
+
+/*
+map<string, string> record;
+map<string, string>::iterator it;
+PRINTF_MAP(record, it);
 
 template <typename T1, typename T2, typename T3>
 void PRINTF_MAP(map<T1, T2> &record, T3 &it)
@@ -22,25 +36,25 @@ void PRINTF_MAP(map<T1, T2> &record, T3 &it)
 		it++;
 	}
 }
+*/
 
 int main(int argc, char *argv[])
 {
 	int i;
 	decltype(i) j = 10;
-	cout << typeid(j).name() << endl;
-
+	const type_info &info = typeid(j);
+	cout << info.name() << endl;
 
 	vector<string> vec;
 	vec.push_back("ab");
 	vec.push_back("ac");
 	vec.push_back("ad");
-	print_vec(vec);
-
+	print_vector(vec);
 
 	map<int, string> record;
 	record.insert(pair<int, string>(1, "ab"));
 	record.insert(pair<int, string>(2, "ac"));
 	record.insert(pair<int, string>(3, "ad"));
-	print_vec(record);
+	print_map(record);
 	return 0;
 }

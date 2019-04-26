@@ -8,7 +8,7 @@
 
 #define HEADER_FLAG		"\r\n"
 #define HEADER_VALUE	": "
- 
+
 static int get_field(string &str, string &value)
 {
 	if(str.size() ==0)
