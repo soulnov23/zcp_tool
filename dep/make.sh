@@ -39,7 +39,7 @@ function clean_curl()
 
 function make_libco()
 {
-	#yum -y install libaio libaio-devel
+	yum -y install libaio libaio-devel
 	cd $1
 	make
 	cp ./lib/* $2
@@ -54,9 +54,9 @@ function clean_libco()
 
 function make_gperf()
 {
-	#yum -y install autoconf automake gnome-common
+	yum -y install autoconf automake gnome-common
 	cd $1
-	#./autogen.sh
+	./autogen.sh
 	./configure --prefix=/tmp/gperf --disable-cpu-profiler \
 	--disable-heap-profiler --disable-heap-checker \
 	--disable-debugalloc --enable-minimal
