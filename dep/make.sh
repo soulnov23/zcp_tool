@@ -5,6 +5,7 @@ set -x
 function make_open_ssl()
 {
 	cd $1
+	chmod -R 777 ./
 	#Makefile is older than Makefile.org, Configure or config.
 	./config
 	./config shared --prefix=/tmp/ssl
