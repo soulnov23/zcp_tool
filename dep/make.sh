@@ -24,6 +24,7 @@ function clean_open_ssl()
 function make_curl()
 {
 	cd $1
+	chmod -R 777 ./
 	./configure --prefix=/tmp/curl --without-nss --with-ssl=/tmp/ssl
 	make
 	make install
@@ -56,6 +57,7 @@ function make_gperf()
 {
 	yum -y install autoconf automake gnome-common
 	cd $1
+	chmod -R 777 ./
 	./autogen.sh
 	./configure --prefix=/tmp/gperf --disable-cpu-profiler \
 	--disable-heap-profiler --disable-heap-checker \
