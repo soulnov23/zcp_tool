@@ -56,5 +56,6 @@ int main(int argc, char *argv[])
 	record.insert(pair<int, string>(2, "ac"));
 	record.insert(pair<int, string>(3, "ad"));
 	print_map(record);
+	
 	return 0;
 }
