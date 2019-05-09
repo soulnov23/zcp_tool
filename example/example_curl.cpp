@@ -8,6 +8,7 @@ using namespace std;
 #include "rsa.h"
 #include "md5.h"
 #include "http_handle.h"
+#include "coder.h"
 
 void get_header(string sign, vector<string> &HeadInfo)
 {
@@ -18,7 +19,8 @@ void get_header(string sign, vector<string> &HeadInfo)
 				   "secret=" + app_key + "&" + 
 				   "sign=" + sign + "&" +
 				   "timestamp=" + now_time;
-	string api_sign = lower(md5(param));
+	string api_sign = md5(param);
+	string_lower(api_sign);
 	HeadInfo.push_back("Content-Type: application/json");
 	HeadInfo.push_back("appid: 8ab74856-8772-45c9-96db-54cb30ab9f74");
 	string timestamp = "timestamp: " + now_time;
@@ -30,6 +32,7 @@ void get_header(string sign, vector<string> &HeadInfo)
 
 int main(int argc, char *argv[])
 {
+	/*
 	string private_key = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCc540quYC9xzCMZeFOe8UmE3W5LWrqFd/"
 						 "2DDSHQASxq8vmOiwFRSG2hsVXtjfmNLQNhtpTR0SGDUjkCsx+"
 "SJH0JDnOfQ2xXHasO65Rnv2wrHs64P6U0aUrMWjgapjkmLwzRV12AKNAX77MGIocpcB0KZhk+0AVc6oQCBybV65JTGu+"
@@ -83,5 +86,14 @@ int main(int argc, char *argv[])
 		PRINTF_ERROR("http_proc failed");
 	}
 	PRINTF_DEBUG("recv_data=[%s]", recv_data.c_str());
+	*/
+	string test("aaa,bbb");
+	string temp;
+	url_encode(test, temp);
+	PRINTF_DEBUG("test:%s", temp.c_str());
+
+	test = "aaa%2cbbb";
+	url_decode(test, temp);
+	PRINTF_DEBUG("test:%s", temp.c_str());
 	return 0;
 }

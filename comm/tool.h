@@ -15,12 +15,14 @@ void str2map(const string &buf, record_t &record);
 void str2vec(const string &buf, const string &field, vector_t &vec);
 
 int get_time_now(string &str_now);
+//字符串时间格式2019-05-09 11:17:55
+time_t str_time2date(const string &str_time);
+string date2str_time(time_t time);
 
 void string_replace(string &data, const string &src, const string &dst);
 void string_lower(string &str);
 void string_upper(string &str);
 
 const string longlong_to_string(long long ll);
-
 
 #endif

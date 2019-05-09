@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 	}
 	//document.PushBack(array, allocator);
 	//document.AddMember("amount", amount_object, allocator);
+
 	StringBuffer buffer;
   	Writer<StringBuffer> writer(buffer);
   	document.Accept(writer);

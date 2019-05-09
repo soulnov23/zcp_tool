@@ -5,7 +5,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include "printf.h"
-#include "socket_option.h"
+#include "net_comm.h"
 #include <string>
 using namespace std;
 

@@ -3,8 +3,8 @@ include ../Inc.mk
 SRC := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp, %.o, $(SRC))
 #BIN := $(patsubst %.cpp, %, $(SRC))
-BIN := example_lambda
-#BIN := test example_xml_parser example_json_parser example_rapid_json example_curl example_libco example_epoll example_auto
+#BIN := example_lambda
+BIN := test example_xml_parser example_json_parser example_rapid_json example_curl example_libco example_epoll example_auto example_lambda
 
 INCLUDE += -I$(COMM_INC) -I$(COMM_CRYPTO_INC) -I$(COMM_NET_INC) -I$(XML_INC) -I$(JSON_CPP_INC) -I$(RAPID_JSON_INC) \
            -I$(OPEN_SSL_INC) -I$(CURL_INC) -I$(LIBCO_INC)

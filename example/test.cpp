@@ -4,7 +4,7 @@
 using namespace std;
 
 template<typename T>
-void print_vec(T &t)
+void printf_map(T &t)
 {
 	for (auto it = t.begin(); it != t.end(); it++)
 	{
@@ -29,18 +29,15 @@ int main(int argc, char *argv[])
 	decltype(i) j = 10;
 	cout << typeid(j).name() << endl;
 
-
 	vector<string> vec;
 	vec.push_back("ab");
 	vec.push_back("ac");
 	vec.push_back("ad");
-	print_vec(vec);
-
 
 	map<int, string> record;
 	record.insert(pair<int, string>(1, "ab"));
 	record.insert(pair<int, string>(2, "ac"));
 	record.insert(pair<int, string>(3, "ad"));
-	print_vec(record);
+	printf_map(record);
 	return 0;
 }

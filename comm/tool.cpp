@@ -159,6 +159,40 @@ int get_time_now(string &str_now)
 	return 0;
 }
 
+time_t str_time2date(const string &str_time)
+{
+	struct tm st_time;
+	sscanf(str_time.c_str(), 
+		   "%04d-%02d-%02d %02d:%02d:%02d",
+		   &st_time.tm_year, 
+		   &st_time.tm_mon, 
+		   &st_time.tm_mday,
+		   &st_time.tm_hour, 
+		   &st_time.tm_min, 
+		   &st_time.tm_sec);
+	st_time.tm_year -= 1900;
+	st_time.tm_mon -= 1;
+	st_time.tm_isdst = 0;
+	return mktime(&st_time);
+}
+
+string date2str_time(time_t time)
+{
+	struct tm st_time;
+	localtime_r(&time, &st_time);
+
+	char date[30];
+	snprintf(date, sizeof(date),
+			"%04d-%02d-%02d %02d:%02d:%02d",
+			st_time.tm_year + 1900,
+			st_time.tm_mon + 1,
+			st_time.tm_mday,
+			st_time.tm_hour,
+			st_time.tm_min,
+			st_time.tm_sec);
+	return date;
+}
+
 void string_replace(string &data, const string &src, const string &dst)
 {
 	string::size_type pos=0;
