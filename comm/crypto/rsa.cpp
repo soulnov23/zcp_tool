@@ -6,6 +6,7 @@
 #include "openssl/evp.h"
 #include "openssl/err.h"
 #include "coder.h"
+#include "base64.h"
 #include "rsa.h"
 #include "printf.h"
 

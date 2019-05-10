@@ -34,6 +34,7 @@ gcc支持的做法，支持arg可变参传入
 	{ \
 		printf("[DEBUG] [%s:%d %s()] " format"\n", __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
 	} \
+	fflush(stdout); \
 }
 
 #define PRINTF_ERROR(format, ...) \
@@ -50,6 +51,7 @@ gcc支持的做法，支持arg可变参传入
 		printf(RED_PRINT_BEG "[ERROR] [%s:%d %s()] [errno:%d err:%s] " format"\n" RED_PRINT_END, __FILE__, __LINE__, \
 		__FUNCTION__, errno, strerror(errno), ##__VA_ARGS__); \
 	} \
+	fflush(stdout); \
 }
 
 #endif

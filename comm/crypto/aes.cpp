@@ -1,5 +1,6 @@
 #include "aes.h"
 #include "coder.h"
+#include "base64.h"
 #include "printf.h"
 #include "openssl/evp.h"
 #include "openssl/err.h"

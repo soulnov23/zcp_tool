@@ -5,8 +5,9 @@
 #include <signal.h>
 #include <unistd.h>
 #include "printf.h"
-#include "net_comm.h"
+#include "net_utils.h"
 #include <string>
+#include <iostream>
 using namespace std;
 
 int epoll_fd;
@@ -131,6 +132,9 @@ void do_recv(int fd)
 
 int main(int argc, char *argv[])
 {
+	PRINTF_DEBUG("example_epoll start success");
+	PRINTF_DEBUG("push");
+	//cout << "push" << endl;
 	epoll_fd = epoll_create1(0);
 	if (-1 == epoll_fd)
 	{

@@ -1,4 +1,5 @@
 #include "tool.h"
+#include "coder.h"
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
@@ -8,111 +9,6 @@
 
 #define HEADER_FLAG		"\r\n"
 #define HEADER_VALUE	": "
-
-static int get_field(string &str, string &value)
-{
-	if(str.size() ==0)
-	{	
-		return 0;
-	}
-
-	string::size_type start = str.find(FIELD_FLAG);
-	if(start == string::npos || start !=0)
-	{
-		start= 0;
-	}
-	else
-	{
-		start += strlen(FIELD_FLAG);
-	}
-
-	string::size_type end = str.find(FIELD_FLAG, start);
-	if(end == string::npos)
-	{
-		end = str.size();
-	}
-
-	value = str.substr(start, end - start);
-	str = str.substr(end);
-
-	return 1;
-}
- 
-static int get_value(const string &str, string &name, string &value)
-{
-	string::size_type pos = str.find(VALUE_FLAG);
-	if(pos == string::npos)
-	{
-		return 0;
-	}
-
-	name = str.substr(0, pos);
-	value = str.substr(pos + strlen(VALUE_FLAG));
-
-	return 1;
-}
-
-
-void map2str(string &url, const record_t &record)
-{
-	for(record_t::const_iterator it = record.begin(); it != record.end(); it++)
-	{
-		url += it->first.c_str();
-		url += VALUE_FLAG;
-		url += it->second.c_str();	
-		url += FIELD_FLAG;
-	}
-
-	if(url.size())
-	{
-		string tmp(url.c_str(), url.size()-1);
-		url = tmp;
-	}
-}
-
-void map2header(string &header, const record_t &record)
-{
-	for(record_t::const_iterator it = record.begin(); it != record.end(); it++)
-	{
-		header += it->first.c_str();
-		header += HEADER_VALUE;
-		header += it->second.c_str();	
-		header += HEADER_FLAG;
-	}
-}
-
-void str2map(const string &buf, record_t &record)
-{
-	string bvalue, fname, fvalue;
-
-	string stbuf = buf;
-	while(get_field(stbuf, bvalue))
-	{
-		if(!get_value(bvalue, fname, fvalue))
-		{
-			continue;
-		}
-		record[fname]=fvalue; 
-	}
-}
-
-void str2vec(const string &buf, const string &field, vector_t &vec)
-{
-	vec.clear();
-	size_t offset = 0;
-	size_t next = 0;
-	while (true)
-	{
-		next = buf.find_first_of(field, offset);
-		if (next == string::npos)
-		{
-			vec.push_back(buf.substr(offset));
-			break;
-		}
-		vec.push_back(buf.substr(offset, next-offset));
-		offset = next + 1;
-	}
-}
 
 /*localtime非线程安全
 int get_time_now(string &str_now)
@@ -226,4 +122,113 @@ const string longlong_to_string(long long ll)
     char tmp[128] = {0};
     snprintf(tmp, sizeof(tmp)-1, "%lld", ll);
     return tmp;
+}
+
+void str2vec(const string &buf, const string &field, vector_t &vec)
+{
+	vec.clear();
+	size_t offset = 0;
+	size_t next = 0;
+	while (true)
+	{
+		next = buf.find_first_of(field, offset);
+		if (next == string::npos)
+		{
+			vec.push_back(buf.substr(offset));
+			break;
+		}
+		vec.push_back(buf.substr(offset, next-offset));
+		offset = next + 1;
+	}
+}
+
+static int get_field(string &str, string &value)
+{
+	if(str.size() == 0)
+	{	
+		return 0;
+	}
+
+	string::size_type start = str.find(FIELD_FLAG);
+	if(start == string::npos || start != 0)
+	{
+		start= 0;
+	}
+	else
+	{
+		start += strlen(FIELD_FLAG);
+	}
+
+	string::size_type end = str.find(FIELD_FLAG, start);
+	if(end == string::npos)
+	{
+		end = str.size();
+	}
+
+	value = str.substr(start, end - start);
+	str = str.substr(end);
+
+	return 1;
+}
+ 
+static int get_value(const string &str, string &name, string &value)
+{
+	string::size_type pos = str.find(VALUE_FLAG);
+	if(pos == string::npos)
+	{
+		return 0;
+	}
+
+	name = str.substr(0, pos);
+	value = str.substr(pos + strlen(VALUE_FLAG));
+
+	return 1;
+}
+
+
+void map2str(string &buf, const record_t &record, bool encode/*=true*/)
+{
+	for(record_t::const_iterator it = record.begin(); it != record.end(); it++)
+	{
+		buf += FIELD_FLAG + it->first;
+		if (encode)
+		{
+			string result;
+			url_encode(it->second, result);
+			buf += VALUE_FLAG + result;
+		}
+		else
+		{
+			buf += VALUE_FLAG + it->second;
+		}
+	}
+
+	if(!buf.empty())
+	{
+		buf = buf.substr(1);
+	}
+}
+
+void str2map(record_t &record, const string &buf, bool encode/*=true*/)
+{
+	string bvalue, fname, fvalue;
+
+	string stbuf = buf;
+	while (get_field(stbuf, bvalue))
+	{
+		if (!get_value(bvalue, fname, fvalue))
+		{
+			continue;
+		}
+		if (encode)
+		{
+			string result;
+			url_decode(fvalue, result);
+			record[fname] = result;
+		}
+		else
+		{
+			record[fname] = fvalue;
+		}
+	}
 }

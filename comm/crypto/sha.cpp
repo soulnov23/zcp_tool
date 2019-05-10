@@ -1,5 +1,6 @@
 #include "sha.h"
 #include "coder.h"
+#include "base64.h"
 #include "openssl/evp.h"
 #include "openssl/sha.h"
 #include "openssl/hmac.h"

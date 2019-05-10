@@ -1,7 +1,6 @@
 include ../Inc.mk
 
-DIR_MODULES=crypto \
-            net
+DIR_MODULES=crypto
 
 SRC := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp, %.o, $(SRC))

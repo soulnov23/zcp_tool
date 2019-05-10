@@ -25,5 +25,9 @@ int main(int argc, char *argv[])
 	int num = AND(8);
 	cout << num << endl;
 	PRINTF_DEBUG("TEST:%d", 10);
+	while (true)
+	{
+		;
+	}
 	return 0;
 }
