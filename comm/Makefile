@@ -32,4 +32,4 @@ clean :
 		make -C $$dir clean; \
 		echo; \
 	done
-	rm -rf $(OBJS) $(SO_BIN) $(A_BIN)
+	rm -rf $(OBJS) $(SO_BIN) $(A_BIN) *.o

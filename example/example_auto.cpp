@@ -1,6 +1,8 @@
 #include "printf.h"
 #include <typeinfo>
 #include <iostream>
+#include <vector>
+#include <map>
 using namespace std;
 
 template<typename T>

@@ -40,4 +40,4 @@ example_lambda : example_lambda.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 clean :
-	rm -rf $(OBJS) $(BIN)
+	rm -rf $(OBJS) $(BIN) *.o

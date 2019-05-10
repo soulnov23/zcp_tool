@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#include "tool.h"
+#include "time_utils.h"
 
 #define RED_PRINT_BEG     "\e[1;31m"
 #define RED_PRINT_END     "\e[m"

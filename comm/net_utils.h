@@ -1,5 +1,5 @@
-#ifndef __NET_COMM_H__
-#define __NET_COMM_H__
+#ifndef __NET_UTILS_H__
+#define __NET_UTILS_H__
 
 #include <string>
 using namespace std;

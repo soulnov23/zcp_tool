@@ -20,4 +20,4 @@ $(A_BIN) : $(OBJS)
 	$(RANLIB) $@
 
 clean :
-	rm -rf $(OBJS) $(SO_BIN) $(A_BIN)
+	rm -rf $(OBJS) $(SO_BIN) $(A_BIN) *.o
