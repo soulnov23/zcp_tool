@@ -83,7 +83,7 @@ int set_socket_sndbuf(int fd, int bufsize)
 	return setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof(bufsize));
 }
 
-string net_int_ip2str(int32_t ip)
+string net_int_ip2str(uint32_t ip)
 {
 	struct sockaddr_in addr_in;
 	char buf[128] = {0};
@@ -92,12 +92,12 @@ string net_int_ip2str(int32_t ip)
 	return buf;
 }
 
-string host_int_ip2str(int32_t ip)
+string host_int_ip2str(uint32_t ip)
 {
 	return net_int_ip2str(htonl(ip));
 }
 
-int32_t str2net_int_ip(const string &ip)
+uint32_t str2net_int_ip(const string &ip)
 {
 	if (ip.empty())
 	{
@@ -114,7 +114,35 @@ int32_t str2net_int_ip(const string &ip)
 	return addr_in.sin_addr.s_addr;
 }
 
-int32_t str2host_int_ip(const string &ip)
+uint32_t str2host_int_ip(const string &ip)
 {
 	return ntohl(str2net_int_ip(ip));
+}
+
+int get_peer_name(int fd, uint32_t &peer_addr, uint16_t &peer_port)
+{
+	struct sockaddr_in addr;
+	socklen_t len = sizeof(addr);
+	if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1)
+	{
+		PRINTF_ERROR("getpeername(%d) error", fd);
+		return -1;
+	}
+	peer_addr = addr.sin_addr.s_addr;
+	peer_port = addr.sin_port;
+	return 0;
+}
+
+int get_sock_name(int fd, uint32_t &peer_addr, uint16_t &peer_port)
+{
+	struct sockaddr_in addr;
+	socklen_t len = sizeof(addr);
+	if (getsockname(fd, (struct sockaddr*)(&addr), &len) == -1)
+	{
+		PRINTF_ERROR("getsockname(%d) error", fd);
+		return -1;
+	}
+	peer_addr = addr.sin_addr.s_addr;
+	peer_port = addr.sin_port;
+	return 0;
 }
