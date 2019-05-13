@@ -1,12 +1,57 @@
 #include "utils.h"
 #include "coder.h"
 #include <string.h>
+#include <algorithm>
 
 #define FIELD_FLAG		"&"
 #define VALUE_FLAG		"="
 
 #define HEADER_FLAG		"\r\n"
 #define HEADER_VALUE	": "
+
+/*
+static string& ltrim(string &ss, int (*pf)(int)=isspace)
+{
+    string::iterator p = find_if(ss.begin(), ss.end(), not1(ptr_fun(pf)));
+    ss.erase(ss.begin(), p);
+    return ss;
+}
+
+static string& rtrim(string &ss, int (*pf)(int)=isspace)
+{
+    string::reverse_iterator p = find_if(ss.rbegin(), ss.rend(), not1(ptr_fun(pf)));
+    ss.erase(p.base(), ss.end());
+    return ss;
+}
+
+void string_trim(string &str)
+{
+	ltrim(rtrim(str));
+}
+
+std::string int_to_string(int i)
+{
+	char szTemp[64];
+	snprintf(szTemp,sizeof(szTemp),"%d",i);
+	return std::string(szTemp);
+}
+
+//%m.nf m表示输出数据总宽度过大左边补空格（包括小数点.）n表示数据精度
+//%.nf 总长度不限小数点后面保留n位不足补零
+std::string double_to_string(double i)
+{
+	char szTemp[64];
+	snprintf(szTemp,sizeof(szTemp),"%.2f",i);
+	return std::string(szTemp);
+}
+
+std::string uint_to_string(unsigned int i)
+{
+	char szTemp[64];
+	snprintf(szTemp,sizeof(szTemp),"%u",i);
+	return std::string(szTemp);
+}
+*/
 
 void string_replace(string &data, const string &src, const string &dst)
 {

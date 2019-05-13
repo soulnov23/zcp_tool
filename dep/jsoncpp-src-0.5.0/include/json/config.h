@@ -1,8 +1,8 @@
 #ifndef JSON_CONFIG_H_INCLUDED
-# define JSON_CONFIG_H_INCLUDED
+#define JSON_CONFIG_H_INCLUDED
 
 /// If defined, indicates that json library is embedded in CppTL library.
-//# define JSON_IN_CPPTL 1
+//#define JSON_IN_CPPTL 1
 
 /// If defined, indicates that json may leverage CppTL library
 //#  define JSON_USE_CPPTL 1
@@ -21,7 +21,7 @@
 
 /// If defined, indicates that Json use exception to report invalid type manipulation
 /// instead of C assert macro.
-# define JSON_USE_EXCEPTION 1
+#define JSON_USE_EXCEPTION 1
 
 # ifdef JSON_IN_CPPTL
 #  include <cpptl/config.h>
