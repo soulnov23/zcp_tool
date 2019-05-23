@@ -35,6 +35,12 @@ function clean_curl()
 {
 	cd $1
 	make clean
+	rm -rf ./docs/examples/.deps
+	rm -rf ./lib/.deps
+	rm -rf ./src/.deps
+	rm -rf ./tests/libtest/.deps
+	rm -rf ./tests/server/.deps
+	rm -rf ./tests/unit/.deps
 	rm -rf /tmp/curl
 }
 
