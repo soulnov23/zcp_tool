@@ -11,6 +11,7 @@ set -x
 
 main()
 {
+	rm -rf ./.vscode/ipch
 	cp -rf ./lib /tmp
 	make clean
 	git pull

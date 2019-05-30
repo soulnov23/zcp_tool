@@ -1,0 +1,12 @@
+{"response":{
+"result":"SUCCESS",
+"resultCode":"err",
+"resultDescription":"err",
+"resultDetail":"err"
+},
+"tokenData":{
+"token":"token",
+"redirectUrl":"test.com",
+"expiryDate":"2018-09-09"
+}
+}

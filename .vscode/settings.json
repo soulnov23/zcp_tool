@@ -1,5 +1,34 @@
 {
-    "files.associations": {
-        "array": "cpp"
+    "C_Cpp.default.includePath": [
+        "E:/project/include/include",
+        "E:/project/include/include/c++/4.8.2",
+        "E:/project/include/include/c++/4.8.2/backward",
+        "E:/project/include/include/c++/4.8.2/bits",
+        "E:/project/include/include/c++/4.8.2/debug",
+        "E:/project/include/include/c++/4.8.2/decimal",
+        "E:/project/include/include/c++/4.8.2/ext",
+        "E:/project/include/include/c++/4.8.2/ext/pb_ds",
+        "E:/project/include/include/c++/4.8.2/ext/detail",
+        "E:/project/include/include/c++/4.8.2/parallel",
+        "E:/project/include/include/c++/4.8.2/profile",
+        "E:/project/include/include/c++/4.8.2/profile/impl",
+        "E:/project/include/include/c++/4.8.2/tr1",
+        "E:/project/include/include/c++/4.8.2/tr2",
+        "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux",
+        "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux/bits",
+        "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux/ext",
+        "${workspaceRoot}/comm",
+        "${workspaceRoot}/comm/cryto",
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/dep/curl-7.29.0": true,
+        "**/dep/openssl-1.0.2k": true,
+        "**/dep/gperftools": true,
+        "**/*.o": true,
     }
 }
