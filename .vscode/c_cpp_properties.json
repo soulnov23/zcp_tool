@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "E:/project/include/include",
+                "E:/project/include/include/c++/4.8.2",
+                "E:/project/include/include/c++/4.8.2/backward",
+                "E:/project/include/include/c++/4.8.2/bits",
+                "E:/project/include/include/c++/4.8.2/debug",
+                "E:/project/include/include/c++/4.8.2/decimal",
+                "E:/project/include/include/c++/4.8.2/ext",
+                "E:/project/include/include/c++/4.8.2/ext/pb_ds",
+                "E:/project/include/include/c++/4.8.2/parallel",
+                "E:/project/include/include/c++/4.8.2/profile",
+                "E:/project/include/include/c++/4.8.2/profile/impl",
+                "E:/project/include/include/c++/4.8.2/tr1",
+                "E:/project/include/include/c++/4.8.2/tr2",
+                "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux",
+                "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux/bits",
+                "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux/ext",
+                "${workspaceRoot}",
+                "${workspaceRoot}/comm",
+                "${workspaceRoot}/comm/crypto",
+                "${workspaceRoot}/dep/openssl-1.0.2k/include",
+                "${workspaceRoot}/dep/curl-7.29.0/include",
+                "${workspaceRoot}/dep/jsoncpp-src-0.5.0/include",
+                "${workspaceRoot}/dep/rapidjson",
+                "${workspaceRoot}/dep/tinyxml2",
+                "${workspaceRoot}/dep/libco"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++11"
+        }
+    ],
+    "version": 4
+}

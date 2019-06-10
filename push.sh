@@ -11,8 +11,6 @@ set -x
 
 main()
 {
-	rm -rf ./.vscode/ipch
-	cp -rf ./lib /tmp
 	make clean
 	git pull
 	git add -A
@@ -23,8 +21,6 @@ main()
 		git commit -a -m "${note}"
 	fi
 	git push -u origin master
-	cp -rf /tmp/lib/* ./lib
-	rm -rf /tmp/lib
 }
 
 main "$@"
