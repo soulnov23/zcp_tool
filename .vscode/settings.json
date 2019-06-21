@@ -26,8 +26,13 @@
         "${workspaceRoot}/dep/tinyxml2",
         "${workspaceRoot}/dep/libco"
     ],
-    "files.associations": {
-        "array": "cpp",
-        "iosfwd": "cpp"
-    }
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/.vscode/ipch": true,
+        "**/*.o": true,
+    },
 }
