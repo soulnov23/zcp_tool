@@ -1,0 +1,6 @@
+.vscode/ipch
+*.o
+*.so.*
+*.so
+*.a
+*.la
