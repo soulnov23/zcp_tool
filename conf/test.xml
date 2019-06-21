@@ -1,0 +1,10 @@
+<response>
+  <result>Failure</result>
+  <params>
+    <orderid>938474</orderid>
+  </params>
+  <error>
+    <errorcode>1001</errorcode>
+    <errordesc>Action not allowed</errordesc>
+  </error>
+</response>

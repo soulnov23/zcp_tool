@@ -25,5 +25,9 @@
         "${workspaceRoot}/dep/rapidjson",
         "${workspaceRoot}/dep/tinyxml2",
         "${workspaceRoot}/dep/libco"
-    ]
+    ],
+    "files.associations": {
+        "array": "cpp",
+        "iosfwd": "cpp"
+    }
 }
