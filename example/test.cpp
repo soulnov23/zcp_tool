@@ -1,105 +1,116 @@
 #include "printf.h"
-#include "daemon.h"
+#include <string>
 #include <iostream>
 #include <vector>
 #include <map>
 using namespace std;
-#include "utils.h"
-#include "json_parser.h"
 #include "http_handle.h"
-#include "sha.h"
-#include <time.h>
+#include "rapidjson.h"
+#include "document.h"
+#include "writer.h"
+#include "stringbuffer.h"
+#include "filereadstream.h"
+using namespace rapidjson;
+#include "time_utils.h"
+#include "md5.h"
+#include "json_parser.h"
+#include "utils.h"
 
 int main(int argc, char *argv[])
 {
-	/*
-	map<string, string> data;
-	data["appId"] 		= "24152";
-	data["requestId"]   = "123456789";
-	data["reqTime"]     = to_string(time(NULL));
-	data["mdmId"] 		= "4151954";
-	data["uin"] 		= "4151954";
-	data["bizType"] 	= "OVERSEA_CLOUD_SG";
-	data["accountType"] = "0";
-	string post_data;
-	map_to_json(post_data, data);
-
-	map<string, string> params;
-	params["appid"] 	= "24152";
-	params["timestamp"] = data["reqTime"];
-	params["nonce"] 	= "ibuaiVcKdpRxkhJA";
-	string temp_sign_param;
-	map2str(temp_sign_param, params);
-	string sign_param = temp_sign_param + "&key=7B00127AD637C55EE9988E7DD519A9B0395BC276";
-	PRINTF_DEBUG("sign_param:[%s]", sign_param.c_str());
-	string sign = hmac_sha256_hex("7B00127AD637C55EE9988E7DD519A9B0395BC276", sign_param);
-	for (string::iterator i = sign.begin(); i != sign.end(); i++)
-	{
-		*i = toupper(*i);
-	}
-	params["signature"] = sign;
-	string url_data;
-	map2str(url_data, params);
-	string temp_url = "http://srv.test-jarvis-api.oss.oa.com/api/Receipt/Va/1.0/applyVa?";
-	string url = temp_url + url_data;
-	PRINTF_DEBUG("url:[%s] data:[%s]", url.c_str(), post_data.c_str());
-	string recv_data;
+    string temp = string("1") + string("127.0.0.1") + string("xyzedfbc");
+    string key = md5(temp);
+    /*
+    for (string::iterator i = key.begin(); i != key.end(); i++)
+    {
+        *i = tolower(*i);
+    }
+    */
+    map<string, string> map_data;
+    map_data["merchant"] = "1";
+    map_data["key"] = key;
+    string post_string;
+    map2str(post_string, map_data);
+	PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
+    string rsp_string;
 	int err_code;
 	string err_msg;
-	string head = "Content-Type: application/json";
-	vector<string> vecHeadInfo;
-	vecHeadInfo.push_back(head);
-	int ret = http_proc(url, 3, &vecHeadInfo, post_data, recv_data, err_code, err_msg);
-	//int ret = http_proc(url, 3, NULL, post_data, recv_data, err_code, err_msg);
+	string url = "https://sandbox.payguru.com/phs/getToken";
+    int ret = http_proc(url, 10, NULL, post_string, rsp_string, err_code, err_msg);
 	if (ret != 0)
 	{
 		PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
+		return -1;
 	}
-	PRINTF_DEBUG("recv_data:[%s]", recv_data.c_str());
-	*/
+	PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
 
-	map<string, string> data;
-	data["appId"] 		= "21310";
-	data["requestId"]   = to_string(time(NULL));
-	data["reqTime"]     = to_string(time(NULL));
-	data["pageSize"] 	= "1000";
-	data["pageIndex"] 	= "1";
-	data["bizType"] 	= "OVERSEA_CLOUD_SG";
-	data["receiptDate"] = "2019-04-04";
-	string post_data;
-	map_to_json(post_data, data);
+    Document doc;
+    doc.Parse(rsp_string.c_str());
+    if (doc.HasParseError() || !doc.IsObject())
+    {
+        PRINTF_ERROR("json error json=[%s]", rsp_string.c_str());
+        return -1;
+    }
+    Value::MemberIterator status_mem = doc.FindMember("status");
+    if ((status_mem == doc.MemberEnd()) || !status_mem->value.IsString())
+    {
+        PRINTF_ERROR("status is not in json or not int format");
+        return -1;
+    }
+    string status = status_mem->value.GetString();
+    if (status != "000")
+    {
+        Value::MemberIterator message_mem = doc.FindMember("message");
+        if ((message_mem == doc.MemberEnd()) || !message_mem->value.IsString())
+        {
+            PRINTF_ERROR("message is not in json or not int format");
+            return -1;
+        }
+        string message = message_mem->value.GetString();
+        PRINTF_ERROR("%s", message.c_str());
+        return -1;
+    }
+    Value::MemberIterator token_mem = doc.FindMember("token");
+    if ((token_mem == doc.MemberEnd()) || !token_mem->value.IsString())
+    {
+        PRINTF_ERROR("token is not in json or not int format");
+        return -1;
+    }
+    string token = token_mem->value.GetString();
+	PRINTF_DEBUG("token:[%s]", token.c_str());
 
-	map<string, string> params;
-	params["appid"] 	= "21310";
-	params["timestamp"] = data["reqTime"];
-	params["nonce"] 	= "ibuaiVcKdpRxkhJA";
-	string temp_sign_param;
-	map2str(temp_sign_param, params);
-	string sign_param = temp_sign_param + "&key=FB8C7CDE69D11061161B2B43C7A1A07E21240C99";
-	PRINTF_DEBUG("sign_param:[%s]", sign_param.c_str());
-	string sign = hmac_sha256_hex("FB8C7CDE69D11061161B2B43C7A1A07E21240C99", sign_param);
-	for (string::iterator i = sign.begin(); i != sign.end(); i++)
+    time_t t = time(NULL);
+    map<string, string> new_map_data;
+    new_map_data["code"] = "demo";
+    new_map_data["amount"] = "12.34";
+    new_map_data["order"] = to_string(t);
+    /*
+    new_map_data["tc_no"] = "123654987";
+    new_map_data["name"] = "chengpzhang";
+    new_map_data["email"] = "chengpzhang@tencent.com";
+    new_map_data["phone"] = "13026697461";
+    new_map_data["user_ip"] = "9.134.3.96";
+    new_map_data["apply_time"] = date2str_time(t);
+    */
+    new_map_data["description"] = "hello world!";
+    string new_post_string;
+    map2str(new_post_string, new_map_data);
+	PRINTF_DEBUG("new_post_string:[%s]", new_post_string.c_str());
+    string new_rsp_string;
+	int new_err_code;
+	string new_err_msg;
+	string new_url = "https://sandbox.payguru.com/phs/orderToReference/direct";
+    vector<string> vecHeadInfo;
+    vecHeadInfo.push_back("merchant: 1");
+    string token_head = string("token: ") + token;
+    vecHeadInfo.push_back(token_head);
+    int new_ret = http_proc(new_url, 10, &vecHeadInfo, new_post_string, new_rsp_string, new_err_code, new_err_msg);
+	if (new_ret != 0)
 	{
-		*i = toupper(*i);
+		PRINTF_ERROR("new_err_code:[%d] new_err_msg:[%s]", new_err_code, new_err_msg.c_str());
+		return -1;
 	}
-	params["signature"] = sign;
-	string url_data;
-	map2str(url_data, params);
-	string temp_url = "http://srv.jarvis-api.oss.oa.com/api/Receipt/Query/1.0/queryReceipt?";
-	string url = temp_url + url_data;
-	PRINTF_DEBUG("url:[%s] data:[%s]", url.c_str(), post_data.c_str());
-	string recv_data;
-	int err_code;
-	string err_msg;
-	vector<string> vecHeadInfo;
-	vecHeadInfo.push_back("Content-Type: application/json");
-	vecHeadInfo.push_back("Accept: application/json");
-	int ret = http_proc(url, 30, &vecHeadInfo, post_data, recv_data, err_code, err_msg);
-	//int ret = http_proc(url, 30, NULL, post_data, recv_data, err_code, err_msg);
-	if (ret != 0)
-	{
-		PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
-	}
-	PRINTF_DEBUG("recv_data:[%s]", recv_data.c_str());
+	PRINTF_DEBUG("new_rsp_string:[%s]", new_rsp_string.c_str());
+
 	return 0;
 }
