@@ -1,6 +1,6 @@
 {
     "C_Cpp.default.includePath": [
-        "E:/project/include/include",
+        /*"E:/project/include/include",
         "E:/project/include/include/c++/4.8.2",
         "E:/project/include/include/c++/4.8.2/backward",
         "E:/project/include/include/c++/4.8.2/bits",
@@ -16,6 +16,7 @@
         "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux",
         "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux/bits",
         "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux/ext",
+        */
         "${workspaceRoot}",
         "${workspaceRoot}/comm",
         "${workspaceRoot}/comm/crypto",
