@@ -18,7 +18,7 @@ using namespace rapidjson;
 
 int main(int argc, char *argv[])
 {
-    string temp = string("1") + string("127.0.0.1") + string("xyzedfbc");
+    string temp = string("1") + string("10.56.44.120") + string("xyzedfbc");
     string key = md5(temp);
     /*
     for (string::iterator i = key.begin(); i != key.end(); i++)
@@ -36,7 +36,9 @@ int main(int argc, char *argv[])
 	int err_code;
 	string err_msg;
 	string url = "https://sandbox.payguru.com/phs/getToken";
-    int ret = http_proc(url, 10, NULL, post_string, rsp_string, err_code, err_msg);
+    vector<string> HeadInfo;
+    //HeadInfo.push_back("Accept: */*");
+    int ret = http_proc(url, 10, &HeadInfo, post_string, rsp_string, err_code, err_msg);
 	if (ret != 0)
 	{
 		PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
