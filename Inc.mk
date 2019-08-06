@@ -23,8 +23,8 @@ INCLUDE ?=
 LDFLAGS ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS   += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
-CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
+CFLAGS   += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
+CXXFLAGS += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
 INCLUDE  +=
 LDFLAGS  +=
 endif
@@ -78,6 +78,7 @@ LIBCO_INC=$(LIBCO_PATH)
 
 GPERF_PATH=$(PROJ_PATH)/dep/gperftools
 GPERF_INC=$(GPERF_PATH)/src
+GPERF_FLAGS ?= -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free
 
 #自动计算文件的依赖关系
 .%.d: %.cpp
