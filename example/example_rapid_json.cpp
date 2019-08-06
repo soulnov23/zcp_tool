@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 	}
 	bool flag = flag_test->value.GetBool();
 	PRINTF_DEBUG("flag:%d", flag);
-	*/
+
 	FILE *fp = fopen("test.json", "r");
 	char buff[65536];
 	FileReadStream is(fp, buff, sizeof(buff));
@@ -123,5 +123,47 @@ int main(int argc, char *argv[])
 	string pay_url = redirect_url_mem->value.GetString();
 	PRINTF_ERROR("pay_url:%s", pay_url.c_str());
 	fclose(fp);
+*/
+	FILE *fp = fopen("test.json", "r");
+	char buff[65536];
+	FileReadStream is(fp, buff, sizeof(buff));
+	Document doc;
+    doc.ParseStream(is);
+    if (doc.HasParseError() || !doc.IsObject())
+	{
+		PRINTF_ERROR("json error json=[%s]", buff);
+        return -1;
+	}
+	Value::MemberIterator resource_mem = doc.FindMember("resource");
+    if ((resource_mem == doc.MemberEnd()) || !resource_mem->value.IsObject())
+    {
+        PRINTF_ERROR("resource is not in json or not int format");
+		return -1;
+    }
+	Value resource_object(kObjectType);
+	resource_object = resource_mem->value.GetObject();
+
+	Value::MemberIterator purchase_units_mem = resource_object.FindMember("purchase_units");
+    if ((purchase_units_mem == doc.MemberEnd()) || !purchase_units_mem->value.IsArray())
+    {
+        PRINTF_ERROR("purchase_units is not in json or not int format");
+		return -1;
+    }
+	Value purchase_units_object(kArrayType);
+	purchase_units_object = purchase_units_mem->value.GetArray();
+	
+
+	Value temp_object(kObjectType);
+	temp_object = purchase_units_object[0].GetObject();
+
+	Value::MemberIterator invoice_id_mem = temp_object.FindMember("invoice_id");
+    if ((invoice_id_mem == temp_object.MemberEnd()) || !invoice_id_mem->value.IsString())
+    {
+        PRINTF_ERROR("invoice_id is not in json or not int format");
+		return -1;
+    }
+	string invoice_id = invoice_id_mem->value.GetString();
+	PRINTF_DEBUG("invoice_id[%s]", invoice_id.c_str());
+
 	return 0;
 }
