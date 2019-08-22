@@ -1,5 +1,6 @@
 #include <string.h>
 #include "base64.h"
+#include "utils.h"
 
 int base64_encode(const std::string &str_in, std::string &str_out)
 {
@@ -106,5 +107,22 @@ int base64_decode(const std::string &str_in, std::string &str_out)
         res.push_back(((k & 0x3) << 6) | l);
     }
     str_out = res;
+    return 0;
+}
+
+int base64_encode_url_safe(const std::string &str_in, std::string &str_out)
+{
+    base64_encode(str_in, str_out);
+    string_replace(str_out, "+", "-");
+    string_replace(str_out, "/", "_");
+    return 0;
+}
+
+int base64_decode_url_safe(const std::string &str_in, std::string &str_out)
+{
+    std::string temp(str_in);
+    string_replace(temp, "-", "+");
+    string_replace(temp, "_", "/");
+    base64_decode(temp, str_out);
     return 0;
 }
