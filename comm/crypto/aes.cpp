@@ -137,7 +137,7 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string
 	unsigned char outbuf[decode_encrypt_msg.size() + EVP_CIPHER_block_size(cipher) + 1024];
 	int outlen, tmplen;
 
-	int rc = EVP_DecryptInit_ex(ctx, EVP_aes_128_cbc(), NULL, (const unsigned char*)key.c_str(), iv);
+	int rc = EVP_DecryptInit_ex(ctx, cipher, NULL, (const unsigned char*)key.c_str(), iv);
 	if (rc != 1)
 	{
 		PRINTF_ERROR();
