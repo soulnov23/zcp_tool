@@ -10,6 +10,11 @@
 #include "rsa.h"
 #include "printf.h"
 
+#define SET_SSL_ERROR() \
+{ \
+	PRINTF_ERROR("errno:%lu %s", ERR_get_error(), ERR_error_string(ERR_get_error(), NULL)) \
+}
+
 int hex_decode(std::string &src, std::string &dst)
 {
 	dst = "";
@@ -59,32 +64,32 @@ int verify_rsa_sign(const std::string &data_in, const std::string &sign, const s
 
 	if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()), format_public_key.length())) == NULL)       
 	{
-         PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
-         goto ready_ret;
+        goto ready_ret;
 	}
 
 	rsa = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);   
 	if (NULL == rsa)
 	{
-         PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
-         goto free_bio;
+        goto free_bio;
 	}
 
 	evp_pkey = EVP_PKEY_new();
 	if (evp_pkey == NULL)
 	{
-         PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
-         goto free_rsa;
+        goto free_rsa;
 	}
 
 	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1)
 	{
-         PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
-         goto free_evp_pkey;
+        goto free_evp_pkey;
 	}
 
 	EVP_MD_CTX_init(&ctx);
@@ -118,7 +123,7 @@ int verify_rsa_sign(const std::string &data_in, const std::string &sign, const s
      //if algorithm == sha1
 	if (RSA_verify(NID_sha1, digest, digest_len, (unsigned char *)coded_sign.c_str(), coded_sign.length(), rsa) != 1)
 	{
-         PRINTF_ERROR();
+         SET_SSL_ERROR();
 		ret = RSA_VERIFY_ERROR;
 	}
 
@@ -168,7 +173,7 @@ int verify_rsa2_sign(const std::string &data_in, const std::string &sign, const 
 
 	if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()), format_public_key.length())) == NULL)       
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto ready_ret;
 	}
@@ -176,7 +181,7 @@ int verify_rsa2_sign(const std::string &data_in, const std::string &sign, const 
 	rsa = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);   
 	if (NULL == rsa)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_bio;
 	}
@@ -184,14 +189,14 @@ int verify_rsa2_sign(const std::string &data_in, const std::string &sign, const 
 	evp_pkey = EVP_PKEY_new();
 	if (evp_pkey == NULL)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_rsa;
 	}
 
 	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_evp_pkey;
 	}
@@ -227,7 +232,7 @@ int verify_rsa2_sign(const std::string &data_in, const std::string &sign, const 
     //if algorithm == sha1
 	if (RSA_verify(NID_sha256, digest, digest_len, (unsigned char *)coded_sign.c_str(), coded_sign.length(), rsa) != 1)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_VERIFY_ERROR;
 	}
 
@@ -430,7 +435,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	// 从字符串读取RSA私钥
 	if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()), format_private_key.length())) == NULL)       
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto ready_ret;
 	}
@@ -439,7 +444,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);   
 	if (NULL == rsa)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto free_bio;
 	}
@@ -449,7 +454,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	evp_pkey = EVP_PKEY_new();
 	if (evp_pkey == NULL)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_rsa;
 	}
@@ -459,7 +464,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	// return 1 for success or 0 for failure
 	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto free_evp_pkey;
 	}
@@ -489,7 +494,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	ret = RSA_sign(NID_sha1, digest, digest_len, sign, &sign_size, rsa);
 	if (ret != 1)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
         ret = RSA_SIGN_ERROR;
         goto free_mem;
 	}
@@ -512,7 +517,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	}
 	else
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		ret = RSA_PARAM_TYPE_ERROR;
 	}
 
@@ -565,7 +570,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	// 从字符串读取RSA私钥
 	if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()), format_private_key.length())) == NULL)       
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto ready_ret;
 	}
@@ -574,7 +579,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);   
 	if (NULL == rsa)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto free_bio;
 	}
@@ -584,7 +589,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	evp_pkey = EVP_PKEY_new();
 	if (evp_pkey == NULL)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_rsa;
 	}
@@ -594,7 +599,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	// return 1 for success or 0 for failure
 	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto free_evp_pkey;
 	}
@@ -624,7 +629,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	ret = RSA_sign(NID_sha256, digest, digest_len, sign, &sign_size, rsa);
 	if (ret != 1)
 	{
-        PRINTF_ERROR();
+        SET_SSL_ERROR();
         ret = RSA_SIGN_ERROR;
         goto free_mem;
 	}
@@ -647,7 +652,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	}
 	else
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		ret = RSA_PARAM_TYPE_ERROR;
 	}
 

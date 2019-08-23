@@ -5,6 +5,11 @@
 #include "openssl/evp.h"
 #include "openssl/err.h"
 
+#define SET_SSL_ERROR() \
+{ \
+	PRINTF_ERROR("errno:%lu %s", ERR_get_error(), ERR_error_string(ERR_get_error(), NULL)) \
+}
+
 int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string& msg, int bit_type, int sign_type, std::string& encrypt_msg)
 {
 	ERR_load_crypto_strings();
@@ -44,7 +49,7 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string
 	int rc = EVP_EncryptInit_ex(ctx, cipher, NULL, (const unsigned char*)key.c_str(), iv);
 	if (rc != 1)
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		EVP_CIPHER_CTX_free(ctx);
 		return AES_CIPHER_INIT_ERROR;
 	}
@@ -52,7 +57,7 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string
 	rc = EVP_EncryptUpdate(ctx, outbuf, &outlen, (unsigned char*)msg.c_str(), msg.length());
 	if (rc != 1)
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		EVP_CIPHER_CTX_free(ctx);
 		return AES_CIPHER_UPDATE_ERROR;
 	}
@@ -60,7 +65,7 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string
 	rc = EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen);
 	if (rc != 1)
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		EVP_CIPHER_CTX_free(ctx);
 		return AES_CIPHER_FINAL_ERROR;
 	}
@@ -140,7 +145,7 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string
 	int rc = EVP_DecryptInit_ex(ctx, cipher, NULL, (const unsigned char*)key.c_str(), iv);
 	if (rc != 1)
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		EVP_CIPHER_CTX_free(ctx);
 		return AES_CIPHER_INIT_ERROR;
 	}
@@ -148,7 +153,7 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string
 	rc = EVP_DecryptUpdate(ctx, outbuf, &outlen, (const unsigned char*)decode_encrypt_msg.c_str(), decode_encrypt_msg.length());
 	if (rc != 1)
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		EVP_CIPHER_CTX_free(ctx);
 		return AES_CIPHER_UPDATE_ERROR;
 	}
@@ -156,7 +161,7 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string
 	rc = EVP_DecryptFinal_ex(ctx, outbuf + outlen, &tmplen);
 	if (rc != 1)
 	{
-		PRINTF_ERROR();
+		SET_SSL_ERROR();
 		EVP_CIPHER_CTX_free(ctx);
 		return AES_CIPHER_FINAL_ERROR;
 	}
