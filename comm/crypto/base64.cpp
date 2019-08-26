@@ -115,6 +115,7 @@ int base64_encode_url_safe(const std::string &str_in, std::string &str_out)
     base64_encode(str_in, str_out);
     string_replace(str_out, "+", "-");
     string_replace(str_out, "/", "_");
+    string_replace(str_out, "=", "");
     return 0;
 }
 
@@ -123,6 +124,12 @@ int base64_decode_url_safe(const std::string &str_in, std::string &str_out)
     std::string temp(str_in);
     string_replace(temp, "-", "+");
     string_replace(temp, "_", "/");
+    int mod4 = temp.size()%4;
+    if (mod4 > 0)
+    {
+        int num = 4 - mod4;
+        temp.append(num, '=');
+    }
     base64_decode(temp, str_out);
     return 0;
 }
