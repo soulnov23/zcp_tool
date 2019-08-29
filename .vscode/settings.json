@@ -20,7 +20,7 @@
         "${workspaceFolder}/dep/jsoncpp-src-0.5.0/include",
         "${workspaceFolder}/dep/libco",
         "${workspaceFolder}/dep/openssl-1.0.2k",
-        "${workspaceFolder}/dep/openssl-1.0.2k/include",
+        "${workspaceFolder}/dep/openssl-1.0.2k/crypto",
         "${workspaceFolder}/dep/rapidjson",
         "${workspaceFolder}/dep/tinyxml2",
         
