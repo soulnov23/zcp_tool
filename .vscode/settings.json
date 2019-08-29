@@ -14,13 +14,16 @@
         */
         "${workspaceFolder}",
         "${workspaceFolder}/comm",
-        "${workspaceFolder}/comm/crypto",
-        "${workspaceFolder}/dep/openssl-1.0.2k/include",
+        "${workspaceFolder}/dep/curl-7.29.0",
         "${workspaceFolder}/dep/curl-7.29.0/include",
+        "${workspaceFolder}/dep/jsoncpp-src-0.5.0",
         "${workspaceFolder}/dep/jsoncpp-src-0.5.0/include",
+        "${workspaceFolder}/dep/libco",
+        "${workspaceFolder}/dep/openssl-1.0.2k",
+        "${workspaceFolder}/dep/openssl-1.0.2k/include",
         "${workspaceFolder}/dep/rapidjson",
         "${workspaceFolder}/dep/tinyxml2",
-        "${workspaceFolder}/dep/libco"
+        
     ],
     "files.exclude": {
         "**/.git": true,
