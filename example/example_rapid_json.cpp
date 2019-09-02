@@ -9,6 +9,17 @@ using namespace std;
 using namespace rapidjson;
 #include <stdio.h>
 
+static bool get_obj(Value &gvalue, const char *member, Value &node)
+{
+	Value::MemberIterator mem = gvalue.FindMember(member);
+	if ((mem == gvalue.MemberEnd()) || (!mem->value.IsObject()))
+	{
+		return false;
+	}
+	node = mem->value.GetObject();
+	return true;
+}
+
 int main(int argc, char *argv[])
 {
 	/*
@@ -134,6 +145,7 @@ int main(int argc, char *argv[])
 		PRINTF_ERROR("json error json=[%s]", buff);
         return -1;
 	}
+	/*
 	Value::MemberIterator resource_mem = doc.FindMember("resource");
     if ((resource_mem == doc.MemberEnd()) || !resource_mem->value.IsObject())
     {
@@ -142,6 +154,9 @@ int main(int argc, char *argv[])
     }
 	Value resource_object(kObjectType);
 	resource_object = resource_mem->value.GetObject();
+	*/
+	Value resource_object(kObjectType);
+	get_obj(doc, "resource", resource_object);
 
 	Value::MemberIterator purchase_units_mem = resource_object.FindMember("purchase_units");
     if ((purchase_units_mem == doc.MemberEnd()) || !purchase_units_mem->value.IsArray())
@@ -151,19 +166,22 @@ int main(int argc, char *argv[])
     }
 	Value purchase_units_object(kArrayType);
 	purchase_units_object = purchase_units_mem->value.GetArray();
+	for (Value::ValueIterator it = purchase_units_object.Begin(); it != purchase_units_object.End(); it++)
+	{
+		Value::MemberIterator invoice_id_mem = it->FindMember("invoice_id");
+		if ((invoice_id_mem == it->MemberEnd()) || !invoice_id_mem->value.IsString())
+		{
+			PRINTF_ERROR("invoice_id is not in json or not int format");
+			return -1;
+		}
+		string invoice_id = invoice_id_mem->value.GetString();
+		PRINTF_DEBUG("invoice_id[%s]", invoice_id.c_str());
+	}
 	
-
+	/*
 	Value temp_object(kObjectType);
 	temp_object = purchase_units_object[0].GetObject();
-
-	Value::MemberIterator invoice_id_mem = temp_object.FindMember("invoice_id");
-    if ((invoice_id_mem == temp_object.MemberEnd()) || !invoice_id_mem->value.IsString())
-    {
-        PRINTF_ERROR("invoice_id is not in json or not int format");
-		return -1;
-    }
-	string invoice_id = invoice_id_mem->value.GetString();
-	PRINTF_DEBUG("invoice_id[%s]", invoice_id.c_str());
+	*/
 
 	return 0;
 }
