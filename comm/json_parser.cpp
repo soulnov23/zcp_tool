@@ -8,22 +8,20 @@
 #include "writer.h"
 #include "stringbuffer.h"
 #include <fstream>
+#include <streambuf>
 using namespace std;
 
 int file_to_json(string &data, const char *file_path)
 {
-	ifstream file;
-	file.exceptions(ifstream::failbit | ifstream::badbit);
-	try
-	{
-		file.open(file_path);
-		getline(file, data, (char)EOF);
-	}
-	catch (ifstream::failure e)
+	ifstream file(file_path);
+	if (!file)
 	{
 		PRINTF_ERROR("open file failed : %s", file_path);
 		return -1;
 	}
+	istreambuf_iterator<char> begin(file);
+	istreambuf_iterator<char> end;
+	data = string(begin, end);
 	return 0;
 }
 
