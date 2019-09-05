@@ -1,9 +1,12 @@
 #include "sha.h"
 #include "coder.h"
 #include "base64.h"
-#include "openssl/evp.h"
+#include "openssl/rsa.h"
 #include "openssl/sha.h"
 #include "openssl/hmac.h"
+#include "openssl/pem.h"
+#include "openssl/bio.h"
+#include <string.h>
 
 int sha256(const std::string &data_in, std::string &data_out)
 {
@@ -127,4 +130,85 @@ std::string hmac_md5_hex(const std::string &key, const std::string &data)
 	szHexHMACSha1[33] = '\0';
 
 	return szHexHMACSha1;
+}
+
+std::string sha1_hex(const std::string &data)
+{
+    //SHA1 res is placed in a static array, it's not thread safe
+    unsigned char *digest = SHA1((unsigned char*)data.c_str(), data.length(), NULL);
+
+    std::string str_out;
+    for (unsigned int i = 0; i < SHA_DIGEST_LENGTH; ++i)
+    {
+        char szTmp[3] = {0};
+        snprintf(szTmp, sizeof(szTmp), "%02x", digest[i]);
+        str_out += szTmp;
+    }
+
+    return str_out;
+}
+
+std::string sha256_hex(const std::string &data)
+{
+    //SHA256 res is placed in a static array, it's not thread safe
+    unsigned char *digest = SHA256((unsigned char*)data.c_str(), data.length(), NULL);
+
+    std::string str_out;
+    for (unsigned int i = 0; i < SHA256_DIGEST_LENGTH; ++i)
+    {
+        char szTmp[3] = {0};
+        snprintf(szTmp, sizeof(szTmp), "%02x", digest[i]);
+        str_out += szTmp;
+    }
+
+    return str_out;
+}
+
+std::string sha256_rsa_base64(const std::string &key, const std::string &data)
+{
+    std::string format_public_key = "-----BEGIN PRIVATE KEY-----\n";
+    for (std::string::size_type i = 0; i < key.length(); i += 64) {
+        format_public_key += key.substr(i, 64);
+        format_public_key += '\n';
+    }
+    format_public_key += "-----END PRIVATE KEY-----\n";
+
+    //从字符串读取RSA私钥
+	BIO *bio = NULL;
+    if ((bio = BIO_new_mem_buf((void *)(format_public_key.c_str()), format_public_key.length())) == NULL)
+    {
+        return "";
+    }
+
+    //从bio结构中得到RSA结构
+    RSA *rsa = NULL;
+    if ((rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL)) == NULL)
+    {
+        BIO_free(bio);
+        return "";
+    }
+    
+    //SHA256 res is placed in a static array, it's not thread safe
+    unsigned char *digest = SHA256((unsigned char*)data.c_str(), data.length(), NULL);
+
+    unsigned int siglen = RSA_size(rsa);
+    unsigned char *sigret = (unsigned char *)malloc(sizeof(unsigned char) * siglen);
+	memset(sigret, 0x0, sizeof(unsigned char) * siglen);
+    if(RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH, sigret, &siglen, rsa) != 1)
+    {
+        BIO_free(bio);
+        RSA_free(rsa);
+        free(sigret);
+        return "";
+    }
+
+    std::string str_in((const char *)sigret, siglen);
+    std::string str_out;
+    base64_encode(str_in, str_out);
+
+    BIO_free(bio);
+    RSA_free(rsa);
+    free(sigret);
+    
+    return str_out;
 }
