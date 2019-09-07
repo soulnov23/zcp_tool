@@ -14,4 +14,7 @@ void get_node(map<string, tinyxml2::XMLElement*> &record, tinyxml2::XMLElement *
 
 void get_attri(map<string, string> &record, tinyxml2::XMLElement *node);
 
+int xml_to_map(map<string, string> &record, const char *file_path);
+int xml_to_map(map<string, string> &record, const char *data, size_t len);
+
 #endif
