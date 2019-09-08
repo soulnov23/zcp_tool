@@ -1,5 +1,6 @@
 #include "printf.h"
 #include "xml_parser.h"
+#include "server.h"
 #include <unistd.h>
 
 map<string, string> config;
@@ -23,24 +24,22 @@ int main(int argc, char *argv[])
 	PRINTF_DEBUG("ip:%s port:%s count:%s", config["ip"].c_str(), config["port"].c_str(), config["count"].c_str());
 
 	int count = strtol(config["count"].c_str(), nullptr, 10);
-	for (int i = 0; i < count; i++)
+	if (init_signal() != 0)
 	{
-		__pid_t pid = fork();
-		if (pid == -1)
+		PRINTF_ERROR("init_signal error");
+		return -1;
+	}
+	for (int i = 0; i < 1; i++)
+	{
+		if (fork_child() != 0)
 		{
-			PRINTF_ERROR("fork error");
+			PRINTF_ERROR("fork_child error");
 			return -1;
 		}
-		else if (pid == 0)
-		{
-			//子进程
-
-		}
-		else //pid > 0
-		{
-			//父进程
-
-		}
+	}
+	while (true)
+	{
+		
 	}
 	return 0;
 }
