@@ -7,6 +7,7 @@
 #include <sys/ioctl.h>
 #include <net/if_arp.h>
 #include <net/if.h>
+#include <string.h>
 #include "printf.h"
 #include "utils.h"
 
@@ -254,3 +255,16 @@ bool get_local_mac(const char *eth_name, string &mac)
 	return ret;
 }
 
+int set_signal_handle(int sig_no, void (*handle)(int, siginfo_t *, void *))
+{
+	struct sigaction sig;
+	memset(&sig, 0, sizeof(struct sigaction));
+	sig.sa_flags = SA_SIGINFO;
+	sig.sa_sigaction = handle;
+	if (sigaction(sig_no, &sig, nullptr) != 0)
+	{
+		PRINTF_ERROR();
+		return -1;
+	}
+	return 0;
+}

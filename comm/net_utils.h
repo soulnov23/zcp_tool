@@ -4,6 +4,7 @@
 #include <string>
 using namespace std;
 #include <unistd.h>
+#include <signal.h>
 
 int make_socket_blocking(int fd);
 int make_socket_nonblocking(int fd);
@@ -29,5 +30,7 @@ int get_sock_name(int fd, uint32_t &peer_addr, uint16_t &peer_port);
 
 bool get_local_ip(const char *eth_name, string &ip);
 bool get_local_mac(const char *eth_name, string &mac);
+
+int set_signal_handle(int sig_no, void (*handle)(int, siginfo_t *, void *));
 
 #endif
