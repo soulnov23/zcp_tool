@@ -6,9 +6,9 @@ OBJS := $(patsubst %.cpp, %.o, $(SRC))
 #BIN := example_lambda
 BIN := test example_xml_parser example_json_parser example_rapid_json example_curl example_libco example_epoll example_auto example_lambda
 
-INCLUDE += -I$(COMM_INC) -I$(COMM_CRYPTO_INC) -I$(XML_INC) -I$(JSON_CPP_INC) -I$(RAPID_JSON_INC) \
+INCLUDE += -I$(COMM_INC) -I$(COMM_CRYPTO_INC) -I$(COMM_NET_INC) -I$(XML_INC) -I$(JSON_CPP_INC) -I$(RAPID_JSON_INC) \
            -I$(OPEN_SSL_INC) -I$(CURL_INC) -I$(LIBCO_INC)
-LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -ljson -lcrypto -lcurl -laio -lcolib -lcomm -lcomm_crypto -ltcmalloc_minimal
+LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -ljson -lcrypto -lcurl -laio -lcolib -lcomm -lcomm_crypto -lcomm_net -ltcmalloc_minimal
 
 all : clean $(BIN)
 
