@@ -1,6 +1,6 @@
 #include "server.h"
 #include "printf.h"
-#include "net_utils.h"
+#include "net/net_utils.h"
 #include <sys/wait.h>
 
 static void signal_handle_func(int sig_no, siginfo_t *sig_info, void *data)

@@ -10,7 +10,7 @@
 using namespace std;
 #include "const.h"
 #include "printf.h"
-#include "net_utils.h"
+#include "net/net_utils.h"
 
 client *client::g_client = new client;
 

@@ -3,7 +3,7 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
-#include "connector.h"
+#include "net/connector.h"
 
 class client
 {
