@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	}
 	PRINTF_DEBUG("ip:%s port:%s count:%s", config["ip"].c_str(), config["port"].c_str(), config["count"].c_str());
 
-	int count = strtol(config["count"].c_str(), nullptr, 10);
+	//int count = strtol(config["count"].c_str(), nullptr, 10);
 	if (init_signal() != 0)
 	{
 		PRINTF_ERROR("init_signal error");
