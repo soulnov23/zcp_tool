@@ -5,7 +5,6 @@
 #include <map>
 using namespace std;
 
-int file_to_json(string &data, const char *file_path);
 int json_to_map(map<string, string> &record, string &data);
 void map_to_json(string &data, const map<string, string> &record);
 

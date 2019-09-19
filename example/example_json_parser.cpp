@@ -1,5 +1,6 @@
 #include "printf.h"
 #include "json_parser.h"
+#include "file_utils.h"
 #include <iostream>
 using namespace std;
 
@@ -17,7 +18,7 @@ void PRINTF_MAP(map<T1, T2> &record, T3 &it)
 int main(int argc, char *argv[])
 {
 	string data;
-	if (file_to_json(data, "/home/zcp_tool/conf/server.json") != 0)
+	if (file_to_string(data, "/home/zcp_tool/conf/server.json") != 0)
 	{
 		PRINTF_ERROR("file_to_json error");
 		return -1;

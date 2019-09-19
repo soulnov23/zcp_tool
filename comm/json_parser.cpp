@@ -7,23 +7,6 @@
 #include "document.h"
 #include "writer.h"
 #include "stringbuffer.h"
-#include <fstream>
-#include <streambuf>
-using namespace std;
-
-int file_to_json(string &data, const char *file_path)
-{
-	ifstream file(file_path);
-	if (!file)
-	{
-		PRINTF_ERROR("open file failed : %s", file_path);
-		return -1;
-	}
-	istreambuf_iterator<char> begin(file);
-	istreambuf_iterator<char> end;
-	data = string(begin, end);
-	return 0;
-}
 
 int json_to_map(map<string, string> &record, string &data)
 {
