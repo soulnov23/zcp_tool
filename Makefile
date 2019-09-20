@@ -1,5 +1,8 @@
 include Inc.mk
 
+#获取当前正在执行的makefile的绝对路径，gnu make会自动将所有读取的makefile路径都会加入到MAKEFILE_LIST变量
+make_file_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+
 DIR_DEP=dep
 
 DIR_MODULES=comm    \
