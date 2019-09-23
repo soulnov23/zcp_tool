@@ -19,6 +19,8 @@
 gcc支持的做法，支持arg可变参传入
 #define PRINTF_DEBUG(format, args...) \
 		printf("[DEBUG] [%s:%d %s()] " format"\n", __FILE__, __LINE__, __FUNCTION__, ##args)
+#define PRINTF_DEBUG(format, args...) \
+		printf("[DEBUG] [%s:%d %s()] " format"\n", __FILE__, __LINE__, __PRETTY_FUNCTION__, ##args)
 */
 
 #define PRINTF_DEBUG(format, ...) \
