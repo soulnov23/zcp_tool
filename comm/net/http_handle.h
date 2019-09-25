@@ -4,18 +4,8 @@
 #include "curl/curl.h"
 #include <string>
 #include <vector>
-#include <map>
 
 size_t recv_proc(void *ptr, size_t size, size_t nmemb, std::string *p);
-
-int http_proc(const std::string &strUrl, 
-		unsigned iTimeout, 
-		std::vector<std::string> *pvecHeadInfo,
-		std::map<std::string, std::string> &mapPostData, 
-		std::string &strRecvBuf,
-		int &iResult,
-		std::string &strErrmsg,
-		const std::string &strCookie = "");
 
 int http_proc(const std::string &strUrl, 
 		unsigned iTimeout, 
@@ -24,7 +14,10 @@ int http_proc(const std::string &strUrl,
 		std::string &strRecvBuf,
 		int &iResult,
 		std::string &strErrmsg,
-		const std::string &strCookie = "");
+		const std::string &strCookie = "",
+		//const std::string &strDnsList = "",
+		//const std::string &strIpv4 = "",
+		bool https_verify = true);
 
 int http_proc(const std::string &strUrl, 
 		unsigned iTimeout, 
@@ -34,6 +27,9 @@ int http_proc(const std::string &strUrl,
 		std::string &strRecvBuf,
 		int &iResult,
 		std::string &strErrmsg,
-		const std::string &strCookie = "");
+		const std::string &strCookie = "",
+		//const std::string &strDnsList = "",
+		//const std::string &strIpv4 = "",
+		bool https_verify = true);
 
 #endif /* __HTTP_HANDLE_H__ */
