@@ -159,57 +159,56 @@ int client::connect_timeout(int fd, const struct sockaddr *addr, socklen_t addrl
 		PRINTF_ERROR("make_socket_nonblocking(%d) error", fd);
 		return -1;
 	}
-	struct timeval timeout;
-	timeout.tv_sec = nsec;
-	timeout.tv_usec = usec;
-	fd_set write_set;
-	FD_ZERO(&write_set);
-	FD_SET(fd, &write_set);
 	int ret = connect(fd, addr, addrlen);
 	if (ret == 0)
 	{
 		PRINTF_DEBUG("connect直接成功");
 		return 0;
 	}
-	else //ret == -1)
+	//ret=-1的情况
+	if (errno != EINPROGRESS)
 	{
-		if (errno != EINPROGRESS)
+		PRINTF_ERROR("connect error");
+		return -1;
+	}
+	struct timeval timeout;
+	timeout.tv_sec = nsec;
+	timeout.tv_usec = usec;
+	fd_set write_set;
+	FD_ZERO(&write_set);
+	FD_SET(fd, &write_set);
+	int count = select(fd+1, NULL, &write_set, NULL, &timeout);
+	if (count == 0)
+	{
+		PRINTF_ERROR("select timeout");
+		return -1;
+	}
+	if (count == -1)
+	{
+		PRINTF_ERROR("select error");
+		return -1;
+	}
+	//count>0的情况
+	if (FD_ISSET(fd, &write_set))
+	{
+		int err = 0;
+		socklen_t len = sizeof(err);
+		if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &err, &len) == -1)
+		{
+			PRINTF_ERROR("getsockopt error");
+			return -1;
+		}
+		if (err != 0)
 		{
 			PRINTF_ERROR("connect error");
 			return -1;
 		}
-		int count = select(fd+1, NULL, &write_set, NULL, &timeout);
-		if (count == 0)
-		{
-			PRINTF_ERROR("select timeout");
-			return -1;
-		}
-		if (count == -1)
-		{
-			PRINTF_ERROR("select error");
-			return -1;
-		}
-		if (FD_ISSET(fd, &write_set))
-		{
-			int err = 0;
-			socklen_t len = sizeof(err);
-			if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &err, &len) == -1)
-			{
-				PRINTF_ERROR("getsockopt error");
-				return -1;
-			}
-			if (err != 0)
-			{
-				PRINTF_ERROR("connect error");
-				return -1;
-			}
-			return 0;
-		}
-		else
-		{
-			PRINTF_ERROR("FD_ISSET error");
-			return -1;
-		}
+		return 0;
+	}
+	else
+	{
+		PRINTF_ERROR("FD_ISSET error");
+		return -1;
 	}
 }
 
