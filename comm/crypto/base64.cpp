@@ -2,7 +2,7 @@
 #include "base64.h"
 #include "utils.h"
 
-int base64_encode(const std::string &str_in, std::string &str_out)
+int base64_encode(const std::string& str_in, std::string& str_out)
 {
     static const char base64_encode_table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     std::string res;
@@ -30,7 +30,7 @@ int base64_encode(const std::string &str_in, std::string &str_out)
     return 0;
 }
 
-int base64_decode(const std::string &str_in, std::string &str_out)
+int base64_decode(const std::string& str_in, std::string& str_out)
 {
     static const int base64_decode_table[] = {
         -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -110,7 +110,7 @@ int base64_decode(const std::string &str_in, std::string &str_out)
     return 0;
 }
 
-int base64_encode_url_safe(const std::string &str_in, std::string &str_out)
+int base64_encode_url_safe(const std::string& str_in, std::string& str_out)
 {
     base64_encode(str_in, str_out);
     string_replace(str_out, "+", "-");
@@ -119,7 +119,7 @@ int base64_encode_url_safe(const std::string &str_in, std::string &str_out)
     return 0;
 }
 
-int base64_decode_url_safe(const std::string &str_in, std::string &str_out)
+int base64_decode_url_safe(const std::string& str_in, std::string& str_out)
 {
     std::string temp(str_in);
     string_replace(temp, "-", "+");

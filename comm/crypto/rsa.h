@@ -41,7 +41,7 @@ enum sign_code_type
 };
 
 /*!
- * \fn int verify_rsa_sign(const std::string &data_in, const std::string &sign, const std::string& public_key, int sign_type, int digest_algo = DIGEST_SHA1);
+ * \fn int verify_rsa_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo = DIGEST_SHA1);
  * \brief	验证RSA签名
  * 
  * 可用\a upay::get_last_error_info()
@@ -52,10 +52,10 @@ enum sign_code_type
  * \param	digest_algo	(Optional) 摘要算法, 见\a upay::crypto::digest_algorithm
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR, \a RSA_VERIFY_ERROR
 */
-int verify_rsa_sign(const std::string &data_in, const std::string &sign, const std::string& public_key, int sign_type, int digest_algo = DIGEST_SHA1);
+int verify_rsa_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo = DIGEST_SHA1);
 
 /*!
- * \fn int verify_rsa_sign(const std::string &data_in, const std::string &sign, const std::string& public_key, int sign_type, int digest_algo = DIGEST_SHA1);
+ * \fn int verify_rsa_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo = DIGEST_SHA1);
  * \brief	验证RSA SHA256签名
  * 
  * 可用\a upay::get_last_error_info()
@@ -66,7 +66,7 @@ int verify_rsa_sign(const std::string &data_in, const std::string &sign, const s
  * \param	digest_algo	(Optional) 摘要算法, 见\a upay::crypto::digest_algorithm
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR, \a RSA_VERIFY_ERROR
 */
-int verify_rsa2_sign(const std::string &data_in, const std::string &sign, const std::string& public_key, int sign_type, int digest_algo = DIGEST_SHA256);
+int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo = DIGEST_SHA256);
 
 int rsa_pubkey_decrypt(const std::string& cipher_in,  //密文
                           int cipher_type_in, //密文类型 base64(CIPHER_TYPE_BASE64) hex(CIPHER_TYPE_HEX) 

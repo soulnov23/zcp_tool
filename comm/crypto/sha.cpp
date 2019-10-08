@@ -8,7 +8,7 @@
 #include "openssl/bio.h"
 #include <string.h>
 
-int sha256(const std::string &data_in, std::string &data_out)
+int sha256(const std::string& data_in, std::string& data_out)
 {
     char buf[2];
     unsigned char hash[SHA256_DIGEST_LENGTH];
@@ -27,7 +27,7 @@ int sha256(const std::string &data_in, std::string &data_out)
     return 0;
 }
 
-std::string hmac_sha1_base64(const std::string &key, const std::string &data)
+std::string hmac_sha1_base64(const std::string& key, const std::string& data)
 {
 
 	unsigned char* digest;
@@ -47,7 +47,7 @@ std::string hmac_sha1_base64(const std::string &key, const std::string &data)
     return str_out;
 }
 
-std::string hmac_sha256_hex(const std::string &key, const std::string &data)
+std::string hmac_sha256_hex(const std::string& key, const std::string& data)
 {
 
 	unsigned char* digest;
@@ -73,7 +73,7 @@ std::string hmac_sha256_hex(const std::string &key, const std::string &data)
     return str_out;
 }
 
-std::string hmac_sha256_base64(const std::string &key, const std::string &data)
+std::string hmac_sha256_base64(const std::string& key, const std::string& data)
 {
 
 	unsigned char* digest;
@@ -93,7 +93,7 @@ std::string hmac_sha256_base64(const std::string &key, const std::string &data)
     return str_out;
 }
 
-std::string hmac_sha1_hex(const std::string &key, const std::string &data)
+std::string hmac_sha1_hex(const std::string& key, const std::string& data)
 {
 
 	unsigned char* digest;
@@ -113,7 +113,7 @@ std::string hmac_sha1_hex(const std::string &key, const std::string &data)
 	return szHexHMACSha1;
 }
 
-std::string hmac_md5_hex(const std::string &key, const std::string &data)
+std::string hmac_md5_hex(const std::string& key, const std::string& data)
 {
 	unsigned char* digest;
 
@@ -132,7 +132,7 @@ std::string hmac_md5_hex(const std::string &key, const std::string &data)
 	return szHexHMACSha1;
 }
 
-std::string sha1_hex(const std::string &data)
+std::string sha1_hex(const std::string& data)
 {
     //SHA1 res is placed in a static array, it's not thread safe
     unsigned char *digest = SHA1((unsigned char*)data.c_str(), data.length(), NULL);
@@ -148,7 +148,7 @@ std::string sha1_hex(const std::string &data)
     return str_out;
 }
 
-std::string sha256_hex(const std::string &data)
+std::string sha256_hex(const std::string& data)
 {
     //SHA256 res is placed in a static array, it's not thread safe
     unsigned char *digest = SHA256((unsigned char*)data.c_str(), data.length(), NULL);
@@ -164,7 +164,7 @@ std::string sha256_hex(const std::string &data)
     return str_out;
 }
 
-std::string sha256_rsa_base64(const std::string &key, const std::string &data)
+std::string sha256_rsa_base64(const std::string& key, const std::string& data)
 {
     std::string format_public_key = "-----BEGIN PRIVATE KEY-----\n";
     for (std::string::size_type i = 0; i < key.length(); i += 64) {

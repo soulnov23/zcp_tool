@@ -400,7 +400,7 @@ unsigned char* digest,//[16];                         /* message digest */
 	MD5_memset ((POINTER)context, 0, sizeof (*context));
 }
 
-std::string md5(const std::string &data_in, int mode)
+std::string md5(const std::string& data_in, int mode)
 {
 	/*MD5_CTX *md5Info = ( MD5_CTX * ) hashInfo, md5InfoBuffer;*/
     MD5_CTX md5Info;

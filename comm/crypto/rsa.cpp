@@ -15,7 +15,7 @@
 	PRINTF_ERROR("errno:%lu %s", ERR_get_error(), ERR_error_string(ERR_get_error(), NULL)) \
 }
 
-int hex_decode(std::string &src, std::string &dst)
+int hex_decode(std::string& src, std::string& dst)
 {
 	dst = "";
 	for (size_t i = 0; i < src.size(); i += 2)
@@ -28,7 +28,7 @@ int hex_decode(std::string &src, std::string &dst)
 	return 0;
 }
 
-int verify_rsa_sign(const std::string &data_in, const std::string &sign, const std::string& public_key, int sign_type, int digest_algo)
+int verify_rsa_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo)
 { 
     ERR_load_crypto_strings();
 
@@ -137,7 +137,7 @@ ready_ret:
 	return ret;
 }
 
-int verify_rsa2_sign(const std::string &data_in, const std::string &sign, const std::string& public_key, int sign_type, int digest_algo)
+int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo)
 { 
     ERR_load_crypto_strings();
 
