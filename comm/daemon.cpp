@@ -6,15 +6,12 @@
 #include <sys/param.h>
 #include "daemon.h"
 
-int init_daemon(char *path)
-{
+int init_daemon(char *path) {
 	int pid;
-	if ((pid = fork()) > 0)
-	{
+	if ((pid = fork()) > 0) {
 		exit(0); /* 是父进程，结束父进程 */
 	}
-	else if (pid < 0)
-	{
+	else if (pid < 0) {
 		return -1; /* fork失败 */
 	}
 	/* 是第一子进程，继续 */
@@ -29,12 +26,10 @@ int init_daemon(char *path)
 
 	/* 现在，第一子进程已经成为无终端的会话组长。但它可以重新申请打开一个
 	控制终端。    可以通过使进程不再成为会话组长来禁止进程重新打开控制终端 */
-	if ((pid = fork()) > 0)
-	{
+	if ((pid = fork()) > 0) {
 		exit(0); /* 是第一子进程，结束第一子进程 */
 	}
-	else if (pid < 0)
-	{
+	else if (pid < 0) {
 		return -1; /* fork失败 */
 	}
 

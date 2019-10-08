@@ -10,16 +10,13 @@
 #include "rsa.h"
 #include "printf.h"
 
-#define SET_SSL_ERROR() \
-{ \
+#define SET_SSL_ERROR() { \
 	PRINTF_ERROR("errno:%lu %s", ERR_get_error(), ERR_error_string(ERR_get_error(), NULL)) \
 }
 
-int hex_decode(std::string& src, std::string& dst)
-{
+int hex_decode(std::string& src, std::string& dst) {
 	dst = "";
-	for (size_t i = 0; i < src.size(); i += 2)
-	{
+	for (size_t i = 0; i < src.size(); i += 2) {
 		int c = 0;
 		sscanf(src.c_str() + i, "%2X", &c);
 		dst += (char)c;   
@@ -28,8 +25,7 @@ int hex_decode(std::string& src, std::string& dst)
 	return 0;
 }
 
-int verify_rsa_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo)
-{ 
+int verify_rsa_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo) { 
     ERR_load_crypto_strings();
 
     int ret = 0;
@@ -62,31 +58,27 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
     }
 	format_public_key += "-----END PUBLIC KEY-----\n";
 
-	if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()), format_public_key.length())) == NULL)       
-	{
+	if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()), format_public_key.length())) == NULL)        {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto ready_ret;
 	}
 
 	rsa = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);   
-	if (NULL == rsa)
-	{
+	if (NULL == rsa) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_bio;
 	}
 
 	evp_pkey = EVP_PKEY_new();
-	if (evp_pkey == NULL)
-	{
+	if (evp_pkey == NULL) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_rsa;
 	}
 
-	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1)
-	{
+	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_evp_pkey;
@@ -98,8 +90,7 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
 	EVP_DigestUpdate(&ctx, data_in.c_str(), data_in.length());
 	EVP_DigestFinal(&ctx, digest, &digest_len);
 
-    if (digest_len > SHA512_DIGEST_LENGTH)
-    {
+    if (digest_len > SHA512_DIGEST_LENGTH) {
 		PRINTF_ERROR("SHA1 digest length error");
         ret = RSA_PARAM_TYPE_ERROR;
         goto free_evp_pkey;
@@ -107,22 +98,19 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
 
     //if digest.length < digets_len ..
 
-	if (sign_type == SIGN_CODE_BASE64)
-	{
+	if (sign_type == SIGN_CODE_BASE64) {
 		if (base64_decode(sign, coded_sign) != 0){
 		    PRINTF_ERROR("base64 decode sign error");
              ret = RSA_PARAM_TYPE_ERROR;
              goto free_evp_pkey;
          } 
 	}
-	else if (sign_type == SIGN_CODE_HEX)
-	{
+	else if (sign_type == SIGN_CODE_HEX) {
          buff_to_hex_string(sign, coded_sign);
 	}
 	
      //if algorithm == sha1
-	if (RSA_verify(NID_sha1, digest, digest_len, (unsigned char *)coded_sign.c_str(), coded_sign.length(), rsa) != 1)
-	{
+	if (RSA_verify(NID_sha1, digest, digest_len, (unsigned char *)coded_sign.c_str(), coded_sign.length(), rsa) != 1) {
          SET_SSL_ERROR();
 		ret = RSA_VERIFY_ERROR;
 	}
@@ -137,8 +125,7 @@ ready_ret:
 	return ret;
 }
 
-int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo)
-{ 
+int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type, int digest_algo) { 
     ERR_load_crypto_strings();
 
     int ret = 0;
@@ -171,31 +158,27 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
     }
 	format_public_key += "-----END PUBLIC KEY-----\n";
 
-	if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()), format_public_key.length())) == NULL)       
-	{
+	if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()), format_public_key.length())) == NULL)        {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto ready_ret;
 	}
 
 	rsa = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);   
-	if (NULL == rsa)
-	{
+	if (NULL == rsa) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_bio;
 	}
 
 	evp_pkey = EVP_PKEY_new();
-	if (evp_pkey == NULL)
-	{
+	if (evp_pkey == NULL) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_rsa;
 	}
 
-	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1)
-	{
+	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_evp_pkey;
@@ -207,8 +190,7 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
 	EVP_DigestUpdate(&ctx, data_in.c_str(), data_in.length());
 	EVP_DigestFinal(&ctx, digest, &digest_len);
 
-    if (digest_len > SHA512_DIGEST_LENGTH)
-    {
+    if (digest_len > SHA512_DIGEST_LENGTH) {
 		PRINTF_ERROR("SHA1 digest length error");
         ret = RSA_PARAM_TYPE_ERROR;
         goto free_evp_pkey;
@@ -216,22 +198,19 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
 
     //if digest.length < digets_len ..
 
-	if (sign_type == SIGN_CODE_BASE64)
-	{
+	if (sign_type == SIGN_CODE_BASE64) {
 		if (base64_decode(sign, coded_sign) != 0){
 		    PRINTF_ERROR("base64 decode sign error");
             ret = RSA_PARAM_TYPE_ERROR;
             goto free_evp_pkey;
         } 
 	}
-	else if (sign_type == SIGN_CODE_HEX)
-	{
+	else if (sign_type == SIGN_CODE_HEX) {
         buff_to_hex_string(sign, coded_sign);
 	}
 	
     //if algorithm == sha1
-	if (RSA_verify(NID_sha256, digest, digest_len, (unsigned char *)coded_sign.c_str(), coded_sign.length(), rsa) != 1)
-	{
+	if (RSA_verify(NID_sha256, digest, digest_len, (unsigned char *)coded_sign.c_str(), coded_sign.length(), rsa) != 1) {
         SET_SSL_ERROR();
 		ret = RSA_VERIFY_ERROR;
 	}
@@ -248,17 +227,14 @@ ready_ret:
 
 
 int public_key_str2rsa(const std::string& public_key_in,
-                            RSA* & rsa)
-{
+                            RSA* & rsa) {
 	BIO *bio =  NULL;
 	int ret;
 
     std::string pub_key = public_key_in;
 	//int keyLen = strPubKey.size();
-	for(std::string::size_type i = 64; i < pub_key.size(); i += 64)
-	{
-		if (pub_key[i] != '\n')
-		{
+	for(std::string::size_type i = 64; i < pub_key.size(); i += 64) {
+		if (pub_key[i] != '\n') {
 			pub_key.insert(i, "\n");
 		}
 		++i;
@@ -268,8 +244,7 @@ int public_key_str2rsa(const std::string& public_key_in,
 	char * pub_key_tmp = const_cast<char *>(pub_key.c_str());
 
 	// 从字符串读取RSA公钥
-	if ((bio = BIO_new_mem_buf(pub_key_tmp, pub_key.length())) == NULL)       
-	{
+	if ((bio = BIO_new_mem_buf(pub_key_tmp, pub_key.length())) == NULL)        {
 		char err_buf[512] = {0};
 		ERR_error_string_n(ERR_get_error(), err_buf, sizeof(err_buf));
 		PRINTF_ERROR("BIO_new_mem_buf err %s", err_buf);
@@ -279,8 +254,7 @@ int public_key_str2rsa(const std::string& public_key_in,
 
 	// 从bio结构中得到RSA结构
 	rsa = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);   
-	if (NULL == rsa)
-	{
+	if (NULL == rsa) {
 		char err_buf[512] = {0};
 		ERR_error_string_n(ERR_get_error(), err_buf, sizeof(err_buf));
 		PRINTF_ERROR("PEM_read_bio_RSA_PUBKEY err %s", err_buf);
@@ -295,16 +269,14 @@ int rsa_public_decrypt(RSA* rsa,
                             const std::string& cipher_data_in, 
                             int cipher_type, 
                             int padding_mode_in,
-                            std::string& clear_data_out)
-{
+                            std::string& clear_data_out) {
     EVP_PKEY *pKey = NULL;
 	int ret;
 
     // should include <openssl/evp.h>
     // private key allocation, EVP_PKEY_free() frees up the private key
     pKey = EVP_PKEY_new();
-    if (pKey == NULL)
-    {
+    if (pKey == NULL) {
         PRINTF_ERROR("EVP_PKEY_new err");
         ret = RSA_KEY_ERROR;
         return ret;
@@ -313,8 +285,7 @@ int rsa_public_decrypt(RSA* rsa,
     // should include <openssl/evp.h>
     // set the key referenced by pKey to rsa
     // return 1 for success or 0 for failure
-    if (EVP_PKEY_set1_RSA(pKey, rsa) != 1)
-    {
+    if (EVP_PKEY_set1_RSA(pKey, rsa) != 1) {
         PRINTF_ERROR("EVP_PKEY_set1_RSA err");
         ret = RSA_KEY_ERROR;
         EVP_PKEY_free(pKey);
@@ -322,12 +293,10 @@ int rsa_public_decrypt(RSA* rsa,
     }
     
     std::string cipher_tmp;
-    if (cipher_type == CIPHER_TYPE_BASE64)
-    {
+    if (cipher_type == CIPHER_TYPE_BASE64) {
 		base64_decode(cipher_data_in,cipher_tmp);
     }
-    else if (cipher_type == CIPHER_TYPE_HEX)
-    {
+    else if (cipher_type == CIPHER_TYPE_HEX) {
 		std::string szCipherHex=cipher_data_in;
         hex_decode(szCipherHex, cipher_tmp);
     }
@@ -337,23 +306,19 @@ int rsa_public_decrypt(RSA* rsa,
 	char * clear_data =  (char *)malloc(sizeof(char)*clen);
 	int clear_data_size;
     // RSA_PKCS1_OAEP_PADDING
-    if (padding_mode_in == TOOLS_RSA_PKCS1_PADDING)
-    {
+    if (padding_mode_in == TOOLS_RSA_PKCS1_PADDING) {
         clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char *)cipher_tmp.c_str(), 
                 (unsigned char *)clear_data, rsa, RSA_PKCS1_PADDING);
     }
-    else if (padding_mode_in == TOOLS_RSA_PKCS1_OAEP_PADDING)
-    {
+    else if (padding_mode_in == TOOLS_RSA_PKCS1_OAEP_PADDING) {
         clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char *)cipher_tmp.c_str(), 
                 (unsigned char *)clear_data, rsa, RSA_PKCS1_OAEP_PADDING);
     }
-    else if (padding_mode_in == TOOLS_RSA_NO_PADDING)
-    {
+    else if (padding_mode_in == TOOLS_RSA_NO_PADDING) {
         clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char *)cipher_tmp.c_str(), 
                 (unsigned char *)clear_data, rsa, RSA_NO_PADDING);
     }
-    else
-    {
+    else {
     	PRINTF_ERROR("PaddingMode is invalid");
         ret = RSA_DECRYPT_ERROR;
 		free(clear_data);
@@ -361,8 +326,7 @@ int rsa_public_decrypt(RSA* rsa,
         return ret;
     }
     
-    if (clear_data_size < 0)
-    {
+    if (clear_data_size < 0) {
     	PRINTF_ERROR("RSA_public_decrypt err");
         ret = RSA_DECRYPT_ERROR;
 		free(clear_data);
@@ -382,27 +346,23 @@ int rsa_pubkey_decrypt(const std::string& cipher_in,
                           int cipher_type, 
                           int padding_mode_in,
                           const std::string& pub_key_in, 
-                          std::string& clear_data_out)
-{
+                          std::string& clear_data_out) {
     RSA* rsa = NULL;
     
     // 不成功的时候rsa没有生成, 成功以后, 后面使用rsa的要负责释放
     int ret = public_key_str2rsa(pub_key_in, rsa);
-    if (0 != ret)
-    {
+    if (0 != ret) {
         return ret;
     }
 
     ret = rsa_public_decrypt(rsa, cipher_in, cipher_type, padding_mode_in, clear_data_out);
-    if (rsa != NULL)
-    {
+    if (rsa != NULL) {
         RSA_free(rsa);
     }
     return ret;
 }
 
-int calculate_rsa_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& signature)
-{
+int calculate_rsa_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& signature) {
     ERR_load_crypto_strings();
     
     int ret = 0;
@@ -425,16 +385,14 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 
     format_private_key = "-----BEGIN RSA PRIVATE KEY-----\n";
 //	int keyLen = private_key.size();
-	for(std::string::size_type i = 0; i < private_key.size(); i += 64)
-	{
+	for(std::string::size_type i = 0; i < private_key.size(); i += 64) {
         format_private_key += private_key.substr(i, 64);
         format_private_key += '\n';
 	}
 	format_private_key += ("-----END RSA PRIVATE KEY-----\n");
 
 	// 从字符串读取RSA私钥
-	if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()), format_private_key.length())) == NULL)       
-	{
+	if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()), format_private_key.length())) == NULL)        {
 		SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto ready_ret;
@@ -442,8 +400,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 
 	// 从bio结构中得到RSA结构
 	rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);   
-	if (NULL == rsa)
-	{
+	if (NULL == rsa) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto free_bio;
@@ -452,8 +409,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	// should include <openssl/evp.h>
 	// private key allocation, EVP_PKEY_free() frees up the private key
 	evp_pkey = EVP_PKEY_new();
-	if (evp_pkey == NULL)
-	{
+	if (evp_pkey == NULL) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_rsa;
@@ -462,8 +418,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	// should include <openssl/evp.h>
 	// set the key referenced by pKey to rsa
 	// return 1 for success or 0 for failure
-	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1)
-	{
+	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto free_evp_pkey;
@@ -475,8 +430,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	EVP_DigestUpdate(&ctx, data_in.c_str(), data_in.size());
 	EVP_DigestFinal(&ctx, digest, &digest_len);
 
-	if (digest_len > SHA512_DIGEST_LENGTH)
-    {
+	if (digest_len > SHA512_DIGEST_LENGTH) {
 		PRINTF_ERROR("SHA256 digest length error");
         ret = RSA_PARAM_TYPE_ERROR;
         goto free_ctx;
@@ -492,16 +446,14 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	// It stores the signature in sigret and the signature size in siglen. sigret must point to RSA_size(rsa) bytes of memory. 
 	// Note that PKCS #1 adds meta-data, placing limits on the size of the key that can be used. See RSA_private_encrypt(3) for lower-level operations.
 	ret = RSA_sign(NID_sha1, digest, digest_len, sign, &sign_size, rsa);
-	if (ret != 1)
-	{
+	if (ret != 1) {
         SET_SSL_ERROR();
         ret = RSA_SIGN_ERROR;
         goto free_mem;
 	}
 
     ret = 0;
-	if (sign_type == SIGN_CODE_BASE64)
-	{
+	if (sign_type == SIGN_CODE_BASE64) {
         std::string tmp((char*)sign, sign_size);
 		if (base64_encode(tmp, signature) !=0)
         {
@@ -510,13 +462,11 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
             goto free_mem;
         }
 	}
-	else if (sign_type == SIGN_CODE_HEX)
-	{   
+	else if (sign_type == SIGN_CODE_HEX) {   
         std::string tmp((char*)sign, sign_size);
         encode_hex_string(tmp, signature);
 	}
-	else
-	{
+	else {
 		SET_SSL_ERROR();
 		ret = RSA_PARAM_TYPE_ERROR;
 	}
@@ -536,8 +486,7 @@ ready_ret:
 }
 
 
-int calculate_rsa2_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& signature)
-{
+int calculate_rsa2_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& signature) {
     ERR_load_crypto_strings();
     
     int ret = 0;
@@ -560,16 +509,14 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 
     format_private_key = "-----BEGIN RSA PRIVATE KEY-----\n";
 //	int keyLen = private_key.size();
-	for(std::string::size_type i = 0; i < private_key.size(); i += 64)
-	{
+	for(std::string::size_type i = 0; i < private_key.size(); i += 64) {
         format_private_key += private_key.substr(i, 64);
         format_private_key += '\n';
 	}
 	format_private_key += ("-----END RSA PRIVATE KEY-----\n");
 
 	// 从字符串读取RSA私钥
-	if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()), format_private_key.length())) == NULL)       
-	{
+	if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()), format_private_key.length())) == NULL)        {
 		SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto ready_ret;
@@ -577,8 +524,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 
 	// 从bio结构中得到RSA结构
 	rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);   
-	if (NULL == rsa)
-	{
+	if (NULL == rsa) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto free_bio;
@@ -587,8 +533,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	// should include <openssl/evp.h>
 	// private key allocation, EVP_PKEY_free() frees up the private key
 	evp_pkey = EVP_PKEY_new();
-	if (evp_pkey == NULL)
-	{
+	if (evp_pkey == NULL) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
         goto free_rsa;
@@ -597,8 +542,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	// should include <openssl/evp.h>
 	// set the key referenced by pKey to rsa
 	// return 1 for success or 0 for failure
-	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1)
-	{
+	if (EVP_PKEY_set1_RSA(evp_pkey, rsa) != 1) {
         SET_SSL_ERROR();
 		ret = RSA_KEY_ERROR;
 		goto free_evp_pkey;
@@ -610,8 +554,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	EVP_DigestUpdate(&ctx, data_in.c_str(), data_in.size());
 	EVP_DigestFinal(&ctx, digest, &digest_len);
 
-	if (digest_len > SHA512_DIGEST_LENGTH)
-    {
+	if (digest_len > SHA512_DIGEST_LENGTH) {
 		PRINTF_ERROR("SHA256 digest length error");
         ret = RSA_PARAM_TYPE_ERROR;
         goto free_ctx;
@@ -627,16 +570,14 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	// It stores the signature in sigret and the signature size in siglen. sigret must point to RSA_size(rsa) bytes of memory. 
 	// Note that PKCS #1 adds meta-data, placing limits on the size of the key that can be used. See RSA_private_encrypt(3) for lower-level operations.
 	ret = RSA_sign(NID_sha256, digest, digest_len, sign, &sign_size, rsa);
-	if (ret != 1)
-	{
+	if (ret != 1) {
         SET_SSL_ERROR();
         ret = RSA_SIGN_ERROR;
         goto free_mem;
 	}
 
     ret = 0;
-	if (sign_type == SIGN_CODE_BASE64)
-	{
+	if (sign_type == SIGN_CODE_BASE64) {
         std::string tmp((char*)sign, sign_size);
 		if (base64_encode(tmp, signature) !=0)
         {
@@ -645,13 +586,11 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
             goto free_mem;
         }
 	}
-	else if (sign_type == SIGN_CODE_HEX)
-	{   
+	else if (sign_type == SIGN_CODE_HEX) {   
         std::string tmp((char*)sign, sign_size);
         encode_hex_string(tmp, signature);
 	}
-	else
-	{
+	else {
 		SET_SSL_ERROR();
 		ret = RSA_PARAM_TYPE_ERROR;
 	}

@@ -5,8 +5,7 @@
 
 #define BUFFER_DEFAULT_SIZE 64*1024
 
-buffer::buffer()
-{
+buffer::buffer() {
 	m_buffer = (char*)malloc(BUFFER_DEFAULT_SIZE);
 	assert(m_buffer != NULL);
 	m_size = 0;
@@ -14,10 +13,8 @@ buffer::buffer()
 	memset(m_buffer, 0, BUFFER_DEFAULT_SIZE);
 }
 
-buffer::~buffer()
-{
-	if (NULL != m_buffer)
-	{
+buffer::~buffer() {
+	if (NULL != m_buffer) {
 		free(m_buffer);	
 		m_buffer = NULL;
 		m_size = 0;
@@ -25,10 +22,8 @@ buffer::~buffer()
 	}
 }
 
-void buffer::append(const char *data, int len)
-{
-	if ((m_size + len) >= m_max_size)
-	{
+void buffer::append(const char *data, int len) {
+	if ((m_size + len) >= m_max_size) {
 		m_buffer = (char*)realloc((void*)m_buffer, 2*m_max_size);
 		assert(m_buffer != NULL);
 		m_max_size = 2*m_max_size;
@@ -37,11 +32,9 @@ void buffer::append(const char *data, int len)
 	m_size += len;
 }
 
-void buffer::remove(int len)
-{
+void buffer::remove(int len) {
 	assert(len <= m_size);
-	if (len == m_size)
-	{
+	if (len == m_size) {
 		memset(m_buffer, 0, m_size);
 		m_size = 0;
 		return;
@@ -50,8 +43,7 @@ void buffer::remove(int len)
 	m_size = m_size - len;
 }
 
-int buffer::size()
-{
+int buffer::size() {
 	return m_size;
 }
 

@@ -8,8 +8,7 @@
 #include "openssl/bio.h"
 #include <string.h>
 
-int sha256(const std::string& data_in, std::string& data_out)
-{
+int sha256(const std::string& data_in, std::string& data_out) {
     char buf[2];
     unsigned char hash[SHA256_DIGEST_LENGTH];
     SHA256_CTX sha256;
@@ -17,8 +16,7 @@ int sha256(const std::string& data_in, std::string& data_out)
     SHA256_Update(&sha256, data_in.c_str(), data_in.size());
     SHA256_Final(hash, &sha256);
     std::string new_string = "";
-    for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    {
+    for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
         sprintf(buf,"%02x",hash[i]);
         new_string = new_string + buf;
     }
@@ -27,8 +25,7 @@ int sha256(const std::string& data_in, std::string& data_out)
     return 0;
 }
 
-std::string hmac_sha1_base64(const std::string& key, const std::string& data)
-{
+std::string hmac_sha1_base64(const std::string& key, const std::string& data) {
 
 	unsigned char* digest;
     unsigned int len = 0;
@@ -47,8 +44,7 @@ std::string hmac_sha1_base64(const std::string& key, const std::string& data)
     return str_out;
 }
 
-std::string hmac_sha256_hex(const std::string& key, const std::string& data)
-{
+std::string hmac_sha256_hex(const std::string& key, const std::string& data) {
 
 	unsigned char* digest;
     unsigned int len = 0;
@@ -63,8 +59,7 @@ std::string hmac_sha256_hex(const std::string& key, const std::string& data)
     //string str_in = (char *)digest;
 
     //str2hex
-    for (unsigned int i = 0; i < len; ++i)
-    {
+    for (unsigned int i = 0; i < len; ++i) {
         char szTmp[3] = {0};
         snprintf(szTmp, sizeof(szTmp), "%02x", digest[i]);
         str_out += szTmp;
@@ -73,8 +68,7 @@ std::string hmac_sha256_hex(const std::string& key, const std::string& data)
     return str_out;
 }
 
-std::string hmac_sha256_base64(const std::string& key, const std::string& data)
-{
+std::string hmac_sha256_base64(const std::string& key, const std::string& data) {
 
 	unsigned char* digest;
     unsigned int len = 0;
@@ -93,8 +87,7 @@ std::string hmac_sha256_base64(const std::string& key, const std::string& data)
     return str_out;
 }
 
-std::string hmac_sha1_hex(const std::string& key, const std::string& data)
-{
+std::string hmac_sha1_hex(const std::string& key, const std::string& data) {
 
 	unsigned char* digest;
 
@@ -113,8 +106,7 @@ std::string hmac_sha1_hex(const std::string& key, const std::string& data)
 	return szHexHMACSha1;
 }
 
-std::string hmac_md5_hex(const std::string& key, const std::string& data)
-{
+std::string hmac_md5_hex(const std::string& key, const std::string& data) {
 	unsigned char* digest;
 
 	// You may use other hash engines. e.g EVP_md5(), EVP_sha224, EVP_sha512, etc
@@ -132,14 +124,12 @@ std::string hmac_md5_hex(const std::string& key, const std::string& data)
 	return szHexHMACSha1;
 }
 
-std::string sha1_hex(const std::string& data)
-{
+std::string sha1_hex(const std::string& data) {
     //SHA1 res is placed in a static array, it's not thread safe
     unsigned char *digest = SHA1((unsigned char*)data.c_str(), data.length(), NULL);
 
     std::string str_out;
-    for (unsigned int i = 0; i < SHA_DIGEST_LENGTH; ++i)
-    {
+    for (unsigned int i = 0; i < SHA_DIGEST_LENGTH; ++i) {
         char szTmp[3] = {0};
         snprintf(szTmp, sizeof(szTmp), "%02x", digest[i]);
         str_out += szTmp;
@@ -148,14 +138,12 @@ std::string sha1_hex(const std::string& data)
     return str_out;
 }
 
-std::string sha256_hex(const std::string& data)
-{
+std::string sha256_hex(const std::string& data) {
     //SHA256 res is placed in a static array, it's not thread safe
     unsigned char *digest = SHA256((unsigned char*)data.c_str(), data.length(), NULL);
 
     std::string str_out;
-    for (unsigned int i = 0; i < SHA256_DIGEST_LENGTH; ++i)
-    {
+    for (unsigned int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
         char szTmp[3] = {0};
         snprintf(szTmp, sizeof(szTmp), "%02x", digest[i]);
         str_out += szTmp;
@@ -164,8 +152,7 @@ std::string sha256_hex(const std::string& data)
     return str_out;
 }
 
-std::string sha256_rsa_base64(const std::string& key, const std::string& data)
-{
+std::string sha256_rsa_base64(const std::string& key, const std::string& data) {
     std::string format_public_key = "-----BEGIN PRIVATE KEY-----\n";
     for (std::string::size_type i = 0; i < key.length(); i += 64) {
         format_public_key += key.substr(i, 64);
@@ -175,15 +162,13 @@ std::string sha256_rsa_base64(const std::string& key, const std::string& data)
 
     //从字符串读取RSA私钥
 	BIO *bio = NULL;
-    if ((bio = BIO_new_mem_buf((void *)(format_public_key.c_str()), format_public_key.length())) == NULL)
-    {
+    if ((bio = BIO_new_mem_buf((void *)(format_public_key.c_str()), format_public_key.length())) == NULL) {
         return "";
     }
 
     //从bio结构中得到RSA结构
     RSA *rsa = NULL;
-    if ((rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL)) == NULL)
-    {
+    if ((rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL)) == NULL) {
         BIO_free(bio);
         return "";
     }
@@ -194,8 +179,7 @@ std::string sha256_rsa_base64(const std::string& key, const std::string& data)
     unsigned int siglen = RSA_size(rsa);
     unsigned char *sigret = (unsigned char *)malloc(sizeof(unsigned char) * siglen);
 	memset(sigret, 0x0, sizeof(unsigned char) * siglen);
-    if(RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH, sigret, &siglen, rsa) != 1)
-    {
+    if(RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH, sigret, &siglen, rsa) != 1) {
         BIO_free(bio);
         RSA_free(rsa);
         free(sigret);

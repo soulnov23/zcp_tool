@@ -16,8 +16,7 @@ using namespace rapidjson;
 #include "json_parser.h"
 #include "utils.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     double amount = 48.99;
     char szbuf[64];
 	snprintf(szbuf, sizeof(szbuf), "%.2lf", amount);

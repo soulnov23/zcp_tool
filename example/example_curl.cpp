@@ -10,8 +10,7 @@ using namespace std;
 #include "net/http_handle.h"
 #include "coder.h"
 
-void get_header(string sign, vector<string> &HeadInfo)
-{
+void get_header(string sign, vector<string> &HeadInfo) {
 	string now_time = to_string(time(NULL));
 	string app_id = "8ab74856-8772-45c9-96db-54cb30ab9f74";
 	string app_key = "5b96f20a-011f-4254-8be8-9a5ceb2f317f";
@@ -30,8 +29,7 @@ void get_header(string sign, vector<string> &HeadInfo)
 	PRINTF_DEBUG("timestamp:[%s] apisign:[%s]", now_time.c_str(), api_sign.c_str());
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 	/*
 	string private_key = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCc540quYC9xzCMZeFOe8UmE3W5LWrqFd/"
 						 "2DDSHQASxq8vmOiwFRSG2hsVXtjfmNLQNhtpTR0SGDUjkCsx+"
@@ -81,8 +79,7 @@ int main(int argc, char *argv[])
 	string recv_data;
 	int err_code;
 	string err_msg;
-	if (0 != http_proc(url, 10, &HeadInfo, post_data_str, recv_data, err_code, err_msg))
-	{
+	if (0 != http_proc(url, 10, &HeadInfo, post_data_str, recv_data, err_code, err_msg)) {
 		PRINTF_ERROR("http_proc failed");
 	}
 	PRINTF_DEBUG("recv_data=[%s]", recv_data.c_str());

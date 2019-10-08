@@ -1,8 +1,7 @@
 #include "http_handle.h"
 #include "printf.h"
 
-size_t recv_proc(void* ptr, size_t size, size_t nmemb, std::string* p)
-{
+size_t recv_proc(void* ptr, size_t size, size_t nmemb, std::string* p) {
 
 	if (p == NULL)
 		return 0;
@@ -25,8 +24,7 @@ int http_proc(const std::string& strUrl,
 		const std::string& strCookie,
 		//const std::string& strDnsList,
 		//const std::string& strIpv4,
-		bool https_verify)
-{
+		bool https_verify) {
 
 	int ret         =  0;
 	char cerr[1024] =  {0};
@@ -36,31 +34,26 @@ int http_proc(const std::string& strUrl,
 	 * 官方推荐使用curl_global_init和curl_global_cleanup
 	 * */
 	static bool bInit = false;
-	if (bInit == false)
-	{
+	if (bInit == false) {
 		bInit = true;
 		curl_global_init(CURL_GLOBAL_ALL);  
 	}
 
 	CURL* curl = curl_easy_init();
-	if (!curl) 
-	{
+	if (!curl)  {
 		PRINTF_ERROR("[curl]curl_easy_init error");
 		strErrmsg = cerr;
 		return -501;
 	}
 
 	struct curl_slist* headerlist =  NULL;
-	if(pvecHeadInfo != NULL)
-	{
-		for(unsigned int i = 0; i < pvecHeadInfo->size(); i++)
-		{
+	if(pvecHeadInfo != NULL) {
+		for(unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
 			headerlist = curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
 			PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
 		}
 	}
-	else 
-	{
+	else  {
 		headerlist = curl_slist_append(headerlist, "Accept: */*");
 		headerlist = curl_slist_append(headerlist, "Pragma: no-cache");
 	}
@@ -71,8 +64,7 @@ int http_proc(const std::string& strUrl,
 
 	curl_easy_setopt(curl, CURLOPT_URL, strUrl.c_str());
 
-	if (!strPostData.empty())
-	{
+	if (!strPostData.empty()) {
 		curl_easy_setopt(curl, CURLOPT_POST, 1);
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, strPostData.c_str());
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strPostData.size());
@@ -83,21 +75,18 @@ int http_proc(const std::string& strUrl,
 
 //Added in cURL 7.33.0暂时不支持
 /*
-	if (!strDnsList.empty())
-	{
+	if (!strDnsList.empty()) {
 		curl_easy_setopt(curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false);
 		curl_easy_setopt(curl, CURLOPT_DNS_SERVERS, strDnsList.c_str());
 	}
 
-	if (!strIpv4.empty())
-	{
+	if (!strIpv4.empty()) {
 		curl_easy_setopt(curl, CURLOPT_DNS_LOCAL_IP4, strIpv4.c_str());
 	}
 */
 
 	//设定为不验证证书和HOST
-	if (!https_verify)
-	{
+	if (!https_verify) {
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
 	}
@@ -114,14 +103,12 @@ int http_proc(const std::string& strUrl,
 
 
 	CURLcode res = curl_easy_perform(curl);
-	if (res != CURLE_OK) 
-	{
+	if (res != CURLE_OK)  {
 		ret = -502;
 
 		PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
 		strErrmsg = cerr;
-		switch (res)
-		{
+		switch (res) {
 			case CURLE_URL_MALFORMAT:
 				;
 			case CURLE_COULDNT_RESOLVE_HOST:
@@ -133,18 +120,15 @@ int http_proc(const std::string& strUrl,
 				break;
 		}
 	}
-	else
-	{
+	else {
 		long iRet;
 		res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &iRet);
-		if (res != CURLE_OK) 
-		{
+		if (res != CURLE_OK)  {
 			ret = -503;
 			PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
 			strErrmsg = cerr;
 		}
-		else if (iRet != 200)// HTTP OK
-		{
+		else if (iRet != 200) {
 			ret = -504;
 			PRINTF_ERROR("[curl]Http Response FAIL(%ld)", iRet);
 			strErrmsg = cerr;
@@ -173,8 +157,7 @@ int http_proc(const std::string& strUrl,
 		const std::string& strCookie,
 		//const std::string& strDnsList,
 		//const std::string& strIpv4,
-		bool https_verify)
-{
+		bool https_verify) {
 
 	int ret         =  0;
 	char cerr[1024] =  {0};
@@ -184,30 +167,25 @@ int http_proc(const std::string& strUrl,
 	 * 官方推荐使用curl_global_init和curl_global_cleanup
 	 * */
 	static bool bInit = false;
-	if (bInit == false)
-	{
+	if (bInit == false) {
 		bInit = true;
 		curl_global_init(CURL_GLOBAL_ALL);  
 	}
 
 	CURL* curl = curl_easy_init();
-	if (!curl) 
-	{
+	if (!curl)  {
 		PRINTF_ERROR("[curl]curl_easy_init error");
 		strErrmsg = cerr;
 		return -501;
 	}
 
 	struct curl_slist* headerlist =  NULL;
-	if(pvecHeadInfo != NULL)
-	{
-		for(unsigned int i = 0; i < pvecHeadInfo->size(); i++)
-		{
+	if(pvecHeadInfo != NULL) {
+		for(unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
 			headerlist = curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
 		}
 	}
-	else 
-	{
+	else  {
 		headerlist = curl_slist_append(headerlist, "Accept: */*");
 		headerlist = curl_slist_append(headerlist, "Pragma: no-cache");
 	}
@@ -221,8 +199,7 @@ int http_proc(const std::string& strUrl,
 
 	curl_easy_setopt(curl, CURLOPT_URL, strUrl.c_str());
 
-	if (strPostData != "")
-	{
+	if (strPostData != "") {
 		curl_easy_setopt(curl, CURLOPT_POST, 1);
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, strPostData.c_str());
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strPostData.size());
@@ -233,21 +210,18 @@ int http_proc(const std::string& strUrl,
 
 //Added in cURL 7.33.0暂时不支持
 /*
-	if (!strDnsList.empty())
-	{
+	if (!strDnsList.empty()) {
 		curl_easy_setopt(curl, CURLOPT_DNS_USE_GLOBAL_CACHE, false);
 		curl_easy_setopt(curl, CURLOPT_DNS_SERVERS, strDnsList.c_str());
 	}
 
-	if (!strIpv4.empty())
-	{
+	if (!strIpv4.empty()) {
 		curl_easy_setopt(curl, CURLOPT_DNS_LOCAL_IP4, strIpv4.c_str());
 	}
 */
 
 	//设定为不验证证书和HOST
-	if (!https_verify)
-	{
+	if (!https_verify) {
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
 	}
@@ -264,14 +238,12 @@ int http_proc(const std::string& strUrl,
 
 
 	CURLcode res = curl_easy_perform(curl);
-	if (res != CURLE_OK) 
-	{
+	if (res != CURLE_OK)  {
 		ret = -502;
 
 		PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
 		strErrmsg = cerr;
-		switch (res)
-		{
+		switch (res) {
 			case CURLE_URL_MALFORMAT:
 				;
 			case CURLE_COULDNT_RESOLVE_HOST:
@@ -283,18 +255,15 @@ int http_proc(const std::string& strUrl,
 				break;
 		}
 	}
-	else
-	{
+	else {
 		long iRet;
 		res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &iRet);
-		if (res != CURLE_OK) 
-		{
+		if (res != CURLE_OK)  {
 			ret = -503;
 			PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
 			strErrmsg = cerr;
 		}
-		else if (iRet != 200)// HTTP OK
-		{
+		else if (iRet != 200) {
 			ret = -504;
 			PRINTF_ERROR("[curl]Http Response FAIL(%ld)", iRet);
 			strErrmsg = cerr;
