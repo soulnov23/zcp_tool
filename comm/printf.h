@@ -6,6 +6,7 @@
 #include <string.h>
 #include "time_utils.h"
 
+/* \e等同于\033 */
 #define RED_PRINT_BEG     "\e[1;31m"
 #define RED_PRINT_END     "\e[m"
 #define GREEN_PRINT_BEG   "\e[1;32m"
