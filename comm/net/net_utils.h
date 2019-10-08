@@ -16,6 +16,7 @@ int make_socket_cloexec(int fd);
 int set_socket_rcvbuf(int fd, int bufsize);
 int set_socket_sndbuf(int fd, int bufsize);
 
+bool is_private_ip(const string &ip);
 //网络字节序整型ip转换为点分十进制字符串ip
 string net_int_ip2str(uint32_t ip);
 //主机字节序整型ip转换为点分十进制字符串ip

@@ -87,12 +87,56 @@ int set_socket_sndbuf(int fd, int bufsize)
 	return setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof(bufsize));
 }
 
+bool is_private_ip(const string &ip)
+{
+	if (ip.empty())
+	{
+		return false;
+	}
+	struct in_addr addr;
+	int ret = inet_pton(AF_INET, ip.c_str(), &addr);
+    if (ret == 0) // IP格式校验
+    {
+		PRINTF_ERROR("ip error");
+        return false;
+    }
+	else if (ret == -1)
+	{
+		PRINTF_ERROR("inet_pton error");
+        return false;
+	}
+    unsigned int ip_piece[2];
+    if (sscanf(ip.c_str(), "%u.%u", &ip_piece[0], &ip_piece[1]) != 2) // 取IP前两段
+    {
+		PRINTF_ERROR("sscanf error");
+        return false;
+    }
+    unsigned int value = ip_piece[0]*256*256*256 + ip_piece[1]*256*256;
+    // "10.0.0.0" >> 24 == 0xA
+    // "9.0.0.0" >> 24 == 0x9
+    // "172.16.0.0" >> 20 == 0xAC1
+    // "192.168.0.0" >> 16 == 0xC0A8
+    // "100.64.0.0" >> 22 == 0x191
+    if (value >> 24 == 0xA || value >> 24 == 0x9 || value >> 20 == 0xAC1 || value >> 16 == 0xC0A8 || value >> 22 == 0x191)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 string net_int_ip2str(uint32_t ip)
 {
 	struct sockaddr_in addr_in;
 	char buf[128] = {0};
 	addr_in.sin_addr.s_addr = ip;
-	inet_ntop(AF_INET, &addr_in.sin_addr, buf, sizeof(buf));
+	if (inet_ntop(AF_INET, &addr_in.sin_addr, buf, sizeof(buf)) == NULL)
+	{
+		PRINTF_ERROR("inet_ntop error");
+        return "";
+	}
 	return buf;
 }
 
@@ -114,7 +158,17 @@ uint32_t str2net_int_ip(const string &ip)
 		return 0;
 	}
 	struct sockaddr_in addr_in;
-	inet_pton(AF_INET, ip.c_str(), &addr_in.sin_addr);
+	int ret = inet_pton(AF_INET, ip.c_str(), &addr_in.sin_addr);
+	if (ret == 0) // IP格式校验
+    {
+		PRINTF_ERROR("ip error");
+        return 0;
+    }
+	else if (ret == -1)
+	{
+		PRINTF_ERROR("inet_pton error");
+        return 0;
+	}
 	return addr_in.sin_addr.s_addr;
 }
 
