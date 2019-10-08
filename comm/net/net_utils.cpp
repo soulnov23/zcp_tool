@@ -87,7 +87,7 @@ int set_socket_sndbuf(int fd, int bufsize)
 	return setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof(bufsize));
 }
 
-bool is_private_ip(const string &ip)
+bool is_private_ip(const string& ip)
 {
 	if (ip.empty())
 	{
@@ -145,7 +145,7 @@ string host_int_ip2str(uint32_t ip)
 	return net_int_ip2str(htonl(ip));
 }
 
-uint32_t str2net_int_ip(const string &ip)
+uint32_t str2net_int_ip(const string& ip)
 {
 	if (ip.empty())
 	{
@@ -172,12 +172,12 @@ uint32_t str2net_int_ip(const string &ip)
 	return addr_in.sin_addr.s_addr;
 }
 
-uint32_t str2host_int_ip(const string &ip)
+uint32_t str2host_int_ip(const string& ip)
 {
 	return ntohl(str2net_int_ip(ip));
 }
 
-int get_peer_name(int fd, uint32_t &peer_addr, uint16_t &peer_port)
+int get_peer_name(int fd, uint32_t& peer_addr, uint16_t& peer_port)
 {
 	struct sockaddr_in addr;
 	socklen_t len = sizeof(addr);
@@ -191,7 +191,7 @@ int get_peer_name(int fd, uint32_t &peer_addr, uint16_t &peer_port)
 	return 0;
 }
 
-int get_sock_name(int fd, uint32_t &peer_addr, uint16_t &peer_port)
+int get_sock_name(int fd, uint32_t& peer_addr, uint16_t& peer_port)
 {
 	struct sockaddr_in addr;
 	socklen_t len = sizeof(addr);
@@ -206,7 +206,7 @@ int get_sock_name(int fd, uint32_t &peer_addr, uint16_t &peer_port)
 }
 
 /*
-bool get_local_ip(const char *eth_name, string &ip)
+bool get_local_ip(const char* eth_name, string& ip)
 {
 	//定义设备最大数量
 	#define MAXINTERFACES 16 
@@ -249,7 +249,7 @@ bool get_local_ip(const char *eth_name, string &ip)
 }
 */
 
-bool get_local_ip(const char *eth_name, string &ip)
+bool get_local_ip(const char* eth_name, string& ip)
 {
 	bool ret = false;
 
@@ -275,7 +275,7 @@ bool get_local_ip(const char *eth_name, string &ip)
 	return ret;
 }
 
-bool get_local_mac(const char *eth_name, string &mac)
+bool get_local_mac(const char* eth_name, string& mac)
 {
 	bool ret = false;
 
@@ -309,7 +309,7 @@ bool get_local_mac(const char *eth_name, string &mac)
 	return ret;
 }
 
-int set_signal_handle(int sig_no, void (*handle)(int, siginfo_t *, void *))
+int set_signal_handle(int sig_no, void (*handle)(int, siginfo_t*, void*))
 {
 	struct sigaction sig;
 	memset(&sig, 0, sizeof(struct sigaction));

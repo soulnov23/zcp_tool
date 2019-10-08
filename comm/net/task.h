@@ -7,7 +7,7 @@ public:
 	task(){}
 	virtual ~task(){}
 
-	virtual void *get_msg() = 0;
+	virtual void* get_msg() = 0;
 
 	virtual int get_fd() = 0;
 

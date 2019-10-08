@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <unistd.h>
 
-connector::connector(int fd, char *ip, arg *data)
+connector::connector(int fd, char* ip, arg* data)
 {
 	m_fd = fd;
 	m_buffer = new buffer;

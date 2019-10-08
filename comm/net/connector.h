@@ -7,7 +7,7 @@
 class connector
 {
 public:
-	connector(int fd, char *ip, arg *data);
+	connector(int fd, char* ip, arg* data);
 	~connector();
 
 private:
@@ -15,9 +15,9 @@ private:
 
 public:
 	int m_fd;
-	buffer *m_buffer;
+	buffer* m_buffer;
 	char m_ip[20];
-	arg *m_data;
+	arg* m_data;
 };
 
 #endif

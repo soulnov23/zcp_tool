@@ -1,7 +1,7 @@
 #include "http_handle.h"
 #include "printf.h"
 
-size_t recv_proc(void *ptr, size_t size, size_t nmemb, std::string *p)
+size_t recv_proc(void* ptr, size_t size, size_t nmemb, std::string* p)
 {
 
 	if (p == NULL)
@@ -15,16 +15,16 @@ size_t recv_proc(void *ptr, size_t size, size_t nmemb, std::string *p)
 	return (size * nmemb);
 }
 
-int http_proc(const std::string &strUrl, 
+int http_proc(const std::string& strUrl, 
 		unsigned iTimeout, 
-		std::vector<std::string> *pvecHeadInfo,
-		std::string &strPostData, 
-		std::string &strRecvBuf,
-		int &iResult,
-		std::string &strErrmsg,
-		const std::string &strCookie,
-		//const std::string &strDnsList,
-		//const std::string &strIpv4,
+		std::vector<std::string>* pvecHeadInfo,
+		std::string& strPostData, 
+		std::string& strRecvBuf,
+		int& iResult,
+		std::string& strErrmsg,
+		const std::string& strCookie,
+		//const std::string& strDnsList,
+		//const std::string& strIpv4,
 		bool https_verify)
 {
 
@@ -42,7 +42,7 @@ int http_proc(const std::string &strUrl,
 		curl_global_init(CURL_GLOBAL_ALL);  
 	}
 
-	CURL *curl = curl_easy_init();
+	CURL* curl = curl_easy_init();
 	if (!curl) 
 	{
 		PRINTF_ERROR("[curl]curl_easy_init error");
@@ -50,7 +50,7 @@ int http_proc(const std::string &strUrl,
 		return -501;
 	}
 
-	struct curl_slist *headerlist =  NULL;
+	struct curl_slist* headerlist =  NULL;
 	if(pvecHeadInfo != NULL)
 	{
 		for(unsigned int i = 0; i < pvecHeadInfo->size(); i++)
@@ -162,17 +162,17 @@ int http_proc(const std::string &strUrl,
 	return ret;
 }
 
-int http_proc(const std::string &strUrl, 
+int http_proc(const std::string& strUrl, 
 		unsigned iTimeout, 
-		std::string &strUserPwd, // The format of which is: [user name]:[password].
-		std::vector<std::string> *pvecHeadInfo,
-		std::string &strPostData, 
-		std::string &strRecvBuf,
-		int &iResult,
-		std::string &strErrmsg,
-		const std::string &strCookie,
-		//const std::string &strDnsList,
-		//const std::string &strIpv4,
+		std::string& strUserPwd, // The format of which is: [user name]:[password].
+		std::vector<std::string>* pvecHeadInfo,
+		std::string& strPostData, 
+		std::string& strRecvBuf,
+		int& iResult,
+		std::string& strErrmsg,
+		const std::string& strCookie,
+		//const std::string& strDnsList,
+		//const std::string& strIpv4,
 		bool https_verify)
 {
 
@@ -190,7 +190,7 @@ int http_proc(const std::string &strUrl,
 		curl_global_init(CURL_GLOBAL_ALL);  
 	}
 
-	CURL *curl = curl_easy_init();
+	CURL* curl = curl_easy_init();
 	if (!curl) 
 	{
 		PRINTF_ERROR("[curl]curl_easy_init error");
@@ -198,7 +198,7 @@ int http_proc(const std::string &strUrl,
 		return -501;
 	}
 
-	struct curl_slist *headerlist =  NULL;
+	struct curl_slist* headerlist =  NULL;
 	if(pvecHeadInfo != NULL)
 	{
 		for(unsigned int i = 0; i < pvecHeadInfo->size(); i++)
