@@ -20,27 +20,32 @@ int json_to_map(map<string, string> &record, string &data)
 	Json::Value::Members member = value.getMemberNames();
 	for (Json::Value::Members::iterator it = member.begin(); it != member.end(); it++)
 	{
-		if (value[*it].isString())
+		//if (value[*it].isString())
+		if (value[*it].type() == Json::stringValue)
 		{
 			//record.insert(pair<string, string>(*it, value[*it].asString()));
 			record[*it] = value[*it].asString();
 		}
-		else if (value[*it].isDouble())
+		//else if (value[*it].isDouble())
+		else if (value[*it].type() == Json::realValue)
 		{
 			//record.insert(pair<string, string>(*it, to_string(value[*it].asDouble())));
 			record[*it] = to_string(value[*it].asDouble());
 		}
-		else if (value[*it].isBool())
+		//else if (value[*it].isBool())
+		else if (value[*it].type() == Json::booleanValue)
 		{
 			//record.insert(pair<string, string>(*it, to_string(value[*it].asBool())));
 			record[*it] = to_string(value[*it].asBool());
 		}
-		else if (value[*it].isInt())
+		//else if (value[*it].isInt())
+		else if (value[*it].type() == Json::intValue)
 		{
 			//record.insert(pair<string, string>(*it, to_string(value[*it].asInt())));
 			record[*it] = to_string(value[*it].asInt());
 		}
-		else if (value[*it].isUInt())
+		//else if (value[*it].isUInt())
+		else if (value[*it].type() == Json::uintValue)
 		{
 			//record.insert(pair<string, string>(*it, to_string(value[*it].asUInt())));
 			record[*it] = to_string(value[*it].asUInt());
