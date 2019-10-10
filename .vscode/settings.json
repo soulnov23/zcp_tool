@@ -1,29 +1,6 @@
 {
     "C_Cpp.default.includePath": [
-        /*
-        "E:/project/include/include",
-        "E:/project/include/include/c++/4.8.2",
-        "E:/project/include/include/c++/4.8.2/ext/pb_ds",
-        "E:/project/include/include/c++/4.8.2/ext/pb_ds/detail",
-        "E:/project/include/include/c++/4.8.2/profile",
-        "E:/project/include/include/c++/4.8.2/x86_64-redhat-linux",
-        "E:/project/include/include/linux",
-        "E:/project/include/include/rdma",
-        "E:/project/include/include/scsi",
-        "E:/project/include/include/sepol",
-        */
-        "${workspaceFolder}",
-        "${workspaceFolder}/comm",
-        "${workspaceFolder}/dep/curl-7.29.0",
-        "${workspaceFolder}/dep/curl-7.29.0/include",
-        "${workspaceFolder}/dep/jsoncpp-src-0.5.0",
-        "${workspaceFolder}/dep/jsoncpp-src-0.5.0/include",
-        "${workspaceFolder}/dep/libco",
-        "${workspaceFolder}/dep/openssl-1.0.2k",
-        "${workspaceFolder}/dep/openssl-1.0.2k/crypto",
-        "${workspaceFolder}/dep/rapidjson",
-        "${workspaceFolder}/dep/tinyxml2",
-        
+        "${workspaceFolder}/**"
     ],
     "files.exclude": {
         "**/.git": true,
