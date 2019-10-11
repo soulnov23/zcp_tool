@@ -1,7 +1,7 @@
 #include "utf8_utils.h"
 #include <iconv.h>
 #include <alloca.h>
-#include "printf.h"
+#include "printf_utils.h"
 
 static const char trailingBytesForUTF8[256] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

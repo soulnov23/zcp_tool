@@ -1,5 +1,5 @@
-#ifndef __PRINTF_H__
-#define __PRINTF_H__
+#ifndef __PRINTF_UTILS_H__
+#define __PRINTF_UTILS_H__
 
 #include <stdio.h>
 #include <errno.h>

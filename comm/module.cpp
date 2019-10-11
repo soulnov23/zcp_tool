@@ -1,6 +1,6 @@
 #include "module.h"
 #include <dlfcn.h>
-#include "printf.h"
+#include "printf_utils.h"
 
 typedef int (*FUNC)(int);
 
