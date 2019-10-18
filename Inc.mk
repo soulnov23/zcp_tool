@@ -13,9 +13,9 @@ BUILD=BUILD_DEBUG
 
 CC = gcc
 CXX = g++ -std=c++11
-AR ?= ar
+AR = ar
 ARFLAGS = -scurv
-RANLIB ?= ranlib
+RANLIB = ranlib
 
 CFLAGS ?=
 CXXFLAGS ?=
@@ -46,11 +46,6 @@ CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O3
 INCLUDE  +=
 LDFLAGS  +=
 endif
-
-PROJ_PATH=/home/zcp_tool
-BIN_DIR=$(PROJ_PATH)/bin
-LIB_DIR=$(PROJ_PATH)/lib
-OBJ_DIR=$(PROJ_PATH)/obj
 
 COMM_PATH=$(PROJ_PATH)/comm
 COMM_INC=$(COMM_PATH)
