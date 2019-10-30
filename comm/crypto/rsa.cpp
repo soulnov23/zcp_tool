@@ -110,7 +110,7 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
 	}
 	
      //if algorithm == sha1
-	if (RSA_verify(NID_sha1, digest, digest_len, (unsigned char *)coded_sign.c_str(), coded_sign.length(), rsa) != 1) {
+	if (RSA_verify(NID_sha1, digest, digest_len, (unsigned char* )coded_sign.c_str(), coded_sign.length(), rsa) != 1) {
          SET_SSL_ERROR();
 		ret = RSA_VERIFY_ERROR;
 	}
@@ -210,7 +210,7 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
 	}
 	
     //if algorithm == sha1
-	if (RSA_verify(NID_sha256, digest, digest_len, (unsigned char *)coded_sign.c_str(), coded_sign.length(), rsa) != 1) {
+	if (RSA_verify(NID_sha256, digest, digest_len, (unsigned char* )coded_sign.c_str(), coded_sign.length(), rsa) != 1) {
         SET_SSL_ERROR();
 		ret = RSA_VERIFY_ERROR;
 	}
@@ -241,7 +241,7 @@ int public_key_str2rsa(const std::string& public_key_in,
 	}
 	pub_key.insert(0, "-----BEGIN PUBLIC KEY-----\n");
 	pub_key.append("\n-----END PUBLIC KEY-----\n");
-	char * pub_key_tmp = const_cast<char *>(pub_key.c_str());
+	char*  pub_key_tmp = const_cast<char* >(pub_key.c_str());
 
 	// 从字符串读取RSA公钥
 	if ((bio = BIO_new_mem_buf(pub_key_tmp, pub_key.length())) == NULL)        {
@@ -303,20 +303,20 @@ int rsa_public_decrypt(RSA* rsa,
 	int cipher_size = cipher_tmp.size();
     
 	int clen =  RSA_size(rsa); 
-	char * clear_data =  (char *)malloc(sizeof(char)*clen);
+	char*  clear_data =  (char* )malloc(sizeof(char)*clen);
 	int clear_data_size;
     // RSA_PKCS1_OAEP_PADDING
     if (padding_mode_in == TOOLS_RSA_PKCS1_PADDING) {
-        clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char *)cipher_tmp.c_str(), 
-                (unsigned char *)clear_data, rsa, RSA_PKCS1_PADDING);
+        clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char* )cipher_tmp.c_str(), 
+                (unsigned char* )clear_data, rsa, RSA_PKCS1_PADDING);
     }
     else if (padding_mode_in == TOOLS_RSA_PKCS1_OAEP_PADDING) {
-        clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char *)cipher_tmp.c_str(), 
-                (unsigned char *)clear_data, rsa, RSA_PKCS1_OAEP_PADDING);
+        clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char* )cipher_tmp.c_str(), 
+                (unsigned char* )clear_data, rsa, RSA_PKCS1_OAEP_PADDING);
     }
     else if (padding_mode_in == TOOLS_RSA_NO_PADDING) {
-        clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char *)cipher_tmp.c_str(), 
-                (unsigned char *)clear_data, rsa, RSA_NO_PADDING);
+        clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char* )cipher_tmp.c_str(), 
+                (unsigned char* )clear_data, rsa, RSA_NO_PADDING);
     }
     else {
     	PRINTF_ERROR("PaddingMode is invalid");
@@ -381,7 +381,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 	EVP_MD_CTX ctx;
 
 	unsigned int sign_size = 0;
-	unsigned char * sign = NULL;
+	unsigned char*  sign = NULL;
 
     format_private_key = "-----BEGIN RSA PRIVATE KEY-----\n";
 //	int keyLen = private_key.size();
@@ -438,7 +438,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 
     // calc sign
 	sign_size  =  RSA_size(rsa);
-	sign =  (unsigned char *)malloc(sizeof(unsigned char) * sign_size);
+	sign =  (unsigned char* )malloc(sizeof(unsigned char) * sign_size);
 	memset(sign, 0x0, sizeof(unsigned char) * sign_size);
 
 	// should include <openssl/rsa.h>
@@ -505,7 +505,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 	EVP_MD_CTX ctx;
 
 	unsigned int sign_size = 0;
-	unsigned char * sign = NULL;
+	unsigned char*  sign = NULL;
 
     format_private_key = "-----BEGIN RSA PRIVATE KEY-----\n";
 //	int keyLen = private_key.size();
@@ -562,7 +562,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 
     // calc sign
 	sign_size  =  RSA_size(rsa);
-	sign =  (unsigned char *)malloc(sizeof(unsigned char) * sign_size);
+	sign =  (unsigned char* )malloc(sizeof(unsigned char) * sign_size);
 	memset(sign, 0x0, sizeof(unsigned char) * sign_size);
 
 	// should include <openssl/rsa.h>

@@ -3,7 +3,7 @@
 #include "net/net_utils.h"
 #include <sys/wait.h>
 
-static void signal_handle_func(int sig_no, siginfo_t *sig_info, void *data) {
+static void signal_handle_func(int sig_no, siginfo_t* sig_info, void* data) {
 	if (sig_no == SIGCHLD) {
 		while (true) {
 			int status = 0;
@@ -61,8 +61,8 @@ static void signal_handle_func(int sig_no, siginfo_t *sig_info, void *data) {
 
 int init_signal() {
 	static const int sigs[] = {SIGINT, SIGTERM, SIGQUIT, SIGCHLD, SIGUSR1, SIGIO, SIGPIPE};
-	const int *begin = std::begin(sigs);
-	const int *end = std::end(sigs);
+	const int* begin = std::begin(sigs);
+	const int* end = std::end(sigs);
 	for (; begin != end; begin++) {
 		int ret = set_signal_handle(*begin, signal_handle_func);
 		if (ret != 0) {

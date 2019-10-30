@@ -9,7 +9,7 @@ int get_time_now(string &str_now) {
 	const string format = "%Y-%m-%d %H:%M:%S";
 	time_t t = time(NULL);
 	char buf[128];
-	struct tm *tm_time = localtime(&t);
+	struct tm* tm_time = localtime(&t);
 	if (!tm_time)  {
 		return -1;
 	}

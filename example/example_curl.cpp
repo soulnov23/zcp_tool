@@ -29,7 +29,7 @@ void get_header(string sign, vector<string> &HeadInfo) {
 	PRINTF_DEBUG("timestamp:[%s] apisign:[%s]", now_time.c_str(), api_sign.c_str());
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 	/*
 	string private_key = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCc540quYC9xzCMZeFOe8UmE3W5LWrqFd/"
 						 "2DDSHQASxq8vmOiwFRSG2hsVXtjfmNLQNhtpTR0SGDUjkCsx+"

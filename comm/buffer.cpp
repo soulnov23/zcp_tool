@@ -22,7 +22,7 @@ buffer::~buffer() {
 	}
 }
 
-void buffer::append(const char *data, int len) {
+void buffer::append(const char* data, int len) {
 	if ((m_size + len) >= m_max_size) {
 		m_buffer = (char*)realloc((void*)m_buffer, 2*m_max_size);
 		assert(m_buffer != NULL);

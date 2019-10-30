@@ -13,7 +13,7 @@ void PRINTF_MAP(map<T1, T2> &record, T3 &it) {
 	}
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 	string data;
 	if (file_to_string(data, "/home/zcp_tool/conf/server.json") != 0) {
 		PRINTF_ERROR("file_to_json error");

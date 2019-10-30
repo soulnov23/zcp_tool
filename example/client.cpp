@@ -12,7 +12,7 @@ using namespace std;
 #include "printf_utils.h"
 #include "net/net_utils.h"
 
-client *client::g_client = new client;
+client* client::g_client = new client;
 
 client::client() {
 	m_epoll_fd = -1;
@@ -28,7 +28,7 @@ client::~client() {
 	stop();
 }
 
-client *client::get_instance() {
+client* client::get_instance() {
 	return g_client;
 }
 
@@ -128,7 +128,7 @@ int client::tcp_socket_start() {
 	return 0;
 }
 
-int client::connect_timeout(int fd, const struct sockaddr *addr, socklen_t addrlen, int nsec, int usec) {
+int client::connect_timeout(int fd, const struct sockaddr*addr, socklen_t addrlen, int nsec, int usec) {
 	if (-1 == make_socket_nonblocking(fd)) {
 		PRINTF_ERROR("make_socket_nonblocking(%d) error", fd);
 		return -1;
@@ -270,7 +270,7 @@ void client::do_tcp_recv() {
 	}
 }
 
-void client::do_tcp_send(int fd, const char *data, int len) {
+void client::do_tcp_send(int fd, const char* data, int len) {
 	int total_send = 0;
 	while (total_send < len) {
 		int ret = send(fd, data+total_send, len-total_send, 0);
@@ -310,7 +310,7 @@ void client::do_udp_recvfrom() {
 		char buf[UDP_RCV_BUF] = {0};
 		struct sockaddr_in addr;
 		socklen_t addr_len = sizeof(addr);
-		ssize_t ret = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr *)&addr, &addr_len);
+		ssize_t ret = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr*)&addr, &addr_len);
 		if (ret > 0) {
 			PRINTF_DEBUG("fd:%d recvfrom:%s data:%s", m_udp_fd, inet_ntoa(addr.sin_addr), buf);
 			continue;
@@ -344,11 +344,11 @@ void client::do_udp_recvfrom() {
 	}
 }
 
-void client::do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in addr) {
+void client::do_udp_sendto(int fd, const char* data, int len, struct sockaddr_in addr) {
 	int total_send = 0;
 	socklen_t addr_len = sizeof(addr);
 	while (total_send < len) {
-		int ret = sendto(fd, data+total_send, len-total_send, 0, (struct sockaddr *)&addr, addr_len);
+		int ret = sendto(fd, data+total_send, len-total_send, 0, (struct sockaddr*)&addr, addr_len);
 		if (ret > 0) {
 			total_send += ret;
 			continue;
@@ -382,7 +382,7 @@ void client::do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in
 	}
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 	client test;
 	test.start();
 	return 0;

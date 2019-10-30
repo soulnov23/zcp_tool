@@ -9,7 +9,7 @@
 #include "printf_utils.h"
 #include "net/net_utils.h"
 
-server *server::g_server = new server;
+server* server::g_server = new server;
 
 server::server() {
 	m_epoll_fd = -1;
@@ -24,7 +24,7 @@ server::~server() {
 	stop();
 }
 
-server *server::get_instance() {
+server* server::get_instance() {
 	return g_server;
 }
 
@@ -213,7 +213,7 @@ void server::do_tcp_accept() {
 	while (true) {
 		struct sockaddr_in addr;
 		socklen_t addr_len = sizeof(addr);
-		int fd = accept(m_tcp_listen_fd, (struct sockaddr *)&addr, &addr_len);
+		int fd = accept(m_tcp_listen_fd, (struct sockaddr*)&addr, &addr_len);
 		if (fd == -1) {
 			break;
 		}
@@ -230,7 +230,7 @@ void server::do_tcp_accept() {
 		if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, fd, &event)) {
 			PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, fd);
 		}
-		connector *conn = new connector(fd, inet_ntoa(addr.sin_addr), NULL);
+		connector* conn = new connector(fd, inet_ntoa(addr.sin_addr), NULL);
 		m_fd_conn.insert(make_pair(fd, conn));
 	}
 }
@@ -241,7 +241,7 @@ void server::do_tcp_recv(int fd) {
 		PRINTF_ERROR("m_fd_conn(map)没有发现连接对象的fd:%d", fd);
 		return;
 	}
-	connector *conn = it->second;
+	connector* conn = it->second;
 	while (true) {
 		char buf[1024] = {0};
 		ssize_t ret = recv(fd, buf, 1024, 0);
@@ -278,13 +278,13 @@ void server::do_tcp_recv(int fd) {
 	}
 }
 
-void server::do_tcp_send(int fd, const char *data, int len) {
+void server::do_tcp_send(int fd, const char* data, int len) {
 	map<int, connector*>::iterator it = m_fd_conn.find(fd);
 	if (it == m_fd_conn.end()) {
 		PRINTF_ERROR("m_fd_conn(map)没有发现连接对象的fd:%d", fd);
 		return;
 	}
-	connector *conn = it->second;
+	connector* conn = it->second;
 	int total_send = 0;
 	while (total_send < len) {
 		int ret = send(fd, data+total_send, len-total_send, 0);
@@ -326,7 +326,7 @@ void server::do_udp_recvfrom() {
 		char buf[UDP_RCV_BUF] = {0};
 		struct sockaddr_in addr;
 		socklen_t addr_len = sizeof(addr);
-		ssize_t ret = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr *)&addr, &addr_len);
+		ssize_t ret = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr*)&addr, &addr_len);
 		if (ret > 0) {
 			PRINTF_DEBUG("fd:%d recvfrom:%s data:%s", m_udp_fd, inet_ntoa(addr.sin_addr), buf);
 			continue;
@@ -360,11 +360,11 @@ void server::do_udp_recvfrom() {
 	}
 }
 
-void server::do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in addr) {
+void server::do_udp_sendto(int fd, const char* data, int len, struct sockaddr_in addr) {
 	int total_send = 0;
 	socklen_t addr_len = sizeof(addr);
 	while (total_send < len) {
-		int ret = sendto(fd, data+total_send, len-total_send, 0, (struct sockaddr *)&addr, addr_len);
+		int ret = sendto(fd, data+total_send, len-total_send, 0, (struct sockaddr*)&addr, addr_len);
 		if (ret > 0) {
 			total_send += ret;
 			continue;
@@ -398,7 +398,7 @@ void server::do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in
 	}
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 	server test;
 	test.start();
 	return 0;

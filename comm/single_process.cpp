@@ -11,7 +11,7 @@
 #define PROCESS_NAME_ERROR          -2
 #define CREATE_LOCKFILE_FAILURE     -3
 
-int single_process(const char *proc_name) {
+int single_process(const char* proc_name) {
 	char file_lock_name[512] = "/var/run/single.";
 	
 	if(strlen(proc_name) >=  (sizeof(file_lock_name) - strlen(file_lock_name))) {

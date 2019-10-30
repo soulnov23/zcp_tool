@@ -9,7 +9,7 @@ using namespace std;
 using namespace rapidjson;
 #include <stdio.h>
 
-static bool get_obj(Value &gvalue, const char *member, Value &node) {
+static bool get_obj(Value &gvalue, const char* member, Value &node) {
 	Value::MemberIterator mem = gvalue.FindMember(member);
 	if ((mem == gvalue.MemberEnd()) || (!mem->value.IsObject())) {
 		return false;
@@ -18,7 +18,7 @@ static bool get_obj(Value &gvalue, const char *member, Value &node) {
 	return true;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 	/*
 	Document document;
     document.SetArray();
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 	bool flag = flag_test->value.GetBool();
 	PRINTF_DEBUG("flag:%d", flag);
 
-	FILE *fp = fopen("test.json", "r");
+	FILE* fp = fopen("test.json", "r");
 	char buff[65536];
 	FileReadStream is(fp, buff, sizeof(buff));
 	Document doc;
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
 	PRINTF_ERROR("pay_url:%s", pay_url.c_str());
 	fclose(fp);
 */
-	FILE *fp = fopen("test.json", "r");
+	FILE* fp = fopen("test.json", "r");
 	char buff[65536];
 	FileReadStream is(fp, buff, sizeof(buff));
 	Document doc;

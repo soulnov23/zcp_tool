@@ -66,7 +66,7 @@
 
     /* POINTER defines a generic pointer type */
 #ifndef POINTER
-    typedef unsigned char * POINTER;
+    typedef unsigned char*  POINTER;
 #endif
 
 
@@ -113,8 +113,8 @@ void MD5Final(unsigned char [16], MD5_CTX *);
 #define S44 21
 
 	void MD5Transform(UINT4 [4], unsigned char [64]);
-	void Encode(unsigned char *, UINT4 *, unsigned int);
-	void Decode(UINT4 *, unsigned char *, unsigned int);
+	void Encode(unsigned char* , UINT4 *, unsigned int);
+	void Decode(UINT4 *, unsigned char* , unsigned int);
 	void MD5_memcpy(POINTER, POINTER, unsigned int);
 	void MD5_memset(POINTER, int, unsigned int);
 
@@ -184,14 +184,14 @@ void MD5_memset (
 	unsigned int i;
 
 	for (i = 0; i < len; i++)
-		((char *)output)[i] = (char)value;
+		((char* )output)[i] = (char)value;
 }
 
 /* Encodes input (UINT4) into output (unsigned char). Assumes len is
    a multiple of 4.
    */
 void Encode (//output, input, len)
-unsigned char *output,
+unsigned char* output,
 			  UINT4 *input,
 			  unsigned int len)
 {
@@ -210,7 +210,7 @@ unsigned char *output,
    */
 void Decode (//output, input, len)
 UINT4 *output,
-	  unsigned char *input,
+	  unsigned char* input,
 	  unsigned int len)
 {
 	unsigned int i, j;

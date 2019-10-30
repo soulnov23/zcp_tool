@@ -15,14 +15,14 @@ static const char trailingBytesForUTF8[256] = {
 };
 
 bool is_legal_utf8(const string &data) {
-	const unsigned char *data_begin = (const unsigned char*)data.c_str();
-	const unsigned char *data_end = data_begin + data.length();
+	const unsigned char* data_begin = (const unsigned char*)data.c_str();
+	const unsigned char* data_end = data_begin + data.length();
 	int length = trailingBytesForUTF8[*data_begin]+1;
     if (data_begin+length > data_end)  {
 		return false;
     }
     unsigned char a;
-    const unsigned char *srcptr = data_begin+length;
+    const unsigned char* srcptr = data_begin+length;
     switch (length) {
     default: return false;
 	/* Everything else falls through when "true"... */
@@ -45,17 +45,17 @@ bool is_legal_utf8(const string &data) {
     return true;
 }
 
-string to_utf8(const char *charset, const string &data) {
+string to_utf8(const char* charset, const string &data) {
 	iconv_t conv = iconv_open("UTF-8", charset);
 	if (conv == (iconv_t)-1) {
 		PRINTF_ERROR("iconv_open error");
 		return "";
 	}
-	const char *str = data.c_str();
+	const char* str = data.c_str();
 	size_t len = data.size();
 	size_t max_len = len*2;
 	size_t out_len = max_len;
-	char *out_str = (char*)alloca(max_len+16);
+	char* out_str = (char*)alloca(max_len+16);
 	if (out_str == NULL) {
 		iconv_close(conv);
 		PRINTF_ERROR("alloca error");
@@ -76,17 +76,17 @@ string to_utf8(const char *charset, const string &data) {
 	return string(out_str, out_len);
 }
 
-string utf8_to(const char *charset, const string &data) {
+string utf8_to(const char* charset, const string &data) {
 	iconv_t conv = iconv_open(charset, "UTF-8");
 	if (conv == (iconv_t)-1) {
 		PRINTF_ERROR("iconv_open error");
 		return "";
 	}
-	const char *str = data.c_str();
+	const char* str = data.c_str();
 	size_t len = data.size();
 	size_t max_len = len*4;
 	size_t out_len = max_len;
-	char *out_str = (char*)alloca(max_len+16);
+	char* out_str = (char*)alloca(max_len+16);
 	if (out_str == NULL) {
 		iconv_close(conv);
 		PRINTF_ERROR("alloca error");

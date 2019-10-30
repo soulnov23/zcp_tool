@@ -37,15 +37,15 @@ int string_escape(const std::string &str_in, std::string &str_out) {
 	return 0;
 }
 
-template <const char *SPECIAL_CHARS>
+template <const char* SPECIAL_CHARS>
 std::string::size_type escape_with_char_set(const std::string &str_in, std::string::size_type start_pos) {
-	const char *pstr = strpbrk(str_in.c_str() + start_pos, SPECIAL_CHARS);
+	const char* pstr = strpbrk(str_in.c_str() + start_pos, SPECIAL_CHARS);
 	if (pstr == NULL)
 		return std::string::npos;
 	return pstr - str_in.c_str();
 }
 
-template <const bool *SHOULD_ESCAPE>
+template <const bool* SHOULD_ESCAPE>
 std::string::size_type escape_with_char_set(const std::string &str_in, std::string::size_type start_pos) {
 	for (; start_pos < str_in.length(); ++start_pos) {
 		if (SHOULD_ESCAPE[(unsigned char)str_in[start_pos]])
@@ -55,18 +55,18 @@ std::string::size_type escape_with_char_set(const std::string &str_in, std::stri
 }
 
 template<std::string::size_type REMAIN_CNT>
-void char_append(const char *chars, std::string &str) {
+void char_append(const char* chars, std::string &str) {
 	str.push_back(*chars);
 	char_append<REMAIN_CNT - 1>(chars + 1, str);
 }
 
 template<>
-void char_append<0>(const char *chars, std::string &str) {
+void char_append<0>(const char* chars, std::string &str) {
     (void)chars;
     (void)str;
 }
 
-typedef bool(*fixed_size_escape_function)(const std::string& str_in, std::string::size_type pos, char *chars_out);
+typedef bool(*fixed_size_escape_function)(const std::string& str_in, std::string::size_type pos, char* chars_out);
 
 template<fixed_size_escape_function FIXED_SIZE_ESCAPE_FUN, std::string::size_type OUT_FIXED_SIZE, std::string::size_type IN_FIXED_SIZE>
 std::string::size_type fixed_size_escape(const std::string &str_in, std::string::size_type pos, std::string &str_out) {
@@ -89,7 +89,7 @@ std::string::size_type fixed_size_escape(const std::string &str_in, std::string:
 
 //upay_escape_string
 
-bool upay_escape_char(const std::string &str_in, std::string::size_type pos, char *t) {
+bool upay_escape_char(const std::string &str_in, std::string::size_type pos, char* t) {
 	const char &c = str_in[pos];
 	if (c == '\\') *t = '_';
 	else if (c == '|') *t = '&';
@@ -122,8 +122,8 @@ extern const bool hex_string_encode_table[] = {
 	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 };
 
-bool hex_string_encode_char(const std::string &str_in, std::string::size_type pos, char *t) {
-	static const char *hex_table = "0123456789ABCDEF";
+bool hex_string_encode_char(const std::string &str_in, std::string::size_type pos, char* t) {
+	static const char* hex_table = "0123456789ABCDEF";
 	const unsigned char &c = str_in[pos];
 	t[0] = '%';
 	t[1] = hex_table[(c >> 4) & 0x0F];
@@ -135,8 +135,8 @@ bool hex_string_encode_char(const std::string &str_in, std::string::size_type po
 
 //buff_to_hex_string
 
-bool buff_hex_string_encode_char(const std::string &str_in, std::string::size_type pos, char *t) {
-    static const char *hex_table = "0123456789ABCDEF";
+bool buff_hex_string_encode_char(const std::string &str_in, std::string::size_type pos, char* t) {
+    static const char* hex_table = "0123456789ABCDEF";
     const unsigned char &c = str_in[pos];
     t[0] = hex_table[(c >> 4) & 0x0F];
     t[1] = hex_table[(c & 0x0F)];
@@ -147,7 +147,7 @@ bool buff_hex_string_encode_char(const std::string &str_in, std::string::size_ty
 
 //decode_hex_string
 
-bool hex_string_part_decode(const std::string &str_in, std::string::size_type pos, char *t) {
+bool hex_string_part_decode(const std::string &str_in, std::string::size_type pos, char* t) {
 	static int hex_index_table[] = {
 		-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 		-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,

@@ -3,7 +3,7 @@
 #include <streambuf>
 #include "printf_utils.h"
 
-int file_to_string(string &data, const char *file_path) {
+int file_to_string(string &data, const char* file_path) {
 	ifstream file(file_path);
 	if (!file) {
 		PRINTF_ERROR("open file failed : %s", file_path);

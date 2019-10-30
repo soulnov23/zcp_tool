@@ -42,8 +42,8 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string
 		return AES_KEY_LENGTH_ERROR;
 	}
 	int iv_len = EVP_CIPHER_iv_length(cipher);
-	if (iv_len != int(strlen((const char *)iv))) {
-		PRINTF_ERROR("iv length %lu not equal EVP_CIPHER_iv_length %d", strlen((const char *)iv), iv_len);
+	if (iv_len != int(strlen((const char* )iv))) {
+		PRINTF_ERROR("iv length %lu not equal EVP_CIPHER_iv_length %d", strlen((const char* )iv), iv_len);
 		return AES_IV_LENGTH_ERROR;
 	}
 	
@@ -114,7 +114,7 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string
 		buff_to_hex_string(encrypt_msg, decode_encrypt_msg);
 	}
 
-	EVP_CIPHER_CTX *ctx;
+	EVP_CIPHER_CTX* ctx;
 	ctx = EVP_CIPHER_CTX_new();
 
 	const EVP_CIPHER* cipher;
@@ -134,8 +134,8 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string
 		return AES_KEY_LENGTH_ERROR;
 	}
 	int iv_len = EVP_CIPHER_iv_length(cipher);
-	if (iv_len != int(strlen((const char *)iv))) {
-		PRINTF_ERROR("iv length %lu not equal EVP_CIPHER_iv_length %d", strlen((const char *)iv), iv_len);
+	if (iv_len != int(strlen((const char* )iv))) {
+		PRINTF_ERROR("iv length %lu not equal EVP_CIPHER_iv_length %d", strlen((const char* )iv), iv_len);
 		return AES_IV_LENGTH_ERROR;
 	}
 

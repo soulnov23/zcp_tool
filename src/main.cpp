@@ -5,7 +5,7 @@
 
 map<string, string> config;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 	PRINTF_DEBUG("%s %s", argv[0], argv[1]);
 	if (argc < 2) {
 		PRINTF_ERROR("Usage: %s conf_file", argv[0]);
@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	const char *file_path = argv[1];
+	const char* file_path = argv[1];
 	if (xml_to_map(config, file_path) != 0) {
 		PRINTF_ERROR("xml_to_map error");
 		return -1;
@@ -31,6 +31,9 @@ int main(int argc, char *argv[]) {
 			return -1;
 		}
 	}
+	PRINTF_DEBUG("1");
+	PRINTF_DEBUG("2");
+	PRINTF_DEBUG("3");
 	while (true) {
 		
 	}

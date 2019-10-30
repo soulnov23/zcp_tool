@@ -13,6 +13,6 @@
  * @note 返回失败时，标准输入输出不会关闭
  **/
 
-int init_daemon(char *path);
+int init_daemon(char* path);
 
 #endif

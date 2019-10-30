@@ -6,7 +6,7 @@
 #include <sys/param.h>
 #include "daemon.h"
 
-int init_daemon(char *path) {
+int init_daemon(char* path) {
 	int pid;
 	if ((pid = fork()) > 0) {
 		exit(0); /* 是父进程，结束父进程 */

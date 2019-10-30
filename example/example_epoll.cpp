@@ -53,7 +53,7 @@ void do_accept() {
 	while (true) {
 		struct sockaddr_in addr;
 		socklen_t addr_len = sizeof(addr);
-		int fd = accept(listen_fd, (struct sockaddr *)&addr, &addr_len);
+		int fd = accept(listen_fd, (struct sockaddr*)&addr, &addr_len);
 		if (fd == -1) {
 			break;
 		}
@@ -108,7 +108,7 @@ void do_recv(int fd) {
 	}
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 	PRINTF_DEBUG("example_epoll start success");
 	PRINTF_DEBUG("push");
 	//cout << "push" << endl;
