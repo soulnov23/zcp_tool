@@ -10,8 +10,8 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libcomm.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE += -I$(XML_INC) -I$(JSON_CPP_INC) -I$(RAPID_JSON_INC) -I$(OPEN_SSL_INC) -I$(CURL_INC) -I$(LIBCO_INC)
-LDFLAGS += -L$(LIB_DIR) -lpthread -ldl -ltinyxml2 -ljson -lcrypto -lcurl -laio -lcolib -ltcmalloc_minimal
+INCLUDE += -I$(XML_INC) -I$(HTTP_PARSER_INC) -I$(JSON_CPP_INC) -I$(RAPID_JSON_INC) -I$(OPEN_SSL_INC) -I$(CURL_INC) -I$(LIBCO_INC)
+LDFLAGS += -L$(LIB_DIR) -lpthread -ldl -ltinyxml2 -lhttp_parser -ljson -lcrypto -lcurl -laio -lcolib -ltcmalloc_minimal
 
 all : clean $(SO_BIN) $(A_BIN)
 	@for dir in $(DIR_MODULES); \

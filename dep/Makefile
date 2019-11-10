@@ -7,6 +7,7 @@ all:
 	bash make.sh make_gperf $(GPERF_PATH) $(LIB_DIR)
 	make -C $(JSON_CPP_PATH)
 	make -C $(XML_PATH)
+	make -C $(HTTP_PARSER_PATH)
 
 clean:
 	bash make.sh clean_open_ssl $(OPEN_SSL_PATH)
@@ -15,4 +16,4 @@ clean:
 	bash make.sh clean_gperf $(GPERF_PATH)
 	make -C $(JSON_CPP_PATH) clean
 	make -C $(XML_PATH) clean
-
+	make -C $(HTTP_PARSER_PATH) clean
