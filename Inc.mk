@@ -48,7 +48,7 @@ LDFLAGS  +=
 endif
 
 #放到Makefile自动获取工程路径
-#PROJ_PATH=/home/zcp_tool
+PROJ_PATH=/home/zcp_tool
 BIN_DIR=$(PROJ_PATH)/bin
 LIB_DIR=$(PROJ_PATH)/lib
 OBJ_DIR=$(PROJ_PATH)/obj
