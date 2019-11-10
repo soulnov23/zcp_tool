@@ -2,6 +2,8 @@
 #include "coder.h"
 #include <string.h>
 #include <algorithm>
+#include <stdarg.h>
+#include <stdio.h>
 
 #define FIELD_FLAG		"&"
 #define VALUE_FLAG		"="
@@ -166,3 +168,24 @@ void str2map(record_t &record, const string& buf, bool encode/*=true*/) {
 		}
 	}
 }
+
+bool va_function(const char* format, ...) {
+	char* message = nullptr;
+	va_list args;
+	va_start(args, format);
+	if (vasprintf(&message, format, args) == -1) {
+    	va_end(args);
+		return false;
+	}
+	va_end(args);
+	/* message has been allocated by vasprintf above, and needs free */
+	free(message);
+	return true;
+}
+
+/*
+string construct_string(const char* format, ...) {
+	string data;
+	if (va_function(format))
+}
+*/

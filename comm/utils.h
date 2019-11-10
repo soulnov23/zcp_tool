@@ -20,4 +20,7 @@ typedef map<string, string> record_t;
 void map2str(string& buf, const record_t& record, bool encode = true);
 void str2map(record_t &record, const string& buf, bool encode = true);
 
+bool va_function(const char* format, ...);
+//bool va_function(const char* format, args...);
+
 #endif
