@@ -2,6 +2,7 @@
 #include "printf_utils.h"
 #include "net/net_utils.h"
 #include <sys/wait.h>
+#include <fcntl.h>
 
 static void signal_handle_func(int sig_no, siginfo_t* sig_info, void* data) {
 	if (sig_no == SIGCHLD) {
@@ -36,13 +37,16 @@ static void signal_handle_func(int sig_no, siginfo_t* sig_info, void* data) {
 		}
 	}
 	else if (sig_no == SIGINT) {
-		
+		PRINTF_DEBUG("recv signal:SIGINT");
+		force_exit();
 	}
 	else if (sig_no == SIGTERM) {
-		
+		PRINTF_DEBUG("recv signal:SIGTERM");
+		force_exit();
 	}
 	else if (sig_no == SIGQUIT) {
-		
+		PRINTF_DEBUG("recv signal:SIGQUIT");
+		force_exit();
 	}
 	else if (sig_no == SIGUSR1) {
 		
@@ -73,6 +77,29 @@ int init_signal() {
 	return 0;
 }
 
+int init_pid_file() {
+	int fd = open("server.pid", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0644);
+	if (fd < 0) {
+		PRINTF_ERROR("open pid file failed");
+		return -1;
+	}
+
+	pid_t pid = getpid();
+	string str_pid = std::to_string(pid);
+	int ret = -1;
+	while ((ret = write(fd, str_pid.data(), str_pid.size()) == -1) && errno == EINTR);
+	if (ret == -1) {
+		PRINTF_ERROR("write pid file failed");
+		unlink("server.pid");
+	}
+	else {
+		ret = 0;
+	}
+
+	close(fd);
+	return ret;
+}
+
 void force_exit() {
 	PRINTF_DEBUG("now force exit, killall -9(SIGKILL)");
 	if (kill(0, SIGKILL) != 0) {
@@ -89,6 +116,11 @@ int fork_child() {
 	else if (pid == 0) {
 		//子进程
 		PRINTF_DEBUG("hello world");
+		while (true) {
+		
+		}
+		//退出，不然还会接着执行for循环创建更多的子进程的子进程
+		_exit(0);
 	}
 	//pid > 0
 	else {

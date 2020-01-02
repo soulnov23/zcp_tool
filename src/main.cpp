@@ -20,20 +20,25 @@ int main(int argc, char* argv[]) {
 	}
 	PRINTF_DEBUG("ip:%s port:%s count:%s", config["ip"].c_str(), config["port"].c_str(), config["count"].c_str());
 
-	//int count = strtol(config["count"].c_str(), nullptr, 10);
+	int count = strtol(config["count"].c_str(), nullptr, 10);
 	if (init_signal() != 0) {
 		PRINTF_ERROR("init_signal error");
 		return -1;
 	}
-	for (int i = 0; i < 1; i++) {
+/*
+	if (init_pid_file() != 0) {
+		PRINTF_ERROR("init_pid_file error");
+		return -1;
+	}
+*/
+	PRINTF_DEBUG("TODO start");
+	for (int i = 0; i < count; i++) {
 		if (fork_child() != 0) {
 			PRINTF_ERROR("fork_child error");
 			return -1;
 		}
 	}
-	PRINTF_DEBUG("1");
-	PRINTF_DEBUG("2");
-	PRINTF_DEBUG("3");
+	PRINTF_DEBUG("TODO end");
 	while (true) {
 		
 	}
