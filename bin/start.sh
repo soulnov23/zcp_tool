@@ -16,5 +16,6 @@ else
 		exit 0
 	else
 		echo "start zcp_server success"
+		exit 0
 	fi
 fi
