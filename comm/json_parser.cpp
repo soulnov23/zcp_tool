@@ -8,7 +8,7 @@
 #include "writer.h"
 #include "stringbuffer.h"
 
-int json_to_map(map<string, string> &record, string &data) {
+int json_to_map(map<string, string>& record, string& data) {
 	Json::Reader reader;
 	Json::Value value;
 	if (!reader.parse(data, value)) {
@@ -46,7 +46,7 @@ int json_to_map(map<string, string> &record, string &data) {
 	return 0;
 }
 
-void map_to_json(string &data, const map<string, string> &record) {
+void map_to_json(string& data, const map<string, string>& record) {
 	Json::Value object;
 	map<string, string>::const_iterator it;
 	for (it = record.begin(); it != record.end(); it++) {
@@ -56,7 +56,7 @@ void map_to_json(string &data, const map<string, string> &record) {
 	data = writer.write(object);
 }
 
-int rapid_json_to_map(map<string, string> &record, string &data) {
+int rapid_json_to_map(map<string, string>& record, string& data) {
 	rapidjson::Document content_json_doc;
 	content_json_doc.Parse(data.c_str());
 	if (content_json_doc.HasParseError() || !content_json_doc.IsObject()) {
@@ -92,7 +92,7 @@ int rapid_json_to_map(map<string, string> &record, string &data) {
 	return 0;
 }
 
-void rapid_map_to_json(string &data, const map<string, string> &record) {
+void rapid_map_to_json(string& data, const map<string, string>& record) {
 	rapidjson::Document document;
     document.SetObject();
     rapidjson::Document::AllocatorType& allocator = document.GetAllocator();

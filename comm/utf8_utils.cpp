@@ -14,7 +14,7 @@ static const char trailingBytesForUTF8[256] = {
     2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,4,4,4,4,5,5,5,5
 };
 
-bool is_legal_utf8(const string &data) {
+bool is_legal_utf8(const string& data) {
 	const unsigned char* data_begin = (const unsigned char*)data.c_str();
 	const unsigned char* data_end = data_begin + data.length();
 	int length = trailingBytesForUTF8[*data_begin]+1;
@@ -45,7 +45,7 @@ bool is_legal_utf8(const string &data) {
     return true;
 }
 
-string to_utf8(const char* charset, const string &data) {
+string to_utf8(const char* charset, const string& data) {
 	iconv_t conv = iconv_open("UTF-8", charset);
 	if (conv == (iconv_t)-1) {
 		PRINTF_ERROR("iconv_open error");
@@ -76,7 +76,7 @@ string to_utf8(const char* charset, const string &data) {
 	return string(out_str, out_len);
 }
 
-string utf8_to(const char* charset, const string &data) {
+string utf8_to(const char* charset, const string& data) {
 	iconv_t conv = iconv_open(charset, "UTF-8");
 	if (conv == (iconv_t)-1) {
 		PRINTF_ERROR("iconv_open error");

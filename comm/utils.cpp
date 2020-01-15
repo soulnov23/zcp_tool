@@ -80,7 +80,7 @@ const string longlong_to_string(long long ll) {
     return tmp;
 }
 
-void str2vec(const string& buf, const string& field, vector_t &vec) {
+void str2vec(const string& buf, const string& field, vector_t& vec) {
 	vec.clear();
 	size_t offset = 0;
 	size_t next = 0;
@@ -150,7 +150,7 @@ void map2str(string& buf, const record_t& record, bool encode/*=true*/) {
 	}
 }
 
-void str2map(record_t &record, const string& buf, bool encode/*=true*/) {
+void str2map(record_t& record, const string& buf, bool encode/*=true*/) {
 	string bvalue, fname, fvalue;
 
 	string stbuf = buf;

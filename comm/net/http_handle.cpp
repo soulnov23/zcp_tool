@@ -50,6 +50,7 @@ int http_proc(const std::string& strUrl,
 	if(pvecHeadInfo != NULL) {
 		for(unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
 			headerlist = curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
+			PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
 		}
 	}
 	else  {
@@ -182,6 +183,7 @@ int http_proc(const std::string& strUrl,
 	if(pvecHeadInfo != NULL) {
 		for(unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
 			headerlist = curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
+			PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
 		}
 	}
 	else  {

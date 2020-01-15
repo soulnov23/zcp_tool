@@ -1,7 +1,7 @@
 #include "xml_parser.h"
 #include "printf_utils.h"
 
-int get_conf(tinyxml2::XMLDocument &doc, const char* file_path) {
+int get_conf(tinyxml2::XMLDocument& doc, const char* file_path) {
 	tinyxml2::XMLError ret = doc.LoadFile(file_path);
 	if (ret != tinyxml2::XML_SUCCESS) {
 		PRINTF_ERROR("load file failed : %s", file_path);
@@ -10,7 +10,7 @@ int get_conf(tinyxml2::XMLDocument &doc, const char* file_path) {
 	return 0;
 }
 
-int get_conf(tinyxml2::XMLDocument &doc, const char* data, size_t len) {
+int get_conf(tinyxml2::XMLDocument& doc, const char* data, size_t len) {
 	tinyxml2::XMLError ret = doc.Parse(data, len);
 	if (ret != tinyxml2::XML_SUCCESS) {
 		PRINTF_ERROR("parse data failed : %s", data);
@@ -19,7 +19,7 @@ int get_conf(tinyxml2::XMLDocument &doc, const char* data, size_t len) {
 	return 0;
 }
 
-void get_node(map<string, tinyxml2::XMLElement*> &record, tinyxml2::XMLDocument &doc) {
+void get_node(map<string, tinyxml2::XMLElement*>& record, tinyxml2::XMLDocument& doc) {
 	tinyxml2::XMLElement* node = doc.FirstChildElement();
 	while (node != NULL) {
 		record.insert(pair<string, tinyxml2::XMLElement*>(node->Name(), node));
@@ -27,7 +27,7 @@ void get_node(map<string, tinyxml2::XMLElement*> &record, tinyxml2::XMLDocument 
 	}
 }
 
-void get_node(map<string, tinyxml2::XMLElement*> &record, tinyxml2::XMLElement* node) {
+void get_node(map<string, tinyxml2::XMLElement*>& record, tinyxml2::XMLElement* node) {
 	tinyxml2::XMLElement* child_node = node->FirstChildElement();
 	while (child_node != NULL) {
 		record.insert(pair<string, tinyxml2::XMLElement*>(child_node->Name(), child_node));
@@ -35,7 +35,7 @@ void get_node(map<string, tinyxml2::XMLElement*> &record, tinyxml2::XMLElement* 
 	}
 }
 
-void get_attri(map<string, string> &record, tinyxml2::XMLElement* node) {
+void get_attri(map<string, string>& record, tinyxml2::XMLElement* node) {
 	const tinyxml2::XMLAttribute* attri = node->FirstAttribute();
 	while (attri != NULL) {
 		record.insert(pair<string, string>(attri->Name(), attri->Value()));
@@ -43,7 +43,7 @@ void get_attri(map<string, string> &record, tinyxml2::XMLElement* node) {
 	}	
 }
 
-int xml_to_map(map<string, string> &record, const char* file_path) {
+int xml_to_map(map<string, string>& record, const char* file_path) {
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError ret = doc.LoadFile(file_path);
 	if (ret != tinyxml2::XML_SUCCESS) {
@@ -63,7 +63,7 @@ int xml_to_map(map<string, string> &record, const char* file_path) {
 	return 0;
 }
 
-int xml_to_map(map<string, string> &record, const char* data, size_t len) {
+int xml_to_map(map<string, string>& record, const char* data, size_t len) {
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError ret = doc.Parse(data, len);
 	if (ret != tinyxml2::XML_SUCCESS) {
