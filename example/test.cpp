@@ -21,14 +21,15 @@ using namespace rapidjson;
 		return ret; \
 }while(0)
 
-string g_card_no = "4567801230000133";
-string g_card_pin = "327990";
+string g_card_no = "4567801230000220";
+string g_card_pin = "104143";
 string g_card_amount = "1000";
 string g_amount = "10";
 vector<string> g_vecHeadInfo;
 string g_OriginalInvoiceNumber;
 string g_OriginalBatchNumber;
 string g_OriginalTransactionId;
+string g_batch_no;
 
 void init() {
 	g_vecHeadInfo.push_back("TerminalID: PUBG-MidasBuy-POS-01");
@@ -53,7 +54,7 @@ int get_batch_no(string& batch_no) {
 	string err_msg;
 	string url = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/initialize";
 	vector<string> vecHeadInfo = g_vecHeadInfo;
-    string transaction_id = string("TransactionId: ") + to_string(get_time_sec());
+    string transaction_id = string("TransactionId: ") + to_string(get_time_usec());
     vecHeadInfo.push_back(transaction_id);
     string post_string("");
     int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
@@ -93,12 +94,12 @@ int get_batch_no(string& batch_no) {
         PRINTF_ERROR("value is not in json or not int format");
 		return -1;
     }
-    batch_no = to_string(batch_no_mem->value.GetInt());
-    PRINTF_DEBUG("CurrentBatchNumber[%s]", batch_no.c_str());
+    g_batch_no = to_string(batch_no_mem->value.GetInt());
+    PRINTF_DEBUG("CurrentBatchNumber[%s]", g_batch_no.c_str());
 	return 0;
 }
 
-int balance_enquiry(string& balance) {
+int balance_enquiry() {
 	string post_string;
 	map<string, string> map_data;
 	map_data["CardNumber"] = g_card_no;
@@ -108,9 +109,9 @@ int balance_enquiry(string& balance) {
 	vector<string> vecHeadInfo = g_vecHeadInfo;
     string transaction_id = string("TransactionId: ") + to_string(get_time_sec());
     vecHeadInfo.push_back(transaction_id);
-	string batch_no;
-	RETURN_ON_ERROR(get_batch_no(batch_no));
-	string current_batch_no = string("CurrentBatchNumber: ") + batch_no;
+	//string batch_no;
+	//RETURN_ON_ERROR(get_batch_no(batch_no));
+	string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
 	vecHeadInfo.push_back("Content-Type: application/json");
 	int err_code;
@@ -130,7 +131,7 @@ int balance_enquiry(string& balance) {
 	if (rsp_code != "0") {
 		PRINTF_DEBUG("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
 	}
-	balance = map_return["Amount"];
+	string balance = map_return["Amount"];
 	PRINTF_DEBUG("Amount[%s]", balance.c_str());
 	return 0;
 }
@@ -152,9 +153,9 @@ int redeem() {
 	vector<string> vecHeadInfo = g_vecHeadInfo;
 	string transaction_id = string("TransactionId: ") + order_id;
     vecHeadInfo.push_back(transaction_id);
-	string batch_no;
-	RETURN_ON_ERROR(get_batch_no(batch_no));
-	string current_batch_no = string("CurrentBatchNumber: ") + batch_no;
+	//string batch_no;
+	//RETURN_ON_ERROR(get_batch_no(batch_no));
+	string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
 	vecHeadInfo.push_back("Content-Type: application/json");
 	int err_code;
@@ -170,7 +171,7 @@ int redeem() {
 	map<string, string> map_return;
 	rapid_json_to_map(map_return, rsp_string);
 	g_OriginalInvoiceNumber = order_id;
-	g_OriginalBatchNumber = batch_no;
+	g_OriginalBatchNumber = g_batch_no;
 	g_OriginalTransactionId = order_id;
 	string rsp_code = map_return["ResponseCode"];
 	string rsp_msg = map_return["ResponseMessage"];
@@ -194,9 +195,9 @@ int cancel_redeem() {
 	vector<string> vecHeadInfo = g_vecHeadInfo;
     string transaction_id = string("TransactionId: ") + to_string(get_time_sec());
     vecHeadInfo.push_back(transaction_id);
-	string batch_no;
-	RETURN_ON_ERROR(get_batch_no(batch_no));
-	string current_batch_no = string("CurrentBatchNumber: ") + batch_no;
+	//string batch_no;
+	//RETURN_ON_ERROR(get_batch_no(batch_no));
+	string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
 	vecHeadInfo.push_back("Content-Type: application/json");
     int err_code;
@@ -231,9 +232,9 @@ int reverse_redeem() {
 	vector<string> vecHeadInfo = g_vecHeadInfo;
     string transaction_id = string("TransactionId: ") + order_id;
     vecHeadInfo.push_back(transaction_id);
-	string batch_no;
-	RETURN_ON_ERROR(get_batch_no(batch_no));
-	string current_batch_no = string("CurrentBatchNumber: ") + batch_no;
+	//string batch_no;
+	//RETURN_ON_ERROR(get_batch_no(batch_no));
+	string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
 	vecHeadInfo.push_back("Content-Type: application/json");
     int err_code;
@@ -259,16 +260,17 @@ int reverse_redeem() {
 int main(int argc, char* argv[]) {
 	init();
 
-	string balance;
-	RETURN_ON_ERROR(balance_enquiry(balance));
+	RETURN_ON_ERROR(get_batch_no(g_batch_no));
 
-	RETURN_ON_ERROR(redeem());
+	//RETURN_ON_ERROR(balance_enquiry());
 
-	RETURN_ON_ERROR(balance_enquiry(balance));
+	//RETURN_ON_ERROR(redeem());
+
+	//RETURN_ON_ERROR(balance_enquiry());
 
 	//RETURN_ON_ERROR(cancel_redeem());
-	RETURN_ON_ERROR(reverse_redeem());
+	//RETURN_ON_ERROR(reverse_redeem());
 
-	RETURN_ON_ERROR(balance_enquiry(balance));
+	//RETURN_ON_ERROR(balance_enquiry());
 	return 0;
 }
