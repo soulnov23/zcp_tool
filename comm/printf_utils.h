@@ -30,11 +30,11 @@ gcc支持的做法，支持arg可变参传入
 
 #define PRINTF_DEBUG(format, ...) \
 { \
-	string time_str; \
-	int ret = get_time_now(time_str); \
-	if (ret == 0) \
+	string __time_str; \
+	int __ret = get_time_now(__time_str); \
+	if (__ret == 0) \
 	{ \
-		printf("[%s] " GREEN_PRINT_BEG "[DEBUG]" GREEN_PRINT_END " [%s:%d %s()] " format"\n", time_str.c_str(), __FILE__, __LINE__, \
+		printf("[%s] " GREEN_PRINT_BEG "[DEBUG]" GREEN_PRINT_END " [%s:%d %s()] " format"\n", __time_str.c_str(), __FILE__, __LINE__, \
 		__FUNCTION__, ##__VA_ARGS__); \
 	} \
 	else \
@@ -46,11 +46,11 @@ gcc支持的做法，支持arg可变参传入
 
 #define PRINTF_ERROR(format, ...) \
 { \
-	string time_str; \
-	int ret = get_time_now(time_str); \
-	if (ret == 0) \
+	string __time_str; \
+	int __ret = get_time_now(__time_str); \
+	if (__ret == 0) \
 	{ \
-		printf("[%s] " RED_PRINT_BEG "[ERROR]" RED_PRINT_END " [%s:%d %s()] [errno:%d err:%s] " format"\n", time_str.c_str(), __FILE__, __LINE__, \
+		printf("[%s] " RED_PRINT_BEG "[ERROR]" RED_PRINT_END " [%s:%d %s()] [errno:%d err:%s] " format"\n", __time_str.c_str(), __FILE__, __LINE__, \
 		__FUNCTION__, errno, strerror(errno), ##__VA_ARGS__); \
 	} \
 	else \
