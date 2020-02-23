@@ -12,7 +12,7 @@ BUILD=BUILD_DEBUG
 #BUILD=BUILD_RELEASE
 
 CC = gcc
-CXX = g++ -std=c++11
+CXX = g++ -std=c++2a
 AR = ar
 ARFLAGS = -scurv
 RANLIB = ranlib
