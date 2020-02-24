@@ -11,14 +11,14 @@
 #define AES_IV_LENGTH_ERROR -6
 
 enum AES_SIGN_TYPE {
-  AES_SIGN_CODE_BASE64 = 0,  //!< 签名经过Base64编码
-  AES_SIGN_CODE_HEX = 1,     //!< 签名经过Hex编码
+    AES_SIGN_CODE_BASE64 = 0,  //!< 签名经过Base64编码
+    AES_SIGN_CODE_HEX = 1,     //!< 签名经过Hex编码
 };
 
 enum AES_BIT_TYPE {
-  AES_BIT_128 = 0,
-  AES_BIT_192 = 1,
-  AES_BIT_256 = 2,
+    AES_BIT_128 = 0,
+    AES_BIT_192 = 1,
+    AES_BIT_256 = 2,
 };
 
 // 返回值不为0则表示错误，通过upay::get_last_error_info()获取错误信息

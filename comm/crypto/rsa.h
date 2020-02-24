@@ -6,10 +6,10 @@
 #define COMM_MAX_BUFLEN 2048
 
 #define RSA_PARAM_TYPE_ERROR -1  //参数错误
-#define RSA_KEY_ERROR -2  // Key错误
-#define RSA_VERIFY_ERROR -3   //签名验证错误
-#define RSA_DECRYPT_ERROR -4  //解密失败
-#define RSA_SIGN_ERROR -5     //签名失败
+#define RSA_KEY_ERROR -2         // Key错误
+#define RSA_VERIFY_ERROR -3      //签名验证错误
+#define RSA_DECRYPT_ERROR -4     //解密失败
+#define RSA_SIGN_ERROR -5        //签名失败
 
 #define TOOLS_RSA_NO_PADDING 1
 #define TOOLS_RSA_PKCS1_PADDING 2
@@ -20,21 +20,21 @@
  * \brief	摘要算法
 */
 enum digest_algorithm {
-  DIGEST_SHA1 = 0,  //!< SHA-1摘要算法
-  DIGEST_SHA256 = 1
+    DIGEST_SHA1 = 0,  //!< SHA-1摘要算法
+    DIGEST_SHA256 = 1
 };
 enum rsa_cipher_type {
-  CIPHER_TYPE_BASE64 = 0,
-  CIPHER_TYPE_HEX = 1
+    CIPHER_TYPE_BASE64 = 0,
+    CIPHER_TYPE_HEX = 1
 };
 /*!
  * \enum	sign_code_type
  * \brief	签名编码类型
 */
 enum sign_code_type {
-  SIGN_CODE_RAW = 0,     //!< 签名未编码
-  SIGN_CODE_BASE64 = 1,  //!< 签名经过Base64编码
-  SIGN_CODE_HEX = 2      //!< 签名经过Hex编码
+    SIGN_CODE_RAW = 0,     //!< 签名未编码
+    SIGN_CODE_BASE64 = 1,  //!< 签名经过Base64编码
+    SIGN_CODE_HEX = 2      //!< 签名经过Hex编码
 };
 
 /*!
@@ -79,8 +79,8 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign,
 
 int rsa_pubkey_decrypt(const std::string& cipher_in,  //密文
                        int cipher_type_in,            //密文类型
-                                            //base64(CIPHER_TYPE_BASE64)
-                                            //hex(CIPHER_TYPE_HEX)
+                       // base64(CIPHER_TYPE_BASE64)
+                       // hex(CIPHER_TYPE_HEX)
                        int padding_mode_in,  // TOOLS_RSA_NO_PADDING
                                              // TOOLS_RSA_PKCS1_PADDING
                                              // TOOLS_RSA_PKCS1_OAEP_PADDING
