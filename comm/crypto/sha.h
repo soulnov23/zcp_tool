@@ -10,4 +10,4 @@ std::string hmac_md5_hex(const std::string& key, const std::string& data);
 std::string hmac_sha256_base64(const std::string& key, const std::string& data);
 std::string hmac_sha256_hex(const std::string& key, const std::string& data);
 
-#endif 
+#endif

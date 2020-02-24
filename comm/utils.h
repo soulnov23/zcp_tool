@@ -6,7 +6,7 @@
 #include <map>
 using namespace std;
 
-//void string_trim(string& str);
+// void string_trim(string& str);
 void string_replace(string& data, const string& src, const string& dst);
 void string_lower(string& str);
 void string_upper(string& str);
@@ -21,6 +21,6 @@ void map2str(string& buf, const record_t& record, bool encode = true);
 void str2map(record_t& record, const string& buf, bool encode = true);
 
 bool va_function(const char* format, ...);
-//bool va_function(const char* format, args...);
+// bool va_function(const char* format, args...);
 
 #endif

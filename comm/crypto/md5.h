@@ -7,10 +7,9 @@
  * \enum	md5_option
  * \brief	md5摘要算法选项
 */
-enum md5_option
-{
-	MD5_RAW = 0,	//!< 直接返回原始结果
-	MD5_HEX = 1 //!< 结果经过Hex编码后返回
+enum md5_option {
+  MD5_RAW = 0,  //!< 直接返回原始结果
+  MD5_HEX = 1   //!< 结果经过Hex编码后返回
 };
 
 /*!
