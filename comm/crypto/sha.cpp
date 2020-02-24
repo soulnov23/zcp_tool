@@ -9,7 +9,7 @@
 #include <string.h>
 
 int sha256(const std::string& data_in, std::string& data_out) {
-    char buf[2];
+    char buf[3];
     unsigned char hash[SHA256_DIGEST_LENGTH];
     SHA256_CTX sha256;
     SHA256_Init(&sha256);
