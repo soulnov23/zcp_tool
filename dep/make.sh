@@ -1,5 +1,12 @@
 #!/bin/bash
 
+:<<!
+LOG_FILE="/var/log/make.log"
+>"${LOG_FILE}"
+exec &>>${LOG_FILE}
+set -x
+!
+
 set -x
 
 function make_open_ssl()
