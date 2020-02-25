@@ -57,7 +57,7 @@ int get_batch_no(string& batch_no) {
     vector<string> vecHeadInfo = g_vecHeadInfo;
     string transaction_id =
         string("TransactionId: ") + to_string(get_time_usec());
-    vecHeadInfo.push_back(transaction_id);
+    // vecHeadInfo.push_back(transaction_id);
     string post_string("");
     int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string,
                         err_code, err_msg);
@@ -113,7 +113,7 @@ int balance_enquiry() {
     vector<string> vecHeadInfo = g_vecHeadInfo;
     string transaction_id =
         string("TransactionId: ") + to_string(get_time_sec());
-    vecHeadInfo.push_back(transaction_id);
+    // vecHeadInfo.push_back(transaction_id);
     // string batch_no;
     // RETURN_ON_ERROR(get_batch_no(batch_no));
     string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
@@ -186,6 +186,7 @@ int redeem() {
         PRINTF_DEBUG("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
                      rsp_msg.c_str());
     }
+    PRINTF_DEBUG("redeem %s success", g_amount.c_str());
     return 0;
 }
 
@@ -203,8 +204,7 @@ int cancel_redeem() {
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
         "cancelredeem";
     vector<string> vecHeadInfo = g_vecHeadInfo;
-    string transaction_id =
-        string("TransactionId: ") + to_string(get_time_sec());
+    string transaction_id = string("TransactionId: ") + g_OriginalTransactionId;
     vecHeadInfo.push_back(transaction_id);
     // string batch_no;
     // RETURN_ON_ERROR(get_batch_no(batch_no));
@@ -229,6 +229,7 @@ int cancel_redeem() {
         PRINTF_DEBUG("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
                      rsp_msg.c_str());
     }
+    PRINTF_DEBUG("cancel redeem %s success", g_amount.c_str());
     return 0;
 }
 
@@ -277,15 +278,15 @@ int main(int argc, char* argv[]) {
 
     RETURN_ON_ERROR(get_batch_no(g_batch_no));
 
-    // RETURN_ON_ERROR(balance_enquiry());
+    RETURN_ON_ERROR(balance_enquiry());
 
-    // RETURN_ON_ERROR(redeem());
+    RETURN_ON_ERROR(redeem());
 
-    // RETURN_ON_ERROR(balance_enquiry());
+    RETURN_ON_ERROR(balance_enquiry());
 
-    // RETURN_ON_ERROR(cancel_redeem());
+    RETURN_ON_ERROR(cancel_redeem());
     // RETURN_ON_ERROR(reverse_redeem());
 
-    // RETURN_ON_ERROR(balance_enquiry());
+    RETURN_ON_ERROR(balance_enquiry());
     return 0;
 }
