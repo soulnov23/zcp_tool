@@ -3,3 +3,6 @@ all:
 
 clean:
 	rm -rf *.log
+
+format:
+	@echo "log nothing"

@@ -3,3 +3,6 @@ all:
 
 clean:
 	#rm -rf lib*
+
+format:
+	@echo "log nothing"

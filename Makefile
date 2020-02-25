@@ -4,13 +4,13 @@ proj_path := $(shell echo $(dir $(make_file_path)) | sed 's/.$$//')
 PROJ_PATH := $(proj_path)
 export PROJ_PATH
 
-DIR_DEP=dep
+DIR_DEP = dep
 
-DIR_MODULES=comm    \
-            example \
-            lib     \
-            obj     \
-            src
+DIR_MODULES = comm    \
+              example \
+              lib     \
+              obj     \
+              src
 
 all:
 	@for dir in $(DIR_MODULES); \
@@ -40,5 +40,12 @@ install:
 	for dir in $(DIR_DEP); \
 	do \
 		make -C $$dir clean; \
+		echo; \
+	done
+
+format:
+	@for dir in $(DIR_MODULES); \
+	do \
+		make -C $$dir format; \
 		echo; \
 	done

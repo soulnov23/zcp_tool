@@ -3,3 +3,6 @@ all:
 
 clean:
 	rm -rf *.o
+
+format:
+	@echo "obj nothing"

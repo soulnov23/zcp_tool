@@ -9,14 +9,14 @@ A_BIN = $(LIB_DIR)/$(A_NAME)
 INCLUDE +=
 LDFLAGS +=
 
-all : clean $(SO_BIN) $(A_BIN)
+all: clean $(SO_BIN) $(A_BIN)
 
-$(SO_BIN) : $(OBJS)
+$(SO_BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) -shared -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
 
-$(A_BIN) : $(OBJS)
+$(A_BIN): $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?
 	$(RANLIB) $@
 
-clean :
+clean:
 	rm -rf $(OBJS)

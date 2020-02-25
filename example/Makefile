@@ -10,40 +10,44 @@ INCLUDE += -I$(COMM_INC) -I$(XML_INC) -I$(HTTP_PARSER_INC) -I$(JSON_CPP_INC) \
 LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lhttp_parser -ljson -lcrypto -lcurl \
 		   -laio -lcolib -lcomm -lcomm_crypto -lcomm_net -ltcmalloc_minimal
 
-all : clean $(BIN)
+all: clean $(BIN)
 
-test : test.o
+test: test.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-client : client.o
+client: client.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-server : server.o
+server: server.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-example_xml_parser : example_xml_parser.o
+example_xml_parser: example_xml_parser.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-example_json_parser : example_json_parser.o
+example_json_parser: example_json_parser.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-example_rapid_json : example_rapid_json.o
+example_rapid_json: example_rapid_json.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-example_curl : example_curl.o
+example_curl: example_curl.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-example_libco : example_libco.o
+example_libco: example_libco.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-example_epoll : example_epoll.o
+example_epoll: example_epoll.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-example_auto : example_auto.o
+example_auto: example_auto.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-example_lambda : example_lambda.o
+example_lambda: example_lambda.o
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
-clean :
+clean:
 	rm -rf $(OBJS) $(BIN) *.o
+
+format:
+	$(FORMAT) ./*.cpp ./*.h
+	
