@@ -47,7 +47,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout,
         for (unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
             headerlist =
                 curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
-            //PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
+            // PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
         }
     } else {
         headerlist = curl_slist_append(headerlist, "Accept: */*");
@@ -190,7 +190,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout,
         for (unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
             headerlist =
                 curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
-            //PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
+            // PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
         }
     } else {
         headerlist = curl_slist_append(headerlist, "Accept: */*");
