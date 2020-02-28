@@ -55,9 +55,6 @@ int get_batch_no(string& batch_no) {
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/initialize";
     vector<string> vecHeadInfo = g_vecHeadInfo;
-    string transaction_id =
-        string("TransactionId: ") + to_string(get_time_usec());
-    // vecHeadInfo.push_back(transaction_id);
     string post_string("");
     int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string,
                         err_code, err_msg);
@@ -71,8 +68,9 @@ int get_batch_no(string& batch_no) {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_DEBUG("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
                      rsp_msg.c_str());
+        return -1;
     }
 
     Document doc;
@@ -111,11 +109,6 @@ int balance_enquiry() {
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
         "balanceenquiry";
     vector<string> vecHeadInfo = g_vecHeadInfo;
-    string transaction_id =
-        string("TransactionId: ") + to_string(get_time_sec());
-    // vecHeadInfo.push_back(transaction_id);
-    // string batch_no;
-    // RETURN_ON_ERROR(get_batch_no(batch_no));
     string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
     vecHeadInfo.push_back("Content-Type: application/json");
@@ -134,8 +127,9 @@ int balance_enquiry() {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_DEBUG("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
                      rsp_msg.c_str());
+        return -1;
     }
     string balance = map_return["Amount"];
     PRINTF_DEBUG("Amount[%s]", balance.c_str());
@@ -146,7 +140,7 @@ int redeem() {
     string order_id = to_string(get_time_sec());
     map<string, string> map_data;
     map_data["Amount"] = g_amount;
-    map_data["BillAmount"] = g_card_amount;
+    //map_data["BillAmount"] = g_card_amount;
     map_data["InvoiceNumber"] = order_id;
     map_data["IdempotencyKey"] = "abcdefghi";
     map_data["CardNumber"] = g_card_no;
@@ -160,8 +154,6 @@ int redeem() {
     vector<string> vecHeadInfo = g_vecHeadInfo;
     string transaction_id = string("TransactionId: ") + order_id;
     vecHeadInfo.push_back(transaction_id);
-    // string batch_no;
-    // RETURN_ON_ERROR(get_batch_no(batch_no));
     string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
     vecHeadInfo.push_back("Content-Type: application/json");
@@ -183,14 +175,16 @@ int redeem() {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_DEBUG("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
                      rsp_msg.c_str());
+        return -1;
     }
     PRINTF_DEBUG("redeem %s success", g_amount.c_str());
     return 0;
 }
 
 int cancel_redeem() {
+    string order_id = to_string(get_time_sec());
     map<string, string> map_data;
     string post_string;
     map_data["CardNumber"] = g_card_no;
@@ -204,10 +198,8 @@ int cancel_redeem() {
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
         "cancelredeem";
     vector<string> vecHeadInfo = g_vecHeadInfo;
-    string transaction_id = string("TransactionId: ") + g_OriginalTransactionId;
+    string transaction_id = string("TransactionId: ") + order_id;
     vecHeadInfo.push_back(transaction_id);
-    // string batch_no;
-    // RETURN_ON_ERROR(get_batch_no(batch_no));
     string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
     vecHeadInfo.push_back("Content-Type: application/json");
@@ -226,8 +218,9 @@ int cancel_redeem() {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_DEBUG("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
                      rsp_msg.c_str());
+        return -1;
     }
     PRINTF_DEBUG("cancel redeem %s success", g_amount.c_str());
     return 0;
@@ -247,8 +240,6 @@ int reverse_redeem() {
     vector<string> vecHeadInfo = g_vecHeadInfo;
     string transaction_id = string("TransactionId: ") + order_id;
     vecHeadInfo.push_back(transaction_id);
-    // string batch_no;
-    // RETURN_ON_ERROR(get_batch_no(batch_no));
     string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
     vecHeadInfo.push_back("Content-Type: application/json");
@@ -267,8 +258,9 @@ int reverse_redeem() {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_DEBUG("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
                      rsp_msg.c_str());
+        return -1;
     }
     return 0;
 }
@@ -276,7 +268,8 @@ int reverse_redeem() {
 int main(int argc, char* argv[]) {
     init();
 
-    RETURN_ON_ERROR(get_batch_no(g_batch_no));
+    //RETURN_ON_ERROR(get_batch_no(g_batch_no));
+    g_batch_no = "10648684";
 
     RETURN_ON_ERROR(balance_enquiry());
 
