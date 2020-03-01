@@ -11,7 +11,7 @@ LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lhttp_parser -ljson -lcrypto -lcur
 
 all: clean $(BIN)
 
-$(BIN) : $(OBJS)
+$(BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 clean:

@@ -5,4 +5,4 @@ clean:
 	#rm -rf lib*
 
 format:
-	@echo "log nothing"
+	@echo "lib nothing"
