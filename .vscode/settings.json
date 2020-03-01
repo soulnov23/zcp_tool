@@ -1,4 +1,18 @@
 {
+    "http.proxy": "http://devnet-proxy.oa.com:8080",
+    "http.proxyStrictSSL": false,
+    "http.proxySupport": "on",
+    "window.zoomLevel": 0,
+    "editor.fontSize": 16,
+    "editor.minimap.enabled": false,
+    "workbench.editor.enablePreview": false,
+    "problems.decorations.enabled": false,
+    "files.autoGuessEncoding": true,
+    "editor.renderControlCharacters": false,
+    "C_Cpp.default.cppStandard": "c++20",
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.errorSquiggles": "Disabled",
+    "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/**"
     ],
@@ -27,4 +41,15 @@
         "**/test": true,
         "**/zcp_server": true,
     },
+    "C_Cpp.workspaceSymbols": "All",
+    "breadcrumbs.enabled": true,
+    "files.autoSave": "onFocusChange",
+    "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
+    "workbench.tree.renderIndentGuides": "none",
+    "workbench.view.alwaysShowHeaderActions": true,
+    "C_Cpp.autoAddFileAssociations": false,
+    "editor.largeFileOptimizations": false,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "workbench.activityBar.visible": true
 }
