@@ -38,7 +38,6 @@ uninstall:
 		echo; \
 	done
 
-
 format:
 	@for dir in $(DIR_MODULES); \
 	do \
