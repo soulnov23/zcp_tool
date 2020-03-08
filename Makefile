@@ -8,8 +8,6 @@ DIR_DEP = dep
 
 DIR_MODULES = comm    \
               example \
-              lib     \
-              obj     \
               src
 
 all:
@@ -20,11 +18,6 @@ all:
 	done
 
 clean:
-	@for dir in $(DIR_DEP); \
-	do \
-		make -C $$dir clean; \
-		echo; \
-	done
 	@for dir in $(DIR_MODULES); \
 	do \
 		make -C $$dir clean; \
@@ -34,14 +27,17 @@ clean:
 install:
 	@for dir in $(DIR_DEP); \
 	do \
-		make -C $$dir; \
+		make -C $$dir install; \
 		echo; \
 	done
-	for dir in $(DIR_DEP); \
+
+uninstall:
+	@for dir in $(DIR_DEP); \
 	do \
-		make -C $$dir clean; \
+		make -C $$dir uninstall; \
 		echo; \
 	done
+
 
 format:
 	@for dir in $(DIR_MODULES); \

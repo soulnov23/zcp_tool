@@ -10,7 +10,8 @@ A_BIN = $(LIB_DIR)/$(A_NAME)
 INCLUDE += -I$(JSON_CPP_INC)
 LDFLAGS +=
 
-all: clean $(SO_BIN) $(A_BIN)
+install: clean $(SO_BIN) $(A_BIN)
+	rm -rf $(OBJS)
 
 $(SO_BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) -shared -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
@@ -18,6 +19,9 @@ $(SO_BIN): $(OBJS)
 $(A_BIN): $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?
 	$(RANLIB) $@
+
+uninstall: clean
+	rm -rf $(SO_BIN) $(A_BIN)
 
 clean:
 	rm -rf $(OBJS)
