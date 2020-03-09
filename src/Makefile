@@ -15,7 +15,7 @@ $(BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 clean:
-	rm -rf $(OBJS) $(BIN) *.o
+	rm -rf $(OBJS) $(BIN)
 
 format:
 	$(FORMAT) ./*.cpp ./*.h
