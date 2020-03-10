@@ -10,7 +10,6 @@ INCLUDE +=
 LDFLAGS +=
 
 install: clean $(SO_BIN) $(A_BIN)
-	rm -rf $(OBJS)
 
 $(SO_BIN): $(OBJS)
 	$(CC) $(CXXFLAGS) -shared -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)

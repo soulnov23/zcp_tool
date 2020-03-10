@@ -11,7 +11,6 @@ INCLUDE += -I$(JSON_CPP_INC)
 LDFLAGS +=
 
 install: clean $(SO_BIN) $(A_BIN)
-	rm -rf $(OBJS)
 
 $(SO_BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) -shared -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
