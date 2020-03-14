@@ -23,7 +23,7 @@ void get_node(map<string, tinyxml2::XMLElement*>& record,
               tinyxml2::XMLDocument& doc) {
     auto* node = doc.FirstChildElement();
     while (node != nullptr) {
-        record.insert(pair<string, tinyxml2::XMLElement*>(node->Name(), node));
+        record.insert(pair<string, decltype(node)>(node->Name(), node));
         node = node->NextSiblingElement();
     }
 }
@@ -32,7 +32,7 @@ void get_node(map<string, tinyxml2::XMLElement*>& record,
               tinyxml2::XMLElement* node) {
     auto* child_node = node->FirstChildElement();
     while (child_node != nullptr) {
-        record.insert(pair<string, tinyxml2::XMLElement*>(child_node->Name(),
+        record.insert(pair<string, decltype(child_node)>(child_node->Name(),
                                                           child_node));
         child_node = child_node->NextSiblingElement();
     }
