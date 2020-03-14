@@ -1,12 +1,17 @@
 #include <string.h>
 #include "coder.h"
 
-typedef std::string::size_type (*escape_function)(const std::string& str_in,
-                                                  std::string::size_type pos,
-                                                  std::string& str_out);
+// typedef std::string::size_type (*escape_function)(const std::string& str_in,
+//                                                  std::string::size_type pos,
+//                                                  std::string& str_out);
+using escape_function =
+    std::string::size_type (*)(const std::string&, std::string::size_type,
+                               std::string&);
 
-typedef std::string::size_type (*escape_predicator)(
-    const std::string& str, std::string::size_type start_pos);
+// typedef std::string::size_type (*escape_predicator)(
+//    const std::string& str, std::string::size_type start_pos);
+using escape_predicator =
+    std::string::size_type (*)(const std::string&, std::string::size_type);
 
 template <escape_predicator NEXT_ESCAPE_POS, escape_function ESCAPE_FUN>
 int string_escape(const std::string& str_in, std::string& str_out) {
@@ -69,9 +74,11 @@ void char_append<0>(const char* chars, std::string& str) {
     (void)str;
 }
 
-typedef bool (*fixed_size_escape_function)(const std::string& str_in,
-                                           std::string::size_type pos,
-                                           char* chars_out);
+// typedef bool (*fixed_size_escape_function)(const std::string& str_in,
+//                                           std::string::size_type pos,
+//                                           char* chars_out);
+using fixed_size_escape_function =
+    bool (*)(const std::string&, std::string::size_type, char*);
 
 template <fixed_size_escape_function FIXED_SIZE_ESCAPE_FUN,
           std::string::size_type OUT_FIXED_SIZE,
