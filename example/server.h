@@ -2,6 +2,7 @@
 #define __SERVER_H__
 
 #include <map>
+#include <memory>
 using namespace std;
 #include "net/connector.h"
 
@@ -16,7 +17,7 @@ class server {
     void stop();
 
    public:
-    static server* get_instance();
+    static shared_ptr<server> get_instance();
 
    private:
     static void signal_handler_t(int signum);
@@ -41,8 +42,8 @@ class server {
     int m_udp_fd;
     int m_unix_fd;
     int m_raw_fd;
-    map<int, connector*> m_fd_conn;
-    static server* g_server;
+    map<int, shared_ptr<connector>> m_fd_conn;
+    static shared_ptr<server> g_server;
 };
 
 #endif

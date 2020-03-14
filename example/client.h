@@ -4,6 +4,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include "net/connector.h"
+#include <memory>
+using namespace std;
 
 class client {
    public:
@@ -16,7 +18,7 @@ class client {
     void stop();
 
    public:
-    static client* get_instance();
+    static shared_ptr<client> get_instance();
 
    private:
     static void signal_handler_t(int signum);
@@ -39,11 +41,11 @@ class client {
     bool m_flag;
     int m_epoll_fd;
     int m_tcp_fd;
-    connector* m_tcp_conn;
+    shared_ptr<connector> m_tcp_conn;
     int m_udp_fd;
     int m_unix_fd;
     int m_raw_fd;
-    static client* g_client;
+    static shared_ptr<client> g_client;
 };
 
 #endif

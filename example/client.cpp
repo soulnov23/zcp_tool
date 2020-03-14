@@ -12,7 +12,7 @@ using namespace std;
 #include "printf_utils.h"
 #include "net/net_utils.h"
 
-client* client::g_client = new client;
+shared_ptr<client> client::g_client = make_shared<client>();
 
 client::client() {
     m_epoll_fd = -1;
@@ -26,7 +26,7 @@ client::client() {
 
 client::~client() { stop(); }
 
-client* client::get_instance() { return g_client; }
+shared_ptr<client> client::get_instance() { return g_client; }
 
 void client::signal_handler_t(int signum) {
     if (signum == SIGPIPE) {
@@ -81,10 +81,6 @@ void client::stop() {
         close(m_tcp_fd);
         m_tcp_fd = -1;
     }
-    if (m_tcp_conn != nullptr) {
-        delete m_tcp_conn;
-        m_tcp_conn = nullptr;
-    }
     if (m_udp_fd != -1) {
         close(m_udp_fd);
         m_udp_fd = -1;
@@ -123,7 +119,7 @@ int client::tcp_socket_start() {
         return -1;
     }
     m_tcp_conn =
-        new connector(m_tcp_fd, inet_ntoa(server_addr.sin_addr), nullptr);
+        make_shared<connector>(m_tcp_fd, inet_ntoa(server_addr.sin_addr), nullptr);
     return 0;
 }
 
@@ -254,7 +250,6 @@ void client::do_tcp_recv() {
                     PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                                  m_epoll_fd, m_tcp_fd);
                 }
-                delete m_tcp_conn;
                 break;
             }
         }
@@ -264,7 +259,6 @@ void client::do_tcp_recv() {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                              m_epoll_fd, m_tcp_fd);
             }
-            delete m_tcp_conn;
             break;
         }
     }
@@ -289,7 +283,6 @@ void client::do_tcp_send(int fd, const char* data, int len) {
                     PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                                  m_epoll_fd, fd);
                 }
-                delete (m_tcp_conn);
                 break;
             }
         }
@@ -300,7 +293,6 @@ void client::do_tcp_send(int fd, const char* data, int len) {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                              m_epoll_fd, fd);
             }
-            delete (m_tcp_conn);
             break;
         }
     }

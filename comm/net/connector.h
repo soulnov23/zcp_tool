@@ -3,6 +3,8 @@
 
 #include "buffer.h"
 #include "arg.h"
+#include <memory>
+using namespace std;
 
 class connector {
    public:
@@ -14,7 +16,7 @@ class connector {
 
    public:
     int m_fd;
-    buffer* m_buffer;
+    shared_ptr<buffer> m_buffer;
     char m_ip[20];
     arg* m_data;
 };
