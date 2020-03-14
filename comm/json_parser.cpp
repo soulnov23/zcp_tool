@@ -16,6 +16,7 @@ int json_to_map(map<string, string>& record, string& data) {
         return -1;
     }
     auto member = value.getMemberNames();
+    // 右值引用减少内存拷贝
     for (auto&& it : member) {
         // if (value[it].isString())
         if (value[it].type() == Json::stringValue) {
@@ -52,6 +53,7 @@ int json_to_map(map<string, string>& record, string& data) {
 
 void map_to_json(string& data, const map<string, string>& record) {
     Json::Value object;
+    // 右值引用减少内存拷贝
     for (auto&& [first, second] : record) {
         object[first] = second;
     }
@@ -93,6 +95,7 @@ void rapid_map_to_json(string& data, const map<string, string>& record) {
     rapidjson::Document document;
     document.SetObject();
     auto& allocator = document.GetAllocator();
+    // 右值引用减少内存拷贝
     for (auto&& [first, second] : record) {
         document.AddMember(rapidjson::StringRef(first.c_str()),
                            rapidjson::StringRef(second.c_str()), allocator);
