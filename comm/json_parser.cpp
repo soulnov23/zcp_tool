@@ -16,8 +16,7 @@ int json_to_map(map<string, string>& record, string& data) {
         return -1;
     }
     auto member = value.getMemberNames();
-    for (auto it = member.begin(); it != member.end();
-         it++) {
+    for (auto it = member.begin(); it != member.end(); it++) {
         // if (value[*it].isString())
         if (value[*it].type() == Json::stringValue) {
             // record.insert(pair<string, string>(*it, value[*it].asString()));
