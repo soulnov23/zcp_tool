@@ -22,7 +22,7 @@ int get_conf(tinyxml2::XMLDocument& doc, const char* data, size_t len) {
 void get_node(map<string, tinyxml2::XMLElement*>& record,
               tinyxml2::XMLDocument& doc) {
     tinyxml2::XMLElement* node = doc.FirstChildElement();
-    while (node != NULL) {
+    while (node != nullptr) {
         record.insert(pair<string, tinyxml2::XMLElement*>(node->Name(), node));
         node = node->NextSiblingElement();
     }
@@ -31,7 +31,7 @@ void get_node(map<string, tinyxml2::XMLElement*>& record,
 void get_node(map<string, tinyxml2::XMLElement*>& record,
               tinyxml2::XMLElement* node) {
     tinyxml2::XMLElement* child_node = node->FirstChildElement();
-    while (child_node != NULL) {
+    while (child_node != nullptr) {
         record.insert(pair<string, tinyxml2::XMLElement*>(child_node->Name(),
                                                           child_node));
         child_node = child_node->NextSiblingElement();
@@ -40,7 +40,7 @@ void get_node(map<string, tinyxml2::XMLElement*>& record,
 
 void get_attri(map<string, string>& record, tinyxml2::XMLElement* node) {
     const tinyxml2::XMLAttribute* attri = node->FirstAttribute();
-    while (attri != NULL) {
+    while (attri != nullptr) {
         record.insert(pair<string, string>(attri->Name(), attri->Value()));
         attri = attri->Next();
     }
@@ -55,9 +55,9 @@ int xml_to_map(map<string, string>& record, const char* file_path) {
     }
     tinyxml2::XMLElement* root = doc.RootElement();
     tinyxml2::XMLElement* node = root->FirstChildElement();
-    while (node != NULL) {
+    while (node != nullptr) {
         const tinyxml2::XMLAttribute* attri = node->FirstAttribute();
-        while (attri != NULL) {
+        while (attri != nullptr) {
             record.insert(pair<string, string>(attri->Name(), attri->Value()));
             attri = attri->Next();
         }
@@ -75,9 +75,9 @@ int xml_to_map(map<string, string>& record, const char* data, size_t len) {
     }
     tinyxml2::XMLElement* root = doc.RootElement();
     tinyxml2::XMLElement* node = root->FirstChildElement();
-    while (node != NULL) {
+    while (node != nullptr) {
         const tinyxml2::XMLAttribute* attri = node->FirstAttribute();
-        while (attri != NULL) {
+        while (attri != nullptr) {
             record.insert(pair<string, string>(attri->Name(), attri->Value()));
             attri = attri->Next();
         }

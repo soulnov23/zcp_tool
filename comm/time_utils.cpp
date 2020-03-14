@@ -7,7 +7,7 @@
 /*localtime非线程安全
 int get_time_now(string& str_now) {
         const string format = "%Y-%m-%d %H:%M:%S";
-        time_t t = time(NULL);
+        time_t t = time(nullptr);
         char buf[128];
         struct tm* tm_time = localtime(&t);
         if (!tm_time)  {
@@ -25,12 +25,12 @@ int get_time_now(string& str_now) {
 int get_time_now(string& str_now) {
     struct timeval tv;
     struct tm timestamp;
-    if (gettimeofday(&tv, NULL) == -1) {
+    if (gettimeofday(&tv, nullptr) == -1) {
         PRINTF_ERROR("gettimeofday failed.");
         return -1;
     }
     time_t now = tv.tv_sec;
-    if (localtime_r(&now, &timestamp) == NULL) {
+    if (localtime_r(&now, &timestamp) == nullptr) {
         PRINTF_ERROR("localtime_r failed.");
         return -1;
     }
@@ -47,7 +47,7 @@ int get_time_now(string& str_now) {
 }
 
 time_t get_time_sec() {
-    time_t ret = time(NULL);
+    time_t ret = time(nullptr);
     if (ret == -1) {
         PRINTF_ERROR("time failed.");
     }
@@ -56,7 +56,7 @@ time_t get_time_sec() {
 
 time_t get_time_usec() {
     struct timeval tv;
-    if (gettimeofday(&tv, NULL) == -1) {
+    if (gettimeofday(&tv, nullptr) == -1) {
         PRINTF_ERROR("gettimeofday failed.");
         return -1;
     }
@@ -67,17 +67,17 @@ int get_time_zone(int& time_zone) {
     time_t t1, t2;
     struct tm tm_local, tm_utc;
     struct timeval tv;
-    if (gettimeofday(&tv, NULL) == -1) {
+    if (gettimeofday(&tv, nullptr) == -1) {
         PRINTF_ERROR("gettimeofday failed.");
         return -1;
     }
     time_t now = tv.tv_sec;
 
-    if (localtime_r(&now, &tm_local) == NULL) {
+    if (localtime_r(&now, &tm_local) == nullptr) {
         PRINTF_ERROR("localtime_r failed.");
         return -1;
     }
-    if (gmtime_r(&now, &tm_utc) == NULL) {
+    if (gmtime_r(&now, &tm_utc) == nullptr) {
         PRINTF_ERROR("gmtime_r failed.");
         return -1;
     }
@@ -119,7 +119,7 @@ time_t str_time2date(const string& str_time) {
 
 string date2str_time(time_t time) {
     struct tm st_time;
-    if (localtime_r(&time, &st_time) == NULL) {
+    if (localtime_r(&time, &st_time) == nullptr) {
         PRINTF_ERROR("localtime_r failed.");
         return "";
     }

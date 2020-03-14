@@ -13,7 +13,7 @@
 
 int make_socket_blocking(int fd) {
     int flags;
-    if ((flags = fcntl(fd, F_GETFL, NULL)) == -1) {
+    if ((flags = fcntl(fd, F_GETFL, nullptr)) == -1) {
         PRINTF_ERROR("fcntl(%d, F_GETFL) error", fd);
         return -1;
     }
@@ -26,7 +26,7 @@ int make_socket_blocking(int fd) {
 
 int make_socket_nonblocking(int fd) {
     int flags;
-    if ((flags = fcntl(fd, F_GETFL, NULL)) == -1) {
+    if ((flags = fcntl(fd, F_GETFL, nullptr)) == -1) {
         PRINTF_ERROR("fcntl(%d, F_GETFL) error", fd);
         return -1;
     }
@@ -54,7 +54,7 @@ int make_socket_keepalive(int fd) {
 
 int make_socket_cloexec(int fd) {
     int flags;
-    if ((flags = fcntl(fd, F_GETFD, NULL)) == -1) {
+    if ((flags = fcntl(fd, F_GETFD, nullptr)) == -1) {
         PRINTF_ERROR("fcntl(%d, F_GETFD) error", fd);
         return -1;
     }
@@ -112,7 +112,7 @@ string net_int_ip2str(uint32_t ip) {
     struct sockaddr_in addr_in;
     char buf[128] = {0};
     addr_in.sin_addr.s_addr = ip;
-    if (inet_ntop(AF_INET, &addr_in.sin_addr, buf, sizeof(buf)) == NULL) {
+    if (inet_ntop(AF_INET, &addr_in.sin_addr, buf, sizeof(buf)) == nullptr) {
         PRINTF_ERROR("inet_ntop error");
         return "";
     }
@@ -195,7 +195,8 @@ bool get_local_ip(const char* eth_name, string& ip) {
                 //设备名称
                 PRINTF_DEBUG("interface name:[%s]",
 interface[i].ifr_ifrn.ifrn_name);
-                if (strstr(interface[i].ifr_ifrn.ifrn_name, eth_name) != NULL) {
+                if (strstr(interface[i].ifr_ifrn.ifrn_name, eth_name) !=
+nullptr) {
                         if (ioctl(fd, SIOCGIFADDR, (char*)&interface[i]) == 0) {
                                 ip = net_int_ip2str((((struct
 sockaddr_in*)(&(interface[i].ifr_ifru.ifru_addr)))->sin_addr.s_addr));

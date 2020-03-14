@@ -13,7 +13,7 @@ int get_lib_func(const char* file_path, const char* func_name) {
     dlerror();
     int (*func)(int);
     *(void**)(&func) = dlsym(handle, func_name);
-    if (dlerror() != NULL) {
+    if (dlerror() != nullptr) {
         PRINTF_ERROR();
         dlclose(handle);
         return -1;

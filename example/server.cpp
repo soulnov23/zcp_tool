@@ -74,7 +74,8 @@ void server::stop() {
         m_epoll_fd = -1;
     }
     if (m_tcp_listen_fd != -1) {
-        if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_tcp_listen_fd, NULL)) {
+        if (-1 ==
+            epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_tcp_listen_fd, nullptr)) {
             PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd,
                          m_tcp_listen_fd);
         }
@@ -82,7 +83,7 @@ void server::stop() {
         m_tcp_listen_fd = -1;
     }
     if (m_udp_fd != -1) {
-        if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, NULL)) {
+        if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, nullptr)) {
             PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd,
                          m_udp_fd);
         }
@@ -90,7 +91,7 @@ void server::stop() {
         m_udp_fd = -1;
     }
     if (m_unix_fd != -1) {
-        if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_unix_fd, NULL)) {
+        if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_unix_fd, nullptr)) {
             PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd,
                          m_unix_fd);
         }
@@ -98,7 +99,7 @@ void server::stop() {
         m_unix_fd = -1;
     }
     if (m_raw_fd != -1) {
-        if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_raw_fd, NULL)) {
+        if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_raw_fd, nullptr)) {
             PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd,
                          m_raw_fd);
         }
@@ -235,7 +236,7 @@ void server::do_tcp_accept() {
             PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd,
                          fd);
         }
-        connector* conn = new connector(fd, inet_ntoa(addr.sin_addr), NULL);
+        connector* conn = new connector(fd, inet_ntoa(addr.sin_addr), nullptr);
         m_fd_conn.insert(make_pair(fd, conn));
     }
 }
@@ -261,7 +262,7 @@ void server::do_tcp_recv(int fd) {
             } else {
                 PRINTF_ERROR("fd:%d ip:%s abnormal disconnection", fd,
                              conn->m_ip);
-                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, NULL)) {
+                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                     PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                                  m_epoll_fd, fd);
                 }
@@ -272,7 +273,7 @@ void server::do_tcp_recv(int fd) {
         }
         if (ret == 0) {
             PRINTF_ERROR("fd:%d ip:%s normal disconnection", fd, conn->m_ip);
-            if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, NULL)) {
+            if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                              m_epoll_fd, fd);
             }
@@ -304,7 +305,7 @@ void server::do_tcp_send(int fd, const char* data, int len) {
             } else {
                 PRINTF_ERROR("fd:%d ip:%s abnormal disconnection", fd,
                              conn->m_ip);
-                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, NULL)) {
+                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                     PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                                  m_epoll_fd, fd);
                 }
@@ -315,7 +316,7 @@ void server::do_tcp_send(int fd, const char* data, int len) {
         }
         if (ret == 0) {
             PRINTF_ERROR("fd:%d ip:%s normal disconnection", fd, conn->m_ip);
-            if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, NULL)) {
+            if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                              m_epoll_fd, fd);
             }
@@ -345,7 +346,7 @@ void server::do_udp_recvfrom() {
             } else {
                 PRINTF_ERROR("fd:%d abnormal disconnection", m_udp_fd);
                 if (-1 ==
-                    epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, NULL)) {
+                    epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, nullptr)) {
                     PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                                  m_epoll_fd, m_udp_fd);
                 }
@@ -356,7 +357,7 @@ void server::do_udp_recvfrom() {
         }
         if (ret == 0) {
             PRINTF_ERROR("fd:%d normal disconnection", m_udp_fd);
-            if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, NULL)) {
+            if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, nullptr)) {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                              m_epoll_fd, m_udp_fd);
             }
@@ -384,7 +385,7 @@ void server::do_udp_sendto(int fd, const char* data, int len,
                 continue;
             } else {
                 PRINTF_ERROR("fd:%d abnormal disconnection", fd);
-                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, NULL)) {
+                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                     PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                                  m_epoll_fd, fd);
                 }
@@ -395,7 +396,7 @@ void server::do_udp_sendto(int fd, const char* data, int len,
         }
         if (ret == 0) {
             PRINTF_ERROR("fd:%d normal disconnection", fd);
-            if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, NULL)) {
+            if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                              m_epoll_fd, fd);
             }

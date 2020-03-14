@@ -11,7 +11,7 @@ using namespace std;
 #include "coder.h"
 
 void get_header(string sign, vector<string>& HeadInfo) {
-    string now_time = to_string(time(NULL));
+    string now_time = to_string(time(nullptr));
     string app_id = "8ab74856-8772-45c9-96db-54cb30ab9f74";
     string app_key = "5b96f20a-011f-4254-8be8-9a5ceb2f317f";
     string param = "appid=" + app_id + "&" + "secret=" + app_key + "&" +

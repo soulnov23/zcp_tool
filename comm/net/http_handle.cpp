@@ -3,7 +3,7 @@
 
 size_t recv_proc(void* ptr, size_t size, size_t nmemb, std::string* p) {
 
-    if (p == NULL) return 0;
+    if (p == nullptr) return 0;
 
     if (size * nmemb == 0) return 0;
 
@@ -42,8 +42,8 @@ int http_proc(const std::string& strUrl, unsigned iTimeout,
         return -501;
     }
 
-    struct curl_slist* headerlist = NULL;
-    if (pvecHeadInfo != NULL) {
+    struct curl_slist* headerlist = nullptr;
+    if (pvecHeadInfo != nullptr) {
         for (unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
             headerlist =
                 curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
@@ -185,8 +185,8 @@ int http_proc(const std::string& strUrl, unsigned iTimeout,
         return -501;
     }
 
-    struct curl_slist* headerlist = NULL;
-    if (pvecHeadInfo != NULL) {
+    struct curl_slist* headerlist = nullptr;
+    if (pvecHeadInfo != nullptr) {
         for (unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
             headerlist =
                 curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());

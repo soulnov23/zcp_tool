@@ -44,7 +44,7 @@ template <const char* SPECIAL_CHARS>
 std::string::size_type escape_with_char_set(const std::string& str_in,
                                             std::string::size_type start_pos) {
     const char* pstr = strpbrk(str_in.c_str() + start_pos, SPECIAL_CHARS);
-    if (pstr == NULL) return std::string::npos;
+    if (pstr == nullptr) return std::string::npos;
     return pstr - str_in.c_str();
 }
 

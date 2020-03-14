@@ -5,10 +5,10 @@
 #include "openssl/evp.h"
 #include "openssl/err.h"
 
-#define SET_SSL_ERROR()                                       \
-    {                                                         \
-        PRINTF_ERROR("errno:%lu %s", ERR_get_error(),         \
-                     ERR_error_string(ERR_get_error(), NULL)) \
+#define SET_SSL_ERROR()                                          \
+    {                                                            \
+        PRINTF_ERROR("errno:%lu %s", ERR_get_error(),            \
+                     ERR_error_string(ERR_get_error(), nullptr)) \
     \
 }
 
@@ -56,7 +56,7 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv,
     unsigned char outbuf[msg.size() + EVP_CIPHER_block_size(cipher) + 1024];
     int outlen, tmplen;
 
-    int rc = EVP_EncryptInit_ex(ctx, cipher, NULL,
+    int rc = EVP_EncryptInit_ex(ctx, cipher, nullptr,
                                 (const unsigned char*)key.c_str(), iv);
     if (rc != 1) {
         SET_SSL_ERROR();
@@ -152,7 +152,7 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv,
         [decode_encrypt_msg.size() + EVP_CIPHER_block_size(cipher) + 1024];
     int outlen, tmplen;
 
-    int rc = EVP_DecryptInit_ex(ctx, cipher, NULL,
+    int rc = EVP_DecryptInit_ex(ctx, cipher, nullptr,
                                 (const unsigned char*)key.c_str(), iv);
     if (rc != 1) {
         SET_SSL_ERROR();

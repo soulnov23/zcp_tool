@@ -69,7 +69,7 @@ void* do_recv(void* arg) {
             break;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void* do_accept(void* arg) {
@@ -105,7 +105,7 @@ void* do_accept(void* arg) {
         task_queue.pop();
         co_resume(task_t->m_co);
     }
-    return NULL;
+    return nullptr;
 }
 
 int do_listen() {
@@ -149,11 +149,11 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < CO_ROUTINE_NUM; i++) {
         task* task_t = new task;
         task_t->m_fd = -1;
-        co_create(&(task_t->m_co), NULL, do_recv, task_t);
+        co_create(&(task_t->m_co), nullptr, do_recv, task_t);
         co_resume(task_t->m_co);
     }
-    stCoRoutine_t* accept_co = NULL;
-    co_create(&accept_co, NULL, do_accept, NULL);
+    stCoRoutine_t* accept_co = nullptr;
+    co_create(&accept_co, nullptr, do_accept, nullptr);
     co_resume(accept_co);
     co_eventloop(co_get_epoll_ct(), 0, 0);
     return 0;

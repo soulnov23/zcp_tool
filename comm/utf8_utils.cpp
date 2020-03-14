@@ -74,7 +74,7 @@ string to_utf8(const char* charset, const string& data) {
     size_t max_len = len * 2;
     size_t out_len = max_len;
     char* out_str = (char*)alloca(max_len + 16);
-    if (out_str == NULL) {
+    if (out_str == nullptr) {
         iconv_close(conv);
         PRINTF_ERROR("alloca error");
         return "";
@@ -105,7 +105,7 @@ string utf8_to(const char* charset, const string& data) {
     size_t max_len = len * 4;
     size_t out_len = max_len;
     char* out_str = (char*)alloca(max_len + 16);
-    if (out_str == NULL) {
+    if (out_str == nullptr) {
         iconv_close(conv);
         PRINTF_ERROR("alloca error");
         return "";

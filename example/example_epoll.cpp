@@ -92,7 +92,7 @@ void do_recv(int fd) {
                 continue;
             } else {
                 PRINTF_ERROR("fd:%d abnormal disconnection", fd);
-                if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, NULL)) {
+                if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                     PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                                  epoll_fd, fd);
                 }
@@ -102,7 +102,7 @@ void do_recv(int fd) {
         }
         if (ret == 0) {
             PRINTF_ERROR("fd:%d normal disconnection", fd);
-            if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, NULL)) {
+            if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", epoll_fd,
                              fd);
             }

@@ -10,10 +10,10 @@
 #include "rsa.h"
 #include "printf_utils.h"
 
-#define SET_SSL_ERROR()                                       \
-    {                                                         \
-        PRINTF_ERROR("errno:%lu %s", ERR_get_error(),         \
-                     ERR_error_string(ERR_get_error(), NULL)) \
+#define SET_SSL_ERROR()                                          \
+    {                                                            \
+        PRINTF_ERROR("errno:%lu %s", ERR_get_error(),            \
+                     ERR_error_string(ERR_get_error(), nullptr)) \
     \
 }
 
@@ -35,9 +35,9 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign,
 
     int ret = 0;
 
-    RSA* rsa = NULL;
-    BIO* bio = NULL;
-    EVP_PKEY* evp_pkey = NULL;
+    RSA* rsa = nullptr;
+    BIO* bio = nullptr;
+    EVP_PKEY* evp_pkey = nullptr;
     unsigned char digest[SHA512_DIGEST_LENGTH];
     unsigned int digest_len = sizeof(digest);
     EVP_MD_CTX ctx;
@@ -66,21 +66,21 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign,
     format_public_key += "-----END PUBLIC KEY-----\n";
 
     if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()),
-                               format_public_key.length())) == NULL) {
+                               format_public_key.length())) == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto ready_ret;
     }
 
-    rsa = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);
-    if (NULL == rsa) {
+    rsa = PEM_read_bio_RSA_PUBKEY(bio, nullptr, nullptr, nullptr);
+    if (rsa == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto free_bio;
     }
 
     evp_pkey = EVP_PKEY_new();
-    if (evp_pkey == NULL) {
+    if (evp_pkey == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto free_rsa;
@@ -141,9 +141,9 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign,
 
     int ret = 0;
 
-    RSA* rsa = NULL;
-    BIO* bio = NULL;
-    EVP_PKEY* evp_pkey = NULL;
+    RSA* rsa = nullptr;
+    BIO* bio = nullptr;
+    EVP_PKEY* evp_pkey = nullptr;
     unsigned char digest[SHA512_DIGEST_LENGTH];
     unsigned int digest_len = sizeof(digest);
     EVP_MD_CTX ctx;
@@ -172,21 +172,21 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign,
     format_public_key += "-----END PUBLIC KEY-----\n";
 
     if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()),
-                               format_public_key.length())) == NULL) {
+                               format_public_key.length())) == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto ready_ret;
     }
 
-    rsa = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);
-    if (NULL == rsa) {
+    rsa = PEM_read_bio_RSA_PUBKEY(bio, nullptr, nullptr, nullptr);
+    if (rsa == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto free_bio;
     }
 
     evp_pkey = EVP_PKEY_new();
-    if (evp_pkey == NULL) {
+    if (evp_pkey == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto free_rsa;
@@ -241,7 +241,7 @@ ready_ret:
 }
 
 int public_key_str2rsa(const std::string& public_key_in, RSA*& rsa) {
-    BIO* bio = NULL;
+    BIO* bio = nullptr;
     int ret;
 
     std::string pub_key = public_key_in;
@@ -257,7 +257,7 @@ int public_key_str2rsa(const std::string& public_key_in, RSA*& rsa) {
     char* pub_key_tmp = const_cast<char*>(pub_key.c_str());
 
     // 从字符串读取RSA公钥
-    if ((bio = BIO_new_mem_buf(pub_key_tmp, pub_key.length())) == NULL) {
+    if ((bio = BIO_new_mem_buf(pub_key_tmp, pub_key.length())) == nullptr) {
         char err_buf[512] = {0};
         ERR_error_string_n(ERR_get_error(), err_buf, sizeof(err_buf));
         PRINTF_ERROR("BIO_new_mem_buf err %s", err_buf);
@@ -266,8 +266,8 @@ int public_key_str2rsa(const std::string& public_key_in, RSA*& rsa) {
     }
 
     // 从bio结构中得到RSA结构
-    rsa = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);
-    if (NULL == rsa) {
+    rsa = PEM_read_bio_RSA_PUBKEY(bio, nullptr, nullptr, nullptr);
+    if (rsa == nullptr) {
         char err_buf[512] = {0};
         ERR_error_string_n(ERR_get_error(), err_buf, sizeof(err_buf));
         PRINTF_ERROR("PEM_read_bio_RSA_PUBKEY err %s", err_buf);
@@ -281,13 +281,13 @@ int public_key_str2rsa(const std::string& public_key_in, RSA*& rsa) {
 int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in,
                        int cipher_type, int padding_mode_in,
                        std::string& clear_data_out) {
-    EVP_PKEY* pKey = NULL;
+    EVP_PKEY* pKey = nullptr;
     int ret;
 
     // should include <openssl/evp.h>
     // private key allocation, EVP_PKEY_free() frees up the private key
     pKey = EVP_PKEY_new();
-    if (pKey == NULL) {
+    if (pKey == nullptr) {
         PRINTF_ERROR("EVP_PKEY_new err");
         ret = RSA_KEY_ERROR;
         return ret;
@@ -355,7 +355,7 @@ int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in,
 int rsa_pubkey_decrypt(const std::string& cipher_in, int cipher_type,
                        int padding_mode_in, const std::string& pub_key_in,
                        std::string& clear_data_out) {
-    RSA* rsa = NULL;
+    RSA* rsa = nullptr;
 
     // 不成功的时候rsa没有生成, 成功以后, 后面使用rsa的要负责释放
     int ret = public_key_str2rsa(pub_key_in, rsa);
@@ -365,7 +365,7 @@ int rsa_pubkey_decrypt(const std::string& cipher_in, int cipher_type,
 
     ret = rsa_public_decrypt(rsa, cipher_in, cipher_type, padding_mode_in,
                              clear_data_out);
-    if (rsa != NULL) {
+    if (rsa != nullptr) {
         RSA_free(rsa);
     }
     return ret;
@@ -378,9 +378,9 @@ int calculate_rsa_sign(const std::string& data_in,
 
     int ret = 0;
 
-    RSA* rsa = NULL;
-    BIO* bio = NULL;
-    EVP_PKEY* evp_pkey = NULL;
+    RSA* rsa = nullptr;
+    BIO* bio = nullptr;
+    EVP_PKEY* evp_pkey = nullptr;
     std::string format_private_key;
 
     // calc digest
@@ -392,7 +392,7 @@ int calculate_rsa_sign(const std::string& data_in,
     EVP_MD_CTX ctx;
 
     unsigned int sign_size = 0;
-    unsigned char* sign = NULL;
+    unsigned char* sign = nullptr;
 
     format_private_key = "-----BEGIN RSA PRIVATE KEY-----\n";
     //	int keyLen = private_key.size();
@@ -404,15 +404,15 @@ int calculate_rsa_sign(const std::string& data_in,
 
     // 从字符串读取RSA私钥
     if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()),
-                               format_private_key.length())) == NULL) {
+                               format_private_key.length())) == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto ready_ret;
     }
 
     // 从bio结构中得到RSA结构
-    rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);
-    if (NULL == rsa) {
+    rsa = PEM_read_bio_RSAPrivateKey(bio, nullptr, nullptr, nullptr);
+    if (rsa == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto free_bio;
@@ -421,7 +421,7 @@ int calculate_rsa_sign(const std::string& data_in,
     // should include <openssl/evp.h>
     // private key allocation, EVP_PKEY_free() frees up the private key
     evp_pkey = EVP_PKEY_new();
-    if (evp_pkey == NULL) {
+    if (evp_pkey == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto free_rsa;
@@ -505,9 +505,9 @@ int calculate_rsa2_sign(const std::string& data_in,
 
     int ret = 0;
 
-    RSA* rsa = NULL;
-    BIO* bio = NULL;
-    EVP_PKEY* evp_pkey = NULL;
+    RSA* rsa = nullptr;
+    BIO* bio = nullptr;
+    EVP_PKEY* evp_pkey = nullptr;
     std::string format_private_key;
 
     // calc digest
@@ -519,7 +519,7 @@ int calculate_rsa2_sign(const std::string& data_in,
     EVP_MD_CTX ctx;
 
     unsigned int sign_size = 0;
-    unsigned char* sign = NULL;
+    unsigned char* sign = nullptr;
 
     format_private_key = "-----BEGIN RSA PRIVATE KEY-----\n";
     //	int keyLen = private_key.size();
@@ -531,15 +531,15 @@ int calculate_rsa2_sign(const std::string& data_in,
 
     // 从字符串读取RSA私钥
     if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()),
-                               format_private_key.length())) == NULL) {
+                               format_private_key.length())) == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto ready_ret;
     }
 
     // 从bio结构中得到RSA结构
-    rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);
-    if (NULL == rsa) {
+    rsa = PEM_read_bio_RSAPrivateKey(bio, nullptr, nullptr, nullptr);
+    if (rsa == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto free_bio;
@@ -548,7 +548,7 @@ int calculate_rsa2_sign(const std::string& data_in,
     // should include <openssl/evp.h>
     // private key allocation, EVP_PKEY_free() frees up the private key
     evp_pkey = EVP_PKEY_new();
-    if (evp_pkey == NULL) {
+    if (evp_pkey == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto free_rsa;

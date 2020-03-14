@@ -7,16 +7,16 @@
 
 buffer::buffer() {
     m_buffer = (char*)malloc(BUFFER_DEFAULT_SIZE);
-    assert(m_buffer != NULL);
+    assert(m_buffer != nullptr);
     m_size = 0;
     m_max_size = BUFFER_DEFAULT_SIZE;
     memset(m_buffer, 0, BUFFER_DEFAULT_SIZE);
 }
 
 buffer::~buffer() {
-    if (NULL != m_buffer) {
+    if (m_buffer != nullptr) {
         free(m_buffer);
-        m_buffer = NULL;
+        m_buffer = nullptr;
         m_size = 0;
         m_max_size = BUFFER_DEFAULT_SIZE;
     }
@@ -25,7 +25,7 @@ buffer::~buffer() {
 void buffer::append(const char* data, int len) {
     if ((m_size + len) >= m_max_size) {
         m_buffer = (char*)realloc((void*)m_buffer, 2 * m_max_size);
-        assert(m_buffer != NULL);
+        assert(m_buffer != nullptr);
         m_max_size = 2 * m_max_size;
     }
     memcpy(m_buffer, data, len);
