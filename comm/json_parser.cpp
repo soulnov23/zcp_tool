@@ -15,8 +15,8 @@ int json_to_map(map<string, string>& record, string& data) {
         PRINTF_ERROR("parse data failed : %s", data.c_str());
         return -1;
     }
-    Json::Value::Members member = value.getMemberNames();
-    for (Json::Value::Members::iterator it = member.begin(); it != member.end();
+    auto member = value.getMemberNames();
+    for (auto it = member.begin(); it != member.end();
          it++) {
         // if (value[*it].isString())
         if (value[*it].type() == Json::stringValue) {
@@ -53,8 +53,7 @@ int json_to_map(map<string, string>& record, string& data) {
 
 void map_to_json(string& data, const map<string, string>& record) {
     Json::Value object;
-    map<string, string>::const_iterator it;
-    for (it = record.begin(); it != record.end(); it++) {
+    for (auto it = record.begin(); it != record.end(); it++) {
         object[it->first] = it->second;
     }
     Json::FastWriter writer;
@@ -68,8 +67,7 @@ int rapid_json_to_map(map<string, string>& record, string& data) {
         PRINTF_ERROR("json error [%s]", data.c_str());
         return -1;
     }
-    for (rapidjson::Value::ConstMemberIterator it =
-             content_json_doc.MemberBegin();
+    for (auto it = content_json_doc.MemberBegin();
          it != content_json_doc.MemberEnd(); it++) {
         if (it->value.IsInt()) {
             record[it->name.GetString()] = to_string(it->value.GetInt());
@@ -95,9 +93,8 @@ int rapid_json_to_map(map<string, string>& record, string& data) {
 void rapid_map_to_json(string& data, const map<string, string>& record) {
     rapidjson::Document document;
     document.SetObject();
-    rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-    map<string, string>::const_iterator it;
-    for (it = record.begin(); it != record.end(); it++) {
+    auto& allocator = document.GetAllocator();
+    for (auto it = record.begin(); it != record.end(); it++) {
         document.AddMember(rapidjson::StringRef(it->first.c_str()),
                            rapidjson::StringRef(it->second.c_str()), allocator);
     }
