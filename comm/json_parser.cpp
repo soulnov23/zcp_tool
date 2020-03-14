@@ -16,35 +16,35 @@ int json_to_map(map<string, string>& record, string& data) {
         return -1;
     }
     auto member = value.getMemberNames();
-    for (auto it = member.begin(); it != member.end(); it++) {
-        // if (value[*it].isString())
-        if (value[*it].type() == Json::stringValue) {
-            // record.insert(pair<string, string>(*it, value[*it].asString()));
-            record[*it] = value[*it].asString();
+    for (auto&& it : member) {
+        // if (value[it].isString())
+        if (value[it].type() == Json::stringValue) {
+            // record.insert(pair<string, string>(it, value[it].asString()));
+            record[it] = value[it].asString();
         }
-        // else if (value[*it].isDouble())
-        else if (value[*it].type() == Json::realValue) {
-            // record.insert(pair<string, string>(*it,
-            // to_string(value[*it].asDouble())));
-            record[*it] = to_string(value[*it].asDouble());
+        // else if (value[it].isDouble())
+        else if (value[it].type() == Json::realValue) {
+            // record.insert(pair<string, string>(it,
+            // to_string(value[it].asDouble())));
+            record[it] = to_string(value[it].asDouble());
         }
-        // else if (value[*it].isBool())
-        else if (value[*it].type() == Json::booleanValue) {
-            // record.insert(pair<string, string>(*it,
-            // to_string(value[*it].asBool())));
-            record[*it] = to_string(value[*it].asBool());
+        // else if (value[it].isBool())
+        else if (value[it].type() == Json::booleanValue) {
+            // record.insert(pair<string, string>(it,
+            // to_string(value[it].asBool())));
+            record[it] = to_string(value[it].asBool());
         }
-        // else if (value[*it].isInt())
-        else if (value[*it].type() == Json::intValue) {
-            // record.insert(pair<string, string>(*it,
-            // to_string(value[*it].asInt())));
-            record[*it] = to_string(value[*it].asInt());
+        // else if (value[it].isInt())
+        else if (value[it].type() == Json::intValue) {
+            // record.insert(pair<string, string>(it,
+            // to_string(value[it].asInt())));
+            record[it] = to_string(value[it].asInt());
         }
-        // else if (value[*it].isUInt())
-        else if (value[*it].type() == Json::uintValue) {
-            // record.insert(pair<string, string>(*it,
-            // to_string(value[*it].asUInt())));
-            record[*it] = to_string(value[*it].asUInt());
+        // else if (value[it].isUInt())
+        else if (value[it].type() == Json::uintValue) {
+            // record.insert(pair<string, string>(it,
+            // to_string(value[it].asUInt())));
+            record[it] = to_string(value[it].asUInt());
         }
     }
     return 0;
@@ -52,8 +52,8 @@ int json_to_map(map<string, string>& record, string& data) {
 
 void map_to_json(string& data, const map<string, string>& record) {
     Json::Value object;
-    for (auto it = record.begin(); it != record.end(); it++) {
-        object[it->first] = it->second;
+    for (auto&& [first, second] : record) {
+        object[first] = second;
     }
     Json::FastWriter writer;
     data = writer.write(object);
@@ -93,9 +93,9 @@ void rapid_map_to_json(string& data, const map<string, string>& record) {
     rapidjson::Document document;
     document.SetObject();
     auto& allocator = document.GetAllocator();
-    for (auto it = record.begin(); it != record.end(); it++) {
-        document.AddMember(rapidjson::StringRef(it->first.c_str()),
-                           rapidjson::StringRef(it->second.c_str()), allocator);
+    for (auto&& [first, second] : record) {
+        document.AddMember(rapidjson::StringRef(first.c_str()),
+                           rapidjson::StringRef(second.c_str()), allocator);
     }
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
