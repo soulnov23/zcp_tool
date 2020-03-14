@@ -4,7 +4,14 @@
 *.so
 *.a
 *.la
-example_*
+example_auto
+example_curl
+example_epoll
+example_json_parser
+example_lambda
+example_libco
+example_rapid_json
+example_xml_parser
 zcp_server
 client
 server
