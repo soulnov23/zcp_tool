@@ -1,7 +1,7 @@
 {
-    "http.proxy": "http://devnet-proxy.oa.com:8080",
-    "http.proxyStrictSSL": false,
-    "http.proxySupport": "on",
+    //"http.proxy": "http://devnet-proxy.oa.com:8080",
+    //"http.proxyStrictSSL": false,
+    //"http.proxySupport": "on",
     "window.zoomLevel": 0,
     "editor.fontSize": 16,
     "editor.minimap.enabled": false,
