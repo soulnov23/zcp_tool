@@ -55,6 +55,7 @@
     "editor.largeFileOptimizations": false,
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
+    "git.path": "/usr/bin/git",
     "workbench.activityBar.visible": true,
     "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?"
 }
