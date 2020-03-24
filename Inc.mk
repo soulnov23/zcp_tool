@@ -88,11 +88,19 @@ GPERF_FLAGS ?= -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno
 	$(CC) $(INCLUDE) -MM $< > $@
 	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
                 sed s/"\.o"/"\.d"/  >> $@
+.%.d: %.cc
+	$(CC) $(INCLUDE) -MM $< > $@
+	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
+                sed s/"\.o"/"\.d"/  >> $@
 
 %.o: %.cpp 
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $<
+%.o: %.cc 
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $<
 
 $(OBJ_DIR)%.o: %.cpp
+	$(CXX) -o $(OBJ_DIR)$*.o $(CXXFLAGS) $(INCLUDE) -c $<
+$(OBJ_DIR)%.o: %.cc
 	$(CXX) -o $(OBJ_DIR)$*.o $(CXXFLAGS) $(INCLUDE) -c $<
 
 .%.d: %.c
