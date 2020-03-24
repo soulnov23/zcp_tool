@@ -10,7 +10,7 @@ DIR_MODULES = comm    \
               example \
               src
 
-all:
+all: check
 	@for dir in $(DIR_MODULES); \
 	do \
 		make -C $$dir; \
@@ -24,7 +24,7 @@ clean:
 		echo; \
 	done
 
-install:
+install: check
 	@for dir in $(DIR_DEP); \
 	do \
 		make -C $$dir install; \
@@ -44,3 +44,7 @@ format:
 		make -C $$dir format; \
 		echo; \
 	done
+
+check:
+	@mkdir -p obj
+	@mkdir -p lib
