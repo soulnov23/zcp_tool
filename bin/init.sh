@@ -6,3 +6,4 @@
 LIB_PATH=../lib
 export LD_LIBRARY_PATH=$LIB_PATH:$LD_LIBRARY_PATH
 ulimit -c unlimited
+mkdir -p ../log
