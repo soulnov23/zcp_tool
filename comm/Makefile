@@ -15,7 +15,7 @@ INCLUDE += -I$(XML_INC) -I$(HTTP_PARSER_INC) -I$(JSON_CPP_INC) -I$(RAPID_JSON_IN
 LDFLAGS += -L$(LIB_DIR) -lpthread -ldl -ltinyxml2 -lhttp_parser -ljson -lcrypto -lcurl \
 		   -laio -lcolib -ltcmalloc_minimal -lssl
 
-all: clean $(SO_BIN) $(A_BIN)
+all: $(SO_BIN) $(A_BIN)
 	@for dir in $(DIR_MODULES); \
 	do \
 		make -C $$dir; \

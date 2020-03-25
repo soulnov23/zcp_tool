@@ -12,7 +12,7 @@ INCLUDE += -I$(COMM_INC) -I$(XML_INC) -I$(HTTP_PARSER_INC) -I$(JSON_CPP_INC) \
 LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lhttp_parser -ljson -lcrypto -lcurl \
 		   -laio -lcolib -lcomm -ltcmalloc_minimal -lssl
 
-all: clean $(SO_BIN) $(A_BIN)
+all: $(SO_BIN) $(A_BIN)
 
 $(SO_BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) -shared -Wl,-rpath=$(LIB_DIR) -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)

@@ -9,7 +9,7 @@ INCLUDE += -I$(COMM_INC) -I$(XML_INC) -I$(HTTP_PARSER_INC) -I$(JSON_CPP_INC) \
 LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lhttp_parser -ljson -lcrypto -lcurl \
 		   -laio -lcolib -lcomm -lcomm_crypto -lcomm_net -ltcmalloc_minimal -lssl
 
-all: clean $(BIN)
+all: $(BIN)
 
 $(BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
