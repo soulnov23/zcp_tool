@@ -48,9 +48,7 @@ INCLUDE  +=
 LDFLAGS  +=
 endif
 
-#Makefile可以自动获取工程路径
-#这里赋值是为了如果没有从根目录进行make，在子目录下make也可以拿到PROJ_PATH的值
-PROJ_PATH = /home/zcp_tool
+PROJ_PATH = $(shell pwd | awk -F'/zcp_tool' '{print $$1}')/zcp_tool
 BIN_DIR = $(PROJ_PATH)/bin
 LIB_DIR = $(PROJ_PATH)/lib
 OBJ_DIR = $(PROJ_PATH)/obj
