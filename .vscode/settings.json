@@ -3,7 +3,7 @@
     //"http.proxyStrictSSL": false,
     //"http.proxySupport": "on",
     "window.zoomLevel": 0,
-    "editor.fontSize": 16,
+    "editor.fontSize": 18,
     "editor.minimap.enabled": false,
     "workbench.editor.enablePreview": false,
     "problems.decorations.enabled": false,
@@ -57,5 +57,8 @@
     "git.confirmSync": false,
     "git.path": "/usr/bin/git",
     "workbench.activityBar.visible": true,
-    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?"
+    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
+    "remote.SSH.remotePlatform": {
+        "cloud": "linux"
+    },
 }
