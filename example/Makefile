@@ -13,37 +13,37 @@ LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lhttp_parser -lcrypto -lcurl \
 all: $(BIN)
 
 test: test.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 client: client.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 server: server.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 example_xml_parser: example_xml_parser.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 example_json_parser: example_json_parser.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 example_rapid_json: example_rapid_json.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 example_curl: example_curl.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 example_libco: example_libco.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 example_epoll: example_epoll.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 example_auto: example_auto.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 example_lambda: example_lambda.o
-	$(CXX) $(CXXFLAGS) -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) -o $@ $^ $(LDFLAGS)
 
 clean:
 	rm -rf $(OBJS) $(BIN)
