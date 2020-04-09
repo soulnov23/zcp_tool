@@ -62,9 +62,6 @@ OPEN_SSL_INC = $(OPEN_SSL_PATH)/include
 CURL_PATH = $(PROJ_PATH)/dep/curl-7.29.0
 CURL_INC = $(CURL_PATH)/include
 
-JSON_CPP_PATH = $(PROJ_PATH)/dep/jsoncpp-src-0.5.0
-JSON_CPP_INC = $(JSON_CPP_PATH)/include
-
 RAPID_JSON_PATH = $(PROJ_PATH)/dep/rapidjson
 RAPID_JSON_INC = $(RAPID_JSON_PATH)
 
