@@ -1,67 +1,12 @@
 #include "json_parser.h"
 #include "printf_utils.h"
 #include "utils.h"
-#include "json/reader.h"
-#include "json/writer.h"
 #include "rapidjson.h"
 #include "document.h"
 #include "writer.h"
 #include "stringbuffer.h"
 
 int json_to_map(map<string, string>& record, string& data) {
-    Json::Reader reader;
-    Json::Value value;
-    if (!reader.parse(data, value)) {
-        PRINTF_ERROR("parse data failed : %s", data.c_str());
-        return -1;
-    }
-    auto member = value.getMemberNames();
-    // 右值引用减少内存拷贝
-    for (auto&& it : member) {
-        // if (value[it].isString())
-        if (value[it].type() == Json::stringValue) {
-            // record.insert(pair<string, string>(it, value[it].asString()));
-            record[it] = value[it].asString();
-        }
-        // else if (value[it].isDouble())
-        else if (value[it].type() == Json::realValue) {
-            // record.insert(pair<string, string>(it,
-            // to_string(value[it].asDouble())));
-            record[it] = to_string(value[it].asDouble());
-        }
-        // else if (value[it].isBool())
-        else if (value[it].type() == Json::booleanValue) {
-            // record.insert(pair<string, string>(it,
-            // to_string(value[it].asBool())));
-            record[it] = to_string(value[it].asBool());
-        }
-        // else if (value[it].isInt())
-        else if (value[it].type() == Json::intValue) {
-            // record.insert(pair<string, string>(it,
-            // to_string(value[it].asInt())));
-            record[it] = to_string(value[it].asInt());
-        }
-        // else if (value[it].isUInt())
-        else if (value[it].type() == Json::uintValue) {
-            // record.insert(pair<string, string>(it,
-            // to_string(value[it].asUInt())));
-            record[it] = to_string(value[it].asUInt());
-        }
-    }
-    return 0;
-}
-
-void map_to_json(string& data, const map<string, string>& record) {
-    Json::Value object;
-    // 右值引用减少内存拷贝
-    for (auto&& [first, second] : record) {
-        object[first] = second;
-    }
-    Json::FastWriter writer;
-    data = writer.write(object);
-}
-
-int rapid_json_to_map(map<string, string>& record, string& data) {
     rapidjson::Document content_json_doc;
     content_json_doc.Parse(data.c_str());
     if (content_json_doc.HasParseError() || !content_json_doc.IsObject()) {
@@ -91,7 +36,7 @@ int rapid_json_to_map(map<string, string>& record, string& data) {
     return 0;
 }
 
-void rapid_map_to_json(string& data, const map<string, string>& record) {
+void map_to_json(string& data, const map<string, string>& record) {
     rapidjson::Document document;
     document.SetObject();
     auto& allocator = document.GetAllocator();

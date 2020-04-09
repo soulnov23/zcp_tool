@@ -64,7 +64,7 @@ int get_batch_no(string& batch_no) {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return;
-    rapid_json_to_map(map_return, rsp_string);
+    json_to_map(map_return, rsp_string);
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
@@ -103,7 +103,7 @@ int balance_enquiry() {
     string post_string;
     map<string, string> map_data;
     map_data["CardNumber"] = g_card_no;
-    rapid_map_to_json(post_string, map_data);
+    map_to_json(post_string, map_data);
     // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
@@ -123,7 +123,7 @@ int balance_enquiry() {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return;
-    rapid_json_to_map(map_return, rsp_string);
+    json_to_map(map_return, rsp_string);
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
@@ -147,7 +147,7 @@ int redeem() {
     map_data["CardPIN"] = g_card_pin;
     map_data["Notes"] = "desc";
     string post_string;
-    rapid_map_to_json(post_string, map_data);
+    map_to_json(post_string, map_data);
     // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/redeem";
@@ -168,7 +168,7 @@ int redeem() {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return;
-    rapid_json_to_map(map_return, rsp_string);
+    json_to_map(map_return, rsp_string);
     g_OriginalInvoiceNumber = order_id;
     g_OriginalBatchNumber = g_batch_no;
     g_OriginalTransactionId = order_id;
@@ -192,7 +192,7 @@ int cancel_redeem() {
     map_data["OriginalAmount"] = g_amount;
     map_data["OriginalBatchNumber"] = g_OriginalBatchNumber;
     map_data["OriginalTransactionId"] = g_OriginalTransactionId;
-    rapid_map_to_json(post_string, map_data);
+    map_to_json(post_string, map_data);
     // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
@@ -214,7 +214,7 @@ int cancel_redeem() {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return;
-    rapid_json_to_map(map_return, rsp_string);
+    json_to_map(map_return, rsp_string);
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
@@ -232,7 +232,7 @@ int reverse_redeem() {
     string post_string;
     map_data["CardNumber"] = g_card_no;
     map_data["InvoiceNumber"] = order_id;
-    rapid_map_to_json(post_string, map_data);
+    map_to_json(post_string, map_data);
     // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
@@ -254,7 +254,7 @@ int reverse_redeem() {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return;
-    rapid_json_to_map(map_return, rsp_string);
+    json_to_map(map_return, rsp_string);
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {

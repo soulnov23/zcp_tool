@@ -8,7 +8,4 @@ using namespace std;
 int json_to_map(map<string, string>& record, string& data);
 void map_to_json(string& data, const map<string, string>& record);
 
-int rapid_json_to_map(map<string, string>& record, string& data);
-void rapid_map_to_json(string& data, const map<string, string>& record);
-
 #endif
