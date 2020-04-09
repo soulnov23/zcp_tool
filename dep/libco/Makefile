@@ -43,15 +43,7 @@ libcolib.a: $(COLIB_OBJS)
 libcolib.so: $(COLIB_OBJS)
 	$(BUILDSHARELIB)
 
-dist: clean libco-$(version).src.tar.gz
-
-libco-$(version).src.tar.gz:
-	@find . -type f | grep -v CVS | grep -v .svn | sed s:^./:libco-$(version)/: > MANIFEST
-	@(cd ..; ln -s libco_pub libco-$(version))
-	(cd ..; tar cvf - `cat libco_pub/MANIFEST` | gzip > libco_pub/libco-$(version).src.tar.gz)
-	@(cd ..; rm libco-$(version))
-
 clean:
 	$(CLEAN) *.o $(PROGS)
-	rm -fr MANIFEST lib solib libco-$(version).src.tar.gz libco-$(version)
+	rm -fr MANIFEST lib solib
 
