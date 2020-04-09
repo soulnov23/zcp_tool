@@ -4,8 +4,6 @@
 #PROJ_PATH := $(proj_path)
 #export PROJ_PATH
 
-DIR_DEP = dep
-
 DIR_MODULES = comm    \
               example \
               src
@@ -24,26 +22,18 @@ clean:
 		echo; \
 	done
 
-install: check
-	@for dir in $(DIR_DEP); \
-	do \
-		make -C $$dir install; \
-		echo; \
-	done
-
-uninstall:
-	@for dir in $(DIR_DEP); \
-	do \
-		make -C $$dir uninstall; \
-		echo; \
-	done
-
 format:
 	@for dir in $(DIR_MODULES); \
 	do \
 		make -C $$dir format; \
 		echo; \
 	done
+
+install: check
+	make -C dep install
+
+uninstall:
+	make -C dep uninstall
 
 check:
 	@mkdir -p obj
