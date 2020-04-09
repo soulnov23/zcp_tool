@@ -16,8 +16,8 @@ clsCoMutex::clsCoMutex() {
 
 clsCoMutex::~clsCoMutex() { co_cond_free(m_ptCondSignal); }
 
-//åç¨‹é”æ— æ³•ç”¨æ¥åšå…¬å¹³è°ƒåº¦ï¼Œå¦‚æœæœ¬åç¨‹ä¸€ç›´æ— è®©å‡ºæ“ä½œçš„è¯ï¼Œæ˜¯æœ‰å¯èƒ½å¯¼è‡´å…¶å®ƒåç¨‹é¥¿æ­»çš„
-//ä¸šåŠ¡ä¸èƒ½ä¾èµ–åç¨‹é”é‡Šæ”¾ä¹‹åï¼Œå…¶å®ƒåç¨‹æœ‰æœºä¼šè¢«è°ƒåº¦ï¼Œè¿™ä¸ªéœ€è¦ä¾èµ–æœ¬åç¨‹æœ‰è®©å‡ºæ‰è¡Œ
+//Ğ­³ÌËøÎŞ·¨ÓÃÀ´×ö¹«Æ½µ÷¶È£¬Èç¹û±¾Ğ­³ÌÒ»Ö±ÎŞÈÃ³ö²Ù×÷µÄ»°£¬ÊÇÓĞ¿ÉÄÜµ¼ÖÂÆäËüĞ­³Ì¶öËÀµÄ
+//ÒµÎñ²»ÄÜÒÀÀµĞ­³ÌËøÊÍ·ÅÖ®ºó£¬ÆäËüĞ­³ÌÓĞ»ú»á±»µ÷¶È£¬Õâ¸öĞèÒªÒÀÀµ±¾Ğ­³ÌÓĞÈÃ³ö²ÅĞĞ
 void clsCoMutex::CoLock() {
   if (m_iWaitItemCnt > 0) {
     m_iWaitItemCnt++;
@@ -61,7 +61,7 @@ clsCoConnection::clsCoConnection(int fd, int timeoutms) {
   m_ptArgs = NULL;
   m_ptReadEventTimer = co_alloc_event(-1);
 
-  //ä¸»åŠ¨è®¾ç½®å¼‚æ­¥æ¨¡å¼ï¼Œè·³è¿‡åº•å±‚hook
+  //Ö÷¶¯ÉèÖÃÒì²½Ä£Ê½£¬Ìø¹ıµ×²ãhook
   fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) | O_NONBLOCK);
 }
 
@@ -558,3 +558,4 @@ static char gzrd_Lib_CPP_Version_ID[] __attribute__((used)) =
     "colib/co_comm.cpp $ $Id: co_comm.cpp 2881429 2018-12-19 09:42:14Z "
     "princewen $ " GZRD_SVN_ATTR "__file__";
 // gzrd_Lib_CPP_Version_ID--end
+

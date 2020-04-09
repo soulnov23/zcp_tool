@@ -1,8 +1,8 @@
 #pragma once
-#include <functional>
-#include <stack>
-#include "co_channel.h"
 #include "co_routine.h"
+#include "co_channel.h"
+#include <stack>
+#include <functional>
 typedef void (*PfnWorkerCallBack)(int workeridx, void* args);
 struct stWorker_t;
 
@@ -43,12 +43,8 @@ class CoRoutinePool {
   int Run(PfnWorkerCallBack func, void* args);
   int Run(std::function<void(int)> func);
 
-  /*
-  int GetIdleWorkerCnt()
-  {
-      return idle_worker_cnt;
-  }
-  */
+  int GetIdleWorkerCnt() { return idle_worker_cnt; }
+
   bool IsRoutinePoolEmpty() { return chn_task.IsPopWaitEmpty(); }
 
   int GetWorkerCnt() { return total_worker_cnt; }
@@ -61,3 +57,4 @@ class CoRoutinePool {
   int idle_worker_cnt;
   clsCoChannel<stTask_t> chn_task;
 };
+

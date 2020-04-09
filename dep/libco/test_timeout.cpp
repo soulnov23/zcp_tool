@@ -10,7 +10,7 @@
 using namespace std;
 void* RoutineFunc(void* args) {
   int* i = (int*)args;
-  printf("%d before yield\n", i);
+  printf("%d before yield\n", *i);
   co_yield_timeout(40 * (*i + 1) * 1000);
   printf("%d after yield\n", *i);
   return NULL;

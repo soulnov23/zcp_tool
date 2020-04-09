@@ -23,7 +23,65 @@
 #include <resolv.h>
 #include <map>
 
-#include <time.h>
+struct stEpollEtItem_t;
+
+struct rpchook_t {
+  int user_flag;
+  int domain;               // AF_LOCAL , AF_INET
+  struct sockaddr_in dest;  // maybe sockaddr_un;
+
+  struct timeval read_timeout;
+  struct timeval write_timeout;
+
+  bool edge_trigger;
+  bool read_ready;
+  bool write_ready;
+  bool free_when_del;
+  stEpollEtItem_t *et_item;
+  // stTimeoutItem_t *timeout_item;
+  // stTimeoutItemLink_t poll_items;
+};
+
+extern rpchook_t* g_rpchook_socket_fd[1280000];
+
+inline rpchook_t *get_by_fd(int fd) {
+  if (fd > -1 &&
+      fd < (int)sizeof(g_rpchook_socket_fd) /
+               (int)sizeof(g_rpchook_socket_fd[0])) {
+    return g_rpchook_socket_fd[fd];
+  }
+  return NULL;
+}
+
+inline rpchook_t *alloc_by_fd(int fd) {
+  if (fd > -1 &&
+      fd < (int)sizeof(g_rpchook_socket_fd) /
+               (int)sizeof(g_rpchook_socket_fd[0])) {
+    rpchook_t *lp = (rpchook_t *)calloc(1, sizeof(rpchook_t));
+    lp->read_timeout.tv_sec = 1;
+    lp->write_timeout.tv_sec = 1;
+    g_rpchook_socket_fd[fd] = lp;
+    return lp;
+  }
+  return NULL;
+}
+
+inline void free_by_fd(int fd) {
+  if (fd > -1 &&
+      fd < (int)sizeof(g_rpchook_socket_fd) /
+               (int)sizeof(g_rpchook_socket_fd[0])) {
+    rpchook_t *lp = g_rpchook_socket_fd[fd];
+    if (lp) {
+      g_rpchook_socket_fd[fd] = NULL;
+      if (lp->et_item) {
+        free(lp->et_item);
+      }
+      free(lp);
+    }
+  }
+  return;
+}
+
 typedef int (*socket_pfn_t)(int domain, int type, int protocol);
 typedef int (*connect_pfn_t)(int socket, const struct sockaddr *address,
                              socklen_t address_len);
@@ -104,3 +162,5 @@ struct co_hook_t {
 };
 void co_replace_hook_func(co_hook_t *in, co_hook_t *sys);
 int co_accept(int fd, struct sockaddr *addr, socklen_t *len);
+
+

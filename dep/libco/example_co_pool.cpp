@@ -8,21 +8,21 @@
 using namespace std;
 
 /*
- * ä½¿ç”¨åç¨‹æ± æ¥å¤„ç†ç”Ÿäº§è€…æ¶ˆè´¹è€…çš„é—®é¢˜
- * ProducerThread ç”Ÿäº§è€…çº¿ç¨‹ï¼Œæ¯100msç”Ÿäº§ä¸€ä¸ªjobï¼Œå¹¶æ”¾å…¥æ— é”circle queueä¸­
- * TickFunc: eventloopçš„å›žè°ƒå‡½æ•°ï¼Œæ¯ä¸€æ¬¡å›žè°ƒçš„æ—¶å€™ï¼Œæ£€æŸ¥circle
- * queueé˜Ÿåˆ—æ˜¯å¦æœ‰å…ƒç´ ï¼Œæœ‰åˆ™é€šè¿‡co_routine_poolè°ƒåº¦åç¨‹æ‰§è¡Œ
- * DoJobå‡½æ•°ï¼šç”¨æˆ·å®šä¹‰çš„ä¸šåŠ¡é€»è¾‘å‡½æ•°ï¼Œæœ€ç»ˆä¼šåœ¨co_routine_poolä¸­çš„ä¸€ä¸ªåç¨‹ä¸­æ‰§è¡Œã€‚å› ä¸ºæœ¬å‡½æ•°æ˜¯åç¨‹æ‰§è¡Œçš„ï¼Œæ‰€ä»¥è¦æ³¨æ„ä¸å¯æœ‰é˜»å¡žè°ƒç”¨ã€‚
+ * Ê¹ÓÃÐ­³Ì³ØÀ´´¦ÀíÉú²úÕßÏû·ÑÕßµÄÎÊÌâ
+ * ProducerThread Éú²úÕßÏß³Ì£¬Ã¿100msÉú²úÒ»¸öjob£¬²¢·ÅÈëÎÞËøcircle queueÖÐ
+ * TickFunc: eventloopµÄ»Øµ÷º¯Êý£¬Ã¿Ò»´Î»Øµ÷µÄÊ±ºò£¬¼ì²écircle
+ * queue¶ÓÁÐÊÇ·ñÓÐÔªËØ£¬ÓÐÔòÍ¨¹ýco_routine_poolµ÷¶ÈÐ­³ÌÖ´ÐÐ
+ * DoJobº¯Êý£ºÓÃ»§¶¨ÒåµÄÒµÎñÂß¼­º¯Êý£¬×îÖÕ»áÔÚco_routine_poolÖÐµÄÒ»¸öÐ­³ÌÖÐÖ´ÐÐ¡£ÒòÎª±¾º¯ÊýÊÇÐ­³ÌÖ´ÐÐµÄ£¬ËùÒÔÒª×¢Òâ²»¿ÉÓÐ×èÈûµ÷ÓÃ¡£
  *
 */
 
 struct stJob_t {
-  int id;
+  unsigned int id;
 };
 
 void DoJob(int workeridx, void* args) {
   stJob_t* job = (stJob_t*)args;
-  printf("%s:%d begin to do job id %d workeridx %d\n", __func__, __LINE__,
+  printf("%s:%d begin to do job id %u workeridx %d\n", __func__, __LINE__,
          job->id, workeridx);
   poll(NULL, 0, 2000);
   // printf("%s:%d finish job id %d workeridx %d\n", __func__, __LINE__,
@@ -38,7 +38,7 @@ class clsCircleQueue {
   int m_iQueueSize;
 
  public:
-  clsCircleQueue(int aiQueueSize) : m_lHead(0), m_lTail(0) {
+  explicit clsCircleQueue(int aiQueueSize) : m_lHead(0), m_lTail(0) {
     m_iQueueSize = aiQueueSize;
     m_pQueue = (void**)malloc(sizeof(void*) * aiQueueSize);
   }
@@ -108,7 +108,7 @@ struct stTickEvent_t {
   enum {
     eMaxQueueCnt = 1024,
   };
-  stTickEvent_t(int pool_size) {
+  explicit stTickEvent_t(int pool_size) {
     pool = new CoRoutinePool(pool_size, NULL);
     job_queue = new clsCircleQueue(eMaxQueueCnt);
   }
@@ -149,8 +149,9 @@ struct stTickEvent_t {
 
 void* ProducerThread(void* args) {
   stTickEvent_t* tick_event = (stTickEvent_t*)args;
-  int i = 0;
-  while (++i) {
+  // Must use unsigned here, because signed overflow is undefined hehavior.
+  unsigned int i = 0;
+  while (++i != 0) {
     stJob_t* job = new stJob_t;
     job->id = i;
     int ret = tick_event->PushQueue(job);

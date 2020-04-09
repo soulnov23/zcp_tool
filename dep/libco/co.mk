@@ -23,7 +23,7 @@ MAIL_ROOT=.
 SRCROOT=.
 
 ##define the compliers
-CPP = g++ -std=c++11
+CPP = g++
 CC  = gcc
 AR = ar -rc
 RANLIB = ranlib

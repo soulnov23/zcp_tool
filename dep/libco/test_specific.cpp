@@ -1,7 +1,7 @@
 #include "co_routine_specific.h"
-#include "iUtils.h"
-#include "stdio.h"
-using namespace Comm;
+#include <stdio.h>
+#include <unistd.h>
+
 struct stMyData {
   int a;
   char b[20];

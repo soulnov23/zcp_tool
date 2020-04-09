@@ -10,10 +10,10 @@
 static void routine_func() {
   co_enable_hook_sys();
 
-  char* name = "git.code.oa.com";
+  const char* name = "git.code.oa.com";
 
   while (true) {
-    struct hostent* host = gethostbyname(name);
+    gethostbyname(name);
     poll(nullptr, 0, 1);
   }
 }

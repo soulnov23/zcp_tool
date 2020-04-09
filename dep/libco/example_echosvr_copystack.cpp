@@ -8,8 +8,6 @@
 #include <poll.h>
 #include <pthread.h>
 #include <stdio.h>
-#include <stdio.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/epoll.h>
@@ -52,7 +50,7 @@ void InitEnv(stEnv_t* env) {
   env->iPort = 12319;
 
   env->bStop = false;
-};
+}
 
 struct stSvrInfo_t {
   pthread_t tid;
@@ -77,6 +75,7 @@ int SetNonBlock(int fd) {
     printf("socket %d get F_SETFL err. %d:%s\n", fd, errno, strerror(errno));
     return -1;
   }
+  return 0;
 }
 
 int BindSocket(int fd, unsigned short port = 0, const char* ip = "*") {
@@ -152,6 +151,7 @@ void* OnAccept(int fd, int revent, void* args) {
     close(fd);
     info->env->bStop = true;
   }
+  return NULL;
 }
 
 int LoopFunc(void* args) {
@@ -240,8 +240,8 @@ void* SvrThread(void* args) {
   }
 
   // 4. add accept callback event;
-  info->event = co_alloc_event();
-  ret = co_add_event(info->event, fd, OnAccept, info, POLLIN, -1);
+  info->event = co_alloc_event(fd);
+  ret = co_add_event(info->event, OnAccept, info, POLLIN, -1);
   assert(ret == 0);
 
   // 5. eventloop
@@ -294,7 +294,7 @@ void* ClientRoutine(void* args) {
     }
 
     char sBuf[128];
-    snprintf(sBuf, 128, "hello world");
+    snprintf(sBuf, sizeof(sBuf), "hello world");
     // int iBufLen = strlen(sBuf) + 1;
     int iBufLen = 128;
     while (true) {
@@ -354,6 +354,7 @@ void* CliThread(void* args) {
   }
 
   co_eventloop(co_get_epoll_ct(), LoopFunc, env);
+  return NULL;
 }
 
 int main(int argc, char* argv[]) {
