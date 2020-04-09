@@ -9,7 +9,7 @@ A_BIN = $(LIB_DIR)/$(A_NAME)
 INCLUDE +=
 LDFLAGS +=
 
-install: clean $(SO_BIN) $(A_BIN)
+install: $(SO_BIN) $(A_BIN)
 
 $(SO_BIN): $(OBJS)
 	$(CC) $(CXXFLAGS) -shared -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
@@ -18,8 +18,5 @@ $(A_BIN): $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?
 	$(RANLIB) $@
 
-uninstall: clean
-	rm -rf $(SO_BIN) $(A_BIN)
-
-clean:
-	rm -rf $(OBJS)
+uninstall:
+	rm -rf $(OBJS) $(SO_BIN) $(A_BIN)
