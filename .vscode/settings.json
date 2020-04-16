@@ -60,4 +60,16 @@
     "remote.SSH.remotePlatform": {
         "cloud": "linux"
     },
+    "python.analysis.cacheFolderPath": "${workspaceFolder}/.vscode",
+    "python.pythonPath": "C:/Python27/python.exe",
+    "python.jediEnabled": false,
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "yapf",
+    "python.autoComplete.addBrackets": true,
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}/**",
+        "C:/Python27/Lib/**"
+    ]
 }
