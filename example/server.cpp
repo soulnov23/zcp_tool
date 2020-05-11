@@ -236,7 +236,8 @@ void server::do_tcp_accept() {
             PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd,
                          fd);
         }
-        auto conn = make_shared<connector>(fd, inet_ntoa(addr.sin_addr), nullptr);
+        auto conn =
+            make_shared<connector>(fd, inet_ntoa(addr.sin_addr), nullptr);
         m_fd_conn.insert(make_pair(fd, conn));
     }
 }
@@ -271,7 +272,8 @@ void server::do_tcp_recv(int fd) {
             }
         }
         if (ret == 0) {
-            PRINTF_ERROR("fd:%d ip:%s normal disconnection", fd, conn.get()->m_ip);
+            PRINTF_ERROR("fd:%d ip:%s normal disconnection", fd,
+                         conn.get()->m_ip);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                              m_epoll_fd, fd);
@@ -312,7 +314,8 @@ void server::do_tcp_send(int fd, const char* data, int len) {
             }
         }
         if (ret == 0) {
-            PRINTF_ERROR("fd:%d ip:%s normal disconnection", fd, conn.get()->m_ip);
+            PRINTF_ERROR("fd:%d ip:%s normal disconnection", fd,
+                         conn.get()->m_ip);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
                              m_epoll_fd, fd);

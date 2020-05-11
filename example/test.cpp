@@ -140,7 +140,7 @@ int redeem() {
     string order_id = to_string(get_time_sec());
     map<string, string> map_data;
     map_data["Amount"] = g_amount;
-    //map_data["BillAmount"] = g_card_amount;
+    // map_data["BillAmount"] = g_card_amount;
     map_data["InvoiceNumber"] = order_id;
     map_data["IdempotencyKey"] = "abcdefghi";
     map_data["CardNumber"] = g_card_no;
@@ -268,7 +268,7 @@ int reverse_redeem() {
 int main(int argc, char* argv[]) {
     init();
 
-    //RETURN_ON_ERROR(get_batch_no(g_batch_no));
+    // RETURN_ON_ERROR(get_batch_no(g_batch_no));
     g_batch_no = "10648684";
 
     RETURN_ON_ERROR(balance_enquiry());

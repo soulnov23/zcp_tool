@@ -118,8 +118,8 @@ int client::tcp_socket_start() {
                      m_tcp_fd);
         return -1;
     }
-    m_tcp_conn =
-        make_shared<connector>(m_tcp_fd, inet_ntoa(server_addr.sin_addr), nullptr);
+    m_tcp_conn = make_shared<connector>(
+        m_tcp_fd, inet_ntoa(server_addr.sin_addr), nullptr);
     return 0;
 }
 
