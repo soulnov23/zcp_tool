@@ -1,21 +1,45 @@
 {
+    //http选项
     //"http.proxy": "http://devnet-proxy.oa.com:8080",
     //"http.proxyStrictSSL": false,
     //"http.proxySupport": "on",
+
     "window.zoomLevel": 0,
+    "problems.decorations.enabled": false,
+    "breadcrumbs.enabled": true,
+
+    //editor选项
     "editor.fontSize": 18,
     "editor.minimap.enabled": false,
-    "workbench.editor.enablePreview": false,
-    "problems.decorations.enabled": false,
-    "files.autoGuessEncoding": true,
     "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "none",
+    "editor.largeFileOptimizations": false,
+    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
+
+    //workbench选项
+    "workbench.editor.enablePreview": false,
+    "workbench.activityBar.visible": true,
+    "workbench.tree.renderIndentGuides": "none",
+    "workbench.view.alwaysShowHeaderActions": true,
+    "workbench.startupEditor": "welcomePageInEmptyWorkbench",
+    
+    //C_Cpp选项
     "C_Cpp.default.cppStandard": "c++20",
     "C_Cpp.default.cStandard": "c11",
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
+    "C_Cpp.autoAddFileAssociations": false,
+    "C_Cpp.workspaceSymbols": "All",
+    //"C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
+    "C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/**"
     ],
+
+    //files选项
+    "files.autoGuessEncoding": true,
+    "files.autoSave": "onFocusChange",
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
@@ -42,24 +66,19 @@
         "**/test": true,
         "**/zcp_server": true
     },
-    "C_Cpp.workspaceSymbols": "All",
-    "breadcrumbs.enabled": true,
-    "files.autoSave": "onFocusChange",
-    "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
-    //"C_Cpp.intelliSenseEngineFallback": "Enabled",
-    "workbench.tree.renderIndentGuides": "none",
-    "workbench.view.alwaysShowHeaderActions": true,
-    "editor.renderWhitespace": "none",
-    "C_Cpp.autoAddFileAssociations": false,
-    "editor.largeFileOptimizations": false,
-    "git.enableSmartCommit": true,
-    "git.confirmSync": false,
-    "git.path": "/usr/bin/git",
-    "workbench.activityBar.visible": true,
-    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
+
+    //remote选项
+    //"remote.SSH.showLoginTerminal": true,
     "remote.SSH.remotePlatform": {
         "cloud": "linux"
     },
+
+    //git选项
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.path": "/usr/bin/git",
+
+    //python选项
     "python.analysis.cacheFolderPath": "${workspaceFolder}/.vscode",
     "python.pythonPath": "C:/Python27/python.exe",
     "python.jediEnabled": false,
