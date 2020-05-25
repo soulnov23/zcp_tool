@@ -34,7 +34,7 @@
     "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
     //"C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.default.includePath": [
-        "/usr/include/",
+        "/usr/include/**",
         "${workspaceFolder}/**"
     ],
 
