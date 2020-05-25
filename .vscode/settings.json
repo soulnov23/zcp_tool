@@ -30,10 +30,11 @@
     "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.workspaceSymbols": "All",
-    //"C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.default.intelliSenseMode": "gcc-x64",
     "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
     //"C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.default.includePath": [
+        "/usr/include/",
         "${workspaceFolder}/**"
     ],
 
@@ -80,7 +81,7 @@
 
     //python选项
     "python.analysis.cacheFolderPath": "${workspaceFolder}/.vscode",
-    "python.pythonPath": "C:/Python27/python.exe",
+    "python.pythonPath": "/usr/bin/python",
     "python.jediEnabled": false,
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": false,
@@ -89,6 +90,6 @@
     "python.autoComplete.addBrackets": true,
     "python.autoComplete.extraPaths": [
         "${workspaceFolder}/**",
-        "C:/Python27/Lib/**"
+        "/usr/lib/python2.7/site-packages/**"
     ]
 }
