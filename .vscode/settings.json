@@ -14,6 +14,10 @@
     "editor.renderControlCharacters": true,
     "editor.renderWhitespace": "none",
     "editor.largeFileOptimizations": false,
+    "editor.copyWithSyntaxHighlighting": false,
+    "editor.definitionLinkOpensInPeek": true,
+    "editor.suggest.insertMode": "replace",
+    "editor.suggest.shareSuggestSelections": true,
     "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
 
     //workbench选项
