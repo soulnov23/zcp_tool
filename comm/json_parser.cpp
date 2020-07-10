@@ -1,6 +1,8 @@
 #include "json_parser.h"
 #include "printf_utils.h"
 #include "utils.h"
+#include "writer.h"
+#include "stringbuffer.h"
 
 int json_to_map(map<string, string>& record, string& data) {
     Document content_json_doc;
@@ -32,6 +34,13 @@ int json_to_map(map<string, string>& record, string& data) {
     return 0;
 }
 
+void json_to_string(string& data, Document& doc) {
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    doc.Accept(writer);
+    data = buffer.GetString();
+}
+
 void map_to_json(string& data, const map<string, string>& record) {
     Document document;
     document.SetObject();
@@ -47,7 +56,7 @@ void map_to_json(string& data, const map<string, string>& record) {
     data = buffer.GetString();
 }
 
-int get_document(Document& doc, const string& data) {
+int string_to_json(Document& doc, const string& data) {
     doc.Parse(data.c_str());
     if (doc.HasParseError() || !doc.IsObject()) {
         PRINTF_ERROR("json error [%s]", data.c_str());
@@ -56,7 +65,7 @@ int get_document(Document& doc, const string& data) {
     return 0;
 }
 
-int get_object(Value& rapid_value, const char* member_name, Value& value) {
+int get_object(Value& rapid_value, const char* member_name, Value*& value) {
     Value::MemberIterator member = rapid_value.FindMember(member_name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsObject())) {
         string ret_info =
@@ -64,12 +73,11 @@ int get_object(Value& rapid_value, const char* member_name, Value& value) {
         PRINTF_ERROR("%s", ret_info.c_str());
         return -1;
     }
-    value = member->value.GetObject();
-    ;
+    value = &(member->value);
     return 0;
 }
 
-int get_array(Value& rapid_value, const char* member_name, Value& value) {
+int get_array(Value& rapid_value, const char* member_name, Value*& value) {
     Value::MemberIterator member = rapid_value.FindMember(member_name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsArray())) {
         string ret_info =
@@ -77,7 +85,7 @@ int get_array(Value& rapid_value, const char* member_name, Value& value) {
         PRINTF_ERROR("%s", ret_info.c_str());
         return -1;
     }
-    value = member->value.GetArray();
+    value = &(member->value);
     return 0;
 }
 
