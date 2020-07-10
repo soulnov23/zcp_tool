@@ -1,0 +1,52 @@
+{
+    "user": {
+        "id": {
+            "value": "025810224280507676"
+        },
+        "email": {
+            "value": ""
+        },
+        "country": {
+            "allow_modify": true
+        }
+    },
+    "settings": {
+        "external_id": "202006282004270273",
+        "project_id": 70471,
+        "return_url": "https://dev.api.unipay.qq.com/h5/overseah5/views/xsolla_new/result.html",
+        "currency": "USD",
+        "mode": "sandbox",
+        "ui": {
+            "size": "large",
+            "components": {
+                "virtual_currency": {
+                    "hidden": true
+                },
+                "virtual_items": {
+                    "hidden": true
+                }
+            }
+        }
+    },
+    "purchase": {
+        "subscription": {
+            "product_id": "3398427",
+            "currency": "USD"
+        }
+    },
+    "custom_parameters": {
+        "offer_id": "1450011705",
+        "country": "US",
+        "openid": "025810224280507676",
+        "type": "unimonth",
+        "pay_method": "os_xsolla_v2:1",
+        "zoneid": "1",
+        "productid": "3398427",
+        "currency_type": "USD",
+        "inner_productid": "xscollat1",
+        "service_code": "-APPMSX52542",
+        "client_version": "android",
+        "pay_channel": "os_xsolla_v2",
+        "pay_channel_sub_id": "1"
+    }
+}
