@@ -9,6 +9,7 @@ using namespace std;
 int make_socket_blocking(int fd);
 int make_socket_nonblocking(int fd);
 int make_socket_reuseaddr(int fd);
+int make_socket_reuseport(int fd);
 int make_socket_tcpnodelay(int fd);
 int make_socket_keepalive(int fd);
 int make_socket_cloexec(int fd);

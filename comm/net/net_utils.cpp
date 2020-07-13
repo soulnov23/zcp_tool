@@ -42,6 +42,11 @@ int make_socket_reuseaddr(int fd) {
     return setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &fd, sizeof(flags));
 }
 
+int make_socket_reuseport(int fd) {
+    int flags = 1;
+    return setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &fd, sizeof(flags));
+}
+
 int make_socket_tcpnodelay(int fd) {
     int flags = 1;
     return setsockopt(fd, SOL_SOCKET, TCP_NODELAY, &flags, sizeof(flags));
