@@ -305,11 +305,13 @@ void server::do_accept() {
         socklen_t addr_len = sizeof(addr);
         int fd = accept(m_listen_fd, (struct sockaddr*)&addr, &addr_len);
         if (fd == -1) {
-            if (errno != EAGAIN)
+            if (errno != EAGAIN) {
+                PRINTF_ERROR("accept error");
+            }
             break;
         }
-        PRINTF_DEBUG("(TCP)New accept ip:%s socket:%d",
-                     inet_ntoa(addr.sin_addr), fd);
+        PRINTF_DEBUG("(TCP)New accept ip:%s socket:%d pid:%d",
+                     inet_ntoa(addr.sin_addr), fd, getpid());
         if (-1 == make_socket_nonblocking(fd)) {
             PRINTF_ERROR("make_socket_nonblocking(%d) error", fd);
         }
@@ -343,10 +345,11 @@ void server::do_recv(int fd) {
         char buf[1024] = {0};
         ssize_t ret = recv(fd, buf, 1024, 0);
         if (ret > 0) {
+            PRINTF_DEBUG("%s", buf);
             conn.get()->m_buffer.get()->append(buf, ret);
             continue;
         } else if (ret == -1) {
-            if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
+            if (errno == EAGAIN) {
                 break;
             } else if (errno == EINTR) {
                 continue;
@@ -362,7 +365,7 @@ void server::do_recv(int fd) {
             }
         }
         if (ret == 0) {
-            PRINTF_ERROR("fd:%d ip:%s normal disconnection", fd,
+            PRINTF_DEBUG("fd:%d ip:%s normal disconnection", fd,
                          conn.get()->m_ip);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
                 PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
@@ -388,7 +391,7 @@ void server::do_send(int fd, const char* data, int len) {
             total_send += ret;
             continue;
         } else if (ret == -1) {
-            if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
+            if (errno == EAGAIN) {
                 break;
             } else if (errno == EINTR) {
                 continue;
