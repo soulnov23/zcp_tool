@@ -16,7 +16,7 @@ CXX = g++ -std=c++2a
 AR = ar
 ARFLAGS = -scurv
 RANLIB = ranlib
-FORMAT = clang-format --style="{BasedOnStyle: Google,AccessModifierOffset: -4,AlignConsecutiveAssignments: true,ColumnLimit: 130,UseTab: Never,IndentWidth: 4,TabWidth: 4}" -i
+FORMAT = clang-format --style="{BasedOnStyle: Google,AccessModifierOffset: -4,ColumnLimit: 130,UseTab: Never,IndentWidth: 4,TabWidth: 4}" -i
 
 CFLAGS ?=
 CXXFLAGS ?=
