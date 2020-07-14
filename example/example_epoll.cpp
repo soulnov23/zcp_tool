@@ -1,13 +1,13 @@
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <signal.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <signal.h>
 #include <unistd.h>
-#include "printf_utils.h"
-#include "net/net_utils.h"
-#include <string>
 #include <iostream>
+#include <string>
+#include "net/net_utils.h"
+#include "printf_utils.h"
 using namespace std;
 
 int epoll_fd;
@@ -27,18 +27,15 @@ int do_listen() {
     event.data.fd = listen_fd;
     event.events = EPOLLIN | EPOLLOUT | EPOLLET;
     if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_ADD, listen_fd, &event)) {
-        PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", epoll_fd,
-                     listen_fd);
+        PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", epoll_fd, listen_fd);
         return -1;
     }
     if (-1 == make_socket_reuseaddr(listen_fd)) {
         PRINTF_ERROR("make_socket_reuseaddr(%d) error", listen_fd);
         return -1;
     }
-    if (-1 ==
-        bind(listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr))) {
-        PRINTF_ERROR("bind(%d, %s) error", listen_fd,
-                     inet_ntoa(server_addr.sin_addr));
+    if (-1 == bind(listen_fd, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
+        PRINTF_ERROR("bind(%d, %s) error", listen_fd, inet_ntoa(server_addr.sin_addr));
         close(listen_fd);
         listen_fd = -1;
         return -1;
@@ -56,12 +53,11 @@ void do_accept() {
     while (true) {
         struct sockaddr_in addr;
         socklen_t addr_len = sizeof(addr);
-        int fd = accept(listen_fd, (struct sockaddr*)&addr, &addr_len);
+        int fd = accept(listen_fd, (struct sockaddr *)&addr, &addr_len);
         if (fd == -1) {
             break;
         }
-        PRINTF_DEBUG("(TCP)New accept ip:%s socket:%d",
-                     inet_ntoa(addr.sin_addr), fd);
+        PRINTF_DEBUG("(TCP)New accept ip:%s socket:%d", inet_ntoa(addr.sin_addr), fd);
         if (-1 == make_socket_nonblocking(fd)) {
             PRINTF_ERROR("make_socket_nonblocking(%d) error", fd);
         }
@@ -72,8 +68,7 @@ void do_accept() {
         event.data.fd = fd;
         event.events = EPOLLOUT | EPOLLET;
         if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event)) {
-            PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", epoll_fd,
-                         fd);
+            PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", epoll_fd, fd);
         }
     }
 }
@@ -93,8 +88,7 @@ void do_recv(int fd) {
             } else {
                 PRINTF_ERROR("fd:%d abnormal disconnection", fd);
                 if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                                 epoll_fd, fd);
+                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", epoll_fd, fd);
                 }
                 close(fd);
                 break;
@@ -103,8 +97,7 @@ void do_recv(int fd) {
         if (ret == 0) {
             PRINTF_ERROR("fd:%d normal disconnection", fd);
             if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", epoll_fd,
-                             fd);
+                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", epoll_fd, fd);
             }
             close(fd);
             break;
@@ -112,7 +105,7 @@ void do_recv(int fd) {
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     PRINTF_DEBUG("example_epoll start success");
     PRINTF_DEBUG("push");
     // cout << "push" << endl;

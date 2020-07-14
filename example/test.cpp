@@ -1,19 +1,19 @@
-#include "printf_utils.h"
-#include <string>
 #include <iostream>
-#include <vector>
 #include <map>
+#include <string>
+#include <vector>
+#include "printf_utils.h"
 using namespace std;
+#include "document.h"
+#include "filereadstream.h"
 #include "net/http_handle.h"
 #include "rapidjson.h"
-#include "document.h"
-#include "writer.h"
 #include "stringbuffer.h"
-#include "filereadstream.h"
+#include "writer.h"
 using namespace rapidjson;
+#include "json_parser.h"
 #include "time_utils.h"
 #include "utils.h"
-#include "json_parser.h"
 
 #define RETURN_ON_ERROR(expr)     \
     do {                          \
@@ -48,16 +48,14 @@ void init() {
     g_vecHeadInfo.push_back(date_at_client);
 }
 
-int get_batch_no(string& batch_no) {
+int get_batch_no(string &batch_no) {
     string rsp_string;
     int err_code;
     string err_msg;
-    string url =
-        "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/initialize";
+    string url = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/initialize";
     vector<string> vecHeadInfo = g_vecHeadInfo;
     string post_string("");
-    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string,
-                        err_code, err_msg);
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
         PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
         return -1;
@@ -68,8 +66,7 @@ int get_batch_no(string& batch_no) {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
-                     rsp_msg.c_str());
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
 
@@ -87,10 +84,8 @@ int get_batch_no(string& batch_no) {
     Value api_web_object(kObjectType);
     api_web_object = api_web_mem->value;
 
-    Value::MemberIterator batch_no_mem =
-        api_web_object.FindMember("CurrentBatchNumber");
-    if ((batch_no_mem == api_web_object.MemberEnd()) ||
-        !batch_no_mem->value.IsInt()) {
+    Value::MemberIterator batch_no_mem = api_web_object.FindMember("CurrentBatchNumber");
+    if ((batch_no_mem == api_web_object.MemberEnd()) || !batch_no_mem->value.IsInt()) {
         PRINTF_ERROR("value is not in json or not int format");
         return -1;
     }
@@ -115,8 +110,7 @@ int balance_enquiry() {
     int err_code;
     string err_msg;
     string rsp_string;
-    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string,
-                        err_code, err_msg);
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
         PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
         return -1;
@@ -127,8 +121,7 @@ int balance_enquiry() {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
-                     rsp_msg.c_str());
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
     string balance = map_return["Amount"];
@@ -149,8 +142,7 @@ int redeem() {
     string post_string;
     map_to_json(post_string, map_data);
     // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
-    string url =
-        "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/redeem";
+    string url = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/redeem";
     vector<string> vecHeadInfo = g_vecHeadInfo;
     string transaction_id = string("TransactionId: ") + order_id;
     vecHeadInfo.push_back(transaction_id);
@@ -160,8 +152,7 @@ int redeem() {
     int err_code;
     string err_msg;
     string rsp_string;
-    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string,
-                        err_code, err_msg);
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
         PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
         return -1;
@@ -175,8 +166,7 @@ int redeem() {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
-                     rsp_msg.c_str());
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
     PRINTF_DEBUG("redeem %s success", g_amount.c_str());
@@ -206,8 +196,7 @@ int cancel_redeem() {
     int err_code;
     string err_msg;
     string rsp_string;
-    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string,
-                        err_code, err_msg);
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
         PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
         return -1;
@@ -218,8 +207,7 @@ int cancel_redeem() {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
-                     rsp_msg.c_str());
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
     PRINTF_DEBUG("cancel redeem %s success", g_amount.c_str());
@@ -246,8 +234,7 @@ int reverse_redeem() {
     int err_code;
     string err_msg;
     string rsp_string;
-    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string,
-                        err_code, err_msg);
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
         PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
         return -1;
@@ -258,14 +245,13 @@ int reverse_redeem() {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(),
-                     rsp_msg.c_str());
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
     return 0;
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     init();
 
     // RETURN_ON_ERROR(get_batch_no(g_batch_no));

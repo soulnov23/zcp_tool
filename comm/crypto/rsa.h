@@ -53,8 +53,7 @@ enum sign_code_type {
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR, \a
  *RSA_VERIFY_ERROR
 */
-int verify_rsa_sign(const std::string& data_in, const std::string& sign,
-                    const std::string& public_key, int sign_type,
+int verify_rsa_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type,
                     int digest_algo = DIGEST_SHA1);
 
 /*!
@@ -73,17 +72,16 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign,
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR, \a
  *RSA_VERIFY_ERROR
 */
-int verify_rsa2_sign(const std::string& data_in, const std::string& sign,
-                     const std::string& public_key, int sign_type,
+int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type,
                      int digest_algo = DIGEST_SHA256);
 
 int rsa_pubkey_decrypt(const std::string& cipher_in,  //密文
                        int cipher_type_in,            //密文类型
                        // base64(CIPHER_TYPE_BASE64)
                        // hex(CIPHER_TYPE_HEX)
-                       int padding_mode_in,  // TOOLS_RSA_NO_PADDING
-                                             // TOOLS_RSA_PKCS1_PADDING
-                                             // TOOLS_RSA_PKCS1_OAEP_PADDING
+                       int padding_mode_in,            // TOOLS_RSA_NO_PADDING
+                                                       // TOOLS_RSA_PKCS1_PADDING
+                                                       // TOOLS_RSA_PKCS1_OAEP_PADDING
                        const std::string& pub_key_in,  //公钥
                        std::string& clear_data_out);   //明文
 
@@ -99,9 +97,7 @@ int rsa_pubkey_decrypt(const std::string& cipher_in,  //密文
  * \param   sign   对数据进行签名后的结果
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR,
 */
-int calculate_rsa_sign(const std::string& data_in,
-                       const std::string& private_key, int sign_type,
-                       std::string& sign);
+int calculate_rsa_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& sign);
 
 /*!
  * \fn int calculate_rsa_sign(const std::string& data_in, const std::string&
@@ -115,8 +111,6 @@ int calculate_rsa_sign(const std::string& data_in,
  * \param   sign   对数据进行签名后的结果
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR,
 */
-int calculate_rsa2_sign(const std::string& data_in,
-                        const std::string& private_key, int sign_type,
-                        std::string& sign);
+int calculate_rsa2_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& sign);
 
 #endif

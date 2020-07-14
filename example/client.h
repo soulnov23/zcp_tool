@@ -1,43 +1,41 @@
 #ifndef __CLIENT_H__
 #define __CLIENT_H__
 
-#include <sys/types.h>
 #include <sys/socket.h>
-#include "net/connector.h"
+#include <sys/types.h>
 #include <memory>
+#include "net/connector.h"
 using namespace std;
 
 class client {
-   public:
+public:
     client();
     ~client();
 
     int start();
 
-   private:
+private:
     void stop();
 
-   public:
+public:
     static shared_ptr<client> get_instance();
 
-   private:
+private:
     static void signal_handler_t(int signum);
 
-   private:
+private:
     void do_tcp_recv();
-    void do_tcp_send(int fd, const char* data, int len);
+    void do_tcp_send(int fd, const char *data, int len);
     void do_udp_recvfrom();
-    void do_udp_sendto(int fd, const char* data, int len,
-                       struct sockaddr_in addr);
+    void do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in addr);
     int tcp_socket_start();
-    int connect_timeout(int fd, const struct sockaddr* addr, socklen_t addrlen,
-                        int nsec, int usec);
+    int connect_timeout(int fd, const struct sockaddr *addr, socklen_t addrlen, int nsec, int usec);
     int udp_socket_start();
     int unix_socket_start();
     int raw_socket_start();
     void event_loop();
 
-   private:
+private:
     bool m_flag;
     int m_epoll_fd;
     int m_tcp_fd;

@@ -1,21 +1,20 @@
-#include "printf_utils.h"
 #include <iostream>
-#include <vector>
 #include <map>
+#include <vector>
+#include "printf_utils.h"
 using namespace std;
-#include "utils.h"
-#include "json_parser.h"
-#include "crypto/rsa.h"
-#include "crypto/md5.h"
-#include "net/http_handle.h"
 #include "coder.h"
+#include "crypto/md5.h"
+#include "crypto/rsa.h"
+#include "json_parser.h"
+#include "net/http_handle.h"
+#include "utils.h"
 
-void get_header(string sign, vector<string>& HeadInfo) {
+void get_header(string sign, vector<string> &HeadInfo) {
     string now_time = to_string(time(nullptr));
     string app_id = "8ab74856-8772-45c9-96db-54cb30ab9f74";
     string app_key = "5b96f20a-011f-4254-8be8-9a5ceb2f317f";
-    string param = "appid=" + app_id + "&" + "secret=" + app_key + "&" +
-                   "sign=" + sign + "&" + "timestamp=" + now_time;
+    string param = "appid=" + app_id + "&" + "secret=" + app_key + "&" + "sign=" + sign + "&" + "timestamp=" + now_time;
     string api_sign = md5(param);
     string_lower(api_sign);
     HeadInfo.push_back("Content-Type: application/json");
@@ -24,11 +23,10 @@ void get_header(string sign, vector<string>& HeadInfo) {
     string str_api_sign = "apisign: " + api_sign;
     HeadInfo.push_back(timestamp);
     HeadInfo.push_back(str_api_sign);
-    PRINTF_DEBUG("timestamp:[%s] apisign:[%s]", now_time.c_str(),
-                 api_sign.c_str());
+    PRINTF_DEBUG("timestamp:[%s] apisign:[%s]", now_time.c_str(), api_sign.c_str());
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     /*
     string private_key =
   "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCc540quYC9xzCMZeFOe8UmE3W5LWrqFd/"

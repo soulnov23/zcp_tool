@@ -2,7 +2,7 @@
 #define __TASK_H__
 
 class task {
-   public:
+public:
     task() {}
     virtual ~task() {}
 

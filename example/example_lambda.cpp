@@ -1,9 +1,9 @@
-#include "printf_utils.h"
-#include <typeinfo>
 #include <iostream>
+#include <typeinfo>
+#include "printf_utils.h"
 using namespace std;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     int a = 1;
     int b = 2;
     auto result = [](int x, int y)->int {

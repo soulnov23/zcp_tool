@@ -1,10 +1,10 @@
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <sys/param.h>
 #include "daemon.h"
+#include <signal.h>
+#include <stdlib.h>
+#include <sys/param.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 int init_daemon(char* path) {
     int pid;

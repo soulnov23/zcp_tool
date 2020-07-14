@@ -35,10 +35,8 @@ int get_time_now(string& str_now) {
         return -1;
     }
     char buf[128];
-    if (snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d %06d",
-                 timestamp.tm_year + 1900, timestamp.tm_mon + 1,
-                 timestamp.tm_mday, timestamp.tm_hour, timestamp.tm_min,
-                 timestamp.tm_sec, (int)(tv.tv_usec)) < 0) {
+    if (snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d %06d", timestamp.tm_year + 1900, timestamp.tm_mon + 1,
+                 timestamp.tm_mday, timestamp.tm_hour, timestamp.tm_min, timestamp.tm_sec, (int)(tv.tv_usec)) < 0) {
         PRINTF_ERROR("snprintf failed.");
         return -1;
     }
@@ -100,8 +98,7 @@ int get_time_zone(int& time_zone) {
 
 time_t str_time2date(const string& str_time) {
     struct tm st_time;
-    if (sscanf(str_time.c_str(), "%04d-%02d-%02d %02d:%02d:%02d",
-               &st_time.tm_year, &st_time.tm_mon, &st_time.tm_mday,
+    if (sscanf(str_time.c_str(), "%04d-%02d-%02d %02d:%02d:%02d", &st_time.tm_year, &st_time.tm_mon, &st_time.tm_mday,
                &st_time.tm_hour, &st_time.tm_min, &st_time.tm_sec) == EOF) {
         PRINTF_ERROR("sscanf failed.");
         return -1;
@@ -125,8 +122,7 @@ string date2str_time(time_t time) {
     }
 
     char date[30];
-    if (snprintf(date, sizeof(date), "%04d-%02d-%02d %02d:%02d:%02d",
-                 st_time.tm_year + 1900, st_time.tm_mon + 1, st_time.tm_mday,
+    if (snprintf(date, sizeof(date), "%04d-%02d-%02d %02d:%02d:%02d", st_time.tm_year + 1900, st_time.tm_mon + 1, st_time.tm_mday,
                  st_time.tm_hour, st_time.tm_min, st_time.tm_sec) < 0) {
         PRINTF_ERROR("snprintf failed.");
         return "";

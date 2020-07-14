@@ -17,6 +17,7 @@
     "editor.copyWithSyntaxHighlighting": false,
     "editor.suggest.insertMode": "replace",
     "editor.suggest.shareSuggestSelections": true,
+    "editor.suggestSelection": "first",
     "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
 
     //workbench选项
@@ -40,6 +41,8 @@
         "/usr/include/**",
         "${workspaceFolder}/**"
     ],
+    "C_Cpp.clang_format_fallbackStyle": "Google",
+    "C_Cpp.clang_format_style": "{BasedOnStyle: Google,AccessModifierOffset: -4,AlignConsecutiveAssignments: true,AlignConsecutiveMacros: true,ColumnLimit: 130,UseTab: Never,IndentWidth: 4,TabWidth: 4}",
 
     //files选项
     "files.autoGuessEncoding": true,
@@ -94,5 +97,8 @@
     "python.autoComplete.extraPaths": [
         "${workspaceFolder}/**",
         "/usr/lib/python2.7/site-packages/**"
-    ]
+    ],
+    "python.languageServer": "Microsoft",
+
+    "explorer.confirmDelete": false
 }

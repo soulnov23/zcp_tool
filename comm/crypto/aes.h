@@ -22,11 +22,9 @@ enum AES_BIT_TYPE {
 };
 
 // 返回值不为0则表示错误，通过upay::get_last_error_info()获取错误信息
-int aes_cbc_encrypt(const std::string& key, unsigned char* iv,
-                    const std::string& msg, int bit_type, int sign_type,
+int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string& msg, int bit_type, int sign_type,
                     std::string& encrypt_msg);
-int aes_cbc_decrypt(const std::string& key, unsigned char* iv,
-                    const std::string& encrypt_msg, int bit_type, int sign_type,
+int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string& encrypt_msg, int bit_type, int sign_type,
                     std::string& decrypt_msg);
 
 #endif

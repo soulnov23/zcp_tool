@@ -1,9 +1,9 @@
 #include "utils.h"
-#include "coder.h"
-#include <string.h>
-#include <algorithm>
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
+#include <algorithm>
+#include "coder.h"
 
 #define FIELD_FLAG "&"
 #define VALUE_FLAG "="
@@ -129,8 +129,7 @@ static int get_value(const string& str, string& name, string& value) {
 }
 
 void map2str(string& buf, const record_t& record, bool encode /*=true*/) {
-    for (record_t::const_iterator it = record.begin(); it != record.end();
-         it++) {
+    for (record_t::const_iterator it = record.begin(); it != record.end(); it++) {
         buf += FIELD_FLAG + it->first;
         if (encode) {
             string result;

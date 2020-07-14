@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include "coder.h"
 #include "md5.h"
+#include <stdio.h>
 #include <string.h>
+#include "coder.h"
 
 /* MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm
 */
@@ -126,10 +126,9 @@ void Decode(UINT4 *, unsigned char *, unsigned int);
 void MD5_memcpy(POINTER, POINTER, unsigned int);
 void MD5_memset(POINTER, int, unsigned int);
 
-static unsigned char PADDING[64] = {
-    0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static unsigned char PADDING[64] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                    0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                    0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 /* F, G, H and I are basic MD5 functions.
 */
@@ -211,9 +210,8 @@ void Decode(  // output, input, len)
     unsigned int i, j;
 
     for (i = 0, j = 0; j < len; i++, j += 4)
-        output[i] = ((UINT4)input[j]) | (((UINT4)input[j + 1]) << 8) |
-                    (((UINT4)input[j + 2]) << 16) |
-                    (((UINT4)input[j + 3]) << 24);
+        output[i] =
+            ((UINT4)input[j]) | (((UINT4)input[j + 1]) << 8) | (((UINT4)input[j + 2]) << 16) | (((UINT4)input[j + 3]) << 24);
 }
 
 /* MD5 basic transformation. Transforms state based on block.
@@ -337,8 +335,7 @@ void MD5Update(            // context, input, inputLen)
     index = (unsigned int)((context->count[0] >> 3) & 0x3F);
 
     /* Update number of bits */
-    if ((context->count[0] += ((UINT4)inputLen << 3)) < ((UINT4)inputLen << 3))
-        context->count[1]++;
+    if ((context->count[0] += ((UINT4)inputLen << 3)) < ((UINT4)inputLen << 3)) context->count[1]++;
     context->count[1] += ((UINT4)inputLen >> 29);
 
     partLen = 64 - index;
@@ -349,16 +346,14 @@ void MD5Update(            // context, input, inputLen)
         MD5_memcpy((POINTER) & context->buffer[index], (POINTER)input, partLen);
         MD5Transform(context->state, context->buffer);
 
-        for (i = partLen; i + 63 < inputLen; i += 64)
-            MD5Transform(context->state, &input[i]);
+        for (i = partLen; i + 63 < inputLen; i += 64) MD5Transform(context->state, &input[i]);
 
         index = 0;
     } else
         i = 0;
 
     /* Buffer remaining input */
-    MD5_memcpy((POINTER) & context->buffer[index], (POINTER) & input[i],
-               inputLen - i);
+    MD5_memcpy((POINTER) & context->buffer[index], (POINTER) & input[i], inputLen - i);
 }
 
 /* MD5 finalization. Ends an MD5 message-digest operation, writing the

@@ -1,10 +1,10 @@
 #include "single_process.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <errno.h>
-#include <unistd.h>
+#include <fcntl.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #define PROCESS_SINGLE_SUCESS 0
 #define PROCESS_BEEN_RUNUING -1
@@ -14,16 +14,14 @@
 int single_process(const char* proc_name) {
     char file_lock_name[512] = "/var/run/single.";
 
-    if (strlen(proc_name) >=
-        (sizeof(file_lock_name) - strlen(file_lock_name))) {
+    if (strlen(proc_name) >= (sizeof(file_lock_name) - strlen(file_lock_name))) {
         /*传入参数名字太长*/
         return PROCESS_NAME_ERROR;
     }
 
     strcat(file_lock_name, proc_name);
 
-    int file = open(file_lock_name, O_WRONLY | O_CREAT,
-                    S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+    int file = open(file_lock_name, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
     if (-1 == file) {
         /*创建文件失败*/
         return CREATE_LOCKFILE_FAILURE;

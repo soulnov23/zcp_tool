@@ -2,7 +2,6 @@
 #include "printf_utils.h"
 
 size_t recv_proc(void* ptr, size_t size, size_t nmemb, std::string* p) {
-
     if (p == nullptr) return 0;
 
     if (size * nmemb == 0) return 0;
@@ -12,14 +11,11 @@ size_t recv_proc(void* ptr, size_t size, size_t nmemb, std::string* p) {
     return (size * nmemb);
 }
 
-int http_proc(const std::string& strUrl, unsigned iTimeout,
-              std::vector<std::string>* pvecHeadInfo, std::string& strPostData,
-              std::string& strRecvBuf, int& iResult, std::string& strErrmsg,
-              const std::string& strCookie,
+int http_proc(const std::string& strUrl, unsigned iTimeout, std::vector<std::string>* pvecHeadInfo, std::string& strPostData,
+              std::string& strRecvBuf, int& iResult, std::string& strErrmsg, const std::string& strCookie,
               // const std::string& strDnsList,
               // const std::string& strIpv4,
               bool https_verify) {
-
     int ret = 0;
     char cerr[1024] = {0};
 
@@ -45,8 +41,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout,
     struct curl_slist* headerlist = nullptr;
     if (pvecHeadInfo != nullptr) {
         for (unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
-            headerlist =
-                curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
+            headerlist = curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
             // PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
         }
     } else {
@@ -55,8 +50,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout,
     }
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
 
-    if (!strCookie.empty())
-        curl_easy_setopt(curl, CURLOPT_COOKIE, strCookie.c_str());
+    if (!strCookie.empty()) curl_easy_setopt(curl, CURLOPT_COOKIE, strCookie.c_str());
 
     curl_easy_setopt(curl, CURLOPT_URL, strUrl.c_str());
 
@@ -153,16 +147,13 @@ int http_proc(const std::string& strUrl, unsigned iTimeout,
     return ret;
 }
 
-int http_proc(const std::string& strUrl, unsigned iTimeout,
-              std::string& strUserPwd,  // The format of which is: [user
-                                        // name]:[password].
-              std::vector<std::string>* pvecHeadInfo, std::string& strPostData,
-              std::string& strRecvBuf, int& iResult, std::string& strErrmsg,
-              const std::string& strCookie,
+int http_proc(const std::string& strUrl, unsigned iTimeout, std::string& strUserPwd,  // The format of which is: [user
+                                                                                      // name]:[password].
+              std::vector<std::string>* pvecHeadInfo, std::string& strPostData, std::string& strRecvBuf, int& iResult,
+              std::string& strErrmsg, const std::string& strCookie,
               // const std::string& strDnsList,
               // const std::string& strIpv4,
               bool https_verify) {
-
     int ret = 0;
     char cerr[1024] = {0};
 
@@ -188,8 +179,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout,
     struct curl_slist* headerlist = nullptr;
     if (pvecHeadInfo != nullptr) {
         for (unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
-            headerlist =
-                curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
+            headerlist = curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
             // PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
         }
     } else {
@@ -201,8 +191,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout,
     //设置帐号和密码
     curl_easy_setopt(curl, CURLOPT_USERPWD, strUserPwd.c_str());
 
-    if (!strCookie.empty())
-        curl_easy_setopt(curl, CURLOPT_COOKIE, strCookie.c_str());
+    if (!strCookie.empty()) curl_easy_setopt(curl, CURLOPT_COOKIE, strCookie.c_str());
 
     curl_easy_setopt(curl, CURLOPT_URL, strUrl.c_str());
 

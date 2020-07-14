@@ -3,8 +3,8 @@
 
 #include <string>
 using namespace std;
-#include <unistd.h>
 #include <signal.h>
+#include <unistd.h>
 
 int make_socket_blocking(int fd);
 int make_socket_nonblocking(int fd);

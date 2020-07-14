@@ -1,16 +1,16 @@
 #include "client.h"
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <signal.h>
 #include <sys/epoll.h>
 #include <sys/select.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <unistd.h>
-#include <signal.h>
 #include <string>
 using namespace std;
 #include "const.h"
-#include "printf_utils.h"
 #include "net/net_utils.h"
+#include "printf_utils.h"
 
 shared_ptr<client> client::g_client = make_shared<client>();
 
@@ -102,8 +102,7 @@ int client::tcp_socket_start() {
     server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
     PRINTF_DEBUG("server ip:%s", SERVER_IP);
     m_tcp_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    int ret = connect_timeout(m_tcp_fd, (struct sockaddr*)&server_addr,
-                              sizeof(server_addr), 3, 0);
+    int ret = connect_timeout(m_tcp_fd, (struct sockaddr *)&server_addr, sizeof(server_addr), 3, 0);
     if (ret == -1) {
         PRINTF_ERROR("connect error");
         close(m_tcp_fd);
@@ -114,17 +113,14 @@ int client::tcp_socket_start() {
     event.data.fd = m_tcp_fd;
     event.events = EPOLLIN | EPOLLET;
     if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_tcp_fd, &event)) {
-        PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd,
-                     m_tcp_fd);
+        PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, m_tcp_fd);
         return -1;
     }
-    m_tcp_conn = make_shared<connector>(
-        m_tcp_fd, inet_ntoa(server_addr.sin_addr), nullptr);
+    m_tcp_conn = make_shared<connector>(m_tcp_fd, inet_ntoa(server_addr.sin_addr), nullptr);
     return 0;
 }
 
-int client::connect_timeout(int fd, const struct sockaddr* addr,
-                            socklen_t addrlen, int nsec, int usec) {
+int client::connect_timeout(int fd, const struct sockaddr *addr, socklen_t addrlen, int nsec, int usec) {
     if (-1 == make_socket_nonblocking(fd)) {
         PRINTF_ERROR("make_socket_nonblocking(%d) error", fd);
         return -1;
@@ -180,11 +176,9 @@ int client::udp_socket_start() {
     server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
     m_udp_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     // TCP套接字调用connect会引发三次握手，而UDP套接字则不会引发三次握手，只是检查是否存在错误，然后立即返回
-    int ret =
-        connect(m_udp_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+    int ret = connect(m_udp_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
     if (-1 == ret) {
-        PRINTF_DEBUG("connect ip:%s port:%d failure", SERVER_IP,
-                     TCP_LISTEN_PORT);
+        PRINTF_DEBUG("connect ip:%s port:%d failure", SERVER_IP, TCP_LISTEN_PORT);
     }
     if (-1 == make_socket_nonblocking(m_udp_fd)) {
         PRINTF_ERROR("make_socket_nonblocking(%d) error", m_udp_fd);
@@ -202,8 +196,7 @@ int client::udp_socket_start() {
     event.data.fd = m_udp_fd;
     event.events = EPOLLIN | EPOLLET;
     if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_udp_fd, &event)) {
-        PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd,
-                     m_udp_fd);
+        PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, m_udp_fd);
         return -1;
     }
     return 0;
@@ -245,10 +238,8 @@ void client::do_tcp_recv() {
                 continue;
             } else {
                 PRINTF_ERROR("fd:%d abnormal disconnection", m_tcp_fd);
-                if (-1 ==
-                    epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_tcp_fd, nullptr)) {
-                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                                 m_epoll_fd, m_tcp_fd);
+                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_tcp_fd, nullptr)) {
+                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, m_tcp_fd);
                 }
                 break;
             }
@@ -256,15 +247,14 @@ void client::do_tcp_recv() {
         if (ret == 0) {
             PRINTF_ERROR("fd:%d normal disconnection", m_tcp_fd);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_tcp_fd, nullptr)) {
-                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                             m_epoll_fd, m_tcp_fd);
+                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, m_tcp_fd);
             }
             break;
         }
     }
 }
 
-void client::do_tcp_send(int fd, const char* data, int len) {
+void client::do_tcp_send(int fd, const char *data, int len) {
     int total_send = 0;
     while (total_send < len) {
         int ret = send(fd, data + total_send, len - total_send, 0);
@@ -277,21 +267,17 @@ void client::do_tcp_send(int fd, const char* data, int len) {
             } else if (errno == EINTR) {
                 continue;
             } else {
-                PRINTF_ERROR("fd:%d ip:%s abnormal disconnection", fd,
-                             m_tcp_conn->m_ip);
+                PRINTF_ERROR("fd:%d ip:%s abnormal disconnection", fd, m_tcp_conn->m_ip);
                 if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                                 m_epoll_fd, fd);
+                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, fd);
                 }
                 break;
             }
         }
         if (ret == 0) {
-            PRINTF_ERROR("fd:%d ip:%s normal disconnection", fd,
-                         m_tcp_conn->m_ip);
+            PRINTF_ERROR("fd:%d ip:%s normal disconnection", fd, m_tcp_conn->m_ip);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                             m_epoll_fd, fd);
+                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, fd);
             }
             break;
         }
@@ -303,11 +289,9 @@ void client::do_udp_recvfrom() {
         char buf[UDP_RCV_BUF] = {0};
         struct sockaddr_in addr;
         socklen_t addr_len = sizeof(addr);
-        ssize_t ret = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0,
-                               (struct sockaddr*)&addr, &addr_len);
+        ssize_t ret = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr *)&addr, &addr_len);
         if (ret > 0) {
-            PRINTF_DEBUG("fd:%d recvfrom:%s data:%s", m_udp_fd,
-                         inet_ntoa(addr.sin_addr), buf);
+            PRINTF_DEBUG("fd:%d recvfrom:%s data:%s", m_udp_fd, inet_ntoa(addr.sin_addr), buf);
             continue;
         } else if (ret == -1) {
             if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
@@ -316,10 +300,8 @@ void client::do_udp_recvfrom() {
                 continue;
             } else {
                 PRINTF_ERROR("fd:%d abnormal disconnection", m_udp_fd);
-                if (-1 ==
-                    epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, nullptr)) {
-                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                                 m_epoll_fd, m_udp_fd);
+                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, nullptr)) {
+                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, m_udp_fd);
                 }
                 close(m_udp_fd);
                 m_udp_fd = -1;
@@ -329,8 +311,7 @@ void client::do_udp_recvfrom() {
         if (ret == 0) {
             PRINTF_ERROR("fd:%d normal disconnection", m_udp_fd);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, nullptr)) {
-                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                             m_epoll_fd, m_udp_fd);
+                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, m_udp_fd);
             }
             close(m_udp_fd);
             m_udp_fd = -1;
@@ -339,13 +320,11 @@ void client::do_udp_recvfrom() {
     }
 }
 
-void client::do_udp_sendto(int fd, const char* data, int len,
-                           struct sockaddr_in addr) {
+void client::do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in addr) {
     int total_send = 0;
     socklen_t addr_len = sizeof(addr);
     while (total_send < len) {
-        int ret = sendto(fd, data + total_send, len - total_send, 0,
-                         (struct sockaddr*)&addr, addr_len);
+        int ret = sendto(fd, data + total_send, len - total_send, 0, (struct sockaddr *)&addr, addr_len);
         if (ret > 0) {
             total_send += ret;
             continue;
@@ -357,8 +336,7 @@ void client::do_udp_sendto(int fd, const char* data, int len,
             } else {
                 PRINTF_ERROR("fd:%d abnormal disconnection", fd);
                 if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                                 m_epoll_fd, fd);
+                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, fd);
                 }
                 close(fd);
                 fd = -1;
@@ -368,8 +346,7 @@ void client::do_udp_sendto(int fd, const char* data, int len,
         if (ret == 0) {
             PRINTF_ERROR("fd:%d normal disconnection", fd);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                             m_epoll_fd, fd);
+                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, fd);
             }
             close(fd);
             fd = -1;
@@ -378,7 +355,7 @@ void client::do_udp_sendto(int fd, const char* data, int len,
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     client test;
     test.start();
     return 0;

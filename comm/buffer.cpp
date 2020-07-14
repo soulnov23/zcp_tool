@@ -1,6 +1,6 @@
 #include "buffer.h"
-#include <malloc.h>
 #include <assert.h>
+#include <malloc.h>
 #include <string.h>
 
 #define BUFFER_DEFAULT_SIZE 64 * 1024

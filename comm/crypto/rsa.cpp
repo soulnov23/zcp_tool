@@ -1,19 +1,18 @@
-#include <string>
-#include <string.h>
 #include "openssl/rsa.h"
-#include "openssl/pem.h"
-#include "openssl/bio.h"
-#include "openssl/evp.h"
-#include "openssl/err.h"
-#include "coder.h"
+#include <string.h>
+#include <string>
 #include "base64.h"
-#include "rsa.h"
+#include "coder.h"
+#include "openssl/bio.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/pem.h"
 #include "printf_utils.h"
+#include "rsa.h"
 
-#define SET_SSL_ERROR()                                          \
-    {                                                            \
-        PRINTF_ERROR("errno:%lu %s", ERR_get_error(),            \
-                     ERR_error_string(ERR_get_error(), nullptr)) \
+#define SET_SSL_ERROR()                                                                           \
+    {                                                                                             \
+        PRINTF_ERROR("errno:%lu %s", ERR_get_error(), ERR_error_string(ERR_get_error(), nullptr)) \
     \
 }
 
@@ -28,8 +27,7 @@ int hex_decode(std::string& src, std::string& dst) {
     return 0;
 }
 
-int verify_rsa_sign(const std::string& data_in, const std::string& sign,
-                    const std::string& public_key, int sign_type,
+int verify_rsa_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type,
                     int digest_algo) {
     ERR_load_crypto_strings();
 
@@ -45,15 +43,13 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign,
     std::string coded_sign = sign;
 
     if (digest_algo != DIGEST_SHA1) {
-        PRINTF_ERROR("invalid digest algorithm: %s",
-                     std::to_string(digest_algo).c_str());
+        PRINTF_ERROR("invalid digest algorithm: %s", std::to_string(digest_algo).c_str());
         ret = RSA_PARAM_TYPE_ERROR;
         goto ready_ret;
     }
 
     if (sign_type < SIGN_CODE_RAW || sign_type > SIGN_CODE_HEX) {
-        PRINTF_ERROR("invalid sign type: %s",
-                     std::to_string(sign_type).c_str());
+        PRINTF_ERROR("invalid sign type: %s", std::to_string(sign_type).c_str());
         ret = RSA_PARAM_TYPE_ERROR;
         goto ready_ret;
     }
@@ -65,8 +61,7 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign,
     }
     format_public_key += "-----END PUBLIC KEY-----\n";
 
-    if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()),
-                               format_public_key.length())) == nullptr) {
+    if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()), format_public_key.length())) == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto ready_ret;
@@ -117,9 +112,7 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign,
     }
 
     // if algorithm == sha1
-    if (RSA_verify(NID_sha1, digest, digest_len,
-                   (unsigned char*)coded_sign.c_str(), coded_sign.length(),
-                   rsa) != 1) {
+    if (RSA_verify(NID_sha1, digest, digest_len, (unsigned char*)coded_sign.c_str(), coded_sign.length(), rsa) != 1) {
         SET_SSL_ERROR();
         ret = RSA_VERIFY_ERROR;
     }
@@ -134,8 +127,7 @@ ready_ret:
     return ret;
 }
 
-int verify_rsa2_sign(const std::string& data_in, const std::string& sign,
-                     const std::string& public_key, int sign_type,
+int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type,
                      int digest_algo) {
     ERR_load_crypto_strings();
 
@@ -151,15 +143,13 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign,
     std::string coded_sign = sign;
 
     if (digest_algo != DIGEST_SHA256) {
-        PRINTF_ERROR("invalid digest algorithm: %s",
-                     std::to_string(digest_algo).c_str());
+        PRINTF_ERROR("invalid digest algorithm: %s", std::to_string(digest_algo).c_str());
         ret = RSA_PARAM_TYPE_ERROR;
         goto ready_ret;
     }
 
     if (sign_type < SIGN_CODE_RAW || sign_type > SIGN_CODE_HEX) {
-        PRINTF_ERROR("invalid sign type: %s",
-                     std::to_string(sign_type).c_str());
+        PRINTF_ERROR("invalid sign type: %s", std::to_string(sign_type).c_str());
         ret = RSA_PARAM_TYPE_ERROR;
         goto ready_ret;
     }
@@ -171,8 +161,7 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign,
     }
     format_public_key += "-----END PUBLIC KEY-----\n";
 
-    if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()),
-                               format_public_key.length())) == nullptr) {
+    if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()), format_public_key.length())) == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto ready_ret;
@@ -223,9 +212,7 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign,
     }
 
     // if algorithm == sha1
-    if (RSA_verify(NID_sha256, digest, digest_len,
-                   (unsigned char*)coded_sign.c_str(), coded_sign.length(),
-                   rsa) != 1) {
+    if (RSA_verify(NID_sha256, digest, digest_len, (unsigned char*)coded_sign.c_str(), coded_sign.length(), rsa) != 1) {
         SET_SSL_ERROR();
         ret = RSA_VERIFY_ERROR;
     }
@@ -278,8 +265,7 @@ int public_key_str2rsa(const std::string& public_key_in, RSA*& rsa) {
     return 0;
 }
 
-int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in,
-                       int cipher_type, int padding_mode_in,
+int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in, int cipher_type, int padding_mode_in,
                        std::string& clear_data_out) {
     EVP_PKEY* pKey = nullptr;
     int ret;
@@ -317,17 +303,14 @@ int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in,
     int clear_data_size;
     // RSA_PKCS1_OAEP_PADDING
     if (padding_mode_in == TOOLS_RSA_PKCS1_PADDING) {
-        clear_data_size = RSA_public_decrypt(
-            cipher_size, (const unsigned char*)cipher_tmp.c_str(),
-            (unsigned char*)clear_data, rsa, RSA_PKCS1_PADDING);
+        clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char*)cipher_tmp.c_str(), (unsigned char*)clear_data,
+                                             rsa, RSA_PKCS1_PADDING);
     } else if (padding_mode_in == TOOLS_RSA_PKCS1_OAEP_PADDING) {
-        clear_data_size = RSA_public_decrypt(
-            cipher_size, (const unsigned char*)cipher_tmp.c_str(),
-            (unsigned char*)clear_data, rsa, RSA_PKCS1_OAEP_PADDING);
+        clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char*)cipher_tmp.c_str(), (unsigned char*)clear_data,
+                                             rsa, RSA_PKCS1_OAEP_PADDING);
     } else if (padding_mode_in == TOOLS_RSA_NO_PADDING) {
-        clear_data_size = RSA_public_decrypt(
-            cipher_size, (const unsigned char*)cipher_tmp.c_str(),
-            (unsigned char*)clear_data, rsa, RSA_NO_PADDING);
+        clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char*)cipher_tmp.c_str(), (unsigned char*)clear_data,
+                                             rsa, RSA_NO_PADDING);
     } else {
         PRINTF_ERROR("PaddingMode is invalid");
         ret = RSA_DECRYPT_ERROR;
@@ -352,8 +335,7 @@ int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in,
     return 0;
 }
 
-int rsa_pubkey_decrypt(const std::string& cipher_in, int cipher_type,
-                       int padding_mode_in, const std::string& pub_key_in,
+int rsa_pubkey_decrypt(const std::string& cipher_in, int cipher_type, int padding_mode_in, const std::string& pub_key_in,
                        std::string& clear_data_out) {
     RSA* rsa = nullptr;
 
@@ -363,17 +345,14 @@ int rsa_pubkey_decrypt(const std::string& cipher_in, int cipher_type,
         return ret;
     }
 
-    ret = rsa_public_decrypt(rsa, cipher_in, cipher_type, padding_mode_in,
-                             clear_data_out);
+    ret = rsa_public_decrypt(rsa, cipher_in, cipher_type, padding_mode_in, clear_data_out);
     if (rsa != nullptr) {
         RSA_free(rsa);
     }
     return ret;
 }
 
-int calculate_rsa_sign(const std::string& data_in,
-                       const std::string& private_key, int sign_type,
-                       std::string& signature) {
+int calculate_rsa_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& signature) {
     ERR_load_crypto_strings();
 
     int ret = 0;
@@ -403,8 +382,7 @@ int calculate_rsa_sign(const std::string& data_in,
     format_private_key += ("-----END RSA PRIVATE KEY-----\n");
 
     // 从字符串读取RSA私钥
-    if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()),
-                               format_private_key.length())) == nullptr) {
+    if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()), format_private_key.length())) == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto ready_ret;
@@ -498,9 +476,7 @@ ready_ret:
     return ret;
 }
 
-int calculate_rsa2_sign(const std::string& data_in,
-                        const std::string& private_key, int sign_type,
-                        std::string& signature) {
+int calculate_rsa2_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& signature) {
     ERR_load_crypto_strings();
 
     int ret = 0;
@@ -530,8 +506,7 @@ int calculate_rsa2_sign(const std::string& data_in,
     format_private_key += ("-----END RSA PRIVATE KEY-----\n");
 
     // 从字符串读取RSA私钥
-    if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()),
-                               format_private_key.length())) == nullptr) {
+    if ((bio = BIO_new_mem_buf((void*)(format_private_key.c_str()), format_private_key.length())) == nullptr) {
         SET_SSL_ERROR();
         ret = RSA_KEY_ERROR;
         goto ready_ret;

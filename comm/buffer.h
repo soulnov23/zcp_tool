@@ -2,7 +2,7 @@
 #define __BUFFER_H__
 
 class buffer {
-   public:
+public:
     //初始化大小为64K，每次超过都扩大2倍
     buffer();
     ~buffer();
@@ -11,7 +11,7 @@ class buffer {
     void remove(int len);
     int size();
 
-   private:
+private:
     char* m_buffer;
     int m_size;
     int m_max_size;

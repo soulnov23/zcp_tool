@@ -1,13 +1,13 @@
 #include "net_utils.h"
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/tcp.h>
 #include <arpa/inet.h>
-#include <sys/ioctl.h>
-#include <net/if_arp.h>
+#include <fcntl.h>
 #include <net/if.h>
+#include <net/if_arp.h>
+#include <netinet/tcp.h>
 #include <string.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include "printf_utils.h"
 #include "utils.h"
 
@@ -70,13 +70,9 @@ int make_socket_cloexec(int fd) {
     return 0;
 }
 
-int set_socket_rcvbuf(int fd, int bufsize) {
-    return setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &bufsize, sizeof(bufsize));
-}
+int set_socket_rcvbuf(int fd, int bufsize) { return setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &bufsize, sizeof(bufsize)); }
 
-int set_socket_sndbuf(int fd, int bufsize) {
-    return setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof(bufsize));
-}
+int set_socket_sndbuf(int fd, int bufsize) { return setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof(bufsize)); }
 
 bool is_private_ip(const string& ip) {
     if (ip.empty()) {
@@ -98,15 +94,13 @@ bool is_private_ip(const string& ip) {
         PRINTF_ERROR("sscanf error");
         return false;
     }
-    unsigned int value =
-        ip_piece[0] * 256 * 256 * 256 + ip_piece[1] * 256 * 256;
+    unsigned int value = ip_piece[0] * 256 * 256 * 256 + ip_piece[1] * 256 * 256;
     // "10.0.0.0" >> 24 == 0xA
     // "9.0.0.0" >> 24 == 0x9
     // "172.16.0.0" >> 20 == 0xAC1
     // "192.168.0.0" >> 16 == 0xC0A8
     // "100.64.0.0" >> 22 == 0x191
-    if (value >> 24 == 0xA || value >> 24 == 0x9 || value >> 20 == 0xAC1 ||
-        value >> 16 == 0xC0A8 || value >> 22 == 0x191) {
+    if (value >> 24 == 0xA || value >> 24 == 0x9 || value >> 20 == 0xAC1 || value >> 16 == 0xC0A8 || value >> 22 == 0x191) {
         return true;
     } else {
         return false;
@@ -227,9 +221,7 @@ bool get_local_ip(const char* eth_name, string& ip) {
     struct ifreq interface;
     strncpy(interface.ifr_ifrn.ifrn_name, eth_name, IFNAMSIZ);
     if (ioctl(fd, SIOCGIFADDR, (char*)&interface) == 0) {
-        ip = net_int_ip2str(
-            (((struct sockaddr_in*)(&(interface.ifr_ifru.ifru_addr)))
-                 ->sin_addr.s_addr));
+        ip = net_int_ip2str((((struct sockaddr_in*)(&(interface.ifr_ifru.ifru_addr)))->sin_addr.s_addr));
         ret = true;
     } else {
         PRINTF_ERROR();
@@ -251,13 +243,11 @@ bool get_local_mac(const char* eth_name, string& mac) {
     strncpy(interface.ifr_ifrn.ifrn_name, eth_name, IFNAMSIZ);
     if (ioctl(fd, SIOCGIFHWADDR, (char*)&interface) == 0) {
         char temp_mac[20];
-        snprintf(temp_mac, sizeof(temp_mac), "%02x:%02x:%02x:%02x:%02x:%02x",
-                 (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[0],
-                 (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[1],
-                 (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[2],
-                 (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[3],
-                 (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[4],
-                 (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[5]);
+        snprintf(
+            temp_mac, sizeof(temp_mac), "%02x:%02x:%02x:%02x:%02x:%02x", (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[0],
+            (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[1], (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[2],
+            (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[3], (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[4],
+            (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[5]);
         mac = temp_mac;
         ret = true;
     } else {

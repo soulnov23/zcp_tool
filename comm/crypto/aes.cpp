@@ -1,19 +1,17 @@
 #include "aes.h"
-#include "coder.h"
 #include "base64.h"
-#include "printf_utils.h"
-#include "openssl/evp.h"
+#include "coder.h"
 #include "openssl/err.h"
+#include "openssl/evp.h"
+#include "printf_utils.h"
 
-#define SET_SSL_ERROR()                                          \
-    {                                                            \
-        PRINTF_ERROR("errno:%lu %s", ERR_get_error(),            \
-                     ERR_error_string(ERR_get_error(), nullptr)) \
+#define SET_SSL_ERROR()                                                                           \
+    {                                                                                             \
+        PRINTF_ERROR("errno:%lu %s", ERR_get_error(), ERR_error_string(ERR_get_error(), nullptr)) \
     \
 }
 
-int aes_cbc_encrypt(const std::string& key, unsigned char* iv,
-                    const std::string& msg, int bit_type, int sign_type,
+int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string& msg, int bit_type, int sign_type,
                     std::string& encrypt_msg) {
     ERR_load_crypto_strings();
 
@@ -23,8 +21,7 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv,
     }
 
     if (sign_type < AES_SIGN_CODE_BASE64 || sign_type > AES_SIGN_CODE_HEX) {
-        PRINTF_ERROR("invalid sign type: %s",
-                     std::to_string(sign_type).c_str());
+        PRINTF_ERROR("invalid sign type: %s", std::to_string(sign_type).c_str());
         return AES_PARAM_TYPE_ERROR;
     }
 
@@ -42,30 +39,26 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv,
 
     int key_len = EVP_CIPHER_key_length(cipher);
     if (key_len != int(key.length())) {
-        PRINTF_ERROR("key length %lu not equal EVP_CIPHER_key_length %d",
-                     key.length(), key_len);
+        PRINTF_ERROR("key length %lu not equal EVP_CIPHER_key_length %d", key.length(), key_len);
         return AES_KEY_LENGTH_ERROR;
     }
     int iv_len = EVP_CIPHER_iv_length(cipher);
     if (iv_len != int(strlen((const char*)iv))) {
-        PRINTF_ERROR("iv length %lu not equal EVP_CIPHER_iv_length %d",
-                     strlen((const char*)iv), iv_len);
+        PRINTF_ERROR("iv length %lu not equal EVP_CIPHER_iv_length %d", strlen((const char*)iv), iv_len);
         return AES_IV_LENGTH_ERROR;
     }
 
     unsigned char outbuf[msg.size() + EVP_CIPHER_block_size(cipher) + 1024];
     int outlen, tmplen;
 
-    int rc = EVP_EncryptInit_ex(ctx, cipher, nullptr,
-                                (const unsigned char*)key.c_str(), iv);
+    int rc = EVP_EncryptInit_ex(ctx, cipher, nullptr, (const unsigned char*)key.c_str(), iv);
     if (rc != 1) {
         SET_SSL_ERROR();
         EVP_CIPHER_CTX_free(ctx);
         return AES_CIPHER_INIT_ERROR;
     }
 
-    rc = EVP_EncryptUpdate(ctx, outbuf, &outlen, (unsigned char*)msg.c_str(),
-                           msg.length());
+    rc = EVP_EncryptUpdate(ctx, outbuf, &outlen, (unsigned char*)msg.c_str(), msg.length());
     if (rc != 1) {
         SET_SSL_ERROR();
         EVP_CIPHER_CTX_free(ctx);
@@ -97,8 +90,7 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv,
     return 0;
 }
 
-int aes_cbc_decrypt(const std::string& key, unsigned char* iv,
-                    const std::string& encrypt_msg, int bit_type, int sign_type,
+int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string& encrypt_msg, int bit_type, int sign_type,
                     std::string& decrypt_msg) {
     ERR_load_crypto_strings();
 
@@ -108,8 +100,7 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv,
     }
 
     if (sign_type < AES_SIGN_CODE_BASE64 || sign_type > AES_SIGN_CODE_HEX) {
-        PRINTF_ERROR("invalid sign type: %s",
-                     std::to_string(sign_type).c_str());
+        PRINTF_ERROR("invalid sign type: %s", std::to_string(sign_type).c_str());
         return AES_PARAM_TYPE_ERROR;
     }
 
@@ -137,32 +128,26 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv,
 
     int key_len = EVP_CIPHER_key_length(cipher);
     if (key_len != int(key.length())) {
-        PRINTF_ERROR("key length %lu not equal EVP_CIPHER_key_length %d",
-                     key.length(), key_len);
+        PRINTF_ERROR("key length %lu not equal EVP_CIPHER_key_length %d", key.length(), key_len);
         return AES_KEY_LENGTH_ERROR;
     }
     int iv_len = EVP_CIPHER_iv_length(cipher);
     if (iv_len != int(strlen((const char*)iv))) {
-        PRINTF_ERROR("iv length %lu not equal EVP_CIPHER_iv_length %d",
-                     strlen((const char*)iv), iv_len);
+        PRINTF_ERROR("iv length %lu not equal EVP_CIPHER_iv_length %d", strlen((const char*)iv), iv_len);
         return AES_IV_LENGTH_ERROR;
     }
 
-    unsigned char outbuf
-        [decode_encrypt_msg.size() + EVP_CIPHER_block_size(cipher) + 1024];
+    unsigned char outbuf[decode_encrypt_msg.size() + EVP_CIPHER_block_size(cipher) + 1024];
     int outlen, tmplen;
 
-    int rc = EVP_DecryptInit_ex(ctx, cipher, nullptr,
-                                (const unsigned char*)key.c_str(), iv);
+    int rc = EVP_DecryptInit_ex(ctx, cipher, nullptr, (const unsigned char*)key.c_str(), iv);
     if (rc != 1) {
         SET_SSL_ERROR();
         EVP_CIPHER_CTX_free(ctx);
         return AES_CIPHER_INIT_ERROR;
     }
 
-    rc = EVP_DecryptUpdate(ctx, outbuf, &outlen,
-                           (const unsigned char*)decode_encrypt_msg.c_str(),
-                           decode_encrypt_msg.length());
+    rc = EVP_DecryptUpdate(ctx, outbuf, &outlen, (const unsigned char*)decode_encrypt_msg.c_str(), decode_encrypt_msg.length());
     if (rc != 1) {
         SET_SSL_ERROR();
         EVP_CIPHER_CTX_free(ctx);

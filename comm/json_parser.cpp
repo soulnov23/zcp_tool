@@ -1,8 +1,8 @@
 #include "json_parser.h"
 #include "printf_utils.h"
+#include "stringbuffer.h"
 #include "utils.h"
 #include "writer.h"
-#include "stringbuffer.h"
 
 int json_to_map(map<string, string>& record, string& data) {
     Document content_json_doc;
@@ -11,8 +11,7 @@ int json_to_map(map<string, string>& record, string& data) {
         PRINTF_ERROR("json error [%s]", data.c_str());
         return -1;
     }
-    for (auto it = content_json_doc.MemberBegin();
-         it != content_json_doc.MemberEnd(); it++) {
+    for (auto it = content_json_doc.MemberBegin(); it != content_json_doc.MemberEnd(); it++) {
         if (it->value.IsInt()) {
             record[it->name.GetString()] = to_string(it->value.GetInt());
         } else if (it->value.IsInt64()) {
@@ -47,8 +46,7 @@ void map_to_json(string& data, const map<string, string>& record) {
     auto& allocator = document.GetAllocator();
     // 右值引用减少内存拷贝
     for (auto && [ first, second ] : record) {
-        document.AddMember(StringRef(first.c_str()), StringRef(second.c_str()),
-                           allocator);
+        document.AddMember(StringRef(first.c_str()), StringRef(second.c_str()), allocator);
     }
     StringBuffer buffer;
     Writer<StringBuffer> writer(buffer);
@@ -68,8 +66,7 @@ int string_to_json(Document& doc, const string& data) {
 int get_object(Value& rapid_value, const char* member_name, Value*& value) {
     Value::MemberIterator member = rapid_value.FindMember(member_name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsObject())) {
-        string ret_info =
-            string(member_name) + " is not in json or not int format";
+        string ret_info = string(member_name) + " is not in json or not int format";
         PRINTF_ERROR("%s", ret_info.c_str());
         return -1;
     }
@@ -80,8 +77,7 @@ int get_object(Value& rapid_value, const char* member_name, Value*& value) {
 int get_array(Value& rapid_value, const char* member_name, Value*& value) {
     Value::MemberIterator member = rapid_value.FindMember(member_name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsArray())) {
-        string ret_info =
-            string(member_name) + " is not in json or not int format";
+        string ret_info = string(member_name) + " is not in json or not int format";
         PRINTF_ERROR("%s", ret_info.c_str());
         return -1;
     }
@@ -92,8 +88,7 @@ int get_array(Value& rapid_value, const char* member_name, Value*& value) {
 int get_string(Value& rapid_value, const char* member_name, string& value) {
     Value::MemberIterator member = rapid_value.FindMember(member_name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsString())) {
-        string ret_info =
-            string(member_name) + " is not in json or not int format";
+        string ret_info = string(member_name) + " is not in json or not int format";
         PRINTF_ERROR("%s", ret_info.c_str());
         return -1;
     }
@@ -104,8 +99,7 @@ int get_string(Value& rapid_value, const char* member_name, string& value) {
 int get_int64(Value& rapid_value, const char* member_name, string& value) {
     Value::MemberIterator member = rapid_value.FindMember(member_name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsInt64())) {
-        string ret_info =
-            string(member_name) + " is not in json or not int format";
+        string ret_info = string(member_name) + " is not in json or not int format";
         PRINTF_ERROR("%s", ret_info.c_str());
         return -1;
     }
@@ -116,8 +110,7 @@ int get_int64(Value& rapid_value, const char* member_name, string& value) {
 int get_uint64(Value& rapid_value, const char* member_name, string& value) {
     Value::MemberIterator member = rapid_value.FindMember(member_name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsUint64())) {
-        string ret_info =
-            string(member_name) + " is not in json or not int format";
+        string ret_info = string(member_name) + " is not in json or not int format";
         PRINTF_ERROR("%s", ret_info.c_str());
         return -1;
     }
@@ -128,8 +121,7 @@ int get_uint64(Value& rapid_value, const char* member_name, string& value) {
 int get_double(Value& rapid_value, const char* member_name, string& value) {
     Value::MemberIterator member = rapid_value.FindMember(member_name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsDouble())) {
-        string ret_info =
-            string(member_name) + " is not in json or not int format";
+        string ret_info = string(member_name) + " is not in json or not int format";
         PRINTF_ERROR("%s", ret_info.c_str());
         return -1;
     }
@@ -140,8 +132,7 @@ int get_double(Value& rapid_value, const char* member_name, string& value) {
 int get_bool(Value& rapid_value, const char* member_name, bool& value) {
     Value::MemberIterator member = rapid_value.FindMember(member_name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsBool())) {
-        string ret_info =
-            string(member_name) + " is not in json or not int format";
+        string ret_info = string(member_name) + " is not in json or not int format";
         PRINTF_ERROR("%s", ret_info.c_str());
         return -1;
     }

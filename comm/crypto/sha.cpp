@@ -1,12 +1,12 @@
 #include "sha.h"
-#include "coder.h"
+#include <string.h>
 #include "base64.h"
-#include "openssl/rsa.h"
-#include "openssl/sha.h"
+#include "coder.h"
+#include "openssl/bio.h"
 #include "openssl/hmac.h"
 #include "openssl/pem.h"
-#include "openssl/bio.h"
-#include <string.h>
+#include "openssl/rsa.h"
+#include "openssl/sha.h"
 
 int sha256(const std::string& data_in, std::string& data_out) {
     char buf[3];
@@ -26,14 +26,13 @@ int sha256(const std::string& data_in, std::string& data_out) {
 }
 
 std::string hmac_sha1_base64(const std::string& key, const std::string& data) {
-
     unsigned char* digest;
     unsigned int len = 0;
 
     // You may use other hash engines. e.g EVP_md5(), EVP_sha224, EVP_sha512,
     // etc
-    digest = HMAC(EVP_sha1(), (unsigned char*)key.c_str(), key.length(),
-                  (unsigned char*)data.c_str(), data.length(), nullptr, &len);
+    digest =
+        HMAC(EVP_sha1(), (unsigned char*)key.c_str(), key.length(), (unsigned char*)data.c_str(), data.length(), nullptr, &len);
 
     // Be careful of the length of string with the choosen hash engine. SHA1
     // produces a 20-byte hash value which rendered as 40 characters.
@@ -48,14 +47,13 @@ std::string hmac_sha1_base64(const std::string& key, const std::string& data) {
 }
 
 std::string hmac_sha256_hex(const std::string& key, const std::string& data) {
-
     unsigned char* digest;
     unsigned int len = 0;
 
     // You may use other hash engines. e.g EVP_md5(), EVP_sha224, EVP_sha512,
     // etc
-    digest = HMAC(EVP_sha256(), (unsigned char*)key.c_str(), key.length(),
-                  (unsigned char*)data.c_str(), data.length(), nullptr, &len);
+    digest =
+        HMAC(EVP_sha256(), (unsigned char*)key.c_str(), key.length(), (unsigned char*)data.c_str(), data.length(), nullptr, &len);
 
     // Be careful of the length of string with the choosen hash engine. SHA1
     // produces a 20-byte hash value which rendered as 40 characters.
@@ -74,16 +72,14 @@ std::string hmac_sha256_hex(const std::string& key, const std::string& data) {
     return str_out;
 }
 
-std::string hmac_sha256_base64(const std::string& key,
-                               const std::string& data) {
-
+std::string hmac_sha256_base64(const std::string& key, const std::string& data) {
     unsigned char* digest;
     unsigned int len = 0;
 
     // You may use other hash engines. e.g EVP_md5(), EVP_sha224, EVP_sha512,
     // etc
-    digest = HMAC(EVP_sha256(), (unsigned char*)key.c_str(), key.length(),
-                  (unsigned char*)data.c_str(), data.length(), nullptr, &len);
+    digest =
+        HMAC(EVP_sha256(), (unsigned char*)key.c_str(), key.length(), (unsigned char*)data.c_str(), data.length(), nullptr, &len);
 
     // Be careful of the length of string with the choosen hash engine. SHA1
     // produces a 20-byte hash value which rendered as 40 characters.
@@ -98,14 +94,12 @@ std::string hmac_sha256_base64(const std::string& key,
 }
 
 std::string hmac_sha1_hex(const std::string& key, const std::string& data) {
-
     unsigned char* digest;
 
     // You may use other hash engines. e.g EVP_md5(), EVP_sha224, EVP_sha512,
     // etc
-    digest =
-        HMAC(EVP_sha1(), (unsigned char*)key.c_str(), key.length(),
-             (unsigned char*)data.c_str(), data.length(), nullptr, nullptr);
+    digest = HMAC(EVP_sha1(), (unsigned char*)key.c_str(), key.length(), (unsigned char*)data.c_str(), data.length(), nullptr,
+                  nullptr);
 
     // Be careful of the length of string with the choosen hash engine. SHA1
     // produces a 20-byte hash value which rendered as 40 characters.
@@ -126,8 +120,7 @@ std::string hmac_md5_hex(const std::string& key, const std::string& data) {
     // You may use other hash engines. e.g EVP_md5(), EVP_sha224, EVP_sha512,
     // etc
     digest =
-        HMAC(EVP_md5(), (unsigned char*)key.c_str(), key.length(),
-             (unsigned char*)data.c_str(), data.length(), nullptr, nullptr);
+        HMAC(EVP_md5(), (unsigned char*)key.c_str(), key.length(), (unsigned char*)data.c_str(), data.length(), nullptr, nullptr);
 
     // Be careful of the length of string with the choosen hash engine. SHA1
     // produces a 20-byte hash value which rendered as 40 characters.
@@ -144,8 +137,7 @@ std::string hmac_md5_hex(const std::string& key, const std::string& data) {
 
 std::string sha1_hex(const std::string& data) {
     // SHA1 res is placed in a static array, it's not thread safe
-    unsigned char* digest =
-        SHA1((unsigned char*)data.c_str(), data.length(), nullptr);
+    unsigned char* digest = SHA1((unsigned char*)data.c_str(), data.length(), nullptr);
 
     std::string str_out;
     for (unsigned int i = 0; i < SHA_DIGEST_LENGTH; ++i) {
@@ -159,8 +151,7 @@ std::string sha1_hex(const std::string& data) {
 
 std::string sha256_hex(const std::string& data) {
     // SHA256 res is placed in a static array, it's not thread safe
-    unsigned char* digest =
-        SHA256((unsigned char*)data.c_str(), data.length(), nullptr);
+    unsigned char* digest = SHA256((unsigned char*)data.c_str(), data.length(), nullptr);
 
     std::string str_out;
     for (unsigned int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
@@ -182,29 +173,24 @@ std::string sha256_rsa_base64(const std::string& key, const std::string& data) {
 
     //从字符串读取RSA私钥
     BIO* bio = nullptr;
-    if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()),
-                               format_public_key.length())) == nullptr) {
+    if ((bio = BIO_new_mem_buf((void*)(format_public_key.c_str()), format_public_key.length())) == nullptr) {
         return "";
     }
 
     //从bio结构中得到RSA结构
     RSA* rsa = nullptr;
-    if ((rsa = PEM_read_bio_RSAPrivateKey(bio, nullptr, nullptr, nullptr)) ==
-        nullptr) {
+    if ((rsa = PEM_read_bio_RSAPrivateKey(bio, nullptr, nullptr, nullptr)) == nullptr) {
         BIO_free(bio);
         return "";
     }
 
     // SHA256 res is placed in a static array, it's not thread safe
-    unsigned char* digest =
-        SHA256((unsigned char*)data.c_str(), data.length(), nullptr);
+    unsigned char* digest = SHA256((unsigned char*)data.c_str(), data.length(), nullptr);
 
     unsigned int siglen = RSA_size(rsa);
-    unsigned char* sigret =
-        (unsigned char*)malloc(sizeof(unsigned char) * siglen);
+    unsigned char* sigret = (unsigned char*)malloc(sizeof(unsigned char) * siglen);
     memset(sigret, 0x0, sizeof(unsigned char) * siglen);
-    if (RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH, sigret, &siglen,
-                 rsa) != 1) {
+    if (RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH, sigret, &siglen, rsa) != 1) {
         BIO_free(bio);
         RSA_free(rsa);
         free(sigret);

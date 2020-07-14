@@ -1,11 +1,13 @@
 #include "server.h"
-#include <sys/epoll.h>
-#include <sys/socket.h>
+
+#include <arpa/inet.h>
 #include <fcntl.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+#include <sys/epoll.h>
+#include <sys/socket.h>
 #include <sys/wait.h>
+#include <unistd.h>
+
 #include "printf_utils.h"
 
 #define SIZE_1K (1024)
@@ -52,19 +54,21 @@ void server::signal_handle_func(int sig_no, siginfo_t* sig_info, void* data) {
             } else {
                 //异常退出
                 int return_result = WEXITSTATUS(status);
-                PRINTF_DEBUG("pid:%d abnormal exit return %d", pid,
-                             return_result);
+                PRINTF_DEBUG("pid:%d abnormal exit return %d", pid, return_result);
             }
         }
     } else if (sig_no == SIGINT) {
         PRINTF_DEBUG("recv signal:SIGINT");
-        _exit(0);;
+        _exit(0);
+        ;
     } else if (sig_no == SIGTERM) {
         PRINTF_DEBUG("recv signal:SIGTERM");
-        _exit(0);;
+        _exit(0);
+        ;
     } else if (sig_no == SIGQUIT) {
         PRINTF_DEBUG("recv signal:SIGQUIT");
-        _exit(0);;
+        _exit(0);
+        ;
     } else if (sig_no == SIGUSR1) {
         PRINTF_DEBUG("recv signal:SIGUSR1");
     } else if (sig_no == SIGIO) {
@@ -102,16 +106,14 @@ void server::stop() {
     }
     if (m_listen_fd != -1) {
         if (epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_listen_fd, nullptr) == -1) {
-            PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd,
-                         m_listen_fd);
+            PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, m_listen_fd);
         }
         close(m_listen_fd);
         m_listen_fd = -1;
     }
     if (m_client_fd != -1) {
         if (epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_client_fd, nullptr) == -1) {
-            PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd,
-                         m_client_fd);
+            PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, m_client_fd);
         }
         close(m_client_fd);
         m_client_fd = -1;
@@ -128,8 +130,7 @@ int server::init_pid_file() {
     pid_t pid = getpid();
     string str_pid = std::to_string(pid);
     int ret = -1;
-    while ((ret = write(fd, str_pid.data(), str_pid.size()) == -1) &&
-           errno == EINTR)
+    while ((ret = write(fd, str_pid.data(), str_pid.size()) == -1) && errno == EINTR)
         ;
     if (ret == -1) {
         PRINTF_ERROR("write pid file failed");
@@ -143,8 +144,7 @@ int server::init_pid_file() {
 }
 
 int server::init_signal() {
-    static const int sigs[] = {SIGINT,  SIGTERM, SIGQUIT, SIGCHLD,
-                               SIGUSR1, SIGIO,   SIGPIPE};
+    static const int sigs[] = {SIGINT, SIGTERM, SIGQUIT, SIGCHLD, SIGUSR1, SIGIO, SIGPIPE};
     const int* begin = std::begin(sigs);
     const int* end = std::end(sigs);
     for (; begin != end; begin++) {
@@ -248,14 +248,11 @@ int server::do_listen() {
     event.data.fd = m_listen_fd;
     event.events = EPOLLIN | EPOLLET;
     if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_listen_fd, &event) == -1) {
-        PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd,
-                     m_listen_fd);
+        PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, m_listen_fd);
         goto error;
     }
-    if (bind(m_listen_fd, (struct sockaddr*)&server_addr,
-                   sizeof(server_addr)) == -1) {
-        PRINTF_ERROR("bind(%d, %s) error", m_listen_fd,
-                     inet_ntoa(server_addr.sin_addr));
+    if (bind(m_listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
+        PRINTF_ERROR("bind(%d, %s) error", m_listen_fd, inet_ntoa(server_addr.sin_addr));
         goto error;
     }
     if (listen(m_listen_fd, 128) == -1) {
@@ -310,8 +307,7 @@ void server::do_accept() {
             }
             break;
         }
-        PRINTF_DEBUG("(TCP)New accept ip:%s socket:%d pid:%d",
-                     inet_ntoa(addr.sin_addr), fd, getpid());
+        PRINTF_DEBUG("(TCP)New accept ip:%s socket:%d pid:%d", inet_ntoa(addr.sin_addr), fd, getpid());
         if (-1 == make_socket_nonblocking(fd)) {
             PRINTF_ERROR("make_socket_nonblocking(%d) error", fd);
         }
@@ -325,11 +321,9 @@ void server::do_accept() {
         event.data.fd = fd;
         event.events = EPOLLIN | EPOLLET;
         if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, fd, &event)) {
-            PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd,
-                         fd);
+            PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, fd);
         }
-        auto conn =
-            make_shared<connector>(fd, inet_ntoa(addr.sin_addr), nullptr);
+        auto conn = make_shared<connector>(fd, inet_ntoa(addr.sin_addr), nullptr);
         m_fd_conn.insert(make_pair(fd, conn));
     }
 }
@@ -354,22 +348,18 @@ void server::do_recv(int fd) {
             } else if (errno == EINTR) {
                 continue;
             } else {
-                PRINTF_ERROR("fd:%d ip:%s abnormal disconnection", fd,
-                             conn.get()->m_ip);
+                PRINTF_ERROR("fd:%d ip:%s abnormal disconnection", fd, conn.get()->m_ip);
                 if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                                 m_epoll_fd, fd);
+                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, fd);
                 }
                 m_fd_conn.erase(it);
                 break;
             }
         }
         if (ret == 0) {
-            PRINTF_DEBUG("fd:%d ip:%s normal disconnection", fd,
-                         conn.get()->m_ip);
+            PRINTF_DEBUG("fd:%d ip:%s normal disconnection", fd, conn.get()->m_ip);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                             m_epoll_fd, fd);
+                PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, fd);
             }
             m_fd_conn.erase(it);
             break;
@@ -396,11 +386,9 @@ void server::do_send(int fd, const char* data, int len) {
             } else if (errno == EINTR) {
                 continue;
             } else {
-                PRINTF_ERROR("fd:%d ip:%s abnormal disconnection", fd,
-                             conn.get()->m_ip);
+                PRINTF_ERROR("fd:%d ip:%s abnormal disconnection", fd, conn.get()->m_ip);
                 if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error",
-                                 m_epoll_fd, fd);
+                    PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_DEL, %d) error", m_epoll_fd, fd);
                 }
                 m_fd_conn.erase(it);
                 break;

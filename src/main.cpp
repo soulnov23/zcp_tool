@@ -1,7 +1,7 @@
-#include "printf_utils.h"
-#include "xml_parser.h"
-#include "server.h"
 #include <unistd.h>
+#include "printf_utils.h"
+#include "server.h"
+#include "xml_parser.h"
 
 map<string, string> config;
 
@@ -38,11 +38,10 @@ int main(int argc, char* argv[]) {
         PRINTF_ERROR("xml_to_map error");
         return -1;
     }
-    PRINTF_DEBUG("ip:%s port:%s count:%s", config["ip"].c_str(),
-                 config["port"].c_str(), config["count"].c_str());
+    PRINTF_DEBUG("ip:%s port:%s count:%s", config["ip"].c_str(), config["port"].c_str(), config["count"].c_str());
 
     int count = strtol(config["count"].c_str(), nullptr, 10);
-    
+
     for (int i = 0; i < count; i++) {
         if (fork_child() != 0) {
             PRINTF_ERROR("fork_child error");

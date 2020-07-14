@@ -64,8 +64,7 @@ int buff_to_hex_string(const std::string& str_in, std::string& str_out);
  * \param [out]	str_out	The out.
  * \return	0表示成功,其余失败
 */
-int decode_hex_string_and_escape(const std::string& str_in,
-                                 std::string& str_out);
+int decode_hex_string_and_escape(const std::string& str_in, std::string& str_out);
 
 /*!
  * \fn	int url_encode(const std::string& str_in, std::string& str_out);

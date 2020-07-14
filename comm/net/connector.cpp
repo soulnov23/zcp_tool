@@ -1,6 +1,6 @@
 #include "connector.h"
-#include <string.h>
 #include <assert.h>
+#include <string.h>
 #include <unistd.h>
 using namespace std;
 

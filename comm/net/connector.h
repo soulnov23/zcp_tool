@@ -1,20 +1,20 @@
 #ifndef __CONNECTOR_H__
 #define __CONNECTOR_H__
 
-#include "buffer.h"
-#include "arg.h"
 #include <memory>
+#include "arg.h"
+#include "buffer.h"
 using namespace std;
 
 class connector {
-   public:
+public:
     connector(int fd, char* ip, arg* data);
     ~connector();
 
-   private:
+private:
     void free();
 
-   public:
+public:
     int m_fd;
     shared_ptr<buffer> m_buffer;
     char m_ip[20];

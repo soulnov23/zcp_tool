@@ -1,11 +1,11 @@
 #ifndef __JSON_PARSER_H__
 #define __JSON_PARSER_H__
 
-#include <string>
 #include <map>
+#include <string>
 using namespace std;
-#include "rapidjson.h"
 #include "document.h"
+#include "rapidjson.h"
 using namespace rapidjson;
 
 int json_to_map(map<string, string>& record, string& data);

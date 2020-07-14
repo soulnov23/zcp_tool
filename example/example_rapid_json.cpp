@@ -1,8 +1,8 @@
-#include "printf_utils.h"
 #include "file_utils.h"
 #include "json_parser.h"
+#include "printf_utils.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     /*
     Document document;
     document.SetArray();

@@ -2,7 +2,7 @@
 #define __ARG_H__
 
 class arg {
-   public:
+public:
     arg() {}
     virtual ~arg() {}
 

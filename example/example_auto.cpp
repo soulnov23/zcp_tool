@@ -1,8 +1,8 @@
-#include "printf_utils.h"
-#include <typeinfo>
 #include <iostream>
-#include <vector>
 #include <map>
+#include <typeinfo>
+#include <vector>
+#include "printf_utils.h"
 using namespace std;
 
 template <typename T>
