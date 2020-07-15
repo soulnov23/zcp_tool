@@ -50,6 +50,7 @@
     ],
     "C_Cpp.clang_format_fallbackStyle": "Google",
     "C_Cpp.clang_format_style": "{BasedOnStyle: Google,PointerAlignment: Left,DerivePointerAlignment: false,IncludeBlocks: Merge,AccessModifierOffset: -4,AlignConsecutiveAssignments: true,AlignConsecutiveMacros: true,ColumnLimit: 130,UseTab: Never,IndentWidth: 4,TabWidth: 4}",
+    "C_Cpp.clang_format_path": "/root/.vscode-server/extensions/ms-vscode.cpptools-0.28.3/LLVM/bin/clang-format",
 
     //files选项
     "files.autoGuessEncoding": true,
