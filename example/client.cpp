@@ -16,12 +16,12 @@ shared_ptr<client> client::g_client = make_shared<client>();
 
 client::client() {
     m_epoll_fd = -1;
-    m_tcp_fd = -1;
+    m_tcp_fd   = -1;
     m_tcp_conn = nullptr;
-    m_udp_fd = -1;
-    m_unix_fd = -1;
-    m_raw_fd = -1;
-    m_flag = true;
+    m_udp_fd   = -1;
+    m_unix_fd  = -1;
+    m_raw_fd   = -1;
+    m_flag     = true;
 }
 
 client::~client() { stop(); }
@@ -97,12 +97,12 @@ void client::stop() {
 
 int client::tcp_socket_start() {
     struct sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(TCP_LISTEN_PORT);
+    server_addr.sin_family      = AF_INET;
+    server_addr.sin_port        = htons(TCP_LISTEN_PORT);
     server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
     PRINTF_DEBUG("server ip:%s", SERVER_IP);
     m_tcp_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    int ret = connect_timeout(m_tcp_fd, (struct sockaddr *)&server_addr, sizeof(server_addr), 3, 0);
+    int ret  = connect_timeout(m_tcp_fd, (struct sockaddr*)&server_addr, sizeof(server_addr), 3, 0);
     if (ret == -1) {
         PRINTF_ERROR("connect error");
         close(m_tcp_fd);
@@ -111,7 +111,7 @@ int client::tcp_socket_start() {
     }
     struct epoll_event event;
     event.data.fd = m_tcp_fd;
-    event.events = EPOLLIN | EPOLLET;
+    event.events  = EPOLLIN | EPOLLET;
     if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_tcp_fd, &event)) {
         PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, m_tcp_fd);
         return -1;
@@ -120,7 +120,7 @@ int client::tcp_socket_start() {
     return 0;
 }
 
-int client::connect_timeout(int fd, const struct sockaddr *addr, socklen_t addrlen, int nsec, int usec) {
+int client::connect_timeout(int fd, const struct sockaddr* addr, socklen_t addrlen, int nsec, int usec) {
     if (-1 == make_socket_nonblocking(fd)) {
         PRINTF_ERROR("make_socket_nonblocking(%d) error", fd);
         return -1;
@@ -136,7 +136,7 @@ int client::connect_timeout(int fd, const struct sockaddr *addr, socklen_t addrl
         return -1;
     }
     struct timeval timeout;
-    timeout.tv_sec = nsec;
+    timeout.tv_sec  = nsec;
     timeout.tv_usec = usec;
     fd_set write_set;
     FD_ZERO(&write_set);
@@ -152,7 +152,7 @@ int client::connect_timeout(int fd, const struct sockaddr *addr, socklen_t addrl
     }
     // count>0的情况
     if (FD_ISSET(fd, &write_set)) {
-        int err = 0;
+        int err       = 0;
         socklen_t len = sizeof(err);
         if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &err, &len) == -1) {
             PRINTF_ERROR("getsockopt error");
@@ -171,12 +171,12 @@ int client::connect_timeout(int fd, const struct sockaddr *addr, socklen_t addrl
 
 int client::udp_socket_start() {
     struct sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(UDP_LISTEN_PORT);
+    server_addr.sin_family      = AF_INET;
+    server_addr.sin_port        = htons(UDP_LISTEN_PORT);
     server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
-    m_udp_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    m_udp_fd                    = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     // TCP套接字调用connect会引发三次握手，而UDP套接字则不会引发三次握手，只是检查是否存在错误，然后立即返回
-    int ret = connect(m_udp_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+    int ret = connect(m_udp_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
     if (-1 == ret) {
         PRINTF_DEBUG("connect ip:%s port:%d failure", SERVER_IP, TCP_LISTEN_PORT);
     }
@@ -194,7 +194,7 @@ int client::udp_socket_start() {
     }
     struct epoll_event event;
     event.data.fd = m_udp_fd;
-    event.events = EPOLLIN | EPOLLET;
+    event.events  = EPOLLIN | EPOLLET;
     if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_udp_fd, &event)) {
         PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, m_udp_fd);
         return -1;
@@ -227,7 +227,7 @@ void client::event_loop() {
 void client::do_tcp_recv() {
     while (true) {
         char buf[1024] = {0};
-        ssize_t ret = recv(m_tcp_fd, buf, 1024, 0);
+        ssize_t ret    = recv(m_tcp_fd, buf, 1024, 0);
         if (ret > 0) {
             m_tcp_conn->m_buffer->append(buf, ret);
             continue;
@@ -254,7 +254,7 @@ void client::do_tcp_recv() {
     }
 }
 
-void client::do_tcp_send(int fd, const char *data, int len) {
+void client::do_tcp_send(int fd, const char* data, int len) {
     int total_send = 0;
     while (total_send < len) {
         int ret = send(fd, data + total_send, len - total_send, 0);
@@ -289,7 +289,7 @@ void client::do_udp_recvfrom() {
         char buf[UDP_RCV_BUF] = {0};
         struct sockaddr_in addr;
         socklen_t addr_len = sizeof(addr);
-        ssize_t ret = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr *)&addr, &addr_len);
+        ssize_t ret        = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr*)&addr, &addr_len);
         if (ret > 0) {
             PRINTF_DEBUG("fd:%d recvfrom:%s data:%s", m_udp_fd, inet_ntoa(addr.sin_addr), buf);
             continue;
@@ -320,11 +320,11 @@ void client::do_udp_recvfrom() {
     }
 }
 
-void client::do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in addr) {
-    int total_send = 0;
+void client::do_udp_sendto(int fd, const char* data, int len, struct sockaddr_in addr) {
+    int total_send     = 0;
     socklen_t addr_len = sizeof(addr);
     while (total_send < len) {
-        int ret = sendto(fd, data + total_send, len - total_send, 0, (struct sockaddr *)&addr, addr_len);
+        int ret = sendto(fd, data + total_send, len - total_send, 0, (struct sockaddr*)&addr, addr_len);
         if (ret > 0) {
             total_send += ret;
             continue;
@@ -355,7 +355,7 @@ void client::do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     client test;
     test.start();
     return 0;

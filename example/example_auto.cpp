@@ -6,14 +6,14 @@
 using namespace std;
 
 template <typename T>
-void print_vector(T &t) {
+void print_vector(T& t) {
     for (auto it = t.begin(); it < t.end(); it++) {
         cout << *it << endl;
     }
 }
 
 template <typename T>
-void print_map(T &t) {
+void print_map(T& t) {
     for (auto it = t.begin(); it != t.end(); it++) {
         cout << it->first << ":" << it->second << endl;
     }
@@ -34,10 +34,10 @@ void PRINTF_MAP(map<T1, T2> &record, T3 &it) {
 }
 */
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     int i;
-    decltype(i) j = 10;
-    const type_info &info = typeid(j);
+    decltype(i) j         = 10;
+    const type_info& info = typeid(j);
     cout << info.name() << endl;
 
     vector<string> vec;

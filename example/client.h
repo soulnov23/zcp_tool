@@ -25,11 +25,11 @@ private:
 
 private:
     void do_tcp_recv();
-    void do_tcp_send(int fd, const char *data, int len);
+    void do_tcp_send(int fd, const char* data, int len);
     void do_udp_recvfrom();
-    void do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in addr);
+    void do_udp_sendto(int fd, const char* data, int len, struct sockaddr_in addr);
     int tcp_socket_start();
-    int connect_timeout(int fd, const struct sockaddr *addr, socklen_t addrlen, int nsec, int usec);
+    int connect_timeout(int fd, const struct sockaddr* addr, socklen_t addrlen, int nsec, int usec);
     int udp_socket_start();
     int unix_socket_start();
     int raw_socket_start();

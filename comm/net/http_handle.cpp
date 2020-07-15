@@ -16,7 +16,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::vector<std::str
               // const std::string& strDnsList,
               // const std::string& strIpv4,
               bool https_verify) {
-    int ret = 0;
+    int ret         = 0;
     char cerr[1024] = {0};
 
     /* comment, gerryyang
@@ -110,10 +110,8 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::vector<std::str
         PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
         strErrmsg = cerr;
         switch (res) {
-            case CURLE_URL_MALFORMAT:
-                ;
-            case CURLE_COULDNT_RESOLVE_HOST:
-                ;
+            case CURLE_URL_MALFORMAT:;
+            case CURLE_COULDNT_RESOLVE_HOST:;
             case CURLE_COULDNT_CONNECT:
                 iResult = -2;
                 break;
@@ -154,7 +152,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::string& strUser
               // const std::string& strDnsList,
               // const std::string& strIpv4,
               bool https_verify) {
-    int ret = 0;
+    int ret         = 0;
     char cerr[1024] = {0};
 
     /* comment, gerryyang
@@ -251,10 +249,8 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::string& strUser
         PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
         strErrmsg = cerr;
         switch (res) {
-            case CURLE_URL_MALFORMAT:
-                ;
-            case CURLE_COULDNT_RESOLVE_HOST:
-                ;
+            case CURLE_URL_MALFORMAT:;
+            case CURLE_COULDNT_RESOLVE_HOST:;
             case CURLE_COULDNT_CONNECT:
                 iResult = -2;
                 break;

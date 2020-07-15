@@ -5,7 +5,7 @@
 using namespace std;
 
 connector::connector(int fd, char* ip, arg* data) {
-    m_fd = fd;
+    m_fd     = fd;
     m_buffer = make_shared<buffer>();
     assert(m_buffer != nullptr);
     strcpy(m_ip, ip);

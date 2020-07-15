@@ -5,11 +5,8 @@
 #include "openssl/evp.h"
 #include "printf_utils.h"
 
-#define SET_SSL_ERROR()                                                                           \
-    {                                                                                             \
-        PRINTF_ERROR("errno:%lu %s", ERR_get_error(), ERR_error_string(ERR_get_error(), nullptr)) \
-    \
-}
+#define SET_SSL_ERROR() \
+    { PRINTF_ERROR("errno:%lu %s", ERR_get_error(), ERR_error_string(ERR_get_error(), nullptr)) }
 
 int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string& msg, int bit_type, int sign_type,
                     std::string& encrypt_msg) {

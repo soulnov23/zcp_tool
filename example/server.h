@@ -25,9 +25,9 @@ private:
 private:
     void do_tcp_accept();
     void do_tcp_recv(int fd);
-    void do_tcp_send(int fd, const char *data, int len);
+    void do_tcp_send(int fd, const char* data, int len);
     void do_udp_recvfrom();
-    void do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in addr);
+    void do_udp_sendto(int fd, const char* data, int len, struct sockaddr_in addr);
     int tcp_socket_start();
     int udp_socket_start();
     int unix_socket_start();

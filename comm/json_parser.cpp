@@ -45,7 +45,7 @@ void map_to_json(string& data, const map<string, string>& record) {
     document.SetObject();
     auto& allocator = document.GetAllocator();
     // 右值引用减少内存拷贝
-    for (auto && [ first, second ] : record) {
+    for (auto&& [first, second] : record) {
         document.AddMember(StringRef(first.c_str()), StringRef(second.c_str()), allocator);
     }
     StringBuffer buffer;

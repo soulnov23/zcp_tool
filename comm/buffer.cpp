@@ -8,7 +8,7 @@
 buffer::buffer() {
     m_buffer = (char*)malloc(BUFFER_DEFAULT_SIZE);
     assert(m_buffer != nullptr);
-    m_size = 0;
+    m_size     = 0;
     m_max_size = BUFFER_DEFAULT_SIZE;
     memset(m_buffer, 0, BUFFER_DEFAULT_SIZE);
 }
@@ -16,8 +16,8 @@ buffer::buffer() {
 buffer::~buffer() {
     if (m_buffer != nullptr) {
         free(m_buffer);
-        m_buffer = nullptr;
-        m_size = 0;
+        m_buffer   = nullptr;
+        m_size     = 0;
         m_max_size = BUFFER_DEFAULT_SIZE;
     }
 }

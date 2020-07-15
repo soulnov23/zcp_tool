@@ -4,7 +4,7 @@
 #define PACK_4 __attribute((aligned(4)))
 #define PACK_1 __attribute__((packed))
 
-#define MAGIC 0x20171226
+#define MAGIC   0x20171226
 #define VERSION 1
 struct ipc_hdr_t {
     uint32_t magic;
@@ -18,12 +18,11 @@ struct ipc_hdr_t {
 #define OFFSET(struct_type, member) ((size_t) & ((struct_type*)0)->member)
 // ptr为结构体struct_type成员member的指针，通过指针和member名字返回struct_type结构体指针
 #define container_of(ptr, struct_type, member)                       \
-    \
-({                                                                   \
+                                                                     \
+    ({                                                               \
         const typeof(((struct_type*)0)->member)* __mptr = (ptr);     \
         (struct_type*)((char*)__mptr - OFFSET(struct_type, member)); \
-    \
-})
+    })
 
 #define IPC_HEADER_SZ (OFFSET(struct ipc_hdr_t, data))
 

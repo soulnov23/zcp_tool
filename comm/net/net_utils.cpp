@@ -109,7 +109,7 @@ bool is_private_ip(const string& ip) {
 
 string net_int_ip2str(uint32_t ip) {
     struct sockaddr_in addr_in;
-    char buf[128] = {0};
+    char buf[128]           = {0};
     addr_in.sin_addr.s_addr = ip;
     if (inet_ntop(AF_INET, &addr_in.sin_addr, buf, sizeof(buf)) == nullptr) {
         PRINTF_ERROR("inet_ntop error");
@@ -221,7 +221,7 @@ bool get_local_ip(const char* eth_name, string& ip) {
     struct ifreq interface;
     strncpy(interface.ifr_ifrn.ifrn_name, eth_name, IFNAMSIZ);
     if (ioctl(fd, SIOCGIFADDR, (char*)&interface) == 0) {
-        ip = net_int_ip2str((((struct sockaddr_in*)(&(interface.ifr_ifru.ifru_addr)))->sin_addr.s_addr));
+        ip  = net_int_ip2str((((struct sockaddr_in*)(&(interface.ifr_ifru.ifru_addr)))->sin_addr.s_addr));
         ret = true;
     } else {
         PRINTF_ERROR();
@@ -260,7 +260,7 @@ bool get_local_mac(const char* eth_name, string& mac) {
 int set_signal_handle(int sig_no, void (*handle)(int, siginfo_t*, void*)) {
     struct sigaction sig;
     memset(&sig, 0, sizeof(struct sigaction));
-    sig.sa_flags = SA_SIGINFO;
+    sig.sa_flags     = SA_SIGINFO;
     sig.sa_sigaction = handle;
     if (sigaction(sig_no, &sig, nullptr) != 0) {
         PRINTF_ERROR();

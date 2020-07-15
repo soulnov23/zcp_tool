@@ -9,7 +9,7 @@
  * \param 		  	str_in 	The in.
  * \param [out]	str_out	The out.
  * \return	0表示成功,其余失败
-*/
+ */
 int upay_escape_string(const std::string& str_in, std::string& str_out);
 
 /*!
@@ -18,14 +18,14 @@ int upay_escape_string(const std::string& str_in, std::string& str_out);
  * \param 		  	str_in 	The in.
  * \param [out]	str_out	The out.
  * \return	0表示成功,其余失败
-*/
+ */
 int encode_hex_string(const std::string& str_in, std::string& str_out);
 /*!
  * \fn	int encode_hex_string(std::string& str_in_out);
  * \brief	Encode hexadecimal string.
  * \param [in,out]	str_in_out	The in out.
  * \return	0表示成功,其余失败
-*/
+ */
 int encode_hex_string(std::string& str_in_out);
 
 /*!
@@ -34,7 +34,7 @@ int encode_hex_string(std::string& str_in_out);
  * \param 		  	str_in 	The in.
  * \param [out]	str_out	The out.
  * \return	0表示成功,其余失败
-*/
+ */
 int decode_hex_string(const std::string& str_in, std::string& str_out);
 /*!
  * \fn	int decode_hex_string(std::string& str_in_out);
@@ -43,7 +43,7 @@ int decode_hex_string(const std::string& str_in, std::string& str_out);
  * 等同于原strdecode
  * \param [in,out]	str_in_out	The in out.
  * \return	0表示成功,其余失败
-*/
+ */
 int decode_hex_string(std::string& str_in_out);
 
 /*!
@@ -52,7 +52,7 @@ int decode_hex_string(std::string& str_in_out);
  * \param 		  	str_in 	The in.
  * \param [out]	str_out	The out.
  * \return	0表示成功,其余失败
-*/
+ */
 int buff_to_hex_string(const std::string& str_in, std::string& str_out);
 
 /*!
@@ -63,7 +63,7 @@ int buff_to_hex_string(const std::string& str_in, std::string& str_out);
  * \param 		  	str_in 	The in.
  * \param [out]	str_out	The out.
  * \return	0表示成功,其余失败
-*/
+ */
 int decode_hex_string_and_escape(const std::string& str_in, std::string& str_out);
 
 /*!
@@ -72,7 +72,7 @@ int decode_hex_string_and_escape(const std::string& str_in, std::string& str_out
  * \param 		  	str_in 	The in.
  * \param [out]	str_out	The out.
  * \return	0表示成功,其余失败
-*/
+ */
 int url_encode(const std::string& str_in, std::string& str_out);
 
 /*!
@@ -81,7 +81,7 @@ int url_encode(const std::string& str_in, std::string& str_out);
  * \param 		  	str_in 	The in.
  * \param [out]	str_out	The out.
  * \return	0表示成功,其余失败
-*/
+ */
 int url_decode(const std::string& str_in, std::string& str_out);
 
 #endif

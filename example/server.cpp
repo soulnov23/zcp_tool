@@ -12,12 +12,12 @@
 shared_ptr<server> server::g_server = make_shared<server>();
 
 server::server() {
-    m_epoll_fd = -1;
+    m_epoll_fd      = -1;
     m_tcp_listen_fd = -1;
-    m_udp_fd = -1;
-    m_unix_fd = -1;
-    m_raw_fd = -1;
-    m_flag = true;
+    m_udp_fd        = -1;
+    m_unix_fd       = -1;
+    m_raw_fd        = -1;
+    m_flag          = true;
 }
 
 server::~server() { stop(); }
@@ -105,8 +105,8 @@ void server::stop() {
 
 int server::tcp_socket_start() {
     struct sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(TCP_LISTEN_PORT);
+    server_addr.sin_family      = AF_INET;
+    server_addr.sin_port        = htons(TCP_LISTEN_PORT);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     // server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
     m_tcp_listen_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -116,7 +116,7 @@ int server::tcp_socket_start() {
     }
     struct epoll_event event;
     event.data.fd = m_tcp_listen_fd;
-    event.events = EPOLLIN | EPOLLET;
+    event.events  = EPOLLIN | EPOLLET;
     if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_tcp_listen_fd, &event)) {
         PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, m_tcp_listen_fd);
         return -1;
@@ -125,7 +125,7 @@ int server::tcp_socket_start() {
         PRINTF_ERROR("make_socket_reuseaddr(%d) error", m_tcp_listen_fd);
         return -1;
     }
-    if (-1 == bind(m_tcp_listen_fd, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
+    if (-1 == bind(m_tcp_listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr))) {
         PRINTF_ERROR("bind(%d, %s) error", m_tcp_listen_fd, inet_ntoa(server_addr.sin_addr));
         close(m_tcp_listen_fd);
         m_tcp_listen_fd = -1;
@@ -142,17 +142,17 @@ int server::tcp_socket_start() {
 
 int server::udp_socket_start() {
     struct sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(UDP_LISTEN_PORT);
+    server_addr.sin_family      = AF_INET;
+    server_addr.sin_port        = htons(UDP_LISTEN_PORT);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    m_udp_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    m_udp_fd                    = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (-1 == make_socket_nonblocking(m_udp_fd)) {
         PRINTF_ERROR("make_socket_nonblocking(%d) error", m_udp_fd);
         return -1;
     }
     struct epoll_event event;
     event.data.fd = m_udp_fd;
-    event.events = EPOLLIN | EPOLLET;
+    event.events  = EPOLLIN | EPOLLET;
     if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_udp_fd, &event)) {
         PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, m_udp_fd);
         return -1;
@@ -161,7 +161,7 @@ int server::udp_socket_start() {
         PRINTF_ERROR("make_socket_reuseaddr(%d) error", m_udp_fd);
         return -1;
     }
-    if (-1 == bind(m_udp_fd, (struct sockaddr *)&server_addr, sizeof(server_addr))) {
+    if (-1 == bind(m_udp_fd, (struct sockaddr*)&server_addr, sizeof(server_addr))) {
         PRINTF_ERROR("bind(%d, %s) error", m_udp_fd, inet_ntoa(server_addr.sin_addr));
         close(m_udp_fd);
         m_udp_fd = -1;
@@ -206,7 +206,7 @@ void server::do_tcp_accept() {
     while (true) {
         struct sockaddr_in addr;
         socklen_t addr_len = sizeof(addr);
-        int fd = accept(m_tcp_listen_fd, (struct sockaddr *)&addr, &addr_len);
+        int fd             = accept(m_tcp_listen_fd, (struct sockaddr*)&addr, &addr_len);
         if (fd == -1) {
             break;
         }
@@ -219,7 +219,7 @@ void server::do_tcp_accept() {
         }
         struct epoll_event event;
         event.data.fd = fd;
-        event.events = EPOLLIN | EPOLLET;
+        event.events  = EPOLLIN | EPOLLET;
         if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, fd, &event)) {
             PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, fd);
         }
@@ -237,7 +237,7 @@ void server::do_tcp_recv(int fd) {
     auto conn = it->second;
     while (true) {
         char buf[1024] = {0};
-        ssize_t ret = recv(fd, buf, 1024, 0);
+        ssize_t ret    = recv(fd, buf, 1024, 0);
         if (ret > 0) {
             conn.get()->m_buffer.get()->append(buf, ret);
             continue;
@@ -266,13 +266,13 @@ void server::do_tcp_recv(int fd) {
     }
 }
 
-void server::do_tcp_send(int fd, const char *data, int len) {
+void server::do_tcp_send(int fd, const char* data, int len) {
     auto it = m_fd_conn.find(fd);
     if (it == m_fd_conn.end()) {
         PRINTF_ERROR("m_fd_conn(map)没有发现连接对象的fd:%d", fd);
         return;
     }
-    auto conn = it->second;
+    auto conn      = it->second;
     int total_send = 0;
     while (total_send < len) {
         int ret = send(fd, data + total_send, len - total_send, 0);
@@ -309,7 +309,7 @@ void server::do_udp_recvfrom() {
         char buf[UDP_RCV_BUF] = {0};
         struct sockaddr_in addr;
         socklen_t addr_len = sizeof(addr);
-        ssize_t ret = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr *)&addr, &addr_len);
+        ssize_t ret        = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr*)&addr, &addr_len);
         if (ret > 0) {
             PRINTF_DEBUG("fd:%d recvfrom:%s data:%s", m_udp_fd, inet_ntoa(addr.sin_addr), buf);
             continue;
@@ -340,11 +340,11 @@ void server::do_udp_recvfrom() {
     }
 }
 
-void server::do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in addr) {
-    int total_send = 0;
+void server::do_udp_sendto(int fd, const char* data, int len, struct sockaddr_in addr) {
+    int total_send     = 0;
     socklen_t addr_len = sizeof(addr);
     while (total_send < len) {
-        int ret = sendto(fd, data + total_send, len - total_send, 0, (struct sockaddr *)&addr, addr_len);
+        int ret = sendto(fd, data + total_send, len - total_send, 0, (struct sockaddr*)&addr, addr_len);
         if (ret > 0) {
             total_send += ret;
             continue;
@@ -375,7 +375,7 @@ void server::do_udp_sendto(int fd, const char *data, int len, struct sockaddr_in
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     server test;
     test.start();
     return 0;

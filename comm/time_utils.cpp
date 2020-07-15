@@ -81,13 +81,13 @@ int get_time_zone(int& time_zone) {
     }
 
     tm_local.tm_isdst = -1;
-    t1 = mktime(&tm_local);
+    t1                = mktime(&tm_local);
     if (t1 == -1) {
         PRINTF_ERROR("mktime failed.");
         return -1;
     }
     tm_utc.tm_isdst = -1;
-    t2 = mktime(&tm_utc);
+    t2              = mktime(&tm_utc);
     if (t2 == -1) {
         PRINTF_ERROR("mktime failed.");
         return -1;
@@ -106,7 +106,7 @@ time_t str_time2date(const string& str_time) {
     st_time.tm_year -= 1900;
     st_time.tm_mon -= 1;
     st_time.tm_isdst = 0;
-    time_t t = mktime(&st_time);
+    time_t t         = mktime(&st_time);
     if (t == -1) {
         PRINTF_ERROR("mktime failed.");
         return -1;

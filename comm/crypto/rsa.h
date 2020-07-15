@@ -6,35 +6,32 @@
 #define COMM_MAX_BUFLEN 2048
 
 #define RSA_PARAM_TYPE_ERROR -1  //参数错误
-#define RSA_KEY_ERROR -2         // Key错误
-#define RSA_VERIFY_ERROR -3      //签名验证错误
-#define RSA_DECRYPT_ERROR -4     //解密失败
-#define RSA_SIGN_ERROR -5        //签名失败
+#define RSA_KEY_ERROR        -2  // Key错误
+#define RSA_VERIFY_ERROR     -3  //签名验证错误
+#define RSA_DECRYPT_ERROR    -4  //解密失败
+#define RSA_SIGN_ERROR       -5  //签名失败
 
-#define TOOLS_RSA_NO_PADDING 1
-#define TOOLS_RSA_PKCS1_PADDING 2
+#define TOOLS_RSA_NO_PADDING         1
+#define TOOLS_RSA_PKCS1_PADDING      2
 #define TOOLS_RSA_PKCS1_OAEP_PADDING 3
 
 /*!
  * \enum	digest_algorithm
  * \brief	摘要算法
-*/
+ */
 enum digest_algorithm {
-    DIGEST_SHA1 = 0,  //!< SHA-1摘要算法
+    DIGEST_SHA1   = 0,  //!< SHA-1摘要算法
     DIGEST_SHA256 = 1
 };
-enum rsa_cipher_type {
-    CIPHER_TYPE_BASE64 = 0,
-    CIPHER_TYPE_HEX = 1
-};
+enum rsa_cipher_type { CIPHER_TYPE_BASE64 = 0, CIPHER_TYPE_HEX = 1 };
 /*!
  * \enum	sign_code_type
  * \brief	签名编码类型
-*/
+ */
 enum sign_code_type {
-    SIGN_CODE_RAW = 0,     //!< 签名未编码
+    SIGN_CODE_RAW    = 0,  //!< 签名未编码
     SIGN_CODE_BASE64 = 1,  //!< 签名经过Base64编码
-    SIGN_CODE_HEX = 2      //!< 签名经过Hex编码
+    SIGN_CODE_HEX    = 2   //!< 签名经过Hex编码
 };
 
 /*!
@@ -52,7 +49,7 @@ enum sign_code_type {
  *upay::crypto::digest_algorithm
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR, \a
  *RSA_VERIFY_ERROR
-*/
+ */
 int verify_rsa_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type,
                     int digest_algo = DIGEST_SHA1);
 
@@ -71,7 +68,7 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
  *upay::crypto::digest_algorithm
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR, \a
  *RSA_VERIFY_ERROR
-*/
+ */
 int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const std::string& public_key, int sign_type,
                      int digest_algo = DIGEST_SHA256);
 
@@ -96,7 +93,7 @@ int rsa_pubkey_decrypt(const std::string& cipher_in,  //密文
  * upay::crypto::sign_code_type
  * \param   sign   对数据进行签名后的结果
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR,
-*/
+ */
 int calculate_rsa_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& sign);
 
 /*!
@@ -110,7 +107,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
  * upay::crypto::sign_code_type
  * \param   sign   对数据进行签名后的结果
  * \return	0为成功,其余错误见\a RSA_PARAM_TYPE_ERROR , \a RSA_KEY_ERROR,
-*/
+ */
 int calculate_rsa2_sign(const std::string& data_in, const std::string& private_key, int sign_type, std::string& sign);
 
 #endif

@@ -8,7 +8,7 @@
 #define FIELD_FLAG "&"
 #define VALUE_FLAG "="
 
-#define HEADER_FLAG "\r\n"
+#define HEADER_FLAG  "\r\n"
 #define HEADER_VALUE ": "
 
 /*
@@ -51,7 +51,7 @@ std::string uint_to_string(unsigned int i) {
 */
 
 void string_replace(string& data, const string& src, const string& dst) {
-    string::size_type pos = 0;
+    string::size_type pos    = 0;
     string::size_type srclen = src.size();
     string::size_type dstlen = dst.size();
     while ((pos = data.find(src, pos)) != string::npos) {
@@ -81,7 +81,7 @@ const string longlong_to_string(long long ll) {
 void str2vec(const string& buf, const string& field, vector_t& vec) {
     vec.clear();
     size_t offset = 0;
-    size_t next = 0;
+    size_t next   = 0;
     while (true) {
         next = buf.find_first_of(field, offset);
         if (next == string::npos) {
@@ -111,7 +111,7 @@ static int get_field(string& str, string& value) {
     }
 
     value = str.substr(start, end - start);
-    str = str.substr(end);
+    str   = str.substr(end);
 
     return 1;
 }
@@ -122,7 +122,7 @@ static int get_value(const string& str, string& name, string& value) {
         return 0;
     }
 
-    name = str.substr(0, pos);
+    name  = str.substr(0, pos);
     value = str.substr(pos + strlen(VALUE_FLAG));
 
     return 1;

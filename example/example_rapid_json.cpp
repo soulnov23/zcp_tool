@@ -2,7 +2,7 @@
 #include "json_parser.h"
 #include "printf_utils.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     /*
     Document document;
     document.SetArray();
@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
     if (string_to_json(doc, data) != 0) {
         return -1;
     }
-    Value *user_object;
+    Value* user_object;
     get_object(doc, "user", user_object);
-    Value *id_object;
+    Value* id_object;
     get_object(*user_object, "id", id_object);
     Value::MemberIterator member = id_object->FindMember("value");
     member->value.SetString("123456", doc.GetAllocator());

@@ -7,7 +7,7 @@ using namespace tinyxml2;
 using namespace std;
 
 template <typename T1, typename T2, typename T3>
-void PRINTF_MAP(map<T1, T2> &record, T3 &it) {
+void PRINTF_MAP(map<T1, T2>& record, T3& it) {
     it = record.begin();
     while (it != record.end()) {
         cout << it->first << ":" << it->second << endl;
@@ -15,7 +15,7 @@ void PRINTF_MAP(map<T1, T2> &record, T3 &it) {
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     /*
     XMLDocument doc;
     if (get_conf(doc, "/home/zcp_tool/conf/server.xml") != 0) {
@@ -67,14 +67,14 @@ int main(int argc, char *argv[]) {
     }
 
     map<string, string> map_params;
-    XMLElement *root = doc.RootElement();
-    XMLElement *child = root->FirstChildElement();
+    XMLElement* root  = doc.RootElement();
+    XMLElement* child = root->FirstChildElement();
     while (child) {
         if (child->Name() && child->GetText()) {
             map_params[child->Name()] = child->GetText();
             PRINTF_DEBUG("key[%s] value[%s]", child->Name(), child->GetText());
         } else if (!child->NoChildren()) {
-            XMLElement *child_child = child->FirstChildElement();
+            XMLElement* child_child = child->FirstChildElement();
             while (child_child) {
                 if (child_child->Name() && child_child->GetText()) {
                     map_params[child_child->Name()] = child_child->GetText();

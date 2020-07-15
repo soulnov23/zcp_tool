@@ -43,14 +43,13 @@
 
 ///忽略错误运行
 #define ignore_error_do(func) \
-    \
-do {                          \
+                              \
+    do {                      \
         int err = errno;      \
         func;                 \
         errno = err;          \
-    \
-}                      \
-    while (0)
+                              \
+    } while (0)
 
 #define i_do ignore_error_do
 

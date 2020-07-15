@@ -187,7 +187,7 @@ std::string sha256_rsa_base64(const std::string& key, const std::string& data) {
     // SHA256 res is placed in a static array, it's not thread safe
     unsigned char* digest = SHA256((unsigned char*)data.c_str(), data.length(), nullptr);
 
-    unsigned int siglen = RSA_size(rsa);
+    unsigned int siglen   = RSA_size(rsa);
     unsigned char* sigret = (unsigned char*)malloc(sizeof(unsigned char) * siglen);
     memset(sigret, 0x0, sizeof(unsigned char) * siglen);
     if (RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH, sigret, &siglen, rsa) != 1) {
