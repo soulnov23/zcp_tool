@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include "daemon.h"
 #include "printf_utils.h"
 #include "server.h"
 #include "xml_parser.h"
@@ -42,12 +43,13 @@ int main(int argc, char* argv[]) {
 
     int count = strtol(config["count"].c_str(), nullptr, 10);
 
+    //读完配置再daemon，因为daemon要是改变了工作目录，那么相对路径的配置文件会找不到
     PRINTF_DEBUG("daemonize begin");
-    // const int daemon_change_dir     = 0;
-    const int daemon_unchange_dir = 1;
-    // const int daemon_redirect_io    = 0;
+    const int daemon_change_dir     = 0;
+    const int daemon_unchange_dir   = 1;
+    const int daemon_redirect_io    = 0;
     const int daemon_un_redirect_io = 1;
-    if (daemon(daemon_unchange_dir, daemon_un_redirect_io) == -1) {
+    if (daemon(daemon_unchange_dir, daemon_un_redirect_io) != 0) {
         PRINTF_ERROR("daemonize failed");
         return -1;
     }
