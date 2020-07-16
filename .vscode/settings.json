@@ -17,7 +17,7 @@
     "editor.copyWithSyntaxHighlighting": false,
     "editor.suggest.insertMode": "replace",
     "editor.suggest.shareSuggestSelections": true,
-    "editor.suggestSelection": "first",
+    "editor.suggestSelection": "recentlyUsedByPrefix",
     "[cpp]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
