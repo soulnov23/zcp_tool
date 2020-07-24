@@ -22,6 +22,9 @@ clean:
 		echo; \
 	done
 
+format_init:
+	$(FORMAT_INIT)
+
 format:
 	@for dir in $(DIR_MODULES); \
 	do \
