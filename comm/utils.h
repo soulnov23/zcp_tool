@@ -18,7 +18,7 @@ void str2vec(const string& buf, const string& field, vector_t& vec);
 
 typedef map<string, string> record_t;
 void map2str(string& buf, const record_t& record, bool encode = true);
-void str2map(record_t& record, const string& buf, bool encode = true);
+void str2map(record_t& record, const string& buf, bool decode = true);
 
 bool va_function(const char* format, ...);
 // bool va_function(const char* format, args...);

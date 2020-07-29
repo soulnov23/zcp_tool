@@ -93,41 +93,6 @@ void str2vec(const string& buf, const string& field, vector_t& vec) {
     }
 }
 
-static int get_field(string& str, string& value) {
-    if (str.size() == 0) {
-        return 0;
-    }
-
-    string::size_type start = str.find(FIELD_FLAG);
-    if (start == string::npos || start != 0) {
-        start = 0;
-    } else {
-        start += strlen(FIELD_FLAG);
-    }
-
-    string::size_type end = str.find(FIELD_FLAG, start);
-    if (end == string::npos) {
-        end = str.size();
-    }
-
-    value = str.substr(start, end - start);
-    str   = str.substr(end);
-
-    return 1;
-}
-
-static int get_value(const string& str, string& name, string& value) {
-    string::size_type pos = str.find(VALUE_FLAG);
-    if (pos == string::npos) {
-        return 0;
-    }
-
-    name  = str.substr(0, pos);
-    value = str.substr(pos + strlen(VALUE_FLAG));
-
-    return 1;
-}
-
 void map2str(string& buf, const record_t& record, bool encode /*=true*/) {
     for (record_t::const_iterator it = record.begin(); it != record.end(); it++) {
         buf += FIELD_FLAG + it->first;
@@ -145,21 +110,41 @@ void map2str(string& buf, const record_t& record, bool encode /*=true*/) {
     }
 }
 
-void str2map(record_t& record, const string& buf, bool encode /*=true*/) {
-    string bvalue, fname, fvalue;
+static int get_value(const string& kv, string& key, string& value, bool decode = true) {
+    size_t pos = kv.find(VALUE_FLAG);
+    if (pos == string::npos) {
+        return false;
+    }
+    key   = kv.substr(0, pos);
+    value = kv.substr(pos + strlen(VALUE_FLAG));
+    if (decode) {
+        string result;
+        url_decode(value, result);
+        value = result;
+    }
+    return true;
+}
 
-    string stbuf = buf;
-    while (get_field(stbuf, bvalue)) {
-        if (!get_value(bvalue, fname, fvalue)) {
-            continue;
+void str2map(record_t& record, const string& buf, bool decode /*=true*/) {
+    size_t offset = 0;
+    size_t next   = 0;
+    string kv;
+    string key;
+    string value;
+    while (true) {
+        next = buf.find_first_of(FIELD_FLAG, offset);
+        if (next == string::npos) {
+            kv = buf.substr(offset);
+            if (get_value(kv, key, value, decode)) {
+                record[key] = value;
+            }
+            break;
         }
-        if (encode) {
-            string result;
-            url_decode(fvalue, result);
-            record[fname] = result;
-        } else {
-            record[fname] = fvalue;
+        kv = buf.substr(offset, next - offset);
+        if (get_value(kv, key, value, decode)) {
+            record[key] = value;
         }
+        offset = next + 1;
     }
 }
 
