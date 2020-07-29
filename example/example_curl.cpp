@@ -1,96 +1,271 @@
 #include <iostream>
 #include <map>
+#include <string>
 #include <vector>
 #include "printf_utils.h"
 using namespace std;
-#include "coder.h"
-#include "crypto/md5.h"
-#include "crypto/rsa.h"
-#include "json_parser.h"
+#include "document.h"
+#include "filereadstream.h"
 #include "net/http_handle.h"
+#include "rapidjson.h"
+#include "stringbuffer.h"
+#include "writer.h"
+using namespace rapidjson;
+#include "json_parser.h"
+#include "time_utils.h"
 #include "utils.h"
 
-void get_header(string sign, vector<string>& HeadInfo) {
-    string now_time = to_string(time(nullptr));
-    string app_id   = "8ab74856-8772-45c9-96db-54cb30ab9f74";
-    string app_key  = "5b96f20a-011f-4254-8be8-9a5ceb2f317f";
-    string param    = "appid=" + app_id + "&" + "secret=" + app_key + "&" + "sign=" + sign + "&" + "timestamp=" + now_time;
-    string api_sign = md5(param);
-    string_lower(api_sign);
-    HeadInfo.push_back("Content-Type: application/json");
-    HeadInfo.push_back("appid: 8ab74856-8772-45c9-96db-54cb30ab9f74");
-    string timestamp    = "timestamp: " + now_time;
-    string str_api_sign = "apisign: " + api_sign;
-    HeadInfo.push_back(timestamp);
-    HeadInfo.push_back(str_api_sign);
-    PRINTF_DEBUG("timestamp:[%s] apisign:[%s]", now_time.c_str(), api_sign.c_str());
+#define RETURN_ON_ERROR(expr)     \
+    do {                          \
+        int ret = (expr);         \
+        if (ret != 0) return ret; \
+    } while (0)
+
+string g_card_no     = "4567801230000220";
+string g_card_pin    = "104143";
+string g_card_amount = "1000";
+string g_amount      = "10";
+vector<string> g_vecHeadInfo;
+string g_OriginalInvoiceNumber;
+string g_OriginalBatchNumber;
+string g_OriginalTransactionId;
+string g_batch_no;
+
+void init() {
+    g_vecHeadInfo.push_back("TerminalID: PUBG-MidasBuy-POS-01");
+    g_vecHeadInfo.push_back("UserName: manager");
+    g_vecHeadInfo.push_back("Password: welcome");
+    g_vecHeadInfo.push_back("ForwardEntityId: proxima.com");
+    g_vecHeadInfo.push_back("ForwardEntityPassword: com.proxima");
+    g_vecHeadInfo.push_back("MerchantOutletName: PUBG-MidasBuy-01");
+    g_vecHeadInfo.push_back("AcquirerId: Proxima BPL");
+    g_vecHeadInfo.push_back("OrganizationName: Proxima BPL");
+    g_vecHeadInfo.push_back("POSEntryMode: 2");
+    g_vecHeadInfo.push_back("POSTypeId: 1");
+    g_vecHeadInfo.push_back("POSName: PUBG-MidasBuy-POS-01");
+    string date           = date2str_time(get_time_sec());
+    string date_at_client = string("DateAtClient: ") + date.substr(0, 10);
+    g_vecHeadInfo.push_back(date_at_client);
+}
+
+int get_batch_no(string& batch_no) {
+    string rsp_string;
+    int err_code;
+    string err_msg;
+    string url                 = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/initialize";
+    vector<string> vecHeadInfo = g_vecHeadInfo;
+    string post_string("");
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
+    if (ret != 0) {
+        PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
+        return -1;
+    }
+    // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
+    map<string, string> map_return;
+    json_to_map(map_return, rsp_string);
+    string rsp_code = map_return["ResponseCode"];
+    string rsp_msg  = map_return["ResponseMessage"];
+    if (rsp_code != "0") {
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
+        return -1;
+    }
+
+    Document doc;
+    doc.Parse(rsp_string.c_str());
+    if (doc.HasParseError() || !doc.IsObject()) {
+        PRINTF_ERROR("json error json=[%s]", rsp_string.c_str());
+        return -1;
+    }
+    Value::MemberIterator api_web_mem = doc.FindMember("ApiWebProperties");
+    if ((api_web_mem == doc.MemberEnd()) || !api_web_mem->value.IsObject()) {
+        PRINTF_ERROR("ApiWebProperties is not in json or not int format");
+        return -1;
+    }
+    Value api_web_object(kObjectType);
+    api_web_object = api_web_mem->value;
+
+    Value::MemberIterator batch_no_mem = api_web_object.FindMember("CurrentBatchNumber");
+    if ((batch_no_mem == api_web_object.MemberEnd()) || !batch_no_mem->value.IsInt()) {
+        PRINTF_ERROR("value is not in json or not int format");
+        return -1;
+    }
+    g_batch_no = to_string(batch_no_mem->value.GetInt());
+    PRINTF_DEBUG("CurrentBatchNumber[%s]", g_batch_no.c_str());
+    return 0;
+}
+
+int balance_enquiry() {
+    string post_string;
+    map<string, string> map_data;
+    map_data["CardNumber"] = g_card_no;
+    map_to_json(post_string, map_data);
+    // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
+    string url =
+        "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
+        "balanceenquiry";
+    vector<string> vecHeadInfo = g_vecHeadInfo;
+    string current_batch_no    = string("CurrentBatchNumber: ") + g_batch_no;
+    vecHeadInfo.push_back(current_batch_no);
+    vecHeadInfo.push_back("Content-Type: application/json");
+    int err_code;
+    string err_msg;
+    string rsp_string;
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
+    if (ret != 0) {
+        PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
+        return -1;
+    }
+    // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
+    map<string, string> map_return;
+    json_to_map(map_return, rsp_string);
+    string rsp_code = map_return["ResponseCode"];
+    string rsp_msg  = map_return["ResponseMessage"];
+    if (rsp_code != "0") {
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
+        return -1;
+    }
+    string balance = map_return["Amount"];
+    PRINTF_DEBUG("Amount[%s]", balance.c_str());
+    return 0;
+}
+
+int redeem() {
+    string order_id = to_string(get_time_sec());
+    map<string, string> map_data;
+    map_data["Amount"] = g_amount;
+    // map_data["BillAmount"] = g_card_amount;
+    map_data["InvoiceNumber"]  = order_id;
+    map_data["IdempotencyKey"] = "abcdefghi";
+    map_data["CardNumber"]     = g_card_no;
+    map_data["CardPIN"]        = g_card_pin;
+    map_data["Notes"]          = "desc";
+    string post_string;
+    map_to_json(post_string, map_data);
+    // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
+    string url                 = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/redeem";
+    vector<string> vecHeadInfo = g_vecHeadInfo;
+    string transaction_id      = string("TransactionId: ") + order_id;
+    vecHeadInfo.push_back(transaction_id);
+    string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
+    vecHeadInfo.push_back(current_batch_no);
+    vecHeadInfo.push_back("Content-Type: application/json");
+    int err_code;
+    string err_msg;
+    string rsp_string;
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
+    if (ret != 0) {
+        PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
+        return -1;
+    }
+    // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
+    map<string, string> map_return;
+    json_to_map(map_return, rsp_string);
+    g_OriginalInvoiceNumber = order_id;
+    g_OriginalBatchNumber   = g_batch_no;
+    g_OriginalTransactionId = order_id;
+    string rsp_code         = map_return["ResponseCode"];
+    string rsp_msg          = map_return["ResponseMessage"];
+    if (rsp_code != "0") {
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
+        return -1;
+    }
+    PRINTF_DEBUG("redeem %s success", g_amount.c_str());
+    return 0;
+}
+
+int cancel_redeem() {
+    string order_id = to_string(get_time_sec());
+    map<string, string> map_data;
+    string post_string;
+    map_data["CardNumber"]            = g_card_no;
+    map_data["OriginalInvoiceNumber"] = g_OriginalInvoiceNumber;
+    map_data["OriginalAmount"]        = g_amount;
+    map_data["OriginalBatchNumber"]   = g_OriginalBatchNumber;
+    map_data["OriginalTransactionId"] = g_OriginalTransactionId;
+    map_to_json(post_string, map_data);
+    // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
+    string url =
+        "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
+        "cancelredeem";
+    vector<string> vecHeadInfo = g_vecHeadInfo;
+    string transaction_id      = string("TransactionId: ") + order_id;
+    vecHeadInfo.push_back(transaction_id);
+    string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
+    vecHeadInfo.push_back(current_batch_no);
+    vecHeadInfo.push_back("Content-Type: application/json");
+    int err_code;
+    string err_msg;
+    string rsp_string;
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
+    if (ret != 0) {
+        PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
+        return -1;
+    }
+    // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
+    map<string, string> map_return;
+    json_to_map(map_return, rsp_string);
+    string rsp_code = map_return["ResponseCode"];
+    string rsp_msg  = map_return["ResponseMessage"];
+    if (rsp_code != "0") {
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
+        return -1;
+    }
+    PRINTF_DEBUG("cancel redeem %s success", g_amount.c_str());
+    return 0;
+}
+
+int reverse_redeem() {
+    string order_id = to_string(get_time_sec());
+    map<string, string> map_data;
+    string post_string;
+    map_data["CardNumber"]    = g_card_no;
+    map_data["InvoiceNumber"] = order_id;
+    map_to_json(post_string, map_data);
+    // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
+    string url =
+        "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
+        "reverseredeem";
+    vector<string> vecHeadInfo = g_vecHeadInfo;
+    string transaction_id      = string("TransactionId: ") + order_id;
+    vecHeadInfo.push_back(transaction_id);
+    string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
+    vecHeadInfo.push_back(current_batch_no);
+    vecHeadInfo.push_back("Content-Type: application/json");
+    int err_code;
+    string err_msg;
+    string rsp_string;
+    int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
+    if (ret != 0) {
+        PRINTF_ERROR("err_code:[%d] err_msg:[%s]", err_code, err_msg.c_str());
+        return -1;
+    }
+    // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
+    map<string, string> map_return;
+    json_to_map(map_return, rsp_string);
+    string rsp_code = map_return["ResponseCode"];
+    string rsp_msg  = map_return["ResponseMessage"];
+    if (rsp_code != "0") {
+        PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
+        return -1;
+    }
+    return 0;
 }
 
 int main(int argc, char* argv[]) {
-    /*
-    string private_key =
-  "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCc540quYC9xzCMZeFOe8UmE3W5LWrqFd/"
-                                             "2DDSHQASxq8vmOiwFRSG2hsVXtjfmNLQNhtpTR0SGDUjkCsx+"
-  "SJH0JDnOfQ2xXHasO65Rnv2wrHs64P6U0aUrMWjgapjkmLwzRV12AKNAX77MGIocpcB0KZhk+0AVc6oQCBybV65JTGu+"
-  "pAyFLMJRtIP5kH3VMuXmig6VeiZAsjEewD/emxgK3cXejMQvqlNYFnCLsZ7ovAhr+"
-  "bhz6SHkOws3p80O6zfQbKfLzdSVaZK8FnwNPznUxAK77bRZN0zF3V9mL9+zrarvFPD5VkcVHNLj0DRzLmr2c5TbiCigs4+I+"
-  "NMfhpoLAgMBAAECggEAbM8GzoImDXV87WAZhtu+NFF6ahhc9EiHL5H3O3PhzXRdyiK9NEpkvrdnUxRCX5pc4qSJ8waRNoUv7zSt60VYMf6NN+zw+"
-  "fYtNfONR30CYOq76nDtGzbnW7TADiDeNmjU2plX3uVCUPoUzmSWIpevht7xl9XE8xtq7AM0E2YSrzEADcxtqQslM0uVOf+ki1eu0/"
-  "OwCz13FzPlPtnDwt2Lw9xxCxWqTgpN4oD5m6EWTqbognUIJ0EFD0dHXjrYnHXc+/Za5e+CDXYApHuhR9bifa1e4HMN084oLY+rkSXUV3+"
-  "Te0APPCfbeEeqvubziDmKxxKaWUq1wPbYi4c06ZQdgQKBgQDhF7zDWgiJFTgrLGmExJRKiR/3QZN4sugYE1itdRDJmiPV4xhWPXSsND3WtqR5+0otb/"
-  "hbzRa3cyl/RXV/1ZmBbE46fX2DKnmLQ1gP74iOuqWpfxjh/qpk+3kEY9aP57le/O0QEEPsJmqCsGM7XnzfNsxGAFYaDHooRbcGtv++"
-  "AwKBgQCycuvRUQjV4dxTuRJuwFbmdq4odSBMu7yCS4i5I9I73d3TGZBWfiXQWFmuiPh+pf3HdvMbgyA243Uv/NGapSmNvARXm0/eEyfTxV7+"
-  "GVdwLf3sSe8DQMCR1eJA9VzuS+jhCrHkFgyW3V/3ki66W8YITENlgC+VebOatfFE8i/ZWQKBgQCZ2VmhxFX1LFW53J86qgoZb+QzYdTkOJQ+cGq6FDunL/"
-  "2yYYfu2g527TYfHbMJ1OH8cH22cVVHiiUg4l7PQzWqqlZF0CQLlOqCb0MvkS8rLxOv6DkfrqrUXrV2dK7gqSegbwuxYQyryg4eyWTp3UlIX/"
-  "H7Hpu7LjAIeq4Anu/p9QKBgFMtpiYHM6segGi2F5VwKhF6uGs7TTb3O0MwmiZSQCiPnlpLzC/E1TNsO0FTryC5lrVnCKKGWHm9RF595eXDnr7mKM/"
-  "9IRlOrH3VvhWLEmrDxVxiifpmMFzJ6ZCFzi91SrO7HHhIns2jmpv3k7hiFsi/Y5roSUXPWJyAull82jjhAoGAaKujjF4HL91UXZFetkkKiBIpIrH5+"
-  "XbiX9z7H9/Tv8NSy/zTvXp3hFl3dr9gO722i/96dTq4th23Gqtih4cA9x8Wd7RChR9yAK/ffSj1lW6RhBWj1j2JCPFCm1TJD5iO3bIeuHm2sAuafKKoWT/"
-  "VCUkKRwt9Wwh9yF20vMQ3kFw=";
+    init();
 
-    string url = "https://api.cmburl.cn:48065/polypay/v1.0/mchorders/onlinepay";
-    map<string, string> post_data;
-    post_data["version"] 	= "0.0.1";
-    post_data["encoding"] 	= "UTF-8";
-    post_data["signMethod"] = "01";
-    map<string, string> biz_content;
-    biz_content["body"] 			= "年夜饭10人套餐";
-    biz_content["merId"] 			= "123123456456789";
-    biz_content["notifyUrl"] 		=
-  "http://dev.api.unipay.qq.com/cgi-bin/bank_cmb_provide.fcg";
-    biz_content["orderId"] 			= "201901111116123456";
-    biz_content["spbillCreateIp"] 	= "10.56.44.120";
-    biz_content["subAppId"] 		= "wx049e5d41b3d11752";
-    biz_content["tradeType"] 		= "APP";
-    biz_content["txnAmt"] 			= "1";
-    string biz_content_data;
-    map_to_json(biz_content_data, biz_content);
-    post_data["biz_content"] = biz_content_data;
-    string params;
-    map2str(params, post_data);
-    string sign;
-    calculate_rsa2_sign(params, private_key, SIGN_CODE_BASE64, sign);
-    post_data["sign"] = sign;
-    string post_data_str;
-    map_to_json(post_data_str, post_data);
-    PRINTF_DEBUG("post_data=[%s]", post_data_str.c_str());
-    vector<string> HeadInfo;
-    get_header(sign, HeadInfo);
-    string recv_data;
-    int err_code;
-    string err_msg;
-    if (0 != http_proc(url, 10, &HeadInfo, post_data_str, recv_data, err_code,
-  err_msg)) {
-            PRINTF_ERROR("http_proc failed");
-    }
-    PRINTF_DEBUG("recv_data=[%s]", recv_data.c_str());
-    */
-    string test("aaa,bbb");
-    string temp;
-    url_encode(test, temp);
-    PRINTF_DEBUG("test:%s", temp.c_str());
+    // RETURN_ON_ERROR(get_batch_no(g_batch_no));
+    g_batch_no = "10648684";
 
-    test = "aaa%2cbbb";
-    url_decode(test, temp);
-    PRINTF_DEBUG("test:%s", temp.c_str());
+    RETURN_ON_ERROR(balance_enquiry());
+
+    RETURN_ON_ERROR(redeem());
+
+    RETURN_ON_ERROR(balance_enquiry());
+
+    RETURN_ON_ERROR(cancel_redeem());
+    // RETURN_ON_ERROR(reverse_redeem());
+
+    RETURN_ON_ERROR(balance_enquiry());
     return 0;
 }
