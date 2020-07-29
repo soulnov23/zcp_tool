@@ -1,4 +1,3 @@
-#include <iostream>
 #include <map>
 #include <string>
 #include <vector>
@@ -13,6 +12,12 @@ int main(int argc, char* argv[]) {
     map<string, string>::iterator it;
     for (it = map_test.begin(); it != map_test.end(); it++) {
         PRINTF_DEBUG("key[%s] value[%s]", it->first.c_str(), it->second.c_str());
+    }
+
+    vector<string> vec;
+    str2vec(kv, '&', vec);
+    for (size_t i = 0; i < vec.size(); i++) {
+        PRINTF_DEBUG("key[%s]", vec[i].c_str());
     }
     return 0;
 }
