@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <algorithm>
+#include <sstream>
 #include "coder.h"
 
 #define FIELD_FLAG "&"
@@ -76,6 +77,15 @@ const string longlong_to_string(long long ll) {
     char tmp[128] = {0};
     snprintf(tmp, sizeof(tmp) - 1, "%lld", ll);
     return tmp;
+}
+
+void str2vec(const string& buf, char field, vector_t& vec) {
+    vec.clear();
+    stringstream input(buf);
+    string value;
+    while (getline(input, value, field)) {
+        vec.push_back(value);
+    }
 }
 
 void str2vec(const string& buf, const string& field, vector_t& vec) {
