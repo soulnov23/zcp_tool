@@ -14,7 +14,7 @@ void string_upper(string& str);
 const string longlong_to_string(long long ll);
 
 typedef vector<string> vector_t;
-void str2vec(const string& buf, char field, vector_t& vec);
+void str2vec(const string& buf, const char& field, vector_t& vec);
 void str2vec(const string& buf, const string& field, vector_t& vec);
 
 typedef map<string, string> record_t;

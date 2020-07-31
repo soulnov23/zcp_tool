@@ -79,7 +79,7 @@ const string longlong_to_string(long long ll) {
     return tmp;
 }
 
-void str2vec(const string& buf, char field, vector_t& vec) {
+void str2vec(const string& buf, const char& field, vector_t& vec) {
     vec.clear();
     stringstream input(buf);
     string value;
@@ -120,19 +120,34 @@ void map2str(string& buf, const record_t& record, bool encode /*=true*/) {
     }
 }
 
-static int get_value(const string& kv, string& key, string& value, bool decode = true) {
-    size_t pos = kv.find(VALUE_FLAG);
+static bool get_value(const string& kv, string& key, string& value, const string& field, bool decode = true) {
+    size_t pos = kv.find(field);
     if (pos == string::npos) {
         return false;
     }
     key   = kv.substr(0, pos);
-    value = kv.substr(pos + strlen(VALUE_FLAG));
+    value = kv.substr(pos + field.length());
     if (decode) {
         string result;
         url_decode(value, result);
         value = result;
     }
     return true;
+}
+
+static bool get_value(const string& kv, string& key, string& value, const char& field, bool decode = true) {
+    stringstream input(kv);
+    if (getline(input, key, field)) {
+        if (getline(input, value, field)) {
+            if (decode) {
+                string result;
+                url_decode(value, result);
+                value = result;
+            }
+            return true;
+        }
+    }
+    return false;
 }
 
 void str2map(record_t& record, const string& buf, bool decode /*=true*/) {
@@ -145,13 +160,13 @@ void str2map(record_t& record, const string& buf, bool decode /*=true*/) {
         next = buf.find_first_of(FIELD_FLAG, offset);
         if (next == string::npos) {
             kv = buf.substr(offset);
-            if (get_value(kv, key, value, decode)) {
+            if (get_value(kv, key, value, VALUE_FLAG, decode)) {
                 record[key] = value;
             }
             break;
         }
         kv = buf.substr(offset, next - offset);
-        if (get_value(kv, key, value, decode)) {
+        if (get_value(kv, key, value, VALUE_FLAG, decode)) {
             record[key] = value;
         }
         offset = next + 1;
