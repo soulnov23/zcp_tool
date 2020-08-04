@@ -1,14 +1,10 @@
 #==============================================================================
 #       BUILD:              编译类型
 #------------------------------------------------------------------------------
-#       BUILD_DEV:          开发版本
-#       BUILD_DEBUG:        测试版本
-#       BUILD_NORMAL:       一般开发版本
+#       BUILD_DEBUG:        开发版本
 #       BUILD_RELEASE:      发行版本
 #------------------------------------------------------------------------------
 BUILD = BUILD_DEBUG
-#BUILD = BUILD_DEV
-#BUILD = BUILD_NORMAL
 #BUILD = BUILD_RELEASE
 
 CC = gcc
@@ -27,18 +23,6 @@ LDFLAGS ?=
 ifeq ($(BUILD), BUILD_DEBUG)
 CFLAGS   += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
 CXXFLAGS += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
-INCLUDE  +=
-LDFLAGS  +=
-endif
-ifeq ($(BUILD), BUILD_DEV)
-CFLAGS   += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -Werror
-CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -Werror
-INCLUDE  +=
-LDFLAGS  +=
-endif
-ifeq ($(BUILD), BUILD_NORMAL)
-CFLAGS   += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O
-CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O
 INCLUDE  +=
 LDFLAGS  +=
 endif
