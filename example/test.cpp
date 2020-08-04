@@ -1,23 +1,28 @@
-#include <map>
-#include <string>
-#include <vector>
+#include "graph.h"
 #include "printf_utils.h"
-using namespace std;
-#include "utils.h"
 
 int main(int argc, char* argv[]) {
-    string kv = "a1=1%261&a2=2%252&a3=3&a4=4&a5";
-    map<string, string> map_test;
-    str2map(map_test, kv);
-    map<string, string>::iterator it;
-    for (it = map_test.begin(); it != map_test.end(); it++) {
-        PRINTF_DEBUG("key[%s] value[%s]", it->first.c_str(), it->second.c_str());
-    }
+    graph_adjvex_list list;
+    vertex_node* a_node = list.add_vertex("A");
+    vertex_node* b_node = list.add_vertex("B");
+    vertex_node* c_node = list.add_vertex("C");
+    vertex_node* d_node = list.add_vertex("D");
+    vertex_node* e_node = list.add_vertex("E");
+    vertex_node* f_node = list.add_vertex("F");
+    vertex_node* g_node = list.add_vertex("G");
+    vertex_node* h_node = list.add_vertex("H");
 
-    vector<string> vec;
-    str2vec(kv, '&', vec);
-    for (size_t i = 0; i < vec.size(); i++) {
-        PRINTF_DEBUG("key[%s]", vec[i].c_str());
-    }
+    a_node->add_edge("B", 3);
+    b_node->add_edge("C", 5);
+    b_node->add_edge("D", 5);
+    c_node->add_edge("F", 10);
+    e_node->add_edge("B", 7);
+    e_node->add_edge("F", 7);
+    f_node->add_edge("G", 2);
+    h_node->add_edge("D", 6);
+    h_node->add_edge("F", 6);
+
+    string data = list.dump_dot();
+    PRINTF_DEBUG("%s", data.c_str());
     return 0;
 }
