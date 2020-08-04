@@ -27,6 +27,9 @@ int fork_child() {
 }
 
 int main(int argc, char* argv[]) {
+#ifdef DEBUG
+    PRINTF_DEBUG("this is debug version");
+#endif
     PRINTF_DEBUG("%s %s", argv[0], argv[1]);
     if (argc < 2) {
         PRINTF_ERROR("Usage: %s conf_file", argv[0]);
