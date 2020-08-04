@@ -22,9 +22,9 @@
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
     "editor.defaultFormatter": "ms-vscode.cpptools",
-    "editor.formatOnPaste": true,
+    //"editor.formatOnPaste": true,
     "editor.formatOnSave": true,
-    "editor.formatOnType": true,
+    //"editor.formatOnType": true,
     "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
 
     //workbench选项

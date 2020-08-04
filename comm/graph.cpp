@@ -102,6 +102,22 @@ void graph_adjvex_list::delete_vertex(const string& name) {
     }
 }
 
+bool graph_adjvex_list::find_edge(const string& src_name, const string& dst_name) {
+    set<vertex_node*>::const_iterator it;
+    for (it = vertex_node_set.begin(); it != vertex_node_set.end(); it++) {
+        if ((*it)->name == src_name) {
+            set<edge_node*>& edge_node_set = (*it)->get_node_set();
+            set<edge_node*>::const_iterator it_i;
+            for (it_i = edge_node_set.begin(); it_i != edge_node_set.end(); it_i++) {
+                if ((*it_i)->name == dst_name) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 string graph_adjvex_list::dump_dot() {
     string content;
     content.append("digraph {\n");

@@ -76,6 +76,8 @@ public:
     void delete_vertex(vertex_node* node);
     void delete_vertex(const string& name);
 
+    bool find_edge(const string& src_name, const string& dst_name);
+
     string dump_dot();
 
 private:

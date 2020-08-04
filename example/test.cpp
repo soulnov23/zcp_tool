@@ -24,5 +24,15 @@ int main(int argc, char* argv[]) {
 
     string data = list.dump_dot();
     PRINTF_DEBUG("%s", data.c_str());
+
+    if (list.find_edge("A", "B")) {
+        PRINTF_DEBUG("AB");
+    }
+    if (list.find_edge("B", "C")) {
+        PRINTF_DEBUG("BC");
+    }
+    if (list.find_edge("A", "C")) {
+        PRINTF_DEBUG("AC");
+    }
     return 0;
 }
