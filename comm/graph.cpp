@@ -1,135 +1,157 @@
 #include "graph.h"
+#include <queue>
+#include <stack>
+using namespace std;
+#include "printf_utils.h"
 
-edge_node::edge_node() {}
+graph_adjvex_list_t::graph_adjvex_list_t() {}
 
-edge_node::~edge_node() {}
-
-vertex_node::vertex_node() {}
-
-vertex_node::~vertex_node() {
-    set<edge_node*>::const_iterator it;
-    for (it = edge_node_set.begin(); it != edge_node_set.end(); it++) {
-        delete *it;
+graph_adjvex_list_t::~graph_adjvex_list_t() {
+    for (auto it : vertex_set) {
+        delete it;
     }
 }
 
-void vertex_node::add_edge(edge_node* node) {
-    set<edge_node*>::const_iterator it;
-    for (it = edge_node_set.begin(); it != edge_node_set.end(); it++) {
-        if (**it == *node) {
-            delete node;
+void graph_adjvex_list_t::add_vertex(vertex_t* vertex) {
+    for (auto it : vertex_set) {
+        if (*it == *vertex) {
+            delete vertex;
             return;
         }
     }
-    edge_node_set.emplace(node);
+    vertex_set.insert(vertex);
 }
 
-edge_node* vertex_node::add_edge(const string& name, const int& weight) {
-    edge_node* node = new edge_node(name, weight);
-    set<edge_node*>::const_iterator it;
-    for (it = edge_node_set.begin(); it != edge_node_set.end(); it++) {
-        if (**it == *node) {
-            delete node;
-            return *it;
+void graph_adjvex_list_t::delete_vertex(vertex_t* vertex) {
+    delete vertex;
+    vertex_set.erase(vertex);
+}
+
+vertex_t* graph_adjvex_list_t::find_vertex(const string& vertex_name) {
+    for (auto it : vertex_set) {
+        if (it->name() == vertex_name) {
+            return it;
         }
     }
-    edge_node_set.emplace(node);
-    return node;
+    return nullptr;
 }
 
-void vertex_node::delete_edge(edge_node* node) {
-    delete node;
-    edge_node_set.erase(node);
-}
-
-void vertex_node::delete_edge(const string& name) {
-    set<edge_node*>::const_iterator it;
-    for (it = edge_node_set.begin(); it != edge_node_set.end(); it++) {
-        if ((*it)->name == name) {
-            delete *it;
-            edge_node_set.erase(it);
-            return;
+bool graph_adjvex_list_t::find_edge(const string& src_name, const string& dst_name) {
+    vertex_t* src_vertex = nullptr;
+    vertex_t* dst_vertex = nullptr;
+    for (auto it : vertex_set) {
+        if (it->name() == src_name) {
+            src_vertex = it;
+        }
+        if (it->name() == dst_name) {
+            dst_vertex = it;
         }
     }
-}
-
-graph_adjvex_list::graph_adjvex_list() {}
-
-graph_adjvex_list::~graph_adjvex_list() {
-    set<vertex_node*>::const_iterator it;
-    for (it = vertex_node_set.begin(); it != vertex_node_set.end(); it++) {
-        delete *it;
+    if ((src_vertex == nullptr) || (dst_vertex == nullptr)) {
+        return false;
     }
+    return src_vertex->find_out_edge(dst_vertex);
 }
 
-void graph_adjvex_list::add_vertex(vertex_node* node) {
-    set<vertex_node*>::const_iterator it;
-    for (it = vertex_node_set.begin(); it != vertex_node_set.end(); it++) {
-        if (**it == *node) {
-            delete node;
-            return;
-        }
-    }
-    vertex_node_set.emplace(node);
-}
-
-vertex_node* graph_adjvex_list::add_vertex(const string& name) {
-    vertex_node* node = new vertex_node(name);
-    set<vertex_node*>::const_iterator it;
-    for (it = vertex_node_set.begin(); it != vertex_node_set.end(); it++) {
-        if (**it == *node) {
-            delete node;
-            return *it;
-        }
-    }
-    vertex_node_set.emplace(node);
-    return node;
-}
-
-void graph_adjvex_list::delete_vertex(vertex_node* node) {
-    delete node;
-    vertex_node_set.erase(node);
-}
-
-void graph_adjvex_list::delete_vertex(const string& name) {
-    set<vertex_node*>::const_iterator it;
-    for (it = vertex_node_set.begin(); it != vertex_node_set.end(); it++) {
-        if ((*it)->name == name) {
-            delete *it;
-            vertex_node_set.erase(it);
-            return;
-        }
-    }
-}
-
-bool graph_adjvex_list::find_edge(const string& src_name, const string& dst_name) {
-    set<vertex_node*>::const_iterator it;
-    for (it = vertex_node_set.begin(); it != vertex_node_set.end(); it++) {
-        if ((*it)->name == src_name) {
-            set<edge_node*>& edge_node_set = (*it)->get_node_set();
-            set<edge_node*>::const_iterator it_i;
-            for (it_i = edge_node_set.begin(); it_i != edge_node_set.end(); it_i++) {
-                if ((*it_i)->name == dst_name) {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-
-string graph_adjvex_list::dump_dot() {
+string graph_adjvex_list_t::dump_dot() {
     string content;
-    content.append("digraph {\n");
-    set<vertex_node*>::const_iterator it;
-    for (it = vertex_node_set.begin(); it != vertex_node_set.end(); it++) {
-        set<edge_node*>& edge_node_set = (*it)->get_node_set();
-        set<edge_node*>::const_iterator it_i;
-        for (it_i = edge_node_set.begin(); it_i != edge_node_set.end(); it_i++) {
+    content.append("\ndigraph {\n");
+    set<vertex_t*>::const_iterator it;
+    for (auto it : vertex_set) {
+        for (auto it_i : it->edge_set()) {
             content.append("\t");
-            content += (*it)->name + " -> " + (*it_i)->name + " [weight = " + to_string((*it_i)->weight) + "];\n";
+            content += it_i->src()->name() + " -> " + it_i->dst()->name() + " [weight = " + it_i->weight() + "];\n";
         }
     }
     content.append("}\n");
     return content;
+}
+
+void graph_adjvex_list_t::bfs_traverse() {
+    map<vertex_t*, bool> visited;
+    for (auto it : vertex_set) {
+        visited[it] = false;
+    }
+    queue<vertex_t*> vertex_queue;
+    // 顶点挨个入栈
+    for (auto it : vertex_set) {
+        if (!visited[it]) {
+            vertex_queue.push(it);
+            visited[it] = true;
+            PRINTF_DEBUG("%s", it->name().c_str());
+        }
+        // 查找顶点的所有未访问的邻接点
+        while (!vertex_queue.empty()) {
+            vertex_t* vertex = vertex_queue.front();
+            auto edge_set    = vertex->edge_set();
+            auto it_i        = edge_set.begin();
+            for (; it_i != edge_set.end(); it_i++) {
+                if (!visited[(*it_i)->dst()]) {
+                    vertex_queue.push((*it_i)->dst());
+                    visited[(*it_i)->dst()] = true;
+                    PRINTF_DEBUG("%s", (*it_i)->dst()->name().c_str());
+                }
+            }
+            // 子邻接点没有了，pop顶点回溯到上一层
+            if (it_i == edge_set.end()) {
+                vertex_queue.pop();
+            }
+        }
+    }
+}
+
+void graph_adjvex_list_t::dfs_traverse() {
+    map<vertex_t*, bool> visited;
+    for (auto it : vertex_set) {
+        visited[it] = false;
+    }
+    stack<vertex_t*> vertex_stack;
+    // 顶点挨个入栈
+    for (auto it : vertex_set) {
+        if (!visited[it]) {
+            vertex_stack.push(it);
+            visited[it] = true;
+            PRINTF_DEBUG("%s", it->name().c_str());
+        }
+        // 查找顶点的第一个未访问的邻接点，然后break出来继续访问子邻接点
+        while (!vertex_stack.empty()) {
+            vertex_t* vertex = vertex_stack.top();
+            auto edge_set    = vertex->edge_set();
+            auto it_i        = edge_set.begin();
+            for (; it_i != edge_set.end(); it_i++) {
+                if (!visited[(*it_i)->dst()]) {
+                    vertex_stack.push((*it_i)->dst());
+                    visited[(*it_i)->dst()] = true;
+                    PRINTF_DEBUG("%s", (*it_i)->dst()->name().c_str());
+                    break;
+                }
+            }
+            // 子邻接点没有了，pop顶点回溯到上一层
+            if (it_i == edge_set.end()) {
+                vertex_stack.pop();
+            }
+        }
+    }
+}
+
+void graph_adjvex_list_t::dfs_traverse_recursion_(vertex_t* vertex, map<vertex_t*, bool>& visited) {
+    if (visited[vertex]) {
+        return;
+    }
+    visited[vertex] = true;
+    PRINTF_DEBUG("%s", vertex->name().c_str());
+    auto edge_set = vertex->edge_set();
+    for (auto it : edge_set) {
+        dfs_traverse_recursion_(it->dst(), visited);
+    }
+}
+
+void graph_adjvex_list_t::dfs_traverse_recursion() {
+    map<vertex_t*, bool> visited;
+    for (auto it : vertex_set) {
+        visited[it] = false;
+    }
+    for (auto it : vertex_set) {
+        dfs_traverse_recursion_(it, visited);
+    }
 }
