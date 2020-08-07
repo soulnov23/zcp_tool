@@ -2,34 +2,25 @@
 #include "printf_utils.h"
 
 int main(int argc, char* argv[]) {
-    vertex_t* A = new vertex_t("A");
-    vertex_t* B = new vertex_t("B");
-    vertex_t* C = new vertex_t("C");
-    vertex_t* D = new vertex_t("D");
-    vertex_t* E = new vertex_t("E");
-    vertex_t* F = new vertex_t("F");
-    vertex_t* G = new vertex_t("G");
-    vertex_t* H = new vertex_t("H");
-
-    A->add_out_edge(B, "3");
-    B->add_out_edge(C, "5");
-    B->add_out_edge(D, "5");
-    C->add_out_edge(F, "10");
-    E->add_out_edge(B, "7");
-    E->add_out_edge(F, "7");
-    F->add_out_edge(G, "2");
-    H->add_out_edge(D, "6");
-    H->add_out_edge(F, "6");
-
     graph_adjvex_list_t list;
-    list.add_vertex(A);
-    list.add_vertex(B);
-    list.add_vertex(C);
-    list.add_vertex(D);
-    list.add_vertex(E);
-    list.add_vertex(F);
-    list.add_vertex(G);
-    list.add_vertex(H);
+    vertex_t* A = list.add_vertex("A");
+    vertex_t* B = list.add_vertex("B");
+    vertex_t* C = list.add_vertex("C");
+    vertex_t* D = list.add_vertex("D");
+    vertex_t* E = list.add_vertex("E");
+    vertex_t* F = list.add_vertex("F");
+    vertex_t* G = list.add_vertex("G");
+    vertex_t* H = list.add_vertex("H");
+
+    list.add_edge(A, B, "3");
+    list.add_edge(B, C, "5");
+    list.add_edge(B, D, "5");
+    list.add_edge(C, F, "10");
+    list.add_edge(E, B, "7");
+    list.add_edge(E, F, "7");
+    list.add_edge(F, G, "2");
+    list.add_edge(H, D, "6");
+    list.add_edge(H, F, "6");
 
     string data = list.dump_dot();
     PRINTF_DEBUG("%s", data.c_str());
@@ -44,8 +35,22 @@ int main(int argc, char* argv[]) {
         PRINTF_DEBUG("AC");
     }
 
-    list.dfs_traverse_recursion();
-    list.dfs_traverse();
-    list.bfs_traverse();
+    data = list.dfs_traverse_recursion();
+    PRINTF_DEBUG("%s", data.c_str());
+    data = list.dfs_traverse();
+    PRINTF_DEBUG("%s", data.c_str());
+    data = list.bfs_traverse();
+    PRINTF_DEBUG("%s", data.c_str());
+
+    graph_adjvex_list_t temp(list);
+    data = temp.dfs_traverse_recursion();
+    PRINTF_DEBUG("%s", data.c_str());
+    data = temp.dfs_traverse();
+    PRINTF_DEBUG("%s", data.c_str());
+    data = temp.bfs_traverse();
+    PRINTF_DEBUG("%s", data.c_str());
+
+    vertex_t a = *A;
+    PRINTF_DEBUG("%s", a.name().c_str());
     return 0;
 }
