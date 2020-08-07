@@ -13,28 +13,16 @@ class vertex_t;
 class edge_t {
 public:
     edge_t(){};
-    edge_t(vertex_t* s, vertex_t* d, const string& w) {
-        src_    = s;
-        dst_    = d;
-        weight_ = w;
+    edge_t(vertex_t* src, vertex_t* dst, const string& weight) {
+        src_    = src;
+        dst_    = dst;
+        weight_ = weight;
     }
     ~edge_t(){};
-    bool operator==(edge_t* edge) {
-        if ((edge->src_ == src_) && (edge->dst_ == dst_)) {
-            return true;
-        }
-        return false;
-    }
-    bool operator==(edge_t edge) {
-        if ((edge.src_ == src_) && (edge.dst_ == dst_)) {
-            return true;
-        }
-        return false;
-    }
-
-    string weight() { return weight_; }
     vertex_t* src() { return src_; }
     vertex_t* dst() { return dst_; }
+    string weight() { return weight_; }
+    void set_weight(const string& weight) { weight_ = weight; }
 
 private:
     vertex_t* src_;
@@ -46,85 +34,29 @@ private:
 class vertex_t {
 public:
     vertex_t(){};
-    vertex_t(const string& n) { name_ = n; }
-    ~vertex_t() {
-        for (auto it : edge_set_) {
-            delete it;
-        }
-    }
-    bool operator==(vertex_t* vertex) {
-        if (vertex->name_ == name_) {
-            return true;
-        }
-        return false;
-    }
-    bool operator==(vertex_t& vertex) {
-        if (vertex.name_ == name_) {
-            return true;
-        }
-        return false;
-    }
+    vertex_t(const string& name) { name_ = name; }
+    ~vertex_t() {}
     // 入度
-    void add_in_edge(vertex_t* vertex, string& weight) {
-        edge_t* edge = new edge_t(vertex, this, weight);
-        for (auto it : edge_set_) {
-            if (*it == *edge) {
-                delete edge;
-                return;
-            }
-        }
-        edge_set_.insert(edge);
-    }
-    void delete_in_edge(vertex_t* vertex) {
-        for (auto it : edge_set_) {
-            if (it->src() == vertex) {
-                edge_set_.erase(it);
-                delete it;
-                return;
-            }
-        }
+    void add_in_edge(edge_t* edge) { in_edge_set_.insert(edge); }
+    void delete_in_edge(edge_t* edge) {
+        in_edge_set_.erase(edge);
+        delete edge;
     }
     // 出度
-    void add_out_edge(vertex_t* vertex, const string& weight) {
-        edge_t* edge = new edge_t(this, vertex, weight);
-        for (auto it : edge_set_) {
-            if (*it == *edge) {
-                delete edge;
-                return;
-            }
-        }
-        edge_set_.insert(edge);
+    void add_out_edge(edge_t* edge) { out_edge_set_.insert(edge); }
+    void delete_out_edge(edge_t* edge) {
+        out_edge_set_.erase(edge);
+        delete edge;
     }
-    void delete_out_edge(vertex_t* vertex) {
-        for (auto it : edge_set_) {
-            if (it->dst() == vertex) {
-                edge_set_.erase(it);
-                delete it;
-                return;
-            }
-        }
-    }
-    bool find_in_edge(vertex_t* vertex) {
-        for (auto it : edge_set_) {
-            if (it->src() == vertex) {
-                return true;
-            }
-        }
-        return false;
-    }
-    bool find_out_edge(vertex_t* vertex) {
-        for (auto it : edge_set_) {
-            if (it->dst() == vertex) {
-                return true;
-            }
-        }
-        return false;
-    }
+
+    set<edge_t*>& in_edge_set() { return in_edge_set_; }
+    set<edge_t*>& out_edge_set() { return out_edge_set_; }
     string name() { return name_; }
-    set<edge_t*>& edge_set() { return edge_set_; }
+    void set_name(const string& name) { name_ = name; }
 
 private:
-    set<edge_t*> edge_set_;
+    set<edge_t*> in_edge_set_;
+    set<edge_t*> out_edge_set_;
     string name_;
 };
 // 邻接链表
@@ -133,22 +65,32 @@ public:
     graph_adjvex_list_t();
     ~graph_adjvex_list_t();
 
-    void add_vertex(vertex_t* vertex);
+    vertex_t* add_vertex(const string& name);
+    void delete_vertex(const string& name);
     void delete_vertex(vertex_t* vertex);
+
+    edge_t* add_edge(vertex_t* src_vertex, vertex_t* dst_vertex, const string& weight);
+    void delete_edge(vertex_t* src_vertex, vertex_t* dst_vertex);
+    void delete_edge(edge_t* edge);
 
     vertex_t* find_vertex(const string& vertex_name);
     bool find_edge(const string& src_name, const string& dst_name);
 
     string dump_dot();
-    void dfs_traverse();
-    void bfs_traverse();
-    void dfs_traverse_recursion();
+
+    string dfs_traverse();
+    string bfs_traverse();
+    string dfs_traverse_recursion();
+
+    string topological_sort();
+    string critical_path();
 
 private:
-    void dfs_traverse_recursion_(vertex_t* vertex, map<vertex_t*, bool>& visited);
+    void dfs_traverse_recursion_(vertex_t* vertex, map<vertex_t*, bool>& visited, string& content);
 
 private:
     set<vertex_t*> vertex_set;
+    set<edge_t*> edge_set;
 };
 
 // 邻接矩阵
