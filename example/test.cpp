@@ -41,16 +41,8 @@ int main(int argc, char* argv[]) {
     PRINTF_DEBUG("%s", data.c_str());
     data = list.bfs_traverse();
     PRINTF_DEBUG("%s", data.c_str());
-
-    graph_adjvex_list_t temp(list);
-    data = temp.dfs_traverse_recursion();
-    PRINTF_DEBUG("%s", data.c_str());
-    data = temp.dfs_traverse();
-    PRINTF_DEBUG("%s", data.c_str());
-    data = temp.bfs_traverse();
+    data = list.topological_sort();
     PRINTF_DEBUG("%s", data.c_str());
 
-    vertex_t a = *A;
-    PRINTF_DEBUG("%s", a.name().c_str());
     return 0;
 }

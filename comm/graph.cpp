@@ -241,6 +241,36 @@ string graph_adjvex_list_t::dfs_traverse_recursion() {
     return content.substr(0, content.length() - 4);
 }
 
-string graph_adjvex_list_t::topological_sort() {}
+// DAG可能存在多个拓扑序列
+string graph_adjvex_list_t::topological_sort() {
+    string content;
+    queue<vertex_t*> vertex_queue;
+    map<vertex_t*, size_t> in_degree_map;
+    for (auto it : vertex_set) {
+        in_degree_map[it] = it->in_degree();
+        if (it->in_degree() == 0) {
+            vertex_queue.push(it);
+        }
+    }
+    size_t count = 0;
+    while (!vertex_queue.empty()) {
+        vertex_t* vertex = vertex_queue.front();
+        auto edge_set    = vertex->out_edge_set();
+        for (auto it_i : edge_set) {
+            in_degree_map[it_i->dst()] = in_degree_map[it_i->dst()] - 1;
+            if (in_degree_map[it_i->dst()] == 0) {
+                vertex_queue.push(it_i->dst());
+            }
+        }
+        vertex_queue.pop();
+        count++;
+        content += vertex->name() + " -> ";
+    }
+    if (count < vertex_count()) {
+        PRINTF_ERROR("DAG have cycle");
+        return "";
+    }
+    return content.substr(0, content.length() - 4);
+}
 
 string graph_adjvex_list_t::critical_path() {}

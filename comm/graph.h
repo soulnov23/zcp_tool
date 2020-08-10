@@ -54,6 +54,9 @@ public:
     string name() { return name_; }
     void set_name(const string& name) { name_ = name; }
 
+    size_t in_degree() { return in_edge_set_.size(); }
+    size_t out_degree() { return out_edge_set_.size(); }
+
 private:
     set<edge_t*> in_edge_set_;
     set<edge_t*> out_edge_set_;
@@ -84,6 +87,9 @@ public:
 
     string topological_sort();
     string critical_path();
+
+    size_t vertex_count() { return vertex_set.size(); }
+    size_t edge_count() { return edge_set.size(); }
 
 private:
     void dfs_traverse_recursion_(vertex_t* vertex, map<vertex_t*, bool>& visited, string& content);
