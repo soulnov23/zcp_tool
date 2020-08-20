@@ -41,7 +41,7 @@
     "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.workspaceSymbols": "All",
-    "C_Cpp.default.intelliSenseMode": "gcc-x64",
+    //"C_Cpp.default.intelliSenseMode": "gcc-x64",
     "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
     //"C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.default.includePath": [
@@ -51,6 +51,7 @@
     "C_Cpp.clang_format_fallbackStyle": "none",
     "C_Cpp.clang_format_style": "file",
     //"C_Cpp.clang_format_path": "/root/.vscode-server/extensions/ms-vscode.cpptools-0.28.3/LLVM/bin/clang-format",
+    "C_Cpp.intelliSenseCacheSize": 10240,
 
     //files选项
     "files.autoGuessEncoding": true,
