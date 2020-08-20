@@ -12,8 +12,6 @@ CXX = g++ -std=c++2a
 AR = ar
 ARFLAGS = -scurv
 RANLIB = ranlib
-FORMAT_INIT = clang-format9 --style=Google --dump-config > .clang-format
-FORMAT = clang-format9 --style=file --fallback-style=none -i
 
 CFLAGS ?=
 CXXFLAGS ?=
@@ -62,6 +60,9 @@ LIBCO_INC = $(LIBCO_PATH)
 GPERF_PATH = $(PROJ_PATH)/dep/gperftools
 GPERF_INC = $(GPERF_PATH)/src
 GPERF_FLAGS ?= -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free
+
+FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .clang-format
+FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
 
 #自动计算文件的依赖关系
 .%.d: %.cpp
