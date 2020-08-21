@@ -46,6 +46,7 @@
     //"C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.default.includePath": [
         "/usr/include/**",
+        "/usr/local/include/**",
         "${workspaceFolder}/**"
     ],
     "C_Cpp.clang_format_fallbackStyle": "none",
