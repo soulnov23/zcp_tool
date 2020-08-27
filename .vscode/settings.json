@@ -41,7 +41,7 @@
     "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.workspaceSymbols": "All",
-    //"C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.default.intelliSenseMode": "gcc-x64",
     "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
     //"C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.default.includePath": [
