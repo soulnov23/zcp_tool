@@ -1,8 +1,8 @@
-#include "json_parser.h"
-#include "printf_utils.h"
-#include "stringbuffer.h"
-#include "utils.h"
-#include "writer.h"
+#include "zcp_tool/comm/json_parser.h"
+#include "third_party/rapidjson/stringbuffer.h"
+#include "third_party/rapidjson/writer.h"
+#include "zcp_tool/comm/printf_utils.h"
+#include "zcp_tool/comm/utils.h"
 
 int json_to_map(map<string, string>& record, string& data) {
     Document content_json_doc;

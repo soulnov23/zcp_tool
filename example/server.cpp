@@ -5,9 +5,9 @@
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include "const.h"
-#include "net/net_utils.h"
-#include "printf_utils.h"
+#include "zcp_tool/comm/net/net_utils.h"
+#include "zcp_tool/comm/printf_utils.h"
+#include "zcp_tool/example/const.h"
 
 shared_ptr<server> server::g_server = make_shared<server>();
 

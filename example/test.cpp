@@ -1,5 +1,5 @@
-#include "graph.h"
-#include "printf_utils.h"
+#include "zcp_tool/comm/graph.h"
+#include "zcp_tool/comm/printf_utils.h"
 
 int main(int argc, char* argv[]) {
     graph_adjvex_list_t list;

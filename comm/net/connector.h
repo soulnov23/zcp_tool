@@ -2,8 +2,8 @@
 #define __CONNECTOR_H__
 
 #include <memory>
-#include "arg.h"
-#include "buffer.h"
+#include "zcp_tool/comm/arg.h"
+#include "zcp_tool/comm/buffer.h"
 using namespace std;
 
 class connector {

@@ -1,5 +1,5 @@
-#include "xml_parser.h"
-#include "printf_utils.h"
+#include "zcp_tool/comm/xml_parser.h"
+#include "zcp_tool/comm/printf_utils.h"
 
 int get_conf(tinyxml2::XMLDocument& doc, const char* file_path) {
     auto ret = doc.LoadFile(file_path);

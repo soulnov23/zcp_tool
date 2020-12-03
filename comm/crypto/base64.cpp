@@ -1,6 +1,6 @@
-#include "base64.h"
+#include "zcp_tool/comm/crypto/base64.h"
 #include <string.h>
-#include "utils.h"
+#include "zcp_tool/comm/utils.h"
 
 int base64_encode(const std::string& str_in, std::string& str_out) {
     static const char base64_encode_table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

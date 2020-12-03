@@ -4,8 +4,8 @@
 #include <map>
 #include <memory>
 using namespace std;
-#include "net/connector.h"
-#include "net/net_utils.h"
+#include "zcp_tool/comm/net/connector.h"
+#include "zcp_tool/comm/net/net_utils.h"
 
 class server {
 public:

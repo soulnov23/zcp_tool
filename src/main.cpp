@@ -1,8 +1,8 @@
 #include <unistd.h>
-#include "daemon.h"
-#include "printf_utils.h"
 #include "server.h"
-#include "xml_parser.h"
+#include "zcp_tool/comm/daemon.h"
+#include "zcp_tool/comm/printf_utils.h"
+#include "zcp_tool/comm/xml_parser.h"
 
 map<string, string> config;
 

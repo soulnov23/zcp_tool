@@ -4,8 +4,8 @@
 #include <map>
 #include <string>
 using namespace std;
-#include "document.h"
-#include "rapidjson.h"
+#include "third_party/rapidjson/document.h"
+#include "third_party/rapidjson/rapidjson.h"
 using namespace rapidjson;
 
 int json_to_map(map<string, string>& record, string& data);

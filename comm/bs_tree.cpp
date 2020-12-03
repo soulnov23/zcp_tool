@@ -1,5 +1,5 @@
-#include "bs_tree.h"
-#include "printf_utils.h"
+#include "zcp_tool/comm/bs_tree.h"
+#include "zcp_tool/comm/printf_utils.h"
 
 bs_tree_t::bs_tree_t() { root_ = nullptr; }
 

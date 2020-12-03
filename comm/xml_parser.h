@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 using namespace std;
-#include "tinyxml2.h"
+#include "third_party/tinyxml2/tinyxml2.h"
 
 int get_conf(tinyxml2::XMLDocument& doc, const char* file_path);
 int get_conf(tinyxml2::XMLDocument& doc, const char* data, size_t len);

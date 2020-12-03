@@ -1,5 +1,5 @@
-#include "printf_utils.h"
-#include "xml_parser.h"
+#include "zcp_tool/comm/printf_utils.h"
+#include "zcp_tool/comm/xml_parser.h"
 using namespace tinyxml2;
 #include <fstream>
 #include <iostream>

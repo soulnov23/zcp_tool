@@ -2,18 +2,18 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "printf_utils.h"
+#include "zcp_tool/comm/printf_utils.h"
 using namespace std;
-#include "document.h"
-#include "filereadstream.h"
-#include "net/http_handle.h"
-#include "rapidjson.h"
-#include "stringbuffer.h"
-#include "writer.h"
+#include "third_party/rapidjson/document.h"
+#include "third_party/rapidjson/filereadstream.h"
+#include "third_party/rapidjson/rapidjson.h"
+#include "third_party/rapidjson/stringbuffer.h"
+#include "third_party/rapidjson/writer.h"
+#include "zcp_tool/comm/net/http_handle.h"
 using namespace rapidjson;
-#include "json_parser.h"
-#include "time_utils.h"
-#include "utils.h"
+#include "zcp_tool/comm/json_parser.h"
+#include "zcp_tool/comm/time_utils.h"
+#include "zcp_tool/comm/utils.h"
 
 #define RETURN_ON_ERROR(expr)     \
     do {                          \

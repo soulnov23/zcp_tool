@@ -6,7 +6,7 @@
 #include <sys/socket.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "printf_utils.h"
+#include "zcp_tool/comm/printf_utils.h"
 
 #define SIZE_1K (1024)
 #define SIZE_1M (SIZE_1K) * (SIZE_1K)

@@ -1,4 +1,4 @@
-#include "client.h"
+#include "zcp_tool/example/client.h"
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <signal.h>
@@ -8,9 +8,9 @@
 #include <unistd.h>
 #include <string>
 using namespace std;
-#include "const.h"
-#include "net/net_utils.h"
-#include "printf_utils.h"
+#include "zcp_tool/comm/net/net_utils.h"
+#include "zcp_tool/comm/printf_utils.h"
+#include "zcp_tool/example/const.h"
 
 shared_ptr<client> client::g_client = make_shared<client>();
 

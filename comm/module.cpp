@@ -1,6 +1,6 @@
-#include "module.h"
+#include "zcp_tool/comm/module.h"
 #include <dlfcn.h>
-#include "printf_utils.h"
+#include "zcp_tool/comm/printf_utils.h"
 
 /*
 // 函数类型，函数类型在参数列表中会退化成函数指针

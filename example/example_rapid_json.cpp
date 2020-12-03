@@ -1,6 +1,6 @@
-#include "file_utils.h"
-#include "json_parser.h"
-#include "printf_utils.h"
+#include "zcp_tool/comm/file_utils.h"
+#include "zcp_tool/comm/json_parser.h"
+#include "zcp_tool/comm/printf_utils.h"
 
 int main(int argc, char* argv[]) {
     /*

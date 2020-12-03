@@ -1,9 +1,9 @@
-#include "aes.h"
-#include "base64.h"
-#include "coder.h"
-#include "openssl/err.h"
-#include "openssl/evp.h"
-#include "printf_utils.h"
+#include "zcp_tool/comm/crypto/aes.h"
+#include "third_party/openssl-1.0.2k/include/openssl/err.h"
+#include "third_party/openssl-1.0.2k/include/openssl/evp.h"
+#include "zcp_tool/comm/crypto/base64.h"
+#include "zcp_tool/comm/crypto/coder.h"
+#include "zcp_tool/comm/printf_utils.h"
 
 #define SET_SSL_ERROR() \
     { PRINTF_ERROR("errno:%lu %s", ERR_get_error(), ERR_error_string(ERR_get_error(), nullptr)) }

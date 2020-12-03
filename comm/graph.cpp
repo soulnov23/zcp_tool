@@ -1,8 +1,8 @@
-#include "graph.h"
+#include "zcp_tool/comm/graph.h"
 #include <queue>
 #include <stack>
 using namespace std;
-#include "printf_utils.h"
+#include "zcp_tool/comm/printf_utils.h"
 
 graph_adjvex_list_t::graph_adjvex_list_t() {}
 

@@ -1,7 +1,7 @@
 #include <iostream>
-#include "file_utils.h"
-#include "json_parser.h"
-#include "printf_utils.h"
+#include "zcp_tool/comm/file_utils.h"
+#include "zcp_tool/comm/json_parser.h"
+#include "zcp_tool/comm/printf_utils.h"
 using namespace std;
 
 template <typename T1, typename T2, typename T3>

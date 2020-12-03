@@ -1,12 +1,12 @@
-#include "sha.h"
+#include "zcp_tool/comm/crypto/sha.h"
 #include <string.h>
-#include "base64.h"
-#include "coder.h"
-#include "openssl/bio.h"
-#include "openssl/hmac.h"
-#include "openssl/pem.h"
-#include "openssl/rsa.h"
-#include "openssl/sha.h"
+#include "third_party/openssl-1.0.2k/include/openssl/bio.h"
+#include "third_party/openssl-1.0.2k/include/openssl/hmac.h"
+#include "third_party/openssl-1.0.2k/include/openssl/pem.h"
+#include "third_party/openssl-1.0.2k/include/openssl/rsa.h"
+#include "third_party/openssl-1.0.2k/include/openssl/sha.h"
+#include "zcp_tool/comm/crypto/base64.h"
+#include "zcp_tool/comm/crypto/coder.h"
 
 int sha256(const std::string& data_in, std::string& data_out) {
     char buf[3];

@@ -4,8 +4,8 @@
 #include <iostream>
 #include <stack>
 #include "co_routine.h"
-#include "net/net_utils.h"
-#include "printf_utils.h"
+#include "zcp_tool/comm/net/net_utils.h"
+#include "zcp_tool/comm/printf_utils.h"
 using namespace std;
 
 #define CO_ROUTINE_NUM  10
