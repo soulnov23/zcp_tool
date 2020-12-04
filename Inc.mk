@@ -36,6 +36,8 @@ BIN_DIR = $(PROJ_PATH)/bin
 LIB_DIR = $(PROJ_PATH)/lib
 OBJ_DIR = $(PROJ_PATH)/obj
 
+INCLUDE = -I/data/home -I/data/home/zcp_tool
+
 COMM_PATH = $(PROJ_PATH)/comm
 COMM_INC = $(COMM_PATH)
 

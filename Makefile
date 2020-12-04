@@ -30,10 +30,10 @@ format:
 	done
 
 install: check
-	make -C dep install
+	make -C third_party install
 
 uninstall:
-	make -C dep uninstall
+	make -C third_party uninstall
 
 check:
 	@mkdir -p obj
