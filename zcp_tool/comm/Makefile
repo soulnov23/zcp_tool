@@ -1,4 +1,4 @@
-include ../Inc.mk
+include ../../Inc.mk
 
 DIR_MODULES = crypto \
 			  net
@@ -10,8 +10,7 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libcomm.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE += -I$(XML_INC) -I$(HTTP_PARSER_INC) -I$(RAPID_JSON_INC) \
-		   -I$(OPEN_SSL_INC) -I$(CURL_INC) -I$(LIBCO_INC)
+INCLUDE += -I$(PROJ_PATH)
 LDFLAGS += -L$(LIB_DIR) -lpthread -ldl -ltinyxml2 -lhttp_parser -lcrypto -lcurl \
 		   -laio -lcolib -ltcmalloc_minimal -lssl
 

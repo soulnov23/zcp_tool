@@ -5,8 +5,8 @@
 #include "third_party/openssl-1.0.2k/include/openssl/pem.h"
 #include "third_party/openssl-1.0.2k/include/openssl/rsa.h"
 #include "third_party/openssl-1.0.2k/include/openssl/sha.h"
+#include "zcp_tool/comm/coder.h"
 #include "zcp_tool/comm/crypto/base64.h"
-#include "zcp_tool/comm/crypto/coder.h"
 
 int sha256(const std::string& data_in, std::string& data_out) {
     char buf[3];

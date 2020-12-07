@@ -32,36 +32,9 @@ LDFLAGS  +=
 endif
 
 PROJ_PATH = $(shell pwd | awk -F'/zcp_tool' '{print $$1}')/zcp_tool
-BIN_DIR = $(PROJ_PATH)/bin
-LIB_DIR = $(PROJ_PATH)/lib
-OBJ_DIR = $(PROJ_PATH)/obj
-
-INCLUDE = -I/data/home -I/data/home/zcp_tool
-
-COMM_PATH = $(PROJ_PATH)/comm
-COMM_INC = $(COMM_PATH)
-
-OPEN_SSL_PATH = $(PROJ_PATH)/dep/openssl-1.0.2k
-OPEN_SSL_INC = $(OPEN_SSL_PATH)/include
-
-CURL_PATH = $(PROJ_PATH)/dep/curl-7.29.0
-CURL_INC = $(CURL_PATH)/include
-
-RAPID_JSON_PATH = $(PROJ_PATH)/dep/rapidjson
-RAPID_JSON_INC = $(RAPID_JSON_PATH)
-
-XML_PATH = $(PROJ_PATH)/dep/tinyxml2
-XML_INC = $(XML_PATH)
-
-HTTP_PARSER_PATH = $(PROJ_PATH)/dep/http-parser
-HTTP_PARSER_INC = $(HTTP_PARSER_PATH)
-
-LIBCO_PATH = $(PROJ_PATH)/dep/libco
-LIBCO_INC = $(LIBCO_PATH)
-
-GPERF_PATH = $(PROJ_PATH)/dep/gperftools
-GPERF_INC = $(GPERF_PATH)/src
-GPERF_FLAGS ?= -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free
+BIN_DIR = $(PROJ_PATH)/release/bin
+LIB_DIR = $(PROJ_PATH)/release/lib
+OBJ_DIR = $(PROJ_PATH)/release/obj
 
 FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .clang-format
 FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i

@@ -1,4 +1,4 @@
-include ../../Inc.mk
+include ../../../Inc.mk
 
 SRC := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp, %.o, $(SRC))
@@ -7,8 +7,7 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libcomm_crypto.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE += -I$(COMM_INC) -I$(XML_INC) -I$(HTTP_PARSER_INC) \
-		   -I$(RAPID_JSON_INC) -I$(OPEN_SSL_INC) -I$(CURL_INC) -I$(LIBCO_INC)
+INCLUDE += -I$(PROJ_PATH)
 LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lhttp_parser -lcrypto -lcurl \
 		   -laio -lcolib -lcomm -ltcmalloc_minimal -lssl
 

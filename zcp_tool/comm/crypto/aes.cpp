@@ -1,8 +1,8 @@
 #include "zcp_tool/comm/crypto/aes.h"
 #include "third_party/openssl-1.0.2k/include/openssl/err.h"
 #include "third_party/openssl-1.0.2k/include/openssl/evp.h"
+#include "zcp_tool/comm/coder.h"
 #include "zcp_tool/comm/crypto/base64.h"
-#include "zcp_tool/comm/crypto/coder.h"
 #include "zcp_tool/comm/printf_utils.h"
 
 #define SET_SSL_ERROR() \

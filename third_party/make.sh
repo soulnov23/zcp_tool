@@ -85,6 +85,30 @@ function uninstall_gperf()
 	rm -rf $2/libtcmalloc*.*
 }
 
+function install_http_parser()
+{
+	cd $1
+	make install
+}
+
+function uninstall_http_parser()
+{
+	cd $1
+	make uninstall
+}
+
+function install_tinyxml2()
+{
+	cd $1
+	make install
+}
+
+function uninstall_tinyxml2()
+{
+	cd $1
+	make uninstall
+}
+
 main()
 {
 	case $1 in
@@ -111,6 +135,18 @@ main()
 		;;
 	uninstall_gperf)
 		uninstall_gperf $2 $3
+		;;
+	install_http_parser)
+		install_http_parser $2 $3
+		;;
+	uninstall_http_parser)
+		uninstall_http_parser $2 $3
+		;;
+	install_tinyxml2)
+		install_tinyxml2 $2 $3
+		;;
+	uninstall_tinyxml2)
+		uninstall_tinyxml2 $2 $3
 		;;
 	*)
 		echo "error:argument is invalid"

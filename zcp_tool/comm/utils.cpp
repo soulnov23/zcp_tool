@@ -4,7 +4,7 @@
 #include <string.h>
 #include <algorithm>
 #include <sstream>
-#include "zcp_tool/comm/crypto/coder.h"
+#include "zcp_tool/comm/coder.h"
 
 #define FIELD_FLAG "&"
 #define VALUE_FLAG "="
