@@ -8,7 +8,7 @@ BUILD = BUILD_DEBUG
 #BUILD = BUILD_RELEASE
 
 CC = gcc
-CXX = g++ -std=c++2a
+CXX = g++ -std=c++20
 AR = ar
 ARFLAGS = -scurv
 RANLIB = ranlib
