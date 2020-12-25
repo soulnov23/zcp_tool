@@ -446,11 +446,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
     ret = 0;
     if (sign_type == SIGN_CODE_BASE64) {
         std::string tmp((char*)sign, sign_size);
-        if (base64_encode(tmp, signature) != 0) {
-            PRINTF_ERROR("base64 decode sign error");
-            ret = RSA_PARAM_TYPE_ERROR;
-            goto free_mem;
-        }
+        base64_encode(tmp, signature);
     } else if (sign_type == SIGN_CODE_HEX) {
         std::string tmp((char*)sign, sign_size);
         encode_hex_string(tmp, signature);
@@ -570,11 +566,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
     ret = 0;
     if (sign_type == SIGN_CODE_BASE64) {
         std::string tmp((char*)sign, sign_size);
-        if (base64_encode(tmp, signature) != 0) {
-            PRINTF_ERROR("base64 decode sign error");
-            ret = RSA_PARAM_TYPE_ERROR;
-            goto free_mem;
-        }
+        base64_encode(tmp, signature);
     } else if (sign_type == SIGN_CODE_HEX) {
         std::string tmp((char*)sign, sign_size);
         encode_hex_string(tmp, signature);

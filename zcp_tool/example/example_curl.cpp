@@ -15,12 +15,6 @@ using namespace rapidjson;
 #include "zcp_tool/comm/time_utils.h"
 #include "zcp_tool/comm/utils.h"
 
-#define RETURN_ON_ERROR(expr)     \
-    do {                          \
-        int ret = (expr);         \
-        if (ret != 0) return ret; \
-    } while (0)
-
 string g_card_no     = "4567801230000220";
 string g_card_pin    = "104143";
 string g_card_amount = "1000";

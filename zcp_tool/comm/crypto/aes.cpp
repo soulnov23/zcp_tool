@@ -75,10 +75,7 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string
 
     if (sign_type == AES_SIGN_CODE_BASE64) {
         std::string tmp((char*)outbuf, outlen);
-        if (base64_encode(tmp, encrypt_msg) != 0) {
-            PRINTF_ERROR("base64 encode sign error");
-            return AES_PARAM_TYPE_ERROR;
-        }
+        base64_encode(tmp, encrypt_msg);
     } else {
         std::string tmp((char*)outbuf, outlen);
         encode_hex_string(tmp, encrypt_msg);

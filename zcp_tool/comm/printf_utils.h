@@ -59,4 +59,32 @@ __PRETTY_FUNCTION__, ##args)
         fflush(stdout);                                                                                                      \
     }
 
+#define RETURN_ON_ERROR(expr)                \
+    do {                                     \
+        int __ret = (expr);                  \
+        if (__ret != 0) {                    \
+            PRINTF_ERROR("call expr error"); \
+            return __ret;                    \
+        }                                    \
+    } while (0)
+
+#define RETURN_ON_ERROR_OR_DO(expr, sucess_expr) \
+    do {                                         \
+        int __ret = (expr);                      \
+        if (__ret != 0) {                        \
+            PRINTF_ERROR("call expr error");     \
+            return __ret;                        \
+        }                                        \
+        sucess_expr;                             \
+    } while (0)
+
+#define ON_ERROR_RETURN(expr, ret_err)           \
+    do {                                         \
+        if ((expr) != 0)                         \
+            if (__ret != 0) {                    \
+                PRINTF_ERROR("call expr error"); \
+                return (ret_err);                \
+            }                                    \
+    } while (0)
+
 #endif
