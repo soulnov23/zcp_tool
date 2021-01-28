@@ -3,14 +3,15 @@
 #include <streambuf>
 #include "zcp_tool/comm/printf_utils.h"
 
-int file_to_string(string& data, const char* file_path) {
+string file_to_string(const char* file_path) {
+    string data = "";
     ifstream file(file_path);
     if (!file) {
         PRINTF_ERROR("open file failed : %s", file_path);
-        return -1;
+        return data;
     }
     istreambuf_iterator<char> begin(file);
     istreambuf_iterator<char> end;
-    data = string(begin, end);
-    return 0;
+    data = move(string(begin, end));
+    return data;
 }
