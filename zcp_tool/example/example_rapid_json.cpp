@@ -23,23 +23,20 @@ int main(int argc, char* argv[]) {
     document.AddMember("amount", array, allocator);
     */
 
-    string data;
-    if (file_to_string(data, "/home/zcp_tool/example/test.json") != 0) {
+    string data = move(file_to_string("/data/home/zcp_tool/zcp_tool/example/test.json"));
+    if (data.empty()) {
         return -1;
     }
     PRINTF_DEBUG("data[%s]", data.c_str());
-    Document doc;
-    if (string_to_json(doc, data) != 0) {
+    Document doc = move(string_to_json(data));
+    if (doc.ObjectEmpty()) {
         return -1;
     }
-    Value* user_object;
-    get_object(doc, "user", user_object);
-    Value* id_object;
-    get_object(*user_object, "id", id_object);
+    Value* user_object           = get_object(doc, "user");
+    Value* id_object             = get_object(*user_object, "id");
     Value::MemberIterator member = id_object->FindMember("value");
     member->value.SetString("123456", doc.GetAllocator());
-    string result;
-    json_to_string(result, doc);
+    string result = move(json_to_string(doc));
     PRINTF_DEBUG("result[%s]", result.c_str());
     return 0;
 }
