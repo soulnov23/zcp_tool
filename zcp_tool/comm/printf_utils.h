@@ -30,33 +30,17 @@ __PRETTY_FUNCTION__, ##args)
 */
 
 #define PRINTF_DEBUG(format, ...)                                                                                                \
-                                                                                                                                 \
     {                                                                                                                            \
-        string __time_str;                                                                                                       \
-        int __ret = get_time_now(__time_str);                                                                                    \
-        if (__ret == 0) {                                                                                                        \
-            printf("[%s] " GREEN_PRINT_BEG "[DEBUG]" GREEN_PRINT_END " [%s:%d %s()] " format "\n", __time_str.c_str(), __FILE__, \
-                   __LINE__, __FUNCTION__, ##__VA_ARGS__);                                                                       \
-        } else {                                                                                                                 \
-            printf(GREEN_PRINT_BEG "[DEBUG]" GREEN_PRINT_END " [%s:%d %s()] " format "\n", __FILE__, __LINE__, __FUNCTION__,     \
-                   ##__VA_ARGS__);                                                                                               \
-        }                                                                                                                        \
+        printf("[%s] " GREEN_PRINT_BEG "[DEBUG]" GREEN_PRINT_END " [%s:%d %s()] " format "\n", get_time_now().c_str(), __FILE__, \
+               __LINE__, __FUNCTION__, ##__VA_ARGS__);                                                                           \
         fflush(stdout);                                                                                                          \
     }
 
-#define PRINTF_ERROR(format, ...)                                                                                            \
-                                                                                                                             \
-    {                                                                                                                        \
-        string __time_str;                                                                                                   \
-        int __ret = get_time_now(__time_str);                                                                                \
-        if (__ret == 0) {                                                                                                    \
-            printf("[%s] " RED_PRINT_BEG "[ERROR]" RED_PRINT_END " [%s:%d %s()] [errno:%d err:%s] " format "\n",             \
-                   __time_str.c_str(), __FILE__, __LINE__, __FUNCTION__, errno, strerror(errno), ##__VA_ARGS__);             \
-        } else {                                                                                                             \
-            printf(RED_PRINT_BEG "[ERROR]" RED_PRINT_END " [%s:%d %s()] [errno:%d err:%s] " format "\n", __FILE__, __LINE__, \
-                   __FUNCTION__, errno, strerror(errno), ##__VA_ARGS__);                                                     \
-        }                                                                                                                    \
-        fflush(stdout);                                                                                                      \
+#define PRINTF_ERROR(format, ...)                                                                                \
+    {                                                                                                            \
+        printf("[%s] " RED_PRINT_BEG "[ERROR]" RED_PRINT_END " [%s:%d %s()] [errno:%d err:%s] " format "\n",     \
+               get_time_now().c_str(), __FILE__, __LINE__, __FUNCTION__, errno, strerror(errno), ##__VA_ARGS__); \
+        fflush(stdout);                                                                                          \
     }
 
 #define RETURN_ON_ERROR(expr)                \
