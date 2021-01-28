@@ -62,21 +62,15 @@ void string_replace(string& data, const string& src, const string& dst) {
 }
 
 void string_lower(string& str) {
-    for (string::iterator i = str.begin(); i != str.end(); i++) {
-        *i = tolower(*i);
+    for (auto& i : str) {
+        i = tolower(i);
     }
 }
 
 void string_upper(string& str) {
-    for (string::iterator i = str.begin(); i != str.end(); i++) {
-        *i = toupper(*i);
+    for (auto& i : str) {
+        i = toupper(i);
     }
-}
-
-const string longlong_to_string(long long ll) {
-    char tmp[128] = {0};
-    snprintf(tmp, sizeof(tmp) - 1, "%lld", ll);
-    return tmp;
 }
 
 void str2vec(const string& buf, const char& field, vector_t& vec) {

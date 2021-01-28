@@ -4,7 +4,7 @@
 #include "zcp_tool/comm/printf_utils.h"
 
 string file_to_string(const char* file_path) {
-    string data = "";
+    string data;
     ifstream file(file_path);
     if (!file) {
         PRINTF_ERROR("open file failed : %s", file_path);
