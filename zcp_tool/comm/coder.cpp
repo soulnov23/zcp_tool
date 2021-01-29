@@ -184,25 +184,25 @@ extern const bool url_encode_table[] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 int upay_escape_string(const std::string& str_in, std::string& str_out) {
-    return string_escape<escape_with_char_set<upay_escape_chars>, fixed_size_escape<upay_escape_char, 1> >(str_in, str_out);
+    return string_escape<escape_with_char_set<upay_escape_chars>, fixed_size_escape<upay_escape_char, 1>>(str_in, str_out);
 }
 
 int encode_hex_string(const std::string& str_in, std::string& str_out) {
-    return string_escape<escape_with_char_set<hex_string_encode_table>, fixed_size_escape<hex_string_encode_char, 3> >(str_in,
-                                                                                                                       str_out);
+    return string_escape<escape_with_char_set<hex_string_encode_table>, fixed_size_escape<hex_string_encode_char, 3>>(str_in,
+                                                                                                                      str_out);
 }
 
 int encode_hex_string(std::string& str_in_out) { return encode_hex_string(str_in_out, str_in_out); }
 
 int decode_hex_string(const std::string& str_in, std::string& str_out) {
-    return string_escape<escape_with_char_set<hex_string_prefix>, fixed_size_escape<hex_string_part_decode, 1, 3> >(str_in,
-                                                                                                                    str_out);
+    return string_escape<escape_with_char_set<hex_string_prefix>, fixed_size_escape<hex_string_part_decode, 1, 3>>(str_in,
+                                                                                                                   str_out);
 }
 
 int decode_hex_string(std::string& str_in_out) { return decode_hex_string(str_in_out, str_in_out); }
 
 int buff_to_hex_string(const std::string& str_in, std::string& str_out) {
-    return string_escape<fixed_size_escape<buff_hex_string_encode_char, 2> >(str_in, str_out);
+    return string_escape<fixed_size_escape<buff_hex_string_encode_char, 2>>(str_in, str_out);
 }
 
 int decode_hex_string_and_escape(const std::string& str_in, std::string& str_out) {
@@ -212,7 +212,7 @@ int decode_hex_string_and_escape(const std::string& str_in, std::string& str_out
 }
 
 int url_encode(const std::string& str_in, std::string& str_out) {
-    return string_escape<escape_with_char_set<url_encode_table>, fixed_size_escape<hex_string_encode_char, 3> >(str_in, str_out);
+    return string_escape<escape_with_char_set<url_encode_table>, fixed_size_escape<hex_string_encode_char, 3>>(str_in, str_out);
 }
 
 int url_decode(const std::string& str_in, std::string& str_out) { return decode_hex_string(str_in, str_out); }
