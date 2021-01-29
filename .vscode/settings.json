@@ -21,7 +21,13 @@
     "[cpp]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
-    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[xml]": {
+        "editor.defaultFormatter": "mikeburgh.xml-format"
+    },
+    //"editor.defaultFormatter": "ms-vscode.cpptools",
     //"editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     //"editor.formatOnType": true,
