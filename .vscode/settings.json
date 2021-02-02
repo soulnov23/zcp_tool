@@ -3,11 +3,9 @@
     //"http.proxy": "http://devnet-proxy.oa.com:8080",
     //"http.proxyStrictSSL": false,
     //"http.proxySupport": "on",
-
     "window.zoomLevel": 0,
     "problems.decorations.enabled": false,
     "breadcrumbs.enabled": true,
-
     //editor选项
     "editor.fontSize": 18,
     "editor.minimap.enabled": false,
@@ -32,14 +30,12 @@
     "editor.formatOnSave": true,
     //"editor.formatOnType": true,
     "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
-
     //workbench选项
     "workbench.editor.enablePreview": false,
     "workbench.activityBar.visible": true,
     "workbench.tree.renderIndentGuides": "none",
     "workbench.view.alwaysShowHeaderActions": true,
     "workbench.startupEditor": "welcomePageInEmptyWorkbench",
-    
     //C_Cpp选项
     //"C_Cpp.default.cppStandard": "c++20",
     //"C_Cpp.default.cStandard": "c11",
@@ -59,7 +55,6 @@
     "C_Cpp.clang_format_style": "file",
     //"C_Cpp.clang_format_path": "/root/.vscode-server/extensions/ms-vscode.cpptools-0.28.3/LLVM/bin/clang-format",
     "C_Cpp.intelliSenseCacheSize": 10240,
-
     //files选项
     "files.autoGuessEncoding": true,
     "files.autoSave": "onFocusChange",
@@ -89,18 +84,15 @@
         "**/test": true,
         "**/zcp_server": true
     },
-
     //remote选项
     //"remote.SSH.showLoginTerminal": true,
     "remote.SSH.remotePlatform": {
         "cloud": "linux"
     },
-
     //git选项
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.path": "/usr/bin/git",
-
     //python选项
     "python.analysis.cacheFolderPath": "${workspaceFolder}/.vscode",
     "python.pythonPath": "/usr/bin/python",
@@ -115,6 +107,13 @@
         "/usr/lib/python2.7/site-packages/**"
     ],
     "python.languageServer": "Microsoft",
-
-    "explorer.confirmDelete": false
+    "explorer.confirmDelete": false,
+    //terminal选项
+    "terminal.integrated.fontFamily": "DejaVu Sans Mono",
+    "terminal.integrated.fontSize": 21,
+    "terminal.integrated.copyOnSelection": true,
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.cursorStyle": "line",
+    "terminal.integrated.scrollback": 5000,
+    "terminal.integrated.wordSeparators": "`~!@#$%^&*()-=+[{]}\\\\|;:'\\\",.<>/?"
 }
