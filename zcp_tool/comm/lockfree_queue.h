@@ -5,16 +5,15 @@
 #include <memory>
 using namespace std;
 
+enum status {
+    LOCKFREE_QUEUE_OK    = 0,   // 操作成功
+    LOCKFREE_QUEUE_ERR   = -1,  // 操作失败
+    LOCKFREE_QUEUE_FULL  = 1,   // 入队列失败，队列已满
+    LOCKFREE_QUEUE_EMPTY = 2    // 出队列失败，队列为空
+};
+
 template <typename T>
 class lockfree_queue_t {
-public:
-    enum status {
-        LOCKFREE_QUEUE_OK    = 0,   // 操作成功
-        LOCKFREE_QUEUE_ERR   = -1,  // 操作失败
-        LOCKFREE_QUEUE_FULL  = 1,   // 入队列失败，队列已满
-        LOCKFREE_QUEUE_EMPTY = 2    // 出队列失败，队列为空
-    };
-
 private:
     void init(size_t size) {
         bool size_is_power_of_2 = (size >= 2) && ((size & (size - 1)) == 0);
