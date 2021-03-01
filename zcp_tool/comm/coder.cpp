@@ -1,4 +1,5 @@
 #include "zcp_tool/comm/coder.h"
+
 #include <string.h>
 
 // typedef std::string::size_type (*escape_function)(const std::string& str_in,

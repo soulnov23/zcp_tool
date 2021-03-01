@@ -1,5 +1,7 @@
 #include "zcp_tool/comm/module.h"
+
 #include <dlfcn.h>
+
 #include "zcp_tool/comm/printf_utils.h"
 
 /*

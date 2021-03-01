@@ -1,6 +1,8 @@
 #include "zcp_tool/comm/file_utils.h"
+
 #include <fstream>
 #include <streambuf>
+
 #include "zcp_tool/comm/printf_utils.h"
 
 string file_to_string(const char* file_path) {

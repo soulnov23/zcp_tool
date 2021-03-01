@@ -1,9 +1,12 @@
 #include "zcp_tool/comm/utils.h"
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <algorithm>
 #include <sstream>
+
 #include "zcp_tool/comm/coder.h"
 
 #define FIELD_FLAG "&"

@@ -1,4 +1,5 @@
 #include "zcp_tool/comm/net/net_utils.h"
+
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <net/if.h>
@@ -8,6 +9,7 @@
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+
 #include "zcp_tool/comm/printf_utils.h"
 #include "zcp_tool/comm/utils.h"
 

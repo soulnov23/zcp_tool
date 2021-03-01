@@ -2,6 +2,7 @@
 #define __CONNECTOR_H__
 
 #include <memory>
+
 #include "zcp_tool/comm/arg.h"
 #include "zcp_tool/comm/buffer.h"
 using namespace std;

@@ -1,4 +1,5 @@
 #include "server.h"
+
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <netinet/in.h>
@@ -6,6 +7,7 @@
 #include <sys/socket.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
 #include "zcp_tool/comm/printf_utils.h"
 
 #define SIZE_1K (1024)

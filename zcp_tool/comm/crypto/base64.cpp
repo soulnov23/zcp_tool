@@ -1,5 +1,7 @@
 #include "zcp_tool/comm/crypto/base64.h"
+
 #include <string.h>
+
 #include "zcp_tool/comm/utils.h"
 
 void base64_encode(const std::string& str_in, std::string& str_out) {

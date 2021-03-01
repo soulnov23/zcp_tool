@@ -1,7 +1,7 @@
 Language: Cpp
 BasedOnStyle: Google
 
-# public,private向左编译4空格
+# public,private向左偏移4空格
 AccessModifierOffset: -4
 
 # 宏定义对齐
@@ -18,7 +18,7 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 
 # 头文件对齐
-IncludeBlocks: Preserve
+IncludeBlocks: Regroup
 
 # 缩进
 IndentWidth: 4
