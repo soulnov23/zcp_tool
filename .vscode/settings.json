@@ -39,7 +39,7 @@
     "workbench.startupEditor": "welcomePageInEmptyWorkbench",
     //C_Cpp选项
     //"C_Cpp.default.cppStandard": "c++20",
-    //"C_Cpp.default.cStandard": "c11",
+    //"C_Cpp.default.cStandard": "c18",
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
     "C_Cpp.autoAddFileAssociations": false,
@@ -93,6 +93,7 @@
     //git选项
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
+    "git.fetchOnPull": true,
     "git.path": "/usr/bin/git",
     //python选项
     "python.analysis.cacheFolderPath": "${workspaceFolder}/.vscode",
