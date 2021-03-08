@@ -111,7 +111,7 @@
     "python.languageServer": "Microsoft",
     "explorer.confirmDelete": false,
     //terminal选项
-    "terminal.integrated.fontFamily": "DejaVu Sans Mono",
+    "terminal.integrated.fontFamily": "Consolas, 'Courier New', monospace",
     "terminal.integrated.fontSize": 21,
     "terminal.integrated.copyOnSelection": true,
     "terminal.integrated.cursorBlinking": true,
