@@ -16,6 +16,9 @@
     "editor.suggest.insertMode": "replace",
     "editor.suggest.shareSuggestSelections": true,
     "editor.suggestSelection": "recentlyUsedByPrefix",
+    "[go]": {
+        "editor.defaultFormatter": "golang.go",
+    },
     "[cpp]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
@@ -23,7 +26,7 @@
         "editor.defaultFormatter": "vscode.json-language-features"
     },
     "[xml]": {
-        "editor.defaultFormatter": "mikeburgh.xml-format"
+        "editor.defaultFormatter": "DotJoshJohnson.xml"
     },
     //"editor.defaultFormatter": "ms-vscode.cpptools",
     //"editor.formatOnPaste": true,
@@ -45,7 +48,7 @@
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.workspaceSymbols": "All",
     "C_Cpp.default.intelliSenseMode": "gcc-x64",
-    "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
+    "C_Cpp.intelliSenseCachePath": "/data/home/.vscode",
     //"C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.default.includePath": [
         "/usr/include/**",
@@ -94,22 +97,10 @@
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.fetchOnPull": true,
-    "git.path": "/usr/bin/git",
-    //python选项
-    "python.analysis.cacheFolderPath": "${workspaceFolder}/.vscode",
-    "python.pythonPath": "/usr/bin/python",
-    "python.jediEnabled": false,
-    "python.linting.enabled": true,
-    "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": true,
-    "python.formatting.provider": "yapf",
-    "python.autoComplete.addBrackets": true,
-    "python.autoComplete.extraPaths": [
-        "${workspaceFolder}/**",
-        "/usr/lib/python2.7/site-packages/**"
-    ],
-    "python.languageServer": "Microsoft",
+    //"git.path": "/usr/bin/git",
+    //explorer选项
     "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
     //terminal选项
     "terminal.integrated.fontFamily": "DejaVu Sans Mono",
     "terminal.integrated.fontSize": 21,
@@ -117,5 +108,12 @@
     "terminal.integrated.cursorBlinking": true,
     "terminal.integrated.cursorStyle": "line",
     "terminal.integrated.scrollback": 5000,
-    "terminal.integrated.wordSeparators": "`~!@#$%^&*()-=+[{]}\\\\|;:'\\\",.<>/?"
+    "terminal.integrated.wordSeparators": "`~!@#$%^&*()-=+[{]}\\\\|;:'\\\",.<>/?",
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    //go选项
+    "go.toolsManagement.autoUpdate": true,
+    //xml选项
+    "xmlTools.enableXmlTreeViewCursorSync": true,
+    "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
+    "xmlTools.splitXmlnsOnFormat": false
 }
