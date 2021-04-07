@@ -12,7 +12,7 @@ LDFLAGS +=
 install: $(SO_BIN) $(A_BIN)
 
 $(SO_BIN): $(OBJS)
-	$(CC) $(CXXFLAGS) -shared -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CXXFLAGS) -shared -Wl,-soname,$(SO_NAME) $(LDFLAGS) $^ -o $@
 
 $(A_BIN): $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?

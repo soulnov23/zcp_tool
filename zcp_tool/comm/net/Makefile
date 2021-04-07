@@ -14,7 +14,7 @@ LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lhttp_parser -lcrypto -lcurl \
 all: $(SO_BIN) $(A_BIN)
 
 $(SO_BIN): $(OBJS)
-	$(CXX) $(CXXFLAGS) -shared -Wl,-rpath=$(LIB_DIR) -Wl,-soname,$(SO_NAME) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -shared -Wl,-rpath=$(LIB_DIR) -Wl,-soname,$(SO_NAME) $(LDFLAGS) $^ -o $@
 
 $(A_BIN): $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?

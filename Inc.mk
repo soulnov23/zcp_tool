@@ -40,35 +40,33 @@ FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .cla
 FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
 
 #自动计算文件的依赖关系
-.%.d: %.cpp
-	$(CC) $(INCLUDE) -MM $< > $@
-	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
+%.d: %.c
+	$(CC) $(INCLUDE) -MD $< > $@
+	@$(CC) $(INCLUDE) -MD $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
                 sed s/"\.o"/"\.d"/  >> $@
-.%.d: %.cc
-	$(CC) $(INCLUDE) -MM $< > $@
-	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
+%.d: %.cc
+	$(CC) $(INCLUDE) -MD $< > $@
+	@$(CC) $(INCLUDE) -MD $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
                 sed s/"\.o"/"\.d"/  >> $@
-
-%.o: %.cpp 
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $<
-%.o: %.cc 
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $<
-
-$(OBJ_DIR)%.o: %.cpp
-	$(CXX) -o $(OBJ_DIR)$*.o $(CXXFLAGS) $(INCLUDE) -c $<
-$(OBJ_DIR)%.o: %.cc
-	$(CXX) -o $(OBJ_DIR)$*.o $(CXXFLAGS) $(INCLUDE) -c $<
-
-.%.d: %.c
-	$(CC) $(INCLUDE) -MM $< > $@
-	@$(CC) $(INCLUDE) -MM $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
+%.d: %.cpp
+	$(CXX) $(INCLUDE) -MD $< > $@
+	@$(CXX) $(INCLUDE) -MD $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
                 sed s/"\.o"/"\.d"/  >> $@
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -c $<
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+%.o: %.cc
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+%.o: %.S
+	$(CXX) $(CXXFLAGS) -D__WITH_FLOAT_SUPPORT -c $^ -o $@
 
 $(OBJ_DIR)%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -c $<
-
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
+$(OBJ_DIR)%.o: %.cc
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
+$(OBJ_DIR)%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
 $(OBJ_DIR)%.o: %.S
-	$(CXX) $(CXXFLAGS) -D__WITH_FLOAT_SUPPORT -o $@ -c $^
+	$(CXX) $(CXXFLAGS) -D__WITH_FLOAT_SUPPORT -c $^ -o $(OBJ_DIR)$*.o
