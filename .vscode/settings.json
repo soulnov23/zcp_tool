@@ -10,7 +10,7 @@
     "editor.fontSize": 18,
     "editor.minimap.enabled": false,
     "editor.renderControlCharacters": true,
-    "editor.renderWhitespace": "none",
+    "editor.renderWhitespace": "all",
     "editor.largeFileOptimizations": false,
     "editor.copyWithSyntaxHighlighting": false,
     "editor.suggest.insertMode": "replace",
@@ -102,7 +102,7 @@
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
     //terminal选项
-    "terminal.integrated.fontFamily": "DejaVu Sans Mono",
+    "terminal.integrated.fontFamily": "DejaVu Sans Mono, monospace",
     "terminal.integrated.fontSize": 21,
     "terminal.integrated.copyOnSelection": true,
     "terminal.integrated.cursorBlinking": true,
