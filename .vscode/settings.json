@@ -10,7 +10,7 @@
     "editor.fontSize": 18,
     "editor.minimap.enabled": false,
     "editor.renderControlCharacters": true,
-    "editor.renderWhitespace": "all",
+    "editor.renderWhitespace": "none",
     "editor.largeFileOptimizations": false,
     "editor.copyWithSyntaxHighlighting": false,
     "editor.suggest.insertMode": "replace",
