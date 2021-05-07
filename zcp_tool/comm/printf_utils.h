@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "zcp_tool/comm/time_utils.h"
 
@@ -23,25 +24,25 @@
 /*
 gcc支持的做法，支持arg可变参传入
 #define PRINTF_DEBUG(format, args...) \
-                printf("[DEBUG] [%s:%d %s()] " format"\n", __FILE__, __LINE__,
+                printf("DEBUG [%s:%d %s()] " format"\n", __FILE__, __LINE__,
 __PRETTY_FUNCTION__, ##args)
 #define PRINTF_DEBUG(format, args...) \
-                printf("[DEBUG] [%s:%d %s()] " format"\n", __FILE__, __LINE__,
+                printf("DEBUG [%s:%d %s()] " format"\n", __FILE__, __LINE__,
 __PRETTY_FUNCTION__, ##args)
 */
 
-#define PRINTF_DEBUG(format, ...)                                                                                                \
-    {                                                                                                                            \
-        printf("[%s] " GREEN_PRINT_BEG "[DEBUG]" GREEN_PRINT_END " [%s:%d %s()] " format "\n", get_time_now().c_str(), __FILE__, \
-               __LINE__, __FUNCTION__, ##__VA_ARGS__);                                                                           \
-        fflush(stdout);                                                                                                          \
+#define PRINTF_DEBUG(format, ...)                                                                                        \
+    {                                                                                                                    \
+        printf("[%s] " GREEN_PRINT_BEG "DEBUG" GREEN_PRINT_END " [%d][%s:%d %s()] " format "\n", get_time_now().c_str(), \
+               getpid(), __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__);                                               \
+        fflush(stdout);                                                                                                  \
     }
 
-#define PRINTF_ERROR(format, ...)                                                                                \
-    {                                                                                                            \
-        printf("[%s] " RED_PRINT_BEG "[ERROR]" RED_PRINT_END " [%s:%d %s()] [errno:%d err:%s] " format "\n",     \
-               get_time_now().c_str(), __FILE__, __LINE__, __FUNCTION__, errno, strerror(errno), ##__VA_ARGS__); \
-        fflush(stdout);                                                                                          \
+#define PRINTF_ERROR(format, ...)                                                                                          \
+    {                                                                                                                      \
+        printf("[%s] " RED_PRINT_BEG "ERROR" RED_PRINT_END " [%d][%s:%d %s()] [errno:%d err:%s] " format "\n",             \
+               get_time_now().c_str(), getpid(), __FILE__, __LINE__, __FUNCTION__, errno, strerror(errno), ##__VA_ARGS__); \
+        fflush(stdout);                                                                                                    \
     }
 
 #define RETURN_ON_ERROR(expr)                \
