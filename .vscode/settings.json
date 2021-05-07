@@ -109,7 +109,7 @@
     "terminal.integrated.cursorStyle": "line",
     "terminal.integrated.scrollback": 5000,
     "terminal.integrated.wordSeparators": "`~!@#$%^&*()-=+[{]}\\\\|;:'\\\",.<>/?",
-    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "terminal.integrated.defaultProfile.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
     //go选项
     "go.toolsManagement.autoUpdate": true,
     //xml选项
