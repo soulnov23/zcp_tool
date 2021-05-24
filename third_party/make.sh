@@ -85,13 +85,13 @@ function uninstall_gperf()
 	rm -rf $2/libtcmalloc*.*
 }
 
-function install_http_parser()
+function install_picohttpparser()
 {
 	cd $1
 	make install
 }
 
-function uninstall_http_parser()
+function uninstall_picohttpparser()
 {
 	cd $1
 	make uninstall
@@ -136,11 +136,11 @@ main()
 	uninstall_gperf)
 		uninstall_gperf $2 $3
 		;;
-	install_http_parser)
-		install_http_parser $2 $3
+	install_picohttpparser)
+		install_picohttpparser $2 $3
 		;;
-	uninstall_http_parser)
-		uninstall_http_parser $2 $3
+	uninstall_picohttpparser)
+		uninstall_picohttpparser $2 $3
 		;;
 	install_tinyxml2)
 		install_tinyxml2 $2 $3
