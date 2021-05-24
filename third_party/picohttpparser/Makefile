@@ -1,6 +1,6 @@
 include ../../Inc.mk
 
-OBJS := http_parser.o
+OBJS := picohttpparser.o
 SO_NAME = libhttp_parser.so
 SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libhttp_parser.a

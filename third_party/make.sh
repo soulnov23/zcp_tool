@@ -12,7 +12,7 @@ set -x
 function install_open_ssl()
 {
 	cd $1
-	chmod -R 777 ./
+	chmod -R 755 ./
 	#Makefile is older than Makefile.org, Configure or config.
 	./config
 	./config shared --prefix=/tmp/ssl
@@ -32,7 +32,7 @@ function uninstall_open_ssl()
 function install_curl()
 {
 	cd $1
-	chmod -R 777 ./
+	chmod -R 755 ./
 	./configure --prefix=/tmp/curl --without-nss --with-ssl=/tmp/ssl
 	make
 	make install
@@ -67,7 +67,7 @@ function install_gperf()
 {
 	yum -y install autoconf automake gnome-common
 	cd $1
-	chmod -R 777 ./
+	chmod -R 755 ./
 	./autogen.sh
 	./configure --prefix=/tmp/gperf --disable-cpu-profiler \
 	--disable-heap-profiler --disable-heap-checker \
