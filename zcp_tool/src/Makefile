@@ -5,7 +5,7 @@ OBJS := $(patsubst %.cpp, %.o, $(SRC))
 BIN = $(BIN_DIR)/zcp_server
 
 INCLUDE += -I$(PROJ_PATH)
-LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lhttp_parser -lcrypto -lcurl \
+LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
 		   -laio -lcolib -lcomm -lcomm_crypto -lcomm_net -ltcmalloc_minimal -lssl
 
 all: $(BIN)

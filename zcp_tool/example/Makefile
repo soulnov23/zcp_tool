@@ -6,7 +6,7 @@ BIN := $(patsubst %.cpp, %, $(SRC))
 #BIN := test client server example_xml_parser example_json_parser example_rapid_json example_curl example_libco example_epoll example_auto example_lambda
 
 INCLUDE += -I$(PROJ_PATH)
-LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lhttp_parser -lcrypto -lcurl \
+LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
 		   -laio -lcolib -lcomm -lcomm_crypto -lcomm_net -ltcmalloc_minimal -lssl
 
 all: $(BIN)

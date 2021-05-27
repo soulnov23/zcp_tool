@@ -11,7 +11,7 @@ A_NAME = libcomm.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
 INCLUDE += -I$(PROJ_PATH)
-LDFLAGS += -L$(LIB_DIR) -lpthread -ldl -ltinyxml2 -lhttp_parser -lcrypto -lcurl \
+LDFLAGS += -L$(LIB_DIR) -lpthread -ldl -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
 		   -laio -lcolib -ltcmalloc_minimal -lssl
 
 all: $(SO_BIN) $(A_BIN)
