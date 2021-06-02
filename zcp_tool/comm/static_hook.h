@@ -49,3 +49,23 @@ int static_hook(T old_func, T new_func) {
 }
 
 #endif
+
+/*
+#include "zcp_tool/comm/printf_utils.h"
+#include "zcp_tool/comm/static_hook.h"
+
+void old_printf() { PRINTF_DEBUG("starsdyang"); }
+
+void new_printf() { PRINTF_DEBUG("chrisqguo"); }
+
+int main(int argc, char* argv[]) {
+    old_printf();
+    int ret = static_hook(old_printf, new_printf);
+    if (ret != 0) {
+        PRINTF_ERROR("static_hook err");
+        return -1;
+    }
+    old_printf();
+    return 0;
+}
+*/
