@@ -13,8 +13,8 @@ using namespace std;
 #include "zcp_tool/comm/net/http_handle.h"
 using namespace rapidjson;
 #include "zcp_tool/comm/json_parser.h"
+#include "zcp_tool/comm/string_utils.h"
 #include "zcp_tool/comm/time_utils.h"
-#include "zcp_tool/comm/utils.h"
 
 string g_card_no     = "4567801230000220";
 string g_card_pin    = "104143";

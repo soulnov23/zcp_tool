@@ -1,5 +1,5 @@
-#ifndef __UTILS_H__
-#define __UTILS_H__
+#ifndef __STRING_UTILS_H__
+#define __STRING_UTILS_H__
 
 #include <map>
 #include <string>

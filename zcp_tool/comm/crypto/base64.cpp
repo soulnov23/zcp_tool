@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "zcp_tool/comm/utils.h"
+#include "zcp_tool/comm/string_utils.h"
 
 void base64_encode(const std::string& str_in, std::string& str_out) {
     static const char base64_encode_table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

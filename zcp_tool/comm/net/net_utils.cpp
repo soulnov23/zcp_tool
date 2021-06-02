@@ -11,7 +11,7 @@
 #include <sys/types.h>
 
 #include "zcp_tool/comm/printf_utils.h"
-#include "zcp_tool/comm/utils.h"
+#include "zcp_tool/comm/string_utils.h"
 
 int make_socket_blocking(int fd) {
     int flags;
