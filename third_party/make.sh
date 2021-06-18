@@ -45,43 +45,6 @@ function uninstall_curl()
 	rm -f $2/libcurl.*
 }
 
-function install_libco()
-{
-	yum -y install libaio libaio-devel
-	cd $1
-	make -j32
-	cp -f ./lib/* $2
-	cp -f ./solib/* $2
-}
-
-function uninstall_libco()
-{
-	cd $1
-	make clean
-	rm -f $2/libcolib.*
-}
-
-function install_gperf()
-{
-	yum -y install autoconf automake gnome-common
-	cd $1
-	chmod -R 755 ./
-	./autogen.sh
-	./configure --prefix=/tmp/gperf --disable-cpu-profiler \
-	--disable-heap-profiler --disable-heap-checker \
-	--disable-debugalloc --enable-minimal
-	make -j32
-	cp -f /tmp/gperf/lib/libtcmalloc*.* $2/
-}
-
-function uninstall_gperf()
-{
-	cd $1
-	make clean
-	rm -rf /tmp/gperf
-	rm -f $2/libtcmalloc*.*
-}
-
 function install_picohttpparser()
 {
 	cd $1
