@@ -7,7 +7,7 @@ BIN := $(patsubst %.cpp, %, $(SRC))
 
 INCLUDE += -I$(PROJ_PATH)
 LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
-		   -laio -lcomm -lcomm_crypto -lcomm_net -lssl -lfmt -lgmock -lgmock_main -lgtest -lgtest_main
+		   -laio -lcomm -lcomm_crypto -lcomm_net -lssl -lfmt -lgmock -lgtest
 
 all: $(BIN)
 
@@ -30,9 +30,6 @@ example_rapid_json: example_rapid_json.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 example_curl: example_curl.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-example_libco: example_libco.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 example_epoll: example_epoll.o
