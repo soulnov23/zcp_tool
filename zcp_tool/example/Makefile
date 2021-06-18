@@ -7,7 +7,7 @@ BIN := $(patsubst %.cpp, %, $(SRC))
 
 INCLUDE += -I$(PROJ_PATH)
 LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
-		   -laio -lcolib -lcomm -lcomm_crypto -lcomm_net -ltcmalloc_minimal -lssl
+		   -laio -lcomm -lcomm_crypto -lcomm_net -lssl
 
 all: $(BIN)
 

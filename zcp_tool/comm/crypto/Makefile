@@ -9,7 +9,7 @@ A_BIN = $(LIB_DIR)/$(A_NAME)
 
 INCLUDE += -I$(PROJ_PATH)
 LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
-		   -laio -lcolib -lcomm -ltcmalloc_minimal -lssl
+		   -laio -lcomm -lssl
 
 all: $(SO_BIN) $(A_BIN)
 
