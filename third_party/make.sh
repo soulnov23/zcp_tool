@@ -16,8 +16,7 @@ function install_open_ssl()
 	#Makefile is older than Makefile.org, Configure or config.
 	./config
 	./config shared --prefix=/tmp/ssl
-	make
-	make install
+	make -j32
 	cp -f /tmp/ssl/lib/libcrypto.* /tmp/ssl/lib/libssl.* $2
 }
 
@@ -26,7 +25,7 @@ function uninstall_open_ssl()
 	cd $1
 	make clean
 	rm -rf /tmp/ssl
-	rm -rf $2/libcrypto.* $2/libssl.*
+	rm -f $2/libcrypto.* $2/libssl.*
 }
 
 function install_curl()
@@ -34,8 +33,7 @@ function install_curl()
 	cd $1
 	chmod -R 755 ./
 	./configure --prefix=/tmp/curl --without-nss --with-ssl=/tmp/ssl
-	make
-	make install
+	make -j32
 	cp -f /tmp/curl/lib/libcurl.* $2
 }
 
@@ -44,23 +42,23 @@ function uninstall_curl()
 	cd $1
 	make clean
 	rm -rf /tmp/curl
-	rm -rf $2/libcurl.*
+	rm -f $2/libcurl.*
 }
 
 function install_libco()
 {
 	yum -y install libaio libaio-devel
 	cd $1
-	make
-	cp ./lib/* $2
-	cp ./solib/* $2
+	make -j32
+	cp -f ./lib/* $2
+	cp -f ./solib/* $2
 }
 
 function uninstall_libco()
 {
 	cd $1
 	make clean
-	rm -rf $2/libcolib.*
+	rm -f $2/libcolib.*
 }
 
 function install_gperf()
@@ -72,8 +70,7 @@ function install_gperf()
 	./configure --prefix=/tmp/gperf --disable-cpu-profiler \
 	--disable-heap-profiler --disable-heap-checker \
 	--disable-debugalloc --enable-minimal
-	make
-	make install
+	make -j32
 	cp -f /tmp/gperf/lib/libtcmalloc*.* $2/
 }
 
@@ -82,13 +79,13 @@ function uninstall_gperf()
 	cd $1
 	make clean
 	rm -rf /tmp/gperf
-	rm -rf $2/libtcmalloc*.*
+	rm -f $2/libtcmalloc*.*
 }
 
 function install_picohttpparser()
 {
 	cd $1
-	make install
+	make -j32
 }
 
 function uninstall_picohttpparser()
@@ -100,13 +97,28 @@ function uninstall_picohttpparser()
 function install_tinyxml2()
 {
 	cd $1
-	make install
+	make -j32
 }
 
 function uninstall_tinyxml2()
 {
 	cd $1
 	make uninstall
+}
+
+function install_fmt()
+{
+	cd $1
+	cmake3 .
+	make -j32
+	cp -f libfmt.a $2/
+}
+
+function uninstall_fmt()
+{
+	cd $1
+	make clean
+	rm -f $2/libfmt.a
 }
 
 main()
@@ -124,18 +136,6 @@ main()
 	uninstall_curl)
 		uninstall_curl $2 $3
 		;;
-	install_libco)
-		install_libco $2 $3
-		;;
-	uninstall_libco)
-		uninstall_libco $2 $3
-		;;
-	install_gperf)
-		install_gperf $2 $3
-		;;
-	uninstall_gperf)
-		uninstall_gperf $2 $3
-		;;
 	install_picohttpparser)
 		install_picohttpparser $2 $3
 		;;
@@ -147,6 +147,12 @@ main()
 		;;
 	uninstall_tinyxml2)
 		uninstall_tinyxml2 $2 $3
+		;;
+	install_fmt)
+		install_fmt $2 $3
+		;;
+	uninstall_fmt)
+		uninstall_fmt $2 $3
 		;;
 	*)
 		echo "error:argument is invalid"
