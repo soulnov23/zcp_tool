@@ -12,7 +12,7 @@ A_BIN = $(LIB_DIR)/$(A_NAME)
 
 INCLUDE += -I$(PROJ_PATH)
 LDFLAGS += -L$(LIB_DIR) -lpthread -ldl -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
-		   -laio -lssl
+		   -laio -lssl -lfmt -lgmock -lgmock_main -lgtest -lgtest_main
 
 all: $(SO_BIN) $(A_BIN)
 	@for dir in $(DIR_MODULES); \

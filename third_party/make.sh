@@ -84,6 +84,21 @@ function uninstall_fmt()
 	rm -f $2/libfmt.a
 }
 
+function install_gtest()
+{
+	cd $1
+	cmake3 .
+	make -j32
+	cp -f ./lib/libgmock*.* ./lib/libgtest*.* $2/
+}
+
+function uninstall_gtest()
+{
+	cd $1
+	make clean
+	rm -f $2/libgmock*.* $2/libgtest*.*
+}
+
 main()
 {
 	case $1 in
@@ -116,6 +131,12 @@ main()
 		;;
 	uninstall_fmt)
 		uninstall_fmt $2 $3
+		;;
+	install_gtest)
+		install_gtest $2 $3
+		;;
+	uninstall_gtest)
+		uninstall_gtest $2 $3
 		;;
 	*)
 		echo "error:argument is invalid"
