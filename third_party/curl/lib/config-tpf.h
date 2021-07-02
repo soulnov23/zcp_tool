@@ -7,11 +7,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2012, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at http://curl.haxx.se/docs/copyright.html.
+ * are also available at https://curl.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -77,18 +77,6 @@
 /* Define if struct sockaddr_in6 has the sin6_scope_id member */
 /* #undef HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID */
 
-/* Define to the type of arg 1 for getnameinfo. */
-/* #undef GETNAMEINFO_TYPE_ARG1 */
-
-/* Define to the type of arg 2 for getnameinfo. */
-/* #undef GETNAMEINFO_TYPE_ARG2 */
-
-/* Define to the type of args 4 and 6 for getnameinfo. */
-/* #undef GETNAMEINFO_TYPE_ARG46 */
-
-/* Define to the type of arg 7 for getnameinfo. */
-/* #undef GETNAMEINFO_TYPE_ARG7 */
-
 /* Define to 1 if you have the alarm function. */
 #define HAVE_ALARM 1
 
@@ -114,14 +102,6 @@
 /* Define to 1 if you have the <crypto.h> header file. */
 /* #undef HAVE_CRYPTO_H */
 #define HAVE_CRYPTO_H 1
-
-/* Define to 1 if you have the <des.h> header file. */
-/* #undef HAVE_DES_H */
-#define HAVE_DES_H 1
-
-/* Define to 1 if you have the `ENGINE_load_builtin_engines' function. */
-/* #undef HAVE_ENGINE_LOAD_BUILTIN_ENGINES */
-#define HAVE_ENGINE_LOAD_BUILTIN_ENGINES 1
 
 /* Define to 1 if you have the <errno.h> header file. */
 #define HAVE_ERRNO_H 1
@@ -169,9 +149,6 @@
 
 /* gethostbyname_r() takes 6 args */
 /* #undef HAVE_GETHOSTBYNAME_R_6 1 */
-
-/* Define to 1 if you have the getnameinfo function. */
-/* #undef HAVE_GETNAMEINFO */
 
 /* Define to 1 if you have the `getpass_r' function. */
 /* #undef HAVE_GETPASS_R */
@@ -246,7 +223,8 @@
 /* Define to 1 if you have the IoctlSocket camel case function. */
 /* #undef HAVE_IOCTLSOCKET_CAMEL */
 
-/* Define to 1 if you have a working IoctlSocket camel case FIONBIO function. */
+/* Define to 1 if you have a working IoctlSocket camel case FIONBIO
+   function. */
 /* #undef HAVE_IOCTLSOCKET_CAMEL_FIONBIO */
 
 /* Define to 1 if you have the <io.h> header file. */
@@ -276,15 +254,8 @@
 /* Define to 1 if you have the `socket' library (-lsocket). */
 /* #undef HAVE_LIBSOCKET */
 
-/* Define to 1 if you have the `ssl' library (-lssl). */
-/* #undef HAVE_LIBSSL */
-#define HAVE_LIBSSL 1
-
 /* if zlib is available */
 /* #undef HAVE_LIBZ */
-
-/* Define to 1 if you have the <limits.h> header file. */
-#define HAVE_LIMITS_H 1
 
 /* if your compiler supports LL */
 #define HAVE_LL 1
@@ -325,10 +296,6 @@
 /* Define to 1 if you have the <openssl/crypto.h> header file. */
 /* #undef HAVE_OPENSSL_CRYPTO_H */
 #define HAVE_OPENSSL_CRYPTO_H 1
-
-/* Define to 1 if you have the <openssl/engine.h> header file. */
-/* #undef HAVE_OPENSSL_ENGINE_H */
-#define HAVE_OPENSSL_ENGINE_H 1
 
 /* Define to 1 if you have the <openssl/err.h> header file. */
 /* #undef HAVE_OPENSSL_ERR_H */
@@ -436,9 +403,6 @@
 /* Define to 1 if you have the `socket' function. */
 #define HAVE_SOCKET 1
 
-/* Define this if you have the SPNEGO library fbopenssl */
-/* #undef HAVE_SPNEGO */
-
 /* Define to 1 if you have the <ssl.h> header file. */
 /* #undef HAVE_SSL_H */
 #define HAVE_SSL_H 1
@@ -470,12 +434,6 @@
 
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
-
-/* Define to 1 if you have the `strlcat' function. */
-/* #undef HAVE_STRLCAT */
-
-/* Define to 1 if you have the `strlcpy' function. */
-/* #undef HAVE_STRLCPY */
 
 /* Define to 1 if you have the `strstr' function. */
 #define HAVE_STRSTR 1
@@ -584,7 +542,8 @@
 #define PACKAGE "curl"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "a suitable curl mailing list => http://curl.haxx.se/mail/"
+#define PACKAGE_BUGREPORT \
+  "a suitable curl mailing list => https://curl.se/mail/"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "curl"
@@ -600,9 +559,6 @@
 
 /* a suitable file to read random data from */
 /* #undef RANDOM_FILE */
-
-/* Define as the return type of signal handlers (`int' or `void'). */
-#define RETSIGTYPE void
 
 /* Define to the type of arg 1 for `select'. */
 #define SELECT_TYPE_ARG1 int
@@ -622,6 +578,9 @@
 /* The size of `short', as computed by sizeof. */
 #define SIZEOF_SHORT 2
 
+/* Define to the size of `long', as computed by sizeof. */
+#define SIZEOF_LONG 8
+
 /* The size of `size_t', as computed by sizeof. */
 #define SIZEOF_SIZE_T 8
 
@@ -637,9 +596,6 @@
 /* Define if you want to enable ares support */
 /* #undef USE_ARES */
 
-/* Define to disable non-blocking sockets */
-/* #undef USE_BLOCKING_SOCKETS */
-
 /* if GnuTLS is enabled */
 /* #undef USE_GNUTLS */
 
@@ -650,7 +606,7 @@
 /* #undef USE_OPENSSL */
 
 /* if SSL is enabled */
-/* #undef USE_SSLEAY */
+/* #undef USE_OPENSSL */
 
 /* to enable SSPI support */
 /* #undef USE_WINDOWS_SSPI */
@@ -685,24 +641,6 @@
 
 /* the signed version of size_t */
 /* #undef ssize_t */
-
-/* Define to 1 if you have the getnameinfo function. */
-/* #undef HAVE_GETNAMEINFO 1 */
-
-/* Define to the type qualifier of arg 1 for getnameinfo. */
-/* #undef GETNAMEINFO_QUAL_ARG1 const */
-
-/* Define to the type of arg 1 for getnameinfo. */
-/* #undef GETNAMEINFO_TYPE_ARG1 struct sockaddr * */
-
-/* Define to the type of arg 2 for getnameinfo. */
-/* #undef GETNAMEINFO_TYPE_ARG2 socklen_t */
-
-/* Define to the type of args 4 and 6 for getnameinfo. */
-/* #undef GETNAMEINFO_TYPE_ARG46 size_t */
-
-/* Define to the type of arg 7 for getnameinfo. */
-/* #undef GETNAMEINFO_TYPE_ARG7 int */
 
 /* Define to 1 if you have the recv function. */
 #define HAVE_RECV 1
