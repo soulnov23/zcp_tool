@@ -7,7 +7,7 @@ BIN := $(patsubst %.cpp, %, $(SRC))
 
 INCLUDE += -I$(PROJ_PATH)
 LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
-		   -laio -lcomm -lcomm_crypto -lcomm_net -lssl -lfmt -lgmock -lgtest
+		   -laio -lcomm -lcomm_crypto -lcomm_net -lssl -lfmt
 
 all: $(BIN)
 
@@ -39,6 +39,9 @@ example_auto: example_auto.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 example_lambda: example_lambda.o
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
+
+example_graph: example_graph.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 clean:
