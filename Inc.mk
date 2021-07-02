@@ -7,7 +7,7 @@
 BUILD = BUILD_DEBUG
 #BUILD = BUILD_RELEASE
 
-CC = gcc
+CC = gcc -std=c++20
 CXX = g++ -std=c++20
 AR = ar
 ARFLAGS = -scurv
@@ -45,8 +45,8 @@ FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
 	@$(CC) $(INCLUDE) -MD $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
                 sed s/"\.o"/"\.d"/  >> $@
 %.d: %.cc
-	$(CC) $(INCLUDE) -MD $< > $@
-	@$(CC) $(INCLUDE) -MD $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
+	$(CXX) $(INCLUDE) -MD $< > $@
+	@$(CXX) $(INCLUDE) -MD $< | sed s/"^"/"\."/  |  sed s/"^\. "/" "/  | \
                 sed s/"\.o"/"\.d"/  >> $@
 %.d: %.cpp
 	$(CXX) $(INCLUDE) -MD $< > $@
@@ -56,7 +56,7 @@ FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 %.o: %.cc
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+	$(CXX) $(CFLAGS) $(INCLUDE) -c $< -o $@
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 %.o: %.S
@@ -65,7 +65,7 @@ FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
 $(OBJ_DIR)%.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
 $(OBJ_DIR)%.o: %.cc
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
+	$(CXX) $(CFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
 $(OBJ_DIR)%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
 $(OBJ_DIR)%.o: %.S
