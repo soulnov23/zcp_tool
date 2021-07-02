@@ -9,7 +9,7 @@ set -x
 
 set -x
 
-function install_open_ssl()
+function open_ssl()
 {
 	cd $1
 	chmod -R 755 ./
@@ -20,7 +20,7 @@ function install_open_ssl()
 	cp -f /tmp/ssl/lib/libcrypto.* /tmp/ssl/lib/libssl.* $2
 }
 
-function uninstall_open_ssl()
+function clean_open_ssl()
 {
 	cd $1
 	make clean
@@ -28,7 +28,7 @@ function uninstall_open_ssl()
 	rm -f $2/libcrypto.* $2/libssl.*
 }
 
-function install_curl()
+function curl()
 {
 	cd $1
 	chmod -R 755 ./
@@ -37,7 +37,7 @@ function install_curl()
 	cp -f /tmp/curl/lib/libcurl.* $2
 }
 
-function uninstall_curl()
+function clean_curl()
 {
 	cd $1
 	make clean
@@ -45,98 +45,74 @@ function uninstall_curl()
 	rm -f $2/libcurl.*
 }
 
-function install_picohttpparser()
+function picohttpparser()
 {
 	cd $1
 	make -j32
 }
 
-function uninstall_picohttpparser()
-{
-	cd $1
-	make uninstall
-}
-
-function install_tinyxml2()
-{
-	cd $1
-	make -j32
-}
-
-function uninstall_tinyxml2()
-{
-	cd $1
-	make uninstall
-}
-
-function install_fmt()
-{
-	cd $1
-	cmake3 .
-	make -j32
-	cp -f libfmt.a $2/
-}
-
-function uninstall_fmt()
+function clean_picohttpparser()
 {
 	cd $1
 	make clean
-	rm -f $2/libfmt.a
 }
 
-function install_gtest()
+function tinyxml2()
 {
 	cd $1
-	cmake3 .
 	make -j32
-	cp -f ./lib/libgmock*.* ./lib/libgtest*.* $2/
 }
 
-function uninstall_gtest()
+function clean_tinyxml2()
 {
 	cd $1
 	make clean
-	rm -f $2/libgmock*.* $2/libgtest*.*
+}
+
+function fmt()
+{
+	cd $1
+	make -j32
+}
+
+function clean_fmt()
+{
+	cd $1
+	make clean
 }
 
 main()
 {
 	case $1 in
-	install_open_ssl)
-		install_open_ssl $2 $3
+	open_ssl)
+		open_ssl $2 $3
 		;;
-	uninstall_open_ssl)
-		uninstall_open_ssl $2 $3
+	clean_open_ssl)
+		clean_open_ssl $2 $3
 		;;
-	install_curl)
-		install_curl $2 $3
+	curl)
+		curl $2 $3
 		;;
-	uninstall_curl)
-		uninstall_curl $2 $3
+	clean_curl)
+		clean_curl $2 $3
 		;;
-	install_picohttpparser)
-		install_picohttpparser $2 $3
+	picohttpparser)
+		picohttpparser $2 $3
 		;;
-	uninstall_picohttpparser)
-		uninstall_picohttpparser $2 $3
+	clean_picohttpparser)
+		clean_picohttpparser $2 $3
 		;;
-	install_tinyxml2)
-		install_tinyxml2 $2 $3
+	tinyxml2)
+		tinyxml2 $2 $3
 		;;
-	uninstall_tinyxml2)
-		uninstall_tinyxml2 $2 $3
+	clean_tinyxml2)
+		clean_tinyxml2 $2 $3
 		;;
-	install_fmt)
-		install_fmt $2 $3
+	fmt)
+		fmt $2 $3
 		;;
-	uninstall_fmt)
-		uninstall_fmt $2 $3
-		;;
-	install_gtest)
-		install_gtest $2 $3
-		;;
-	uninstall_gtest)
-		uninstall_gtest $2 $3
+	clean_fmt)
+		clean_fmt $2 $3
 		;;
 	*)
 		echo "error:argument is invalid"

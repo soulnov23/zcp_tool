@@ -15,10 +15,10 @@ format:
 	make -C zcp_tool format
 
 install: check
-	make -C third_party install
+	make -C third_party
 
 uninstall:
-	make -C third_party uninstall
+	make -C third_party clean
 
 check:
 	@mkdir -p $(BIN_DIR)

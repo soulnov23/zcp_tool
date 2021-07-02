@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "third_party/curl-7.29.0/include/curl/curl.h"
+#include "third_party/curl/include/curl/curl.h"
 
 size_t recv_proc(void* ptr, size_t size, size_t nmemb, std::string* p);
 
