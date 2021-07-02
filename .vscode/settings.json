@@ -75,19 +75,7 @@
         "**/*.so": true,
         "**/*.so.*": true,
         "**/*.a": true,
-        "**/*.la": true,
-        "**/example_auto": true,
-        "**/example_curl": true,
-        "**/example_epoll": true,
-        "**/example_json_parser": true,
-        "**/example_lambda": true,
-        "**/example_libco": true,
-        "**/example_xml_parser": true,
-        "**/example_rapid_json": true,
-        "**/client": true,
-        "**/server": true,
-        "**/test": true,
-        "**/zcp_server": true
+        "**/*.la": true
     },
     //remote选项
     //"remote.SSH.showLoginTerminal": true,
