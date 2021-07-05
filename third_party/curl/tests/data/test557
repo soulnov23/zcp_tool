@@ -1,10 +1,4 @@
 <testcase>
-<info>
-<keywords>
-printf
-unittest
-</keywords>
-</info>
 #
 # Server-side
 <reply>
@@ -17,7 +11,7 @@ none
 </server>
 # tool is what to use instead of 'curl'
 <tool>
-lib%TESTNUMBER
+lib557
 </tool>
 
 <name>
@@ -31,7 +25,7 @@ nothing
 #
 # Verify data after the test has been "shot"
 <verify>
-<stdout>
+<stdout mode="text">
 All curl_mprintf() unsigned short tests OK!
 All curl_mprintf() signed short tests OK!
 All curl_mprintf() unsigned int tests OK!
@@ -39,8 +33,6 @@ All curl_mprintf() signed int tests OK!
 All curl_mprintf() unsigned long tests OK!
 All curl_mprintf() signed long tests OK!
 All curl_mprintf() curl_off_t tests OK!
-All curl_mprintf() strings tests OK!
-All float strings tests OK!
 </stdout>
 </verify>
 

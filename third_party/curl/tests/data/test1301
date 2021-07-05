@@ -2,7 +2,7 @@
 <info>
 <keywords>
 unittest
-curl_strcasecompare
+curl_strequal
 </keywords>
 </info>
 
@@ -16,7 +16,11 @@ none
 unittest
 </features>
  <name>
-curl_strcasecompare unit tests
+curl_strequal unit tests
  </name>
+<tool>
+unit1301
+</tool>
 </client>
+
 </testcase>

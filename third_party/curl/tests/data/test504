@@ -6,7 +6,6 @@ HTTP GET
 HTTP proxy
 multi
 FAILURE
-connect to non-listen
 </keywords>
 </info>
 
@@ -21,18 +20,17 @@ none
 </server>
 <features>
 http
-proxy
 </features>
 # tool is what to use instead of 'curl'
 <tool>
-lib%TESTNUMBER
+lib504
 </tool>
 
  <name>
 simple multi through local proxy without listener
  </name>
  <command>
-http://%HOSTIP:%NOLISTENPORT/%TESTNUMBER %HOSTIP:%NOLISTENPORT
+http://%HOSTIP:%HTTPSPORT/504 %HOSTIP:55555
 </command>
 </client>
 

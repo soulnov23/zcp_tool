@@ -2,7 +2,7 @@
 #
 # xc-cc-check.m4
 #
-# Copyright (c) 2013 - 2020, Daniel Stenberg <daniel@haxx.se>
+# Copyright (c) 2013 Daniel Stenberg <daniel@haxx.se>
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -59,7 +59,7 @@ dnl Private macro.
 
 AC_DEFUN([_XC_PROG_CC], [
   AC_REQUIRE([_XC_PROG_CC_PREAMBLE])dnl
-  AC_REQUIRE([XC_CHECK_BUILD_FLAGS])dnl
+  AC_REQUIRE([XC_CHECK_USER_FLAGS])dnl
   AC_REQUIRE([AC_PROG_INSTALL])dnl
   AC_REQUIRE([AC_PROG_CC])dnl
   AC_REQUIRE([AM_PROG_CC_C_O])dnl
@@ -93,3 +93,4 @@ AC_DEFUN([XC_CHECK_PROG_CC], [
   AC_BEFORE([$0],[_XC_PROG_CC_POSTLUDE])dnl
   AC_REQUIRE([_XC_PROG_CC])dnl
 ])
+

@@ -1,17 +1,10 @@
 <testcase>
-<info>
-<keywords>
-HTTP
-HTTP POST
-</keywords>
-</info>
-
 #
 # Server-side
 <reply>
-<data>
+<data mode="text">
 HTTP/1.1 200 OK swsclose
-Date: Tue, 09 Nov 2010 14:49:00 GMT
+Date: Thu, 09 Nov 2010 14:49:00 GMT
 Server: test-server/fake
 Content-Length: 3
 
@@ -26,22 +19,25 @@ http
 </server>
 # tool is what to use instead of 'curl'
 <tool>
-lib%TESTNUMBER
+lib544
 </tool>
 
  <name>
 HTTP POST text data using CURLOPT_COPYPOSTFIELDS
  </name>
  <command>
-http://%HOSTIP:%HTTPPORT/%TESTNUMBER
+http://%HOSTIP:%HTTPPORT/544
 </command>
 </client>
 
 #
 # Verify data after the test has been "shot"
 <verify>
+<strip>
+^User-Agent:.*
+</strip>
 <protocol nonewline="yes">
-POST /%TESTNUMBER HTTP/1.1
+POST /544 HTTP/1.1
 Host: %HOSTIP:%HTTPPORT
 Accept: */*
 Content-Length: 4

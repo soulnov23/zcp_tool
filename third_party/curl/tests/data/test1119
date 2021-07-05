@@ -1,7 +1,6 @@
 <testcase>
 <info>
 <keywords>
-source analysis
 symbols-in-versions
 </keywords>
 </info>
@@ -22,9 +21,4 @@ Verify that symbols-in-versions and headers are in sync
 </command>
 </client>
 
-<verify>
-<stdout>
-OK
-</stdout>
-</verify>
 </testcase>

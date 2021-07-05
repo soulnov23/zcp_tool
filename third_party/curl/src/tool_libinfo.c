@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2012, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.se/docs/copyright.html.
+ * are also available at http://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -21,7 +21,7 @@
  ***************************************************************************/
 #include "tool_setup.h"
 
-#include "strcase.h"
+#include "rawstr.h"
 
 #define ENABLE_CURLX_PRINTF
 /* use our own printf() functions */
@@ -55,23 +55,18 @@ CURLcode get_libcurl_info(void)
     { "ftp",    CURLPROTO_FTP    },
     { "ftps",   CURLPROTO_FTPS   },
     { "gopher", CURLPROTO_GOPHER },
-    { "gophers",CURLPROTO_GOPHERS},
     { "http",   CURLPROTO_HTTP   },
     { "https",  CURLPROTO_HTTPS  },
     { "imap",   CURLPROTO_IMAP   },
     { "imaps",  CURLPROTO_IMAPS  },
     { "ldap",   CURLPROTO_LDAP   },
     { "ldaps",  CURLPROTO_LDAPS  },
-    { "mqtt",   CURLPROTO_MQTT   },
     { "pop3",   CURLPROTO_POP3   },
     { "pop3s",  CURLPROTO_POP3S  },
     { "rtmp",   CURLPROTO_RTMP   },
-    { "rtmps",  CURLPROTO_RTMPS  },
     { "rtsp",   CURLPROTO_RTSP   },
     { "scp",    CURLPROTO_SCP    },
     { "sftp",   CURLPROTO_SFTP   },
-    { "smb",    CURLPROTO_SMB    },
-    { "smbs",   CURLPROTO_SMBS   },
     { "smtp",   CURLPROTO_SMTP   },
     { "smtps",  CURLPROTO_SMTPS  },
     { "telnet", CURLPROTO_TELNET },
@@ -79,6 +74,7 @@ CURLcode get_libcurl_info(void)
     {  NULL,    0                }
   };
 
+  struct proto_name_pattern const *p;
   const char *const *proto;
 
   /* Pointer to libcurl's run-time version information */
@@ -90,9 +86,8 @@ CURLcode get_libcurl_info(void)
   built_in_protos = 0;
   if(curlinfo->protocols) {
     for(proto = curlinfo->protocols; *proto; proto++) {
-      struct proto_name_pattern const *p;
       for(p = possibly_built_in; p->proto_name; p++) {
-        if(curl_strequal(*proto, p->proto_name)) {
+        if(curlx_raw_equal(*proto, p->proto_name)) {
           built_in_protos |= p->proto_pattern;
           break;
         }
@@ -102,3 +97,4 @@ CURLcode get_libcurl_info(void)
 
   return CURLE_OK;
 }
+

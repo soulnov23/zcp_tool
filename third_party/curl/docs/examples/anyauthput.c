@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2012, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.se/docs/copyright.html.
+ * are also available at http://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -19,32 +19,48 @@
  * KIND, either express or implied.
  *
  ***************************************************************************/
-/* <DESC>
- * HTTP PUT upload with authentication using "any" method. libcurl picks the
- * one the server supports/wants.
- * </DESC>
- */
 #include <stdio.h>
 #include <fcntl.h>
+#ifdef WIN32
+#  include <io.h>
+#else
+#  ifdef __VMS
+     typedef int intptr_t;
+#  endif
+#  if !defined(_AIX) && !defined(__sgi) && !defined(__osf__)
+#    include <stdint.h>
+#  endif
+#  include <unistd.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <curl/curl.h>
-
-#ifdef WIN32
-#  include <io.h>
-#  define READ_3RD_ARG unsigned int
-#else
-#  include <unistd.h>
-#  define READ_3RD_ARG size_t
+#ifdef _MSC_VER
+#  ifdef _WIN64
+     typedef __int64 intptr_t;
+#  else
+     typedef int intptr_t;
+#  endif
 #endif
+
+#include <curl/curl.h>
 
 #if LIBCURL_VERSION_NUM < 0x070c03
 #error "upgrade your libcurl to no less than 7.12.3"
 #endif
 
+#ifndef TRUE
+#define TRUE 1
+#endif
+
+#if defined(_AIX) || defined(__sgi) || defined(__osf__)
+#ifndef intptr_t
+#define intptr_t long
+#endif
+#endif
+
 /*
- * This example shows a HTTP PUT operation with authentication using "any"
+ * This example shows a HTTP PUT operation with authentiction using "any"
  * type. It PUTs a file given as a command line argument to the URL also given
  * on the command line.
  *
@@ -57,8 +73,7 @@
 /* ioctl callback function */
 static curlioerr my_ioctl(CURL *handle, curliocmd cmd, void *userp)
 {
-  int *fdp = (int *)userp;
-  int fd = *fdp;
+  intptr_t fd = (intptr_t)userp;
 
   (void)handle; /* not used in here */
 
@@ -78,15 +93,14 @@ static curlioerr my_ioctl(CURL *handle, curliocmd cmd, void *userp)
 }
 
 /* read callback function, fread() look alike */
-static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *stream)
+static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *stream)
 {
-  ssize_t retcode;
+  size_t retcode;
   curl_off_t nread;
 
-  int *fdp = (int *)stream;
-  int fd = *fdp;
+  intptr_t fd = (intptr_t)stream;
 
-  retcode = read(fd, ptr, (READ_3RD_ARG)(size * nmemb));
+  retcode = read(fd, ptr, size * nmemb);
 
   nread = (curl_off_t)retcode;
 
@@ -100,7 +114,7 @@ int main(int argc, char **argv)
 {
   CURL *curl;
   CURLcode res;
-  int hd;
+  intptr_t hd ;
   struct stat file_info;
 
   char *file;
@@ -109,11 +123,11 @@ int main(int argc, char **argv)
   if(argc < 3)
     return 1;
 
-  file = argv[1];
+  file= argv[1];
   url = argv[2];
 
   /* get the file size of the local file */
-  hd = open(file, O_RDONLY);
+  hd = open(file, O_RDONLY) ;
   fstat(hd, &file_info);
 
   /* In windows, this will init the winsock stuff */
@@ -126,20 +140,20 @@ int main(int argc, char **argv)
     curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
 
     /* which file to upload */
-    curl_easy_setopt(curl, CURLOPT_READDATA, (void *)&hd);
+    curl_easy_setopt(curl, CURLOPT_READDATA, (void*)hd);
 
     /* set the ioctl function */
     curl_easy_setopt(curl, CURLOPT_IOCTLFUNCTION, my_ioctl);
 
     /* pass the file descriptor to the ioctl callback as well */
-    curl_easy_setopt(curl, CURLOPT_IOCTLDATA, (void *)&hd);
+    curl_easy_setopt(curl, CURLOPT_IOCTLDATA, (void*)hd);
 
     /* enable "uploading" (which means PUT when doing HTTP) */
-    curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+    curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L) ;
 
     /* specify target URL, and note that this URL should also include a file
        name, not only a directory (as you can do with GTP uploads) */
-    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl,CURLOPT_URL, url);
 
     /* and give the size of the upload, this supports large file sizes
        on systems that have general support for it */

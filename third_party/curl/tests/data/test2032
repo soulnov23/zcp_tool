@@ -5,7 +5,6 @@ HTTP
 HTTP GET
 HTTP Basic auth
 HTTP NTLM auth
-flaky
 </keywords>
 </info>
 # Server-side
@@ -23,7 +22,7 @@ WWW-Authenticate: Basic realm="testrealm"
 This is a bad password page!
 </data100>
 
-<!-- NTLM auth -->
+<!-- NTML auth -->
 <data200>
 HTTP/1.1 401 Need Basic or NTLM auth (2)
 Server: Microsoft-IIS/5.0
@@ -40,7 +39,7 @@ HTTP/1.1 401 NTLM intermediate (2)
 Server: Microsoft-IIS/5.0
 Content-Type: text/html; charset=iso-8859-1
 Content-Length: 33
-WWW-Authenticate: NTLM TlRMTVNTUAACAAAACAAIADAAAACGgAEAq6U1NAWaJCIAAAAAAAAAAAAAAAA4AAAATlRMTUF1dGg=
+WWW-Authenticate: NTLM TlRMTVNTUAACAAAACAAIADAAAAAGggEAq6U1NAWaJCIAAAAAAAAAAAAAAAA4AAAATlRMTUF1dGg=
 
 This is still not the real page!
 </data1201>
@@ -55,9 +54,34 @@ Finally, this is the real page!
 </data1202>
 
 <datacheck>
-Data connection 0: 228
-Data connection 1: 228
-Data connection 2: 402
+HTTP/1.1 401 Need Basic or NTLM auth
+Server: Microsoft-IIS/5.0
+Content-Type: text/html; charset=iso-8859-1
+Content-Length: 29
+WWW-Authenticate: NTLM
+WWW-Authenticate: Basic realm="testrealm"
+
+This is a bad password page!
+HTTP/1.1 401 Need Basic or NTLM auth
+Server: Microsoft-IIS/5.0
+Content-Type: text/html; charset=iso-8859-1
+Content-Length: 29
+WWW-Authenticate: NTLM
+WWW-Authenticate: Basic realm="testrealm"
+
+This is a bad password page!
+HTTP/1.1 401 NTLM intermediate (2)
+Server: Microsoft-IIS/5.0
+Content-Type: text/html; charset=iso-8859-1
+Content-Length: 33
+WWW-Authenticate: NTLM TlRMTVNTUAACAAAACAAIADAAAAAGggEAq6U1NAWaJCIAAAAAAAAAAAAAAAA4AAAATlRMTUF1dGg=
+
+HTTP/1.1 200 Things are fine in server land
+Server: Microsoft-IIS/5.0
+Content-Type: text/html; charset=iso-8859-1
+Content-Length: 32
+
+Finally, this is the real page!
 </datacheck>
 
 </reply>
@@ -66,8 +90,6 @@ Data connection 2: 402
 <client>
 <features>
 NTLM
-SSL
-!SSPI
 </features>
 <server>
 http
@@ -86,7 +108,7 @@ CURL_GETHOSTNAME=curlhost
 LD_PRELOAD=%PWD/libtest/.libs/libhostname.so
  </setenv>
  <command>
-http://%HOSTIP:%HTTPPORT/%TESTNUMBER
+http://%HOSTIP:%HTTPPORT/2032
 </command>
 <precheck>
 chkhostname curlhost
@@ -95,25 +117,28 @@ chkhostname curlhost
 
 # Verify data after the test has been "shot"
 <verify>
+<strip>
+^User-Agent:.*
+</strip>
 <protocol>
-GET /%TESTNUMBER0100 HTTP/1.1
-Host: %HOSTIP:%HTTPPORT
+GET /20320100 HTTP/1.1
 Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3M=
+Host: 127.0.0.1:8990
 Accept: */*
 
-GET /%TESTNUMBER0100 HTTP/1.1
-Host: %HOSTIP:%HTTPPORT
+GET /20320100 HTTP/1.1
 Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3M=
+Host: 127.0.0.1:8990
 Accept: */*
 
-GET /%TESTNUMBER0200 HTTP/1.1
-Host: %HOSTIP:%HTTPPORT
+GET /20320200 HTTP/1.1
 Authorization: NTLM TlRMTVNTUAABAAAABoIIAAAAAAAAAAAAAAAAAAAAAAA=
+Host: 127.0.0.1:8990
 Accept: */*
 
-GET /%TESTNUMBER0200 HTTP/1.1
-Host: %HOSTIP:%HTTPPORT
-Authorization: NTLM TlRMTVNTUAADAAAAGAAYAEAAAAAYABgAWAAAAAAAAABwAAAACAAIAHAAAAAIAAgAeAAAAAAAAAAAAAAAhoABAI+/Fp9IERAQ74OsdNPbBpg7o8CVwLSO4DtFyIcZHUMKVktWIu92s2892OVpd2JzqnRlc3R1c2VyY3VybGhvc3Q=
+GET /20320200 HTTP/1.1
+Authorization: NTLM TlRMTVNTUAADAAAAGAAYAEAAAAAYABgAWAAAAAAAAABwAAAACAAIAHAAAAAIAAgAeAAAAAAAAAAAAAAABoIBAI+/Fp9IERAQ74OsdNPbBpg7o8CVwLSO4DtFyIcZHUMKVktWIu92s2892OVpd2JzqnRlc3R1c2VyY3VybGhvc3Q=
+Host: 127.0.0.1:8990
 Accept: */*
 
 </protocol>

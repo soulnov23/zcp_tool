@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2012, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.se/docs/copyright.html.
+ * are also available at http://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -19,13 +19,11 @@
  * KIND, either express or implied.
  *
  ***************************************************************************/
-/* <DESC>
- * HTTP PUT with easy interface and read callback
- * </DESC>
- */
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <unistd.h>
+
 #include <curl/curl.h>
 
 /*
@@ -38,7 +36,7 @@
  * http://www.apacheweek.com/features/put
  */
 
-static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *stream)
+static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *stream)
 {
   size_t retcode;
   curl_off_t nread;
@@ -60,7 +58,8 @@ int main(int argc, char **argv)
 {
   CURL *curl;
   CURLcode res;
-  FILE * hd_src;
+  FILE * hd_src ;
+  int hd ;
   struct stat file_info;
 
   char *file;
@@ -69,11 +68,13 @@ int main(int argc, char **argv)
   if(argc < 3)
     return 1;
 
-  file = argv[1];
+  file= argv[1];
   url = argv[2];
 
   /* get the file size of the local file */
-  stat(file, &file_info);
+  hd = open(file, O_RDONLY) ;
+  fstat(hd, &file_info);
+  close(hd) ;
 
   /* get a FILE * of the same file, could also be made with
      fdopen() from the previous descriptor, but hey this is just
@@ -89,8 +90,11 @@ int main(int argc, char **argv)
     /* we want to use our own read function */
     curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
 
-    /* enable uploading (implies PUT over HTTP) */
+    /* enable uploading */
     curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+
+    /* HTTP PUT please */
+    curl_easy_setopt(curl, CURLOPT_PUT, 1L);
 
     /* specify target URL, and note that this URL should include a file
        name, not only a directory */

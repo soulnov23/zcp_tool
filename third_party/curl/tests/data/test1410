@@ -2,7 +2,6 @@
 <info>
 <keywords>
 cmdline
-FAILURE
 </keywords>
 </info>
 
@@ -17,7 +16,7 @@ none
 Pass in negative number to --max-time
  </name>
  <command>
-http://%HOSTIP:%NOLISTENPORT/%TESTNUMBER --max-time -4
+http://%HOSTIP:%HTTPPORT/1410 --max-time -4
 </command>
 </client>
 

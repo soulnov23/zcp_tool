@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2012, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.se/docs/copyright.html.
+ * are also available at http://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -30,7 +30,9 @@
 
 #include "test.h"
 
+#ifdef HAVE_LIMITS_H
 #include <limits.h>
+#endif
 
 #include "testutil.h"
 #include "warnless.h"
@@ -44,9 +46,9 @@
 
 #define NUM_HANDLES 2
 
-static CURL *eh[NUM_HANDLES];
+CURL *eh[NUM_HANDLES];
 
-static int init(int num, CURLM *cm, const char *url, const char *userpwd,
+static int init(int num, CURLM *cm, const char* url, const char* userpwd,
                 struct curl_slist *headers)
 {
   int res = 0;
@@ -97,7 +99,7 @@ init_failed:
   return res; /* failure */
 }
 
-static int loop(int num, CURLM *cm, const char *url, const char *userpwd,
+static int loop(int num, CURLM *cm, const char* url, const char* userpwd,
                 struct curl_slist *headers)
 {
   CURLMsg *msg;
@@ -111,7 +113,7 @@ static int loop(int num, CURLM *cm, const char *url, const char *userpwd,
   if(res)
     return res;
 
-  while(U) {
+  while (U) {
 
     int M = -99;
 
@@ -123,7 +125,7 @@ static int loop(int num, CURLM *cm, const char *url, const char *userpwd,
     if(res)
       return res;
 
-    if(U) {
+    if (U) {
       FD_ZERO(&R);
       FD_ZERO(&W);
       FD_ZERO(&E);
@@ -150,7 +152,7 @@ static int loop(int num, CURLM *cm, const char *url, const char *userpwd,
         T.tv_usec = 0;
       }
 
-      res_select_test(M + 1, &R, &W, &E, &T);
+      res_select_test(M+1, &R, &W, &E, &T);
       if(res)
         return res;
     }
@@ -163,7 +165,7 @@ static int loop(int num, CURLM *cm, const char *url, const char *userpwd,
                 curl_easy_strerror(msg->data.result));
         curl_multi_remove_handle(cm, e);
         curl_easy_cleanup(e);
-        for(i = 0; i < NUM_HANDLES; i++) {
+        for(i=0; i < NUM_HANDLES; i++) {
           if(eh[i] == e) {
             eh[i] = NULL;
             break;
@@ -190,7 +192,7 @@ int test(char *URL)
   int res = 0;
   int i;
 
-  for(i = 0; i < NUM_HANDLES; i++)
+  for(i=0; i < NUM_HANDLES; i++)
     eh[i] = NULL;
 
   start_test_timing();
@@ -198,7 +200,7 @@ int test(char *URL)
   if(test_argc < 4)
     return 99;
 
-  msnprintf(buffer, sizeof(buffer), "Host: %s", HOST);
+  sprintf(buffer, "Host: %s", HOST);
 
   /* now add a custom Host: header */
   headers = curl_slist_append(headers, buffer);
@@ -232,7 +234,7 @@ test_cleanup:
 
   /* proper cleanup sequence - type PB */
 
-  for(i = 0; i < NUM_HANDLES; i++) {
+  for(i=0; i < NUM_HANDLES; i++) {
     curl_multi_remove_handle(cm, eh[i]);
     curl_easy_cleanup(eh[i]);
   }

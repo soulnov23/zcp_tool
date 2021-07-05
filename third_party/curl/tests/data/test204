@@ -1,10 +1,4 @@
 <testcase>
-<info>
-<keywords>
-FILE
-</keywords>
-</info>
-
 # no Server-side
 
 # Client-side
@@ -15,10 +9,10 @@ file
  <name>
 "upload" with file://
  </name>
-<command option="no-include">
-file://localhost%FILE_PWD/log/result%TESTNUMBER.txt -T log/upload%TESTNUMBER.txt
+ <command>
+file://localhost/%PWD/log/result204.txt -T log/upload204.txt
 </command>
-<file name="log/upload%TESTNUMBER.txt">
+<file name="log/upload204.txt">
 data
 in
 file
@@ -29,7 +23,7 @@ write
 
 # Verify data after the test has been "shot"
 <verify>
-<file name="log/result%TESTNUMBER.txt">
+<file name="log/result204.txt">
 data
 in
 file

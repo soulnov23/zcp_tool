@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2011, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.se/docs/copyright.html.
+ * are also available at http://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -19,10 +19,6 @@
  * KIND, either express or implied.
  *
  ***************************************************************************/
-/* <DESC>
- * Simple HTTP GET that stores the headers in a separate file
- * </DESC>
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -31,7 +27,7 @@
 
 static size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
-  size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
+  int written = fwrite(ptr, size, nmemb, (FILE *)stream);
   return written;
 }
 
@@ -49,7 +45,7 @@ int main(void)
   curl_handle = curl_easy_init();
 
   /* set URL to get */
-  curl_easy_setopt(curl_handle, CURLOPT_URL, "https://example.com");
+  curl_easy_setopt(curl_handle, CURLOPT_URL, "http://example.com");
 
   /* no progress meter please */
   curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
@@ -57,35 +53,30 @@ int main(void)
   /* send all data to this function  */
   curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
 
-  /* open the header file */
-  headerfile = fopen(headerfilename, "wb");
-  if(!headerfile) {
+  /* open the files */
+  headerfile = fopen(headerfilename,"w");
+  if (headerfile == NULL) {
+    curl_easy_cleanup(curl_handle);
+    return -1;
+  }
+  bodyfile = fopen(bodyfilename,"w");
+  if (bodyfile == NULL) {
     curl_easy_cleanup(curl_handle);
     return -1;
   }
 
-  /* open the body file */
-  bodyfile = fopen(bodyfilename, "wb");
-  if(!bodyfile) {
-    curl_easy_cleanup(curl_handle);
-    fclose(headerfile);
-    return -1;
-  }
+  /* we want the headers to this file handle */
+  curl_easy_setopt(curl_handle,   CURLOPT_WRITEHEADER, headerfile);
 
-  /* we want the headers be written to this file handle */
-  curl_easy_setopt(curl_handle, CURLOPT_HEADERDATA, headerfile);
-
-  /* we want the body be written to this file handle instead of stdout */
-  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, bodyfile);
+  /*
+   * Notice here that if you want the actual data sent anywhere else but
+   * stdout, you should consider using the CURLOPT_WRITEDATA option.  */
 
   /* get it! */
   curl_easy_perform(curl_handle);
 
   /* close the header file */
   fclose(headerfile);
-
-  /* close the body file */
-  fclose(bodyfile);
 
   /* cleanup curl stuff */
   curl_easy_cleanup(curl_handle);

@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2012, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.se/docs/copyright.html.
+ * are also available at http://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -27,41 +27,23 @@
 
 #if defined(WIN32) && !defined(MSDOS)
 
-/* set in win32_init() */
-extern LARGE_INTEGER tool_freq;
-extern bool tool_isVistaOrGreater;
-
-/* In case of bug fix this function has a counterpart in timeval.c */
-struct timeval tvnow(void)
+struct timeval tool_tvnow(void)
 {
+  /*
+  ** GetTickCount() is available on _all_ Windows versions from W95 up
+  ** to nowadays. Returns milliseconds elapsed since last system boot,
+  ** increases monotonically and wraps once 49.7 days have elapsed.
+  */
   struct timeval now;
-  if(tool_isVistaOrGreater) { /* QPC timer might have issues pre-Vista */
-    LARGE_INTEGER count;
-    QueryPerformanceCounter(&count);
-    now.tv_sec = (long)(count.QuadPart / tool_freq.QuadPart);
-    now.tv_usec = (long)((count.QuadPart % tool_freq.QuadPart) * 1000000 /
-                         tool_freq.QuadPart);
-  }
-  else {
-    /* Disable /analyze warning that GetTickCount64 is preferred  */
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable:28159)
-#endif
-    DWORD milliseconds = GetTickCount();
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
-
-    now.tv_sec = (long)(milliseconds / 1000);
-    now.tv_usec = (long)((milliseconds % 1000) * 1000);
-  }
+  DWORD milliseconds = GetTickCount();
+  now.tv_sec = milliseconds / 1000;
+  now.tv_usec = (milliseconds % 1000) * 1000;
   return now;
 }
 
 #elif defined(HAVE_CLOCK_GETTIME_MONOTONIC)
 
-struct timeval tvnow(void)
+struct timeval tool_tvnow(void)
 {
   /*
   ** clock_gettime() is granted to be increased monotonically when the
@@ -74,7 +56,7 @@ struct timeval tvnow(void)
   struct timespec tsnow;
   if(0 == clock_gettime(CLOCK_MONOTONIC, &tsnow)) {
     now.tv_sec = tsnow.tv_sec;
-    now.tv_usec = (int)(tsnow.tv_nsec / 1000);
+    now.tv_usec = tsnow.tv_nsec / 1000;
   }
   /*
   ** Even when the configure process has truly detected monotonic clock
@@ -95,7 +77,7 @@ struct timeval tvnow(void)
 
 #elif defined(HAVE_GETTIMEOFDAY)
 
-struct timeval tvnow(void)
+struct timeval tool_tvnow(void)
 {
   /*
   ** gettimeofday() is not granted to be increased monotonically, due to
@@ -109,7 +91,7 @@ struct timeval tvnow(void)
 
 #else
 
-struct timeval tvnow(void)
+struct timeval tool_tvnow(void)
 {
   /*
   ** time() returns the value of time in seconds since the Epoch.
@@ -128,8 +110,29 @@ struct timeval tvnow(void)
  *
  * Returns: the time difference in number of milliseconds.
  */
-long tvdiff(struct timeval newer, struct timeval older)
+long tool_tvdiff(struct timeval newer, struct timeval older)
 {
-  return (long)(newer.tv_sec-older.tv_sec)*1000+
-    (long)(newer.tv_usec-older.tv_usec)/1000;
+  return (newer.tv_sec-older.tv_sec)*1000+
+    (newer.tv_usec-older.tv_usec)/1000;
 }
+
+/*
+ * Same as tool_tvdiff but with full usec resolution.
+ *
+ * Returns: the time difference in seconds with subsecond resolution.
+ */
+double tool_tvdiff_secs(struct timeval newer, struct timeval older)
+{
+  if(newer.tv_sec != older.tv_sec)
+    return (double)(newer.tv_sec-older.tv_sec)+
+      (double)(newer.tv_usec-older.tv_usec)/1000000.0;
+  else
+    return (double)(newer.tv_usec-older.tv_usec)/1000000.0;
+}
+
+/* return the number of seconds in the given input timeval struct */
+long tool_tvlong(struct timeval t1)
+{
+  return t1.tv_sec;
+}
+

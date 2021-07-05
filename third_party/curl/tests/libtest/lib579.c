@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2012, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.se/docs/copyright.html.
+ * are also available at http://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -39,6 +39,7 @@ struct WriteThis {
 static int progress_callback(void *clientp, double dltotal, double dlnow,
                              double ultotal, double ulnow)
 {
+  FILE *moo;
   static int prev_ultotal = -1;
   static int prev_ulnow = -1;
   (void)clientp; /* UNUSED */
@@ -52,7 +53,7 @@ static int progress_callback(void *clientp, double dltotal, double dlnow,
   if((prev_ultotal != (int)ultotal) ||
      (prev_ulnow != (int)ulnow)) {
 
-    FILE *moo = fopen(libtest_arg2, "ab");
+    moo = fopen(libtest_arg2, "ab");
     if(moo) {
       fprintf(moo, "Progress callback called with UL %d out of %d\n",
               (int)ulnow, (int)ultotal);
@@ -64,7 +65,7 @@ static int progress_callback(void *clientp, double dltotal, double dlnow,
   return 0;
 }
 
-static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
+static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userp)
 {
   struct WriteThis *pooh = (struct WriteThis *)userp;
   const char *data;
@@ -86,25 +87,24 @@ static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
 int test(char *URL)
 {
   CURL *curl;
-  CURLcode res = CURLE_OK;
+  CURLcode res=CURLE_OK;
   struct curl_slist *slist = NULL;
   struct WriteThis pooh;
   pooh.counter = 0;
 
-  if(curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
+  if (curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
     fprintf(stderr, "curl_global_init() failed\n");
     return TEST_ERR_MAJOR_BAD;
   }
 
-  curl = curl_easy_init();
-  if(!curl) {
+  if ((curl = curl_easy_init()) == NULL) {
     fprintf(stderr, "curl_easy_init() failed\n");
     curl_global_cleanup();
     return TEST_ERR_MAJOR_BAD;
   }
 
   slist = curl_slist_append(slist, "Transfer-Encoding: chunked");
-  if(!slist) {
+  if (slist == NULL) {
     fprintf(stderr, "curl_slist_append() failed\n");
     curl_easy_cleanup(curl);
     curl_global_cleanup();
@@ -126,7 +126,7 @@ int test(char *URL)
   test_setopt(curl, CURLOPT_READFUNCTION, read_callback);
 
   /* pointer to pass to our read function */
-  test_setopt(curl, CURLOPT_READDATA, &pooh);
+  test_setopt(curl, CURLOPT_INFILE, &pooh);
 
   /* get verbose debug output please */
   test_setopt(curl, CURLOPT_VERBOSE, 1L);

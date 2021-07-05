@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2011, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.se/docs/copyright.html.
+ * are also available at http://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -19,17 +19,15 @@
  * KIND, either express or implied.
  *
  ***************************************************************************/
-/* <DESC>
- * Get a web page, extract the title with libxml.
- * </DESC>
+// Get a web page, parse it with libxml.
+//
+// Written by Lars Nilsson
+//
+// GNU C++ compile command line suggestion (edit paths accordingly):
+//
+// g++ -Wall -I/opt/curl/include -I/opt/libxml/include/libxml2 htmltitle.cc \
+// -o htmltitle -L/opt/curl/lib -L/opt/libxml/lib -lcurl -lxml2
 
- Written by Lars Nilsson
-
- GNU C++ compile command line suggestion (edit paths accordingly):
-
- g++ -Wall -I/opt/curl/include -I/opt/libxml/include/libxml2 htmltitle.cpp \
- -o htmltitle -L/opt/curl/lib -L/opt/libxml/lib -lcurl -lxml2
-*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -42,7 +40,7 @@
 //
 
 #ifdef _MSC_VER
-#define COMPARE(a, b) (!_stricmp((a), (b)))
+#define COMPARE(a, b) (!stricmp((a), (b)))
 #else
 #define COMPARE(a, b) (!strcasecmp((a), (b)))
 #endif
@@ -72,7 +70,7 @@ static std::string buffer;
 static int writer(char *data, size_t size, size_t nmemb,
                   std::string *writerData)
 {
-  if(writerData == NULL)
+  if (writerData == NULL)
     return 0;
 
   writerData->append(data, size*nmemb);
@@ -90,38 +88,50 @@ static bool init(CURL *&conn, char *url)
 
   conn = curl_easy_init();
 
-  if(conn == NULL) {
+  if (conn == NULL)
+  {
     fprintf(stderr, "Failed to create CURL connection\n");
+
     exit(EXIT_FAILURE);
   }
 
   code = curl_easy_setopt(conn, CURLOPT_ERRORBUFFER, errorBuffer);
-  if(code != CURLE_OK) {
+  if (code != CURLE_OK)
+  {
     fprintf(stderr, "Failed to set error buffer [%d]\n", code);
+
     return false;
   }
 
   code = curl_easy_setopt(conn, CURLOPT_URL, url);
-  if(code != CURLE_OK) {
+  if (code != CURLE_OK)
+  {
     fprintf(stderr, "Failed to set URL [%s]\n", errorBuffer);
+
     return false;
   }
 
   code = curl_easy_setopt(conn, CURLOPT_FOLLOWLOCATION, 1L);
-  if(code != CURLE_OK) {
+  if (code != CURLE_OK)
+  {
     fprintf(stderr, "Failed to set redirect option [%s]\n", errorBuffer);
+
     return false;
   }
 
   code = curl_easy_setopt(conn, CURLOPT_WRITEFUNCTION, writer);
-  if(code != CURLE_OK) {
+  if (code != CURLE_OK)
+  {
     fprintf(stderr, "Failed to set writer [%s]\n", errorBuffer);
+
     return false;
   }
 
   code = curl_easy_setopt(conn, CURLOPT_WRITEDATA, &buffer);
-  if(code != CURLE_OK) {
+  if (code != CURLE_OK)
+  {
     fprintf(stderr, "Failed to set write data [%s]\n", errorBuffer);
+
     return false;
   }
 
@@ -136,9 +146,10 @@ static void StartElement(void *voidContext,
                          const xmlChar *name,
                          const xmlChar **attributes)
 {
-  Context *context = static_cast<Context *>(voidContext);
+  Context *context = (Context *)voidContext;
 
-  if(COMPARE(reinterpret_cast<char *>(name), "TITLE")) {
+  if (COMPARE((char *)name, "TITLE"))
+  {
     context->title = "";
     context->addTitle = true;
   }
@@ -152,9 +163,9 @@ static void StartElement(void *voidContext,
 static void EndElement(void *voidContext,
                        const xmlChar *name)
 {
-  Context *context = static_cast<Context *>(voidContext);
+  Context *context = (Context *)voidContext;
 
-  if(COMPARE(reinterpret_cast<char *>(name), "TITLE"))
+  if (COMPARE((char *)name, "TITLE"))
     context->addTitle = false;
 }
 
@@ -166,8 +177,8 @@ static void handleCharacters(Context *context,
                              const xmlChar *chars,
                              int length)
 {
-  if(context->addTitle)
-    context->title.append(reinterpret_cast<char *>(chars), length);
+  if (context->addTitle)
+    context->title.append((char *)chars, length);
 }
 
 //
@@ -178,7 +189,7 @@ static void Characters(void *voidContext,
                        const xmlChar *chars,
                        int length)
 {
-  Context *context = static_cast<Context *>(voidContext);
+  Context *context = (Context *)voidContext;
 
   handleCharacters(context, chars, length);
 }
@@ -191,7 +202,7 @@ static void cdata(void *voidContext,
                   const xmlChar *chars,
                   int length)
 {
-  Context *context = static_cast<Context *>(voidContext);
+  Context *context = (Context *)voidContext;
 
   handleCharacters(context, chars, length);
 }
@@ -260,8 +271,10 @@ int main(int argc, char *argv[])
 
   // Ensure one argument is given
 
-  if(argc != 2) {
+  if (argc != 2)
+  {
     fprintf(stderr, "Usage: %s <url>\n", argv[0]);
+
     exit(EXIT_FAILURE);
   }
 
@@ -269,8 +282,10 @@ int main(int argc, char *argv[])
 
   // Initialize CURL connection
 
-  if(!init(conn, argv[1])) {
+  if (!init(conn, argv[1]))
+  {
     fprintf(stderr, "Connection initializion failed\n");
+
     exit(EXIT_FAILURE);
   }
 
@@ -279,15 +294,19 @@ int main(int argc, char *argv[])
   code = curl_easy_perform(conn);
   curl_easy_cleanup(conn);
 
-  if(code != CURLE_OK) {
+  if (code != CURLE_OK)
+  {
     fprintf(stderr, "Failed to get '%s' [%s]\n", argv[1], errorBuffer);
+
     exit(EXIT_FAILURE);
   }
 
   // Parse the (assumed) HTML code
+
   parseHtml(buffer, title);
 
   // Display the extracted title
+
   printf("Title: %s\n", title.c_str());
 
   return EXIT_SUCCESS;

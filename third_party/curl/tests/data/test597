@@ -12,7 +12,7 @@ CONNECT_ONLY
 ftp
 </server>
 <tool>
-lib%TESTNUMBER
+lib597
 </tool>
  <name>
 FTP connect only option
@@ -31,6 +31,7 @@ ftp://%HOSTIP:%FTPPORT
 USER anonymous
 PASS ftp@example.com
 PWD
+QUIT
 </protocol>
 </verify>
 </testcase>

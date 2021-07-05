@@ -9,22 +9,10 @@ FAILURE
 </keywords>
 </info>
 
-# Server-side
-<reply>
-
-<connect nocheck="yes">
-HTTP/1.1 405 Method Not Allowed swsclose
-
-And you should ignore this data.
-</connect>
-
-</reply>
-
 # Client-side
 <client>
 <features>
 SSL
-proxy
 </features>
 <server>
 https
@@ -33,7 +21,7 @@ https
 HTTPS GET over HTTP proxy fails
  </name>
  <command>
--k -U fake:user -x %HOSTIP:%HTTPPORT https://bad.fakeurl-to.test:%TESTNUMBER/slash/%TESTNUMBER
+-k -U fake:user -x %HOSTIP:%HTTPPORT https://bad.fakeurl-to.test/slash/302
 </command>
 </client>
 
@@ -43,6 +31,9 @@ HTTPS GET over HTTP proxy fails
 <errorcode>
 56
 </errorcode>
+<strip>
+^User-Agent:.*
+</strip>
 <data>
 </data>
 </verify>

@@ -1,27 +1,16 @@
 <testcase>
-<info>
-<keywords>
-HTTP
-HTTP GET
-</keywords>
-</info>
-
 #
 # Server-side
 <reply>
 <data>
 HTTP/1.1 200 OK swsclose
-Date: Tue, 09 Nov 2010 14:49:00 GMT
+Date: Thu, 09 Nov 2010 14:49:00 GMT
 Content-Length: -6
 Content-Type: text/html
 Funny-head: yesyes
 
 moooooooooooo
 </data>
-<datacheck>
-HTTP/1.1 200 OK swsclose
-Date: Tue, 09 Nov 2010 14:49:00 GMT
-</datacheck>
 </reply>
 
 #
@@ -31,25 +20,24 @@ Date: Tue, 09 Nov 2010 14:49:00 GMT
 http
 </server>
  <name>
-HTTP response with negative Content-Length
+simple HTTP GET with negative Content-Length
  </name>
  <command>
-http://%HOSTIP:%HTTPPORT/%TESTNUMBER
+http://%HOSTIP:%HTTPPORT/178
 </command>
 </client>
 
 #
 # Verify data after the test has been "shot"
 <verify>
+<strip>
+^User-Agent:.*
+</strip>
 <protocol>
-GET /%TESTNUMBER HTTP/1.1
+GET /178 HTTP/1.1
 Host: %HOSTIP:%HTTPPORT
-User-Agent: curl/%VERSION
 Accept: */*
 
 </protocol>
-<errorcode>
-8
-</errorcode>
 </verify>
 </testcase>
