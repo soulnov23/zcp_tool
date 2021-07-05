@@ -9,7 +9,7 @@ LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
 		   -laio -lcomm -lcomm_crypto -lcomm_net -lssl -lfmt
 
 all: $(BIN)
-
+	
 $(BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 

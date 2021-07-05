@@ -12,7 +12,7 @@ LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
 		   -laio -lcomm -lssl -lfmt
 
 all: $(SO_BIN) $(A_BIN)
-
+	
 $(SO_BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) -shared -Wl,-rpath=$(LIB_DIR) -Wl,-soname,$(SO_NAME) $(LDFLAGS) $^ -o $@
 
