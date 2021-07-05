@@ -1,21 +1,11 @@
-#! /usr/bin/env perl
-# Copyright 1995-2020 The OpenSSL Project Authors. All Rights Reserved.
-#
-# Licensed under the OpenSSL license (the "License").  You may not use
-# this file except in compliance with the License.  You can obtain a copy
-# in the file LICENSE in the source distribution or at
-# https://www.openssl.org/source/license.html
-
+#!/usr/local/bin/perl
 
 $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 push(@INC,"${dir}","${dir}../../perlasm");
 require "x86asm.pl";
 require "cbc.pl";
 
-$output = pop;
-open STDOUT,">$output";
-
-&asm_init($ARGV[0]);
+&asm_init($ARGV[0],"rc5-586.pl");
 
 $RC5_MAX_ROUNDS=16;
 $RC5_32_OFF=($RC5_MAX_ROUNDS+2)*4;
@@ -31,8 +21,6 @@ $tmp4="edx";
 &RC5_32_encrypt("RC5_32_decrypt",0);
 &cbc("RC5_32_cbc_encrypt","RC5_32_encrypt","RC5_32_decrypt",0,4,5,3,-1,-1);
 &asm_finish();
-
-close STDOUT or die "error closing STDOUT: $!";
 
 sub RC5_32_encrypt
 	{

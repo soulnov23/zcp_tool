@@ -1,14 +1,7 @@
-#! /usr/bin/env perl
-# Copyright 2010-2020 The OpenSSL Project Authors. All Rights Reserved.
-#
-# Licensed under the OpenSSL license (the "License").  You may not use
-# this file except in compliance with the License.  You can obtain a copy
-# in the file LICENSE in the source distribution or at
-# https://www.openssl.org/source/license.html
-
+#!/usr/bin/env perl
 #
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
 # details see http://www.openssl.org/~appro/cryptogams/.
@@ -67,8 +60,6 @@
 # hereafter less for longer keys, while verify - by 74-13%.
 # DSA performance improves by 115-30%.
 
-$output=pop;
-
 if ($^O eq "hpux") {
     $ADDP="addp4";
     for (@ARGV) { $ADDP="add" if (/[\+DD|\-mlp]64/); }
@@ -80,7 +71,7 @@ $code=<<___;
 
 // int bn_mul_mont (BN_ULONG *rp,const BN_ULONG *ap,
 //		    const BN_ULONG *bp,const BN_ULONG *np,
-//		    const BN_ULONG *n0p,int num);
+//		    const BN_ULONG *n0p,int num);			
 .align	64
 .global	bn_mul_mont#
 .proc	bn_mul_mont#
@@ -203,7 +194,7 @@ bn_mul_mont_general:
 { .mmi;	.pred.rel	"mutex",p39,p41
 (p39)	add		topbit=r0,r0
 (p41)	add		topbit=r0,r0,1
-	nop.i		0		}
+	nop.i		0		}	
 { .mmi;	st8		[tp_1]=n[0]
 	add		tptr=16,sp
 	add		tp_1=8,sp	};;
@@ -341,19 +332,19 @@ bn_mul_mont_general:
 { .mmb;	sub	rptr=rptr,len		// rewind
 	sub	tptr=tptr,len
 	clrrrb.pr			};;
-{ .mmi;	mov	aptr=rptr
-	mov	bptr=tptr
+{ .mmi;	and	aptr=tptr,topbit
+	andcm	bptr=rptr,topbit
 	mov	pr.rot=1<<16		};;
-{ .mii;	cmp.eq	p0,p6=topbit,r0
+{ .mii;	or	nptr=aptr,bptr
 	mov	ar.lc=lc
-	mov	ar.ec=2			};;
+	mov	ar.ec=3			};;
 
 .Lcopy_ctop:
-{ .mmi;	(p16)	ld8	a[0]=[aptr],8
-	(p16)	ld8	t[0]=[bptr],8
-	(p6)	mov	a[1]=t[1]	};;	// (p17)
-{ .mmb;	(p17)	st8	[rptr]=a[1],8
-	(p17)	st8	[tptr]=r0,8
+{ .mmb;	(p16)	ld8	n[0]=[nptr],8
+	(p18)	st8	[tptr]=r0,8
+	(p16)	nop.b	0		}
+{ .mmb;	(p16)	nop.m	0
+	(p18)	st8	[rptr]=n[2],8
 	br.ctop.sptk	.Lcopy_ctop	};;
 .Lcopy_cend:
 
@@ -855,6 +846,6 @@ copyright:
 stringz	"Montgomery multiplication for IA-64, CRYPTOGAMS by <appro\@openssl.org>"
 ___
 
-open STDOUT,">$output" if $output;
+$output=shift and open STDOUT,">$output";
 print $code;
-close STDOUT or die "error closing STDOUT: $!";
+close STDOUT;

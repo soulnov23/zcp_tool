@@ -1,20 +1,11 @@
-/*
- * Copyright 2002-2018 The OpenSSL Project Authors. All Rights Reserved.
- *
- * Licensed under the OpenSSL license (the "License").  You may not use
- * this file except in compliance with the License.  You can obtain a copy
- * in the file LICENSE in the source distribution or at
- * https://www.openssl.org/source/license.html
- */
-
-#include "../bn_local.h"
+#include "../bn_lcl.h"
 #if !(defined(__GNUC__) && __GNUC__>=2)
 # include "../bn_asm.c"         /* kind of dirty hack for Sun Studio */
 #else
 /*-
  * x86_64 BIGNUM accelerator version 0.1, December 2002.
  *
- * Implemented by Andy Polyakov <appro@openssl.org> for the OpenSSL
+ * Implemented by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
  * project.
  *
  * Rights for redistribution and usage in source and binary forms are
@@ -63,6 +54,12 @@
  *    very much like 64-bit code compiled with no-asm on the same
  *    machine.
  */
+
+# if defined(_WIN64) || !defined(__LP64__)
+#  define BN_ULONG unsigned long long
+# else
+#  define BN_ULONG unsigned long
+# endif
 
 # undef mul
 # undef mul_add
@@ -114,7 +111,7 @@ BN_ULONG bn_mul_add_words(BN_ULONG *rp, const BN_ULONG *ap, int num,
     BN_ULONG c1 = 0;
 
     if (num <= 0)
-        return c1;
+        return (c1);
 
     while (num & ~3) {
         mul_add(rp[0], ap[0], w, c1);
@@ -136,7 +133,7 @@ BN_ULONG bn_mul_add_words(BN_ULONG *rp, const BN_ULONG *ap, int num,
         return c1;
     }
 
-    return c1;
+    return (c1);
 }
 
 BN_ULONG bn_mul_words(BN_ULONG *rp, const BN_ULONG *ap, int num, BN_ULONG w)
@@ -144,7 +141,7 @@ BN_ULONG bn_mul_words(BN_ULONG *rp, const BN_ULONG *ap, int num, BN_ULONG w)
     BN_ULONG c1 = 0;
 
     if (num <= 0)
-        return c1;
+        return (c1);
 
     while (num & ~3) {
         mul(rp[0], ap[0], w, c1);
@@ -164,7 +161,7 @@ BN_ULONG bn_mul_words(BN_ULONG *rp, const BN_ULONG *ap, int num, BN_ULONG w)
             return c1;
         mul(rp[2], ap[2], w, c1);
     }
-    return c1;
+    return (c1);
 }
 
 void bn_sqr_words(BN_ULONG *r, const BN_ULONG *a, int n)
@@ -219,10 +216,9 @@ BN_ULONG bn_add_words(BN_ULONG *rp, const BN_ULONG *ap, const BN_ULONG *bp,
                   "       adcq    (%5,%2,8),%0    \n"
                   "       movq    %0,(%3,%2,8)    \n"
                   "       lea     1(%2),%2        \n"
-                  "       dec     %1              \n"
-                  "       jnz     1b              \n"
-                  "       sbbq    %0,%0           \n"
-                  :"=&r" (ret), "+c"(n), "+r"(i)
+                  "       loop    1b              \n"
+                  "       sbbq    %0,%0           \n":"=&r" (ret), "+c"(n),
+                  "+r"(i)
                   :"r"(rp), "r"(ap), "r"(bp)
                   :"cc", "memory");
 
@@ -246,10 +242,9 @@ BN_ULONG bn_sub_words(BN_ULONG *rp, const BN_ULONG *ap, const BN_ULONG *bp,
                   "       sbbq    (%5,%2,8),%0    \n"
                   "       movq    %0,(%3,%2,8)    \n"
                   "       lea     1(%2),%2        \n"
-                  "       dec     %1              \n"
-                  "       jnz     1b              \n"
-                  "       sbbq    %0,%0           \n"
-                  :"=&r" (ret), "+c"(n), "+r"(i)
+                  "       loop    1b              \n"
+                  "       sbbq    %0,%0           \n":"=&r" (ret), "+c"(n),
+                  "+r"(i)
                   :"r"(rp), "r"(ap), "r"(bp)
                   :"cc", "memory");
 
@@ -264,7 +259,7 @@ BN_ULONG bn_sub_words(BN_ULONG *r, BN_ULONG *a, BN_ULONG *b, int n)
     int c = 0;
 
     if (n <= 0)
-        return (BN_ULONG)0;
+        return ((BN_ULONG)0);
 
     for (;;) {
         t1 = a[0];
@@ -303,7 +298,7 @@ BN_ULONG bn_sub_words(BN_ULONG *r, BN_ULONG *a, BN_ULONG *b, int n)
         b += 4;
         r += 4;
     }
-    return c;
+    return (c);
 }
 # endif
 

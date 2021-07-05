@@ -1,18 +1,11 @@
-#! /usr/bin/env perl
-# Copyright 1999-2018 The OpenSSL Project Authors. All Rights Reserved.
-#
-# Licensed under the OpenSSL license (the "License").  You may not use
-# this file except in compliance with the License.  You can obtain a copy
-# in the file LICENSE in the source distribution or at
-# https://www.openssl.org/source/license.html
-
+#!/usr/bin/env perl
 
 package x86nasm;
 
 *out=\@::out;
 
 $::lbdecor="L\$";		# local label decoration
-$nmdecor="_";			# external name decoration
+$nmdecor=$::netware?"":"_";	# external name decoration
 $drdecor=$::mwerks?".":"";	# directive decoration
 
 $initseg="";
@@ -132,7 +125,7 @@ ___
 	grep {s/(^extern\s+${nmdecor}OPENSSL_ia32cap_P)/\;$1/} @out;
 	push (@out,$comm)
     }
-    push (@out,$initseg) if ($initseg);
+    push (@out,$initseg) if ($initseg);		
 }
 
 sub ::comment {   foreach (@_) { push(@out,"\t; $_\n"); }   }

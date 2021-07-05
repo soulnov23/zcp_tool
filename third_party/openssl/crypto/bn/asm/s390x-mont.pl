@@ -1,14 +1,7 @@
-#! /usr/bin/env perl
-# Copyright 2007-2020 The OpenSSL Project Authors. All Rights Reserved.
-#
-# Licensed under the OpenSSL license (the "License").  You may not use
-# this file except in compliance with the License.  You can obtain a copy
-# in the file LICENSE in the source distribution or at
-# https://www.openssl.org/source/license.html
-
+#!/usr/bin/env perl
 
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
 # details see http://www.openssl.org/~appro/cryptogams/.
@@ -61,7 +54,7 @@ if ($flavour =~ /3[12]/) {
 	$g="g";
 }
 
-while (($output=shift) && ($output!~/\w[\w\-]*\.\w+$/)) {}
+while (($output=shift) && ($output!~/^\w[\w\-]*\.\w+$/)) {}
 open STDOUT,">$output";
 
 $stdframe=16*$SIZE_T+4*8;
@@ -145,7 +138,7 @@ $code.=<<___;
 	lghi	$NHI,0
 	alcgr	$NHI,$nhi
 
-	la	$j,8		# j=1
+	la	$j,8(%r0)	# j=1
 	lr	$count,$num
 
 .align	16
@@ -197,7 +190,7 @@ $code.=<<___;
 	lghi	$NHI,0
 	alcgr	$NHI,$nhi
 
-	la	$j,8		# j=1
+	la	$j,8(%r0)	# j=1
 	lr	$count,$num
 
 .align	16
@@ -241,7 +234,7 @@ $code.=<<___;
 	la	$ap,$stdframe($sp)
 	ahi	$num,1		# restore $num, incidentally clears "borrow"
 
-	la	$j,0
+	la	$j,0(%r0)
 	lr	$count,$num
 .Lsub:	lg	$alo,0($j,$ap)
 	lg	$nlo,0($j,$np)
@@ -252,16 +245,16 @@ $code.=<<___;
 	brct	$count,.Lsub
 	lghi	$ahi,0
 	slbgr	$AHI,$ahi	# handle upmost carry
-	lghi	$NHI,-1
-	xgr	$NHI,$AHI
 
-	la	$j,0
+	ngr	$ap,$AHI
+	lghi	$np,-1
+	xgr	$np,$AHI
+	ngr	$np,$rp
+	ogr	$ap,$np		# ap=borrow?tp:rp
+
+	la	$j,0(%r0)
 	lgr	$count,$num
-.Lcopy:	lg	$ahi,$stdframe($j,$sp)	# conditional copy
-	lg	$alo,0($j,$rp)
-	ngr	$ahi,$AHI
-	ngr	$alo,$NHI
-	ogr	$alo,$ahi
+.Lcopy:	lg	$alo,0($j,$ap)		# copy or in-place refresh
 	_dswap	$alo
 	stg	$j,$stdframe($j,$sp)	# zap tp
 	stg	$alo,0($j,$rp)
@@ -281,4 +274,4 @@ foreach (split("\n",$code)) {
 	s/_dswap\s+(%r[0-9]+)/sprintf("rllg\t%s,%s,32",$1,$1) if($SIZE_T==4)/e;
 	print $_,"\n";
 }
-close STDOUT or die "error closing STDOUT: $!";
+close STDOUT;

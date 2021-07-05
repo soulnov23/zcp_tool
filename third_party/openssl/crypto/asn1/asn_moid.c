@@ -1,24 +1,73 @@
+/* asn_moid.c */
 /*
- * Copyright 2002-2018 The OpenSSL Project Authors. All Rights Reserved.
+ * Written by Stephen Henson (steve@openssl.org) for the OpenSSL project
+ * 2001.
+ */
+/* ====================================================================
+ * Copyright (c) 2001-2004 The OpenSSL Project.  All rights reserved.
  *
- * Licensed under the OpenSSL license (the "License").  You may not use
- * this file except in compliance with the License.  You can obtain a copy
- * in the file LICENSE in the source distribution or at
- * https://www.openssl.org/source/license.html
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
+ *
+ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
+ *    endorse or promote products derived from this software without
+ *    prior written permission. For written permission, please contact
+ *    licensing@OpenSSL.org.
+ *
+ * 5. Products derived from this software may not be called "OpenSSL"
+ *    nor may "OpenSSL" appear in their names without prior written
+ *    permission of the OpenSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This product includes cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product includes software written by Tim
+ * Hudson (tjh@cryptsoft.com).
+ *
  */
 
 #include <stdio.h>
-#include "crypto/ctype.h"
+#include <ctype.h>
 #include <openssl/crypto.h>
-#include "internal/cryptlib.h"
+#include "cryptlib.h"
 #include <openssl/conf.h>
+#include <openssl/dso.h>
 #include <openssl/x509.h>
-#include "crypto/asn1.h"
-#include "crypto/objects.h"
 
 /* Simple ASN1 OID module: add all objects in a given section */
 
-static int do_create(const char *value, const char *name);
+static int do_create(char *value, char *name);
 
 static int oid_module_init(CONF_IMODULE *md, const CONF *cnf)
 {
@@ -26,9 +75,8 @@ static int oid_module_init(CONF_IMODULE *md, const CONF *cnf)
     const char *oid_section;
     STACK_OF(CONF_VALUE) *sktmp;
     CONF_VALUE *oval;
-
     oid_section = CONF_imodule_get_value(md);
-    if ((sktmp = NCONF_get_section(cnf, oid_section)) == NULL) {
+    if (!(sktmp = NCONF_get_section(cnf, oid_section))) {
         ASN1err(ASN1_F_OID_MODULE_INIT, ASN1_R_ERROR_LOADING_SECTION);
         return 0;
     }
@@ -44,6 +92,7 @@ static int oid_module_init(CONF_IMODULE *md, const CONF *cnf)
 
 static void oid_module_finish(CONF_IMODULE *md)
 {
+    OBJ_cleanup();
 }
 
 void ASN1_add_oid_module(void)
@@ -57,44 +106,48 @@ void ASN1_add_oid_module(void)
  * shortname = some long name, 1.2.3.4
  */
 
-static int do_create(const char *value, const char *name)
+static int do_create(char *value, char *name)
 {
     int nid;
-    const char *ln, *ostr, *p;
-    char *lntmp = NULL;
-
+    ASN1_OBJECT *oid;
+    char *ln, *ostr, *p, *lntmp;
     p = strrchr(value, ',');
-    if (p == NULL) {
+    if (!p) {
         ln = name;
         ostr = value;
     } else {
-        ln = value;
+        ln = NULL;
         ostr = p + 1;
-        if (*ostr == '\0')
+        if (!*ostr)
             return 0;
-        while (ossl_isspace(*ostr))
+        while (isspace((unsigned char)*ostr))
             ostr++;
-        while (ossl_isspace(*ln))
+    }
+
+    nid = OBJ_create(ostr, name, ln);
+
+    if (nid == NID_undef)
+        return 0;
+
+    if (p) {
+        ln = value;
+        while (isspace((unsigned char)*ln))
             ln++;
         p--;
-        while (ossl_isspace(*p)) {
+        while (isspace((unsigned char)*p)) {
             if (p == ln)
                 return 0;
             p--;
         }
         p++;
-        if ((lntmp = OPENSSL_malloc((p - ln) + 1)) == NULL) {
-            ASN1err(ASN1_F_DO_CREATE, ERR_R_MALLOC_FAILURE);
+        lntmp = OPENSSL_malloc((p - ln) + 1);
+        if (lntmp == NULL)
             return 0;
-        }
         memcpy(lntmp, ln, p - ln);
-        lntmp[p - ln] = '\0';
-        ln = lntmp;
+        lntmp[p - ln] = 0;
+        oid = OBJ_nid2obj(nid);
+        oid->ln = lntmp;
     }
 
-    nid = OBJ_create(ostr, name, ln);
-
-    OPENSSL_free(lntmp);
-
-    return nid != NID_undef;
+    return 1;
 }
