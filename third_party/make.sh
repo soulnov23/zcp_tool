@@ -9,7 +9,7 @@ set -x
 
 set -x
 
-function open_ssl()
+function openssl()
 {
 	cd $1
 	chmod -R 755 ./
@@ -20,7 +20,7 @@ function open_ssl()
 	cp -f /tmp/ssl/lib/libcrypto.* /tmp/ssl/lib/libssl.* $2
 }
 
-function clean_open_ssl()
+function clean_openssl()
 {
 	cd $1
 	make clean
@@ -84,11 +84,11 @@ function clean_fmt()
 main()
 {
 	case $1 in
-	open_ssl)
-		open_ssl $2 $3
+	openssl)
+		openssl $2 $3
 		;;
-	clean_open_ssl)
-		clean_open_ssl $2 $3
+	clean_openssl)
+		clean_openssl $2 $3
 		;;
 	curl)
 		curl $2 $3
