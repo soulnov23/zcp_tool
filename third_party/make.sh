@@ -17,6 +17,7 @@ function openssl()
 	./config
 	./config shared --prefix=/tmp/ssl
 	make -j32
+	make install
 	cp -f /tmp/ssl/lib/libcrypto.* /tmp/ssl/lib/libssl.* $2
 }
 
@@ -34,6 +35,7 @@ function curl()
 	chmod -R 755 ./
 	./configure --prefix=/tmp/curl --without-nss --with-ssl=/tmp/ssl
 	make -j32
+	make install
 	cp -f /tmp/curl/lib/libcurl.* $2
 }
 

@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2012, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at http://curl.haxx.se/docs/copyright.html.
+ * are also available at https://curl.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -20,6 +20,10 @@
  *
  ***************************************************************************/
 #include "tool_setup.h"
+
+#if defined(__AMIGA__) && !defined(__amigaos4__)
+#  undef HAVE_TERMIOS_H
+#endif
 
 #ifndef HAVE_GETPASS_R
 /* this file is only for systems without getpass_r() */
@@ -52,9 +56,9 @@
 #  endif
 #endif
 
-#define _MPRINTF_REPLACE
-#include <curl/mprintf.h>
-
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include "tool_getpass.h"
 
 #include "memdebug.h" /* keep this as LAST include */
@@ -89,18 +93,14 @@ char *getpass_r(const char *prompt, char *buffer, size_t buflen)
     if((sts & 1) && (iosb.iosb$w_status & 1))
       buffer[iosb.iosb$w_bcnt] = '\0';
 
-    sts = sys$dassgn(chan);
+    sys$dassgn(chan);
   }
   return buffer; /* we always return success */
 }
 #define DONE
 #endif /* __VMS */
 
-#ifdef __SYMBIAN32__
-#  define getch() getchar()
-#endif
-
-#if defined(WIN32) || defined(__SYMBIAN32__)
+#if defined(WIN32)
 
 char *getpass_r(const char *prompt, char *buffer, size_t buflen)
 {
@@ -117,12 +117,10 @@ char *getpass_r(const char *prompt, char *buffer, size_t buflen)
       if(buffer[i] == '\b')
         /* remove this letter and if this is not the first key, remove the
            previous one as well */
-        i = i - (i >= 1) ? 2 : 1;
+        i = i - (i >= 1 ? 2 : 1);
   }
-#ifndef __SYMBIAN32__
   /* since echo is disabled, print a newline */
   fputs("\n", stderr);
-#endif
   /* if user didn't hit ENTER, terminate buffer */
   if(i == buflen)
     buffer[buflen-1] = '\0';
@@ -130,7 +128,7 @@ char *getpass_r(const char *prompt, char *buffer, size_t buflen)
   return buffer; /* we always return success */
 }
 #define DONE
-#endif /* WIN32 || __SYMBIAN32__ */
+#endif /* WIN32 */
 
 #ifdef NETWARE
 /* NetWare implementation */
@@ -207,18 +205,16 @@ static bool ttyecho(bool enable, int fd)
 #endif
     return TRUE; /* disabled */
   }
-  else {
-    /* re-enable echo, assumes we disabled it before (and set the structs we
-       now use to reset the terminal status) */
+  /* re-enable echo, assumes we disabled it before (and set the structs we
+     now use to reset the terminal status) */
 #ifdef HAVE_TERMIOS_H
-    tcsetattr(fd, TCSAFLUSH, &withecho);
+  tcsetattr(fd, TCSAFLUSH, &withecho);
 #elif defined(HAVE_TERMIO_H)
-    ioctl(fd, TCSETA, &withecho);
+  ioctl(fd, TCSETA, &withecho);
 #else
-    return FALSE; /* not enabled */
+  return FALSE; /* not enabled */
 #endif
-    return TRUE; /* enabled */
-  }
+  return TRUE; /* enabled */
 }
 
 char *getpass_r(const char *prompt, /* prompt to display */
@@ -229,14 +225,14 @@ char *getpass_r(const char *prompt, /* prompt to display */
   bool disabled;
   int fd = open("/dev/tty", O_RDONLY);
   if(-1 == fd)
-    fd = 1; /* use stdin if the tty couldn't be used */
+    fd = STDIN_FILENO; /* use stdin if the tty couldn't be used */
 
   disabled = ttyecho(FALSE, fd); /* disable terminal echo */
 
   fputs(prompt, stderr);
   nread = read(fd, password, buflen);
   if(nread > 0)
-    password[--nread] = '\0'; /* zero terminate where enter is stored */
+    password[--nread] = '\0'; /* null-terminate where enter is stored */
   else
     password[0] = '\0'; /* got nothing */
 
@@ -246,7 +242,7 @@ char *getpass_r(const char *prompt, /* prompt to display */
     (void)ttyecho(TRUE, fd); /* enable echo */
   }
 
-  if(1 != fd)
+  if(STDIN_FILENO != fd)
     close(fd);
 
   return password; /* return pointer to buffer */

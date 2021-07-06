@@ -2,6 +2,7 @@
 <info>
 <keywords>
 FTP
+EPRT
 PORT
 FAILURE
 EPRT refused
@@ -28,7 +29,7 @@ ipv6
 FTP download, failed PORT
  </name>
  <command>
-ftp://%HOSTIP:%FTPPORT/116 -P 1.2.3.4
+ftp://%HOSTIP:%FTPPORT/%TESTNUMBER -P 1.2.3.4
 </command>
 </client>
 
