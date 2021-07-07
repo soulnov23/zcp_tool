@@ -1,7 +1,8 @@
 #include "zcp_tool/comm/crypto/aes.h"
 
-#include "third_party/openssl/include/openssl/err.h"
-#include "third_party/openssl/include/openssl/evp.h"
+#include <openssl/err.h>
+#include <openssl/evp.h>
+
 #include "zcp_tool/comm/coder.h"
 #include "zcp_tool/comm/crypto/base64.h"
 #include "zcp_tool/comm/printf_utils.h"

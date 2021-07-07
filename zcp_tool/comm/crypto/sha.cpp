@@ -1,12 +1,12 @@
 #include "zcp_tool/comm/crypto/sha.h"
 
+#include <openssl/bio.h>
+#include <openssl/hmac.h>
+#include <openssl/pem.h>
+#include <openssl/rsa.h>
+#include <openssl/sha.h>
 #include <string.h>
 
-#include "third_party/openssl/include/openssl/bio.h"
-#include "third_party/openssl/include/openssl/hmac.h"
-#include "third_party/openssl/include/openssl/pem.h"
-#include "third_party/openssl/include/openssl/rsa.h"
-#include "third_party/openssl/include/openssl/sha.h"
 #include "zcp_tool/comm/coder.h"
 #include "zcp_tool/comm/crypto/base64.h"
 
