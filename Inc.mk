@@ -7,7 +7,7 @@
 BUILD = BUILD_DEBUG
 #BUILD = BUILD_RELEASE
 
-CC = gcc -std=c++20
+CC = gcc
 CXX = g++ -std=c++20
 AR = ar
 ARFLAGS = -scurv

@@ -1,15 +1,21 @@
 include ../Inc.mk
 
+DIR_MODULES = picohttpparser \
+			  tinyxml2 \
+              fmt
+
 all:
-	bash make.sh openssl openssl $(LIB_DIR)
-	bash make.sh curl curl $(LIB_DIR)
-	bash make.sh picohttpparser picohttpparser $(LIB_DIR)
-	bash make.sh tinyxml2 tinyxml2 $(LIB_DIR)
-	bash make.sh fmt fmt $(LIB_DIR)
+	bash make.sh openssl
+	bash make.sh curl
+	@for dir in $(DIR_MODULES); \
+	do \
+		make -C $$dir -j32; \
+		echo; \
+	done
 
 clean:
-	bash make.sh clean_openssl openssl $(LIB_DIR)
-	bash make.sh clean_curl curl $(LIB_DIR)
-	bash make.sh clean_picohttpparser picohttpparser $(LIB_DIR)
-	bash make.sh clean_tinyxml2 tinyxml2 $(LIB_DIR)
-	bash make.sh clean_fmt fmt $(LIB_DIR)
+	@for dir in $(DIR_MODULES); \
+	do \
+		make -C $$dir clean; \
+		echo; \
+	done
