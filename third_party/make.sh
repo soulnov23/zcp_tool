@@ -19,6 +19,7 @@ function openssl()
 	./config shared --prefix=/usr
 	make -j32
 	make install
+	cd ..
 	rm -rf openssl-1.1.1j
 }
 
@@ -30,6 +31,7 @@ function curl()
 	./configure --prefix=/usr --with-ssl
 	make -j32
 	make install
+	cd ..
 	rm -rf curl-7.76.1
 }
 
