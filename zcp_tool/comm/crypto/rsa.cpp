@@ -38,7 +38,7 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
     EVP_PKEY* evp_pkey = nullptr;
     unsigned char digest[SHA512_DIGEST_LENGTH];
     unsigned int digest_len = sizeof(digest);
-    EVP_MD_CTX ctx;
+    EVP_MD_CTX* ctx         = EVP_MD_CTX_new();
     std::string format_public_key;
     std::string coded_sign = sign;
 
@@ -87,11 +87,11 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
         goto free_evp_pkey;
     }
 
-    EVP_MD_CTX_init(&ctx);
+    EVP_MD_CTX_init(ctx);
     // if (DIGEST_SHA1 == digest_algo) ...
-    EVP_DigestInit(&ctx, EVP_sha1());
-    EVP_DigestUpdate(&ctx, data_in.c_str(), data_in.length());
-    EVP_DigestFinal(&ctx, digest, &digest_len);
+    EVP_DigestInit(ctx, EVP_sha1());
+    EVP_DigestUpdate(ctx, data_in.c_str(), data_in.length());
+    EVP_DigestFinal(ctx, digest, &digest_len);
 
     if (digest_len > SHA512_DIGEST_LENGTH) {
         PRINTF_ERROR("SHA1 digest length error");
@@ -138,7 +138,7 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
     EVP_PKEY* evp_pkey = nullptr;
     unsigned char digest[SHA512_DIGEST_LENGTH];
     unsigned int digest_len = sizeof(digest);
-    EVP_MD_CTX ctx;
+    EVP_MD_CTX* ctx         = EVP_MD_CTX_new();
     std::string format_public_key;
     std::string coded_sign = sign;
 
@@ -187,11 +187,11 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
         goto free_evp_pkey;
     }
 
-    EVP_MD_CTX_init(&ctx);
+    EVP_MD_CTX_init(ctx);
     // if (DIGEST_SHA1 == digest_algo) ...
-    EVP_DigestInit(&ctx, EVP_sha256());
-    EVP_DigestUpdate(&ctx, data_in.c_str(), data_in.length());
-    EVP_DigestFinal(&ctx, digest, &digest_len);
+    EVP_DigestInit(ctx, EVP_sha256());
+    EVP_DigestUpdate(ctx, data_in.c_str(), data_in.length());
+    EVP_DigestFinal(ctx, digest, &digest_len);
 
     if (digest_len > SHA512_DIGEST_LENGTH) {
         PRINTF_ERROR("SHA1 digest length error");
@@ -368,7 +368,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
     // should include <openssl/evp.h>
     // The EVP digest routines are a high level interface to message digests,
     // and should be used instead of the cipher-specific functions
-    EVP_MD_CTX ctx;
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
 
     unsigned int sign_size = 0;
     unsigned char* sign    = nullptr;
@@ -415,10 +415,10 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
     }
 
     // initializes digest context ctx
-    EVP_MD_CTX_init(&ctx);
-    EVP_DigestInit(&ctx, EVP_sha1());
-    EVP_DigestUpdate(&ctx, data_in.c_str(), data_in.size());
-    EVP_DigestFinal(&ctx, digest, &digest_len);
+    EVP_MD_CTX_init(ctx);
+    EVP_DigestInit(ctx, EVP_sha1());
+    EVP_DigestUpdate(ctx, data_in.c_str(), data_in.size());
+    EVP_DigestFinal(ctx, digest, &digest_len);
 
     if (digest_len > SHA512_DIGEST_LENGTH) {
         PRINTF_ERROR("SHA256 digest length error");
@@ -461,7 +461,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 free_mem:
     free(sign);
 free_ctx:
-    EVP_MD_CTX_cleanup(&ctx);
+    EVP_MD_CTX_free(ctx);
 free_evp_pkey:
     EVP_PKEY_free(evp_pkey);
 free_rsa:
@@ -488,7 +488,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
     // should include <openssl/evp.h>
     // The EVP digest routines are a high level interface to message digests,
     // and should be used instead of the cipher-specific functions
-    EVP_MD_CTX ctx;
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
 
     unsigned int sign_size = 0;
     unsigned char* sign    = nullptr;
@@ -535,10 +535,10 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
     }
 
     // initializes digest context ctx
-    EVP_MD_CTX_init(&ctx);
-    EVP_DigestInit(&ctx, EVP_sha256());
-    EVP_DigestUpdate(&ctx, data_in.c_str(), data_in.size());
-    EVP_DigestFinal(&ctx, digest, &digest_len);
+    EVP_MD_CTX_init(ctx);
+    EVP_DigestInit(ctx, EVP_sha256());
+    EVP_DigestUpdate(ctx, data_in.c_str(), data_in.size());
+    EVP_DigestFinal(ctx, digest, &digest_len);
 
     if (digest_len > SHA512_DIGEST_LENGTH) {
         PRINTF_ERROR("SHA256 digest length error");
@@ -581,7 +581,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 free_mem:
     free(sign);
 free_ctx:
-    EVP_MD_CTX_cleanup(&ctx);
+    EVP_MD_CTX_free(ctx);
 free_evp_pkey:
     EVP_PKEY_free(evp_pkey);
 free_rsa:
