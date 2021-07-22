@@ -7,7 +7,7 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libyaml.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE +=
+INCLUDE += -I$(PROJ_PATH)/third_party/yaml/include
 LDFLAGS +=
 
 all: $(SO_BIN) $(A_BIN)
