@@ -7,8 +7,8 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libcomm_net.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE += -I$(PROJ_PATH)
-LDFLAGS += -L$(LIB_DIR) -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
+INCLUDE +=
+LDFLAGS += -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
 		   -laio -lcomm -lssl -lfmt
 
 all: $(SO_BIN) $(A_BIN)
