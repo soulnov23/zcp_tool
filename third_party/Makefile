@@ -9,13 +9,13 @@ all:
 	bash make.sh curl
 	@for dir in $(DIR_MODULES); \
 	do \
-		make -C $$dir -j32; \
+		$(MAKE) -C $$dir -j32; \
 		echo; \
 	done
 
 clean:
 	@for dir in $(DIR_MODULES); \
 	do \
-		make -C $$dir clean; \
+		$(MAKE) -C $$dir clean; \
 		echo; \
 	done

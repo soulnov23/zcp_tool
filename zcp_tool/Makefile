@@ -5,20 +5,20 @@ DIR_MODULES = comm \
 all:
 	@for dir in $(DIR_MODULES); \
 	do \
-		make -C $$dir; \
+		$(MAKE) -C $$dir; \
 		echo; \
 	done
 
 clean:
 	@for dir in $(DIR_MODULES); \
 	do \
-		make -C $$dir clean; \
+		$(MAKE) -C $$dir clean; \
 		echo; \
 	done
 
 format:
 	@for dir in $(DIR_MODULES); \
 	do \
-		make -C $$dir format; \
+		$(MAKE) -C $$dir format; \
 		echo; \
 	done

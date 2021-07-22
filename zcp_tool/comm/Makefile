@@ -17,7 +17,7 @@ LDFLAGS += -L$(LIB_DIR) -lpthread -ldl -ltinyxml2 -lpicohttpparser -lcrypto -lcu
 all: $(SO_BIN) $(A_BIN)
 	@for dir in $(DIR_MODULES); \
 	do \
-		make -C $$dir; \
+		$(MAKE) -C $$dir; \
 		echo; \
 	done
 
@@ -31,7 +31,7 @@ $(A_BIN): $(OBJS)
 clean:
 	@for dir in $(DIR_MODULES); \
 	do \
-		make -C $$dir clean; \
+		$(MAKE) -C $$dir clean; \
 		echo; \
 	done
 	rm -rf $(OBJS) $(SO_BIN) $(A_BIN)
@@ -39,7 +39,7 @@ clean:
 format:
 	@for dir in $(DIR_MODULES); \
 	do \
-		make -C $$dir format; \
+		$(MAKE) -C $$dir format; \
 		echo; \
 	done
 	$(FORMAT) ./*.cpp ./*.h

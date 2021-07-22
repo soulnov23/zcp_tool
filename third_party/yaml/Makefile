@@ -1,5 +1,5 @@
 all:
-	make -C include -j32
+	$(MAKE) -C include -j32
 
 clean:
-	make -C src clean
+	$(MAKE) -C src clean

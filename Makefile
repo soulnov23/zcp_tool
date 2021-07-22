@@ -6,19 +6,19 @@ include Inc.mk
 #export PROJ_PATH
 
 all: check
-	make -C zcp_tool
+	$(MAKE) -C zcp_tool
 
 clean:
-	make -C zcp_tool clean
+	$(MAKE) -C zcp_tool clean
 
 format:
-	make -C zcp_tool format
+	$(MAKE) -C zcp_tool format
 
 install: check
-	make -C third_party
+	$(MAKE) -C third_party
 
 uninstall:
-	make -C third_party clean
+	$(MAKE) -C third_party clean
 
 check:
 	@mkdir -p $(BIN_DIR)

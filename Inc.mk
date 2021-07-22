@@ -7,6 +7,7 @@
 BUILD = BUILD_DEBUG
 #BUILD = BUILD_RELEASE
 
+MAKE = make
 CC = gcc
 CXX = g++ -std=c++20
 AR = ar
