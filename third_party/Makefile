@@ -2,7 +2,8 @@ include ../Inc.mk
 
 DIR_MODULES = picohttpparser \
 			  tinyxml2 \
-              fmt
+              fmt \
+			  yaml
 
 all:
 	bash make.sh openssl
