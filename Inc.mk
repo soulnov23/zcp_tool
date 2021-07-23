@@ -14,27 +14,35 @@ AR = ar
 ARFLAGS = -scurv
 RANLIB = ranlib
 
-CFLAGS ?=
-CXXFLAGS ?=
-INCLUDE ?=
-LDFLAGS ?=
-
 PROJ_PATH = $(shell pwd | awk -F'/zcp_tool' '{print $$1}')/zcp_tool
 BIN_DIR = $(PROJ_PATH)/release/bin
 LIB_DIR = $(PROJ_PATH)/release/lib
 OBJ_DIR = $(PROJ_PATH)/release/obj
 
+CFLAGS ?=
+CXXFLAGS ?=
+INCLUDE ?= -I$(PROJ_PATH) \
+		   -I$(PROJ_PATH)/third_party/curl/include \
+		   -I$(PROJ_PATH)/third_party/openssl/include \
+		   -I$(PROJ_PATH)/third_party/fmt/include \
+		   -I$(PROJ_PATH)/third_party/picohttpparser \
+		   -I$(PROJ_PATH)/third_party/rapidjson \
+		   -I$(PROJ_PATH)/third_party/spdlog/include \
+		   -I$(PROJ_PATH)/third_party/tinyxml2 \
+		   -I$(PROJ_PATH)/third_party/yaml/include
+LDFLAGS ?= -L$(LIB_DIR)
+
 ifeq ($(BUILD), BUILD_DEBUG)
 CFLAGS   += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
 CXXFLAGS += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
-INCLUDE  += -I$(PROJ_PATH) -I./
-LDFLAGS  +=	-L$(LIB_DIR)
+INCLUDE  +=
+LDFLAGS  +=
 endif
 ifeq ($(BUILD), BUILD_RELEASE)
 CFLAGS   += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O3
 CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O3
-INCLUDE  += -I$(PROJ_PATH) -I./
-LDFLAGS  += -L$(LIB_DIR)
+INCLUDE  +=
+LDFLAGS  +=
 endif
 
 FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .clang-format
