@@ -12,7 +12,7 @@ LDFLAGS +=
 all: $(SO_BIN) $(A_BIN)
 
 $(SO_BIN): $(OBJS)
-	$(CC) $(CXXFLAGS) -shared -Wl,-soname,$(SO_NAME) $(LDFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) -shared -Wl,-soname,$(SO_NAME) $(LDFLAGS) $^ -o $@
 
 $(A_BIN): $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?

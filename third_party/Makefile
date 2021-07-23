@@ -12,7 +12,8 @@ openssl:
 	cd $(OPENSSL) && ./config && ./config shared --prefix=/tmp/openssl
 	cd $(OPENSSL) && $(MAKE) -j32 && $(MAKE) install
 	rm -rf $(OPENSSL)
-	cp -rf /tmp/openssl/include/openssl ./
+	rm -rf openssl
+	cp -rf /tmp/openssl/include ./openssl
 	cp -rf /tmp/openssl/lib/lib* $(LIB_DIR)
 
 curl:
@@ -21,7 +22,8 @@ curl:
 	cd $(CURL) && ./configure --prefix=/tmp/curl --with-ssl=/tmp/openssl
 	cd $(CURL) && $(MAKE) -j32 && $(MAKE) install
 	rm -rf $(CURL)
-	cp -rf /tmp/curl/include/curl ./
+	rm -rf curl
+	cp -rf /tmp/curl/include ./curl
 	cp -rf /tmp/curl/lib/lib* $(LIB_DIR)
 
 fmt:
