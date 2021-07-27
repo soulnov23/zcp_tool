@@ -5,3 +5,7 @@ all:
 
 clean:
 	$(MAKE) -C src clean
+
+.PHONY: all clean
+
+.DEFAULT_GOAL: all

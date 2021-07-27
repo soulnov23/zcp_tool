@@ -3,7 +3,8 @@ include ../Inc.mk
 OPENSSL := openssl-1.1.1j
 CURL := curl-7.76.1
 
-all: openssl curl fmt picohttpparser tinyxml2 yaml
+#all: openssl curl fmt picohttpparser tinyxml2 yaml
+all: fmt picohttpparser tinyxml2 yaml
 
 openssl: 
 	tar -zvxf $(OPENSSL).tar.gz

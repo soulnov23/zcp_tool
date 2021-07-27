@@ -21,3 +21,7 @@ $(A_BIN): $(OBJS)
 
 clean:
 	rm -rf $(OBJS) $(SO_BIN) $(A_BIN)
+
+.PHONY: all clean
+
+.DEFAULT_GOAL: all
