@@ -7,8 +7,8 @@
             "label": "build",
             "type": "shell",
             "command": [
-                "make -C ${workspaceFolder}/zcp_tool/example test && ",
-                "${workspaceFolder}/zcp_tool/example/test"
+                "make -C ${workspaceFolder}/src/test test && ",
+                "${workspaceFolder}/src/test/test"
             ],
             "group": {
                 "kind": "build",
