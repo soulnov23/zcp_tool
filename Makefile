@@ -6,13 +6,13 @@ include Inc.mk
 #export PROJ_PATH
 
 all: check
-	$(MAKE) -C zcp_tool
+	$(MAKE) -C src
 
 clean:
-	$(MAKE) -C zcp_tool clean
+	$(MAKE) -C src clean
 
 format:
-	$(MAKE) -C zcp_tool format
+	$(MAKE) -C src format
 
 install: check
 	$(MAKE) -C third_party
@@ -24,3 +24,7 @@ check:
 	@mkdir -p $(BIN_DIR)
 	@mkdir -p $(LIB_DIR)
 	@mkdir -p $(OBJ_DIR)
+
+.PHONY: all clean format install uninstall check
+
+.DEFAULT_GOAL: all

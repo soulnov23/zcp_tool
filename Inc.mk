@@ -14,10 +14,10 @@ AR = ar
 ARFLAGS = -scurv
 RANLIB = ranlib
 
-CFLAGS ?=
+CFLAGS 	 ?=
 CXXFLAGS ?=
-INCLUDE ?=
-LDFLAGS ?=
+INCLUDE  ?=
+LDFLAGS  ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
 CFLAGS   += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
@@ -38,14 +38,18 @@ LIB_DIR = $(PROJ_PATH)/release/lib
 OBJ_DIR = $(PROJ_PATH)/release/obj
 
 #由于第三方库代码里面include的路径就是按照原目录结构，导致引用第三方库不能直接使用全路径
-CURL_INC = $(PROJ_PATH)/third_party/curl/include
-OPENSSL_INC = $(PROJ_PATH)/third_party/openssl/include
-FMT_INC = $(PROJ_PATH)/third_party/fmt/include
-PICOHTTPPARSER_INC = $(PROJ_PATH)/third_party/picohttpparser/include
-RAPIDJSON_INC = $(PROJ_PATH)/third_party/rapidjson/include
-SPDLOG_INC = $(PROJ_PATH)/third_party/spdlog/include
-TINYXML2_INC = $(PROJ_PATH)/third_party/tinyxml2/include
-YAML_INC = $(PROJ_PATH)/third_party/yaml/include
+CURL_INC 			= $(PROJ_PATH)/third_party/curl/include
+OPENSSL_INC 		= $(PROJ_PATH)/third_party/openssl/include
+FMT_INC 			= $(PROJ_PATH)/third_party/fmt/include
+PICOHTTPPARSER_INC 	= $(PROJ_PATH)/third_party/picohttpparser/include
+RAPIDJSON_INC 		= $(PROJ_PATH)/third_party/rapidjson/include
+SPDLOG_INC 			= $(PROJ_PATH)/third_party/spdlog/include
+TINYXML2_INC 		= $(PROJ_PATH)/third_party/tinyxml2/include
+YAML_INC 			= $(PROJ_PATH)/third_party/yaml/include
+
+INCLUDE += -I$(PROJ_PATH) -I$(CURL_INC) -I$(OPENSSL_INC) -I$(FMT_INC) \
+		   -I$(PICOHTTPPARSER_INC) -I$(RAPIDJSON_INC) -I$(SPDLOG_INC) \
+		   -I$(TINYXML2_INC) -I$(YAML_INC)
 
 FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .clang-format
 FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
