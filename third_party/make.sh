@@ -9,30 +9,33 @@ set -x
 
 set -x
 
+OPENSSL=openssl-1.1.1j
+CURL=curl-7.76.1
+
 function openssl()
 {
-	tar -zvxf openssl-1.1.1j.tar.gz
-	cd openssl-1.1.1j
-	chmod -R 755 ./
+	tar -zvxf ${OPENSSL}.tar.gz
+	chmod -R 755 ${OPENSSL}
+	cd ${OPENSSL}
 	#Makefile is older than Makefile.org, Configure or config.
 	./config
-	./config shared --prefix=/usr
+	./config shared --prefix=/tmp/openssl
 	make -j32
 	make install
 	cd ..
-	rm -rf openssl-1.1.1j
+	rm -rf ${OPENSSL}
 }
 
 function curl()
 {
-	tar -zvxf curl-7.76.1.tar.gz
-	cd curl-7.76.1
-	chmod -R 755 ./
-	./configure --prefix=/usr --with-ssl
+	tar -zvxf ${CURL}.tar.gz
+	chmod -R 755 ${CURL}
+	cd ${CURL}
+	./configure --prefix=/tmp/curl --with-ssl=/tmp/openssl
 	make -j32
 	make install
 	cd ..
-	rm -rf curl-7.76.1
+	rm -rf ${CURL}
 }
 
 main()
