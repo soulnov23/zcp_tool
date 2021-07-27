@@ -47,11 +47,11 @@ yaml:
 	$(MAKE) -C yaml -j32
 
 clean:
-	rm -rf $(LIB_DIR)/libcrypto.*
-	rm -rf $(LIB_DIR)/libssl.*
-	rm -rf /tmp/openssl
-	rm -rf $(LIB_DIR)/libcurl.*
-	rm -rf /tmp/curl
+	#rm -rf $(LIB_DIR)/libcrypto.*
+	#rm -rf $(LIB_DIR)/libssl.*
+	#rm -rf /tmp/openssl
+	#rm -rf $(LIB_DIR)/libcurl.*
+	#rm -rf /tmp/curl
 	rm -rf $(LIB_DIR)/libfmt.*
 	$(MAKE) -C picohttpparser clean
 	$(MAKE) -C tinyxml2 clean
