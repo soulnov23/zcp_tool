@@ -8,7 +8,7 @@ A_BIN = $(LIB_DIR)/$(A_NAME)
 
 CFLAGS   +=
 CXXFLAGS +=
-INCLUDE  += -I$(PICOHTTPPARSER_INC)
+INCLUDE  +=
 LDFLAGS  +=
 
 all: $(SO_BIN) $(A_BIN)
