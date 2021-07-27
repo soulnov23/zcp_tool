@@ -6,8 +6,10 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libpicohttpparser.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE +=
-LDFLAGS +=
+CFLAGS   +=
+CXXFLAGS +=
+INCLUDE  += -I$(PICOHTTPPARSER_INC)
+LDFLAGS  +=
 
 all: $(SO_BIN) $(A_BIN)
 

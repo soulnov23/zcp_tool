@@ -6,8 +6,10 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libtinyxml2.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE +=
-LDFLAGS +=
+CFLAGS   +=
+CXXFLAGS +=
+INCLUDE  += -I$(TINYXML2_INC)
+LDFLAGS  +=
 
 all: $(SO_BIN) $(A_BIN)
 

@@ -4,9 +4,11 @@ SRC := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp, %.o, $(SRC))
 BIN := $(patsubst %.cpp, ./bin/%, $(SRC))
 
-INCLUDE +=
-LDFLAGS += -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
-		   -laio -lcomm -lcomm_crypto -lcomm_net -lssl -lfmt
+CFLAGS   +=
+CXXFLAGS +=
+INCLUDE  += -I$(PROJ_PATH)
+LDFLAGS  += -L$(LIB_DIR) -lcurl -lfmt -lssl -lcrypto -lpicohttpparser \
+		    -ltinyxml2 -lyaml -lcomm -lcomm_crypto -lcomm_net -lpthread
 
 all: check $(BIN)
 	

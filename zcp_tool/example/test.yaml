@@ -1,0 +1,92 @@
+global:                                           #全局配置
+  namespace: Development                          #环境类型，分正式Production和非正式Development两种类型
+  env_name: dev                                   #环境名称，非正式环境下多环境的名称
+
+server:                                           #服务端配置
+  app: os_mp_points                               #业务的应用名
+  server: os_mp_points                            #进程服务名
+  filter:
+    - calllog
+    - recovery
+    - validation
+  service:                                        #业务服务提供的service，可以有多个
+    - name: trpc.osmp.points.Handler              #service的名字服务路由名称
+      ip: 0.0.0.0                                 #服务监听ip地址
+      port: 54321                                 #服务监听端口
+      network: tcp                                #网络监听类型 tcp udp
+      protocol: http                              #应用层协议 trpc http
+      timeout: 3000                               #请求最长处理时间 单位 毫秒
+    - name: trpc.osmp.points.Provider
+      ip: 0.0.0.0
+      port: 54322
+      network: tcp
+      protocol: http
+      timeout: 3000
+
+client:                                           #客户端调用的后端配置
+  filter:
+    - backcalllog
+  service:                                        #业务服务提供的service，可以有多个
+    - name: wuji                                  #service的名字服务路由名称
+      network: tcp                                #网络监听类型 tcp udp
+      protocol: http                              #应用层协议 trpc http
+      target: http://11.181.200.183:1024          #请求服务地址
+      timeout: 3000                               #请求最长处理时间 单位 毫秒
+    - name: trpc.mpgo.points_exchange_whole_service.Greeter
+      network: tcp
+      protocol: http
+      target: ip://11.177.4.156:8080
+      timeout: 3000
+
+plugins:                                          #插件配置
+  log:                                            #日志配置
+    default:                                      #默认日志的配置，可支持多输出
+      - writer: console                           #控制台标准输出 默认
+        level: debug                              #标准输出日志的级别
+      - writer: file                              #本地文件日志
+        level: debug                              #本地文件滚动日志的级别
+        writer_config:
+          filename: ../log/run.log                #本地文件滚动日志文件名
+          roll_type: time                         #本地文件滚动日志的类型 size大小分隔，time时间分隔
+          time_unit: day                          #本地文件滚动日志的类型配置time有效，按照day
+          max_size: 1024                          #本地文件滚动日志的大小 单位 MB
+          max_backups: 10                         #最大日志文件数
+          max_age: 7                              #最大日志保留天数
+          compress: false                         #日志文件是否压缩
+  midaslog:                                       #midaslog日志配置
+    call:
+      - writer: file
+        level: debug
+        formatter: form
+        formatter_config:
+          key_time: Time
+          key_message: Message
+          key_level: Level
+          key_caller: Caller
+          encode_level: capital
+          encode_caller: short
+          encode_duration: string
+        writer_config:
+          filename: ../log/call.log
+          max_size: 10
+          max_backups: 10
+          max_age: 7
+          compress: false
+    backcall:
+      - writer: file
+        level: debug
+        formatter: form
+        formatter_config:
+          key_time: Time
+          key_message: Message
+          key_level: Level
+          key_caller: Caller
+          encode_level: capital
+          encode_caller: short
+          encode_duration: string
+        writer_config:
+          filename: ../log/backcall.log
+          max_size: 10
+          max_backups: 10
+          max_age: 7
+          compress: false

@@ -7,9 +7,11 @@ SO_BIN = $(LIB_DIR)/$(SO_NAME)
 A_NAME = libcomm_crypto.a
 A_BIN = $(LIB_DIR)/$(A_NAME)
 
-INCLUDE +=
-LDFLAGS += -lpthread -ltinyxml2 -lpicohttpparser -lcrypto -lcurl \
-		   -laio -lcomm -lssl -lfmt
+CFLAGS   +=
+CXXFLAGS +=
+INCLUDE  += -I$(PROJ_PATH)
+LDFLAGS  += -L$(LIB_DIR) -lcurl -lfmt -lssl -lcrypto -lpicohttpparser \
+		    -ltinyxml2 -lyaml -lpthread
 
 all: $(SO_BIN) $(A_BIN)
 	

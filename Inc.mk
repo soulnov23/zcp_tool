@@ -14,23 +14,10 @@ AR = ar
 ARFLAGS = -scurv
 RANLIB = ranlib
 
-PROJ_PATH = $(shell pwd | awk -F'/zcp_tool' '{print $$1}')/zcp_tool
-BIN_DIR = $(PROJ_PATH)/release/bin
-LIB_DIR = $(PROJ_PATH)/release/lib
-OBJ_DIR = $(PROJ_PATH)/release/obj
-
 CFLAGS ?=
 CXXFLAGS ?=
-INCLUDE ?= -I$(PROJ_PATH) \
-		   -I$(PROJ_PATH)/third_party/curl/include \
-		   -I$(PROJ_PATH)/third_party/openssl/include \
-		   -I$(PROJ_PATH)/third_party/fmt/include \
-		   -I$(PROJ_PATH)/third_party/picohttpparser \
-		   -I$(PROJ_PATH)/third_party/rapidjson \
-		   -I$(PROJ_PATH)/third_party/spdlog/include \
-		   -I$(PROJ_PATH)/third_party/tinyxml2 \
-		   -I$(PROJ_PATH)/third_party/yaml/include
-LDFLAGS ?= -L$(LIB_DIR)
+INCLUDE ?=
+LDFLAGS ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
 CFLAGS   += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
@@ -44,6 +31,21 @@ CXXFLAGS += -Wall -g -fPIC -pipe -Wl,-z -Wl,defs -O3
 INCLUDE  +=
 LDFLAGS  +=
 endif
+
+PROJ_PATH = $(shell pwd | awk -F'/zcp_tool' '{print $$1}')/zcp_tool
+BIN_DIR = $(PROJ_PATH)/release/bin
+LIB_DIR = $(PROJ_PATH)/release/lib
+OBJ_DIR = $(PROJ_PATH)/release/obj
+
+#由于第三方库代码里面include的路径就是按照原目录结构，导致引用第三方库不能直接使用全路径
+CURL_INC = $(PROJ_PATH)/third_party/curl/include
+OPENSSL_INC = $(PROJ_PATH)/third_party/openssl/include
+FMT_INC = $(PROJ_PATH)/third_party/fmt/include
+PICOHTTPPARSER_INC = $(PROJ_PATH)/third_party/picohttpparser/include
+RAPIDJSON_INC = $(PROJ_PATH)/third_party/rapidjson/include
+SPDLOG_INC = $(PROJ_PATH)/third_party/spdlog/include
+TINYXML2_INC = $(PROJ_PATH)/third_party/tinyxml2/include
+YAML_INC = $(PROJ_PATH)/third_party/yaml/include
 
 FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .clang-format
 FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
