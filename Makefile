@@ -21,9 +21,9 @@ uninstall:
 	$(MAKE) -C third_party clean
 
 check:
-	@mkdir -p $(BIN_DIR)
-	@mkdir -p $(LIB_DIR)
-	@mkdir -p $(OBJ_DIR)
+	mkdir -p $(BIN_DIR)
+	mkdir -p $(LIB_DIR)
+	mkdir -p $(OBJ_DIR)
 
 .PHONY: all clean format install uninstall check
 

@@ -7,7 +7,7 @@ BIN = $(BIN_DIR)/zcp_server
 CFLAGS   +=
 CXXFLAGS +=
 INCLUDE  +=
-LDFLAGS  += -lpthread -L$(LIB_DIR) -lcurl -lfmt -lssl -lcrypto \
+LDFLAGS  += -lpthread -lssl -lcrypto -lcurl -L$(LIB_DIR) -lfmt  \
 		    -lpicohttpparser -ltinyxml2 -lyaml -lbase
 
 all: $(BIN)

@@ -19,19 +19,14 @@ tinyxml2:
 	$(MAKE) -C tinyxml2 -j32
 
 yaml:
-	$(MAKE) -C yaml -j32
+	$(MAKE) -C yaml
 
 clean:
-	rm -rf $(LIB_DIR)/libcrypto.*
-	rm -rf $(LIB_DIR)/libssl.*
-	rm -rf /tmp/openssl
-	rm -rf $(LIB_DIR)/libcurl.*
-	rm -rf /tmp/curl
 	rm -rf $(LIB_DIR)/libfmt.*
 	$(MAKE) -C picohttpparser clean
 	$(MAKE) -C tinyxml2 clean
 	$(MAKE) -C yaml clean
 
-.PHONY: openssl curl fmt picohttpparser tinyxml2 yaml clean
+.PHONY: fmt picohttpparser tinyxml2 yaml clean
 
 .DEFAULT_GOAL: all
