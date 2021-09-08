@@ -5,3 +5,5 @@
 *.so
 *.a
 *.la
+release/bin
+src/test/bin
