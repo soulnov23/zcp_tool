@@ -7,9 +7,6 @@ AccessModifierOffset: -4
 # 宏定义对齐
 AlignConsecutiveMacros: true
 
-# 声明变量对齐
-AlignConsecutiveAssignments: true
-
 # 每行限长130
 ColumnLimit: 130
 
@@ -25,3 +22,6 @@ IndentWidth: 4
 
 # tab
 TabWidth: 4
+
+# 枚举值一直都换行
+AllowShortEnumsOnASingleLine: false
