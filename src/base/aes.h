@@ -12,7 +12,7 @@
 
 enum AES_SIGN_TYPE {
     AES_SIGN_CODE_BASE64 = 0,  //!< 签名经过Base64编码
-    AES_SIGN_CODE_HEX    = 1,  //!< 签名经过Hex编码
+    AES_SIGN_CODE_HEX = 1,     //!< 签名经过Hex编码
 };
 
 enum AES_BIT_TYPE {

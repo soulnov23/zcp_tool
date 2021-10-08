@@ -14,8 +14,8 @@ class edge_t {
 public:
     edge_t(){};
     edge_t(vertex_t* src, vertex_t* dst, const string& weight) {
-        src_    = src;
-        dst_    = dst;
+        src_ = src;
+        dst_ = dst;
         weight_ = weight;
     }
     ~edge_t(){};

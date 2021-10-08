@@ -20,7 +20,7 @@
  * \brief	摘要算法
  */
 enum digest_algorithm {
-    DIGEST_SHA1   = 0,  //!< SHA-1摘要算法
+    DIGEST_SHA1 = 0,  //!< SHA-1摘要算法
     DIGEST_SHA256 = 1
 };
 enum rsa_cipher_type { CIPHER_TYPE_BASE64 = 0, CIPHER_TYPE_HEX = 1 };
@@ -29,9 +29,9 @@ enum rsa_cipher_type { CIPHER_TYPE_BASE64 = 0, CIPHER_TYPE_HEX = 1 };
  * \brief	签名编码类型
  */
 enum sign_code_type {
-    SIGN_CODE_RAW    = 0,  //!< 签名未编码
+    SIGN_CODE_RAW = 0,     //!< 签名未编码
     SIGN_CODE_BASE64 = 1,  //!< 签名经过Base64编码
-    SIGN_CODE_HEX    = 2   //!< 签名经过Hex编码
+    SIGN_CODE_HEX = 2      //!< 签名经过Hex编码
 };
 
 /*!

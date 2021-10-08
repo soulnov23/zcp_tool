@@ -17,17 +17,17 @@ int listen_fd;
 
 int do_listen() {
     struct sockaddr_in server_addr;
-    server_addr.sin_family      = AF_INET;
-    server_addr.sin_port        = htons(8765);
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(8765);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    listen_fd                   = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    listen_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (-1 == make_socket_nonblocking(listen_fd)) {
         PRINTF_ERROR("make_socket_nonblocking(%d) error", listen_fd);
         return -1;
     }
     struct epoll_event event;
     event.data.fd = listen_fd;
-    event.events  = EPOLLIN | EPOLLOUT | EPOLLET;
+    event.events = EPOLLIN | EPOLLOUT | EPOLLET;
     if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_ADD, listen_fd, &event)) {
         PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", epoll_fd, listen_fd);
         return -1;
@@ -55,7 +55,7 @@ void do_accept() {
     while (true) {
         struct sockaddr_in addr;
         socklen_t addr_len = sizeof(addr);
-        int fd             = accept(listen_fd, (struct sockaddr*)&addr, &addr_len);
+        int fd = accept(listen_fd, (struct sockaddr*)&addr, &addr_len);
         if (fd == -1) {
             break;
         }
@@ -68,7 +68,7 @@ void do_accept() {
         }
         struct epoll_event event;
         event.data.fd = fd;
-        event.events  = EPOLLOUT | EPOLLET;
+        event.events = EPOLLOUT | EPOLLET;
         if (-1 == epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event)) {
             PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", epoll_fd, fd);
         }
@@ -78,7 +78,7 @@ void do_accept() {
 void do_recv(int fd) {
     while (true) {
         char buf[1024] = {0};
-        ssize_t ret    = recv(fd, buf, 1024, 0);
+        ssize_t ret = recv(fd, buf, 1024, 0);
         if (ret > 0) {
             PRINTF_DEBUG("fd:%d recv:%s", fd, buf);
             continue;

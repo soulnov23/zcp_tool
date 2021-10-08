@@ -124,10 +124,10 @@ extern const bool hex_string_encode_table[] = {
 
 bool hex_string_encode_char(const std::string& str_in, std::string::size_type pos, char* t) {
     static const char* hex_table = "0123456789ABCDEF";
-    const unsigned char& c       = str_in[pos];
-    t[0]                         = '%';
-    t[1]                         = hex_table[(c >> 4) & 0x0F];
-    t[2]                         = hex_table[(c & 0x0F)];
+    const unsigned char& c = str_in[pos];
+    t[0] = '%';
+    t[1] = hex_table[(c >> 4) & 0x0F];
+    t[2] = hex_table[(c & 0x0F)];
     return true;
 }
 
@@ -137,9 +137,9 @@ bool hex_string_encode_char(const std::string& str_in, std::string::size_type po
 
 bool buff_hex_string_encode_char(const std::string& str_in, std::string::size_type pos, char* t) {
     static const char* hex_table = "0123456789ABCDEF";
-    const unsigned char& c       = str_in[pos];
-    t[0]                         = hex_table[(c >> 4) & 0x0F];
-    t[1]                         = hex_table[(c & 0x0F)];
+    const unsigned char& c = str_in[pos];
+    t[0] = hex_table[(c >> 4) & 0x0F];
+    t[1] = hex_table[(c & 0x0F)];
     return true;
 }
 

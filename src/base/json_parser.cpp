@@ -71,7 +71,7 @@ Document string_to_json(const string& data) {
 }
 
 Value* get_object(Value& rapid_value, const char* name) {
-    Value* value                 = nullptr;
+    Value* value = nullptr;
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsObject())) {
         string ret_info = move(string(name) + " is not in json or not int format");
@@ -83,7 +83,7 @@ Value* get_object(Value& rapid_value, const char* name) {
 }
 
 Value* get_array(Value& rapid_value, const char* name) {
-    Value* value                 = nullptr;
+    Value* value = nullptr;
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsArray())) {
         string ret_info = move(string(name) + " is not in json or not int format");
@@ -107,7 +107,7 @@ string get_string(Value& rapid_value, const char* name) {
 }
 
 int64_t get_int64(Value& rapid_value, const char* name) {
-    int64_t value                = 0;
+    int64_t value = 0;
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsInt64())) {
         string ret_info = move(string(name) + " is not in json or not int format");
@@ -119,7 +119,7 @@ int64_t get_int64(Value& rapid_value, const char* name) {
 }
 
 uint64_t get_uint64(Value& rapid_value, const char* name) {
-    uint64_t value               = 0;
+    uint64_t value = 0;
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsUint64())) {
         string ret_info = move(string(name) + " is not in json or not int format");
@@ -131,7 +131,7 @@ uint64_t get_uint64(Value& rapid_value, const char* name) {
 }
 
 double get_double(Value& rapid_value, const char* name) {
-    double value                 = 0.000000;
+    double value = 0.000000;
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsDouble())) {
         string ret_info = move(string(name) + " is not in json or not int format");
@@ -143,7 +143,7 @@ double get_double(Value& rapid_value, const char* name) {
 }
 
 bool get_bool(Value& rapid_value, const char* name) {
-    bool value                   = true;
+    bool value = true;
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsBool())) {
         string ret_info = move(string(name) + " is not in json or not int format");

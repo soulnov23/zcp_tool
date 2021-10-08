@@ -16,10 +16,10 @@ using namespace rapidjson;
 #include "src/base/string_utils.h"
 #include "src/base/time_utils.h"
 
-string g_card_no     = "4567801230000220";
-string g_card_pin    = "104143";
+string g_card_no = "4567801230000220";
+string g_card_pin = "104143";
 string g_card_amount = "1000";
-string g_amount      = "10";
+string g_amount = "10";
 vector<string> g_vecHeadInfo;
 string g_OriginalInvoiceNumber;
 string g_OriginalBatchNumber;
@@ -38,7 +38,7 @@ void init() {
     g_vecHeadInfo.push_back("POSEntryMode: 2");
     g_vecHeadInfo.push_back("POSTypeId: 1");
     g_vecHeadInfo.push_back("POSName: PUBG-MidasBuy-POS-01");
-    string date           = date2str_time(get_time_sec());
+    string date = date2str_time(get_time_sec());
     string date_at_client = string("DateAtClient: ") + date.substr(0, 10);
     g_vecHeadInfo.push_back(date_at_client);
 }
@@ -47,7 +47,7 @@ int get_batch_no(string& batch_no) {
     string rsp_string;
     int err_code;
     string err_msg;
-    string url                 = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/initialize";
+    string url = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/initialize";
     vector<string> vecHeadInfo = g_vecHeadInfo;
     string post_string("");
     int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
@@ -57,8 +57,8 @@ int get_batch_no(string& batch_no) {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
-    string rsp_code                = map_return["ResponseCode"];
-    string rsp_msg                 = map_return["ResponseMessage"];
+    string rsp_code = map_return["ResponseCode"];
+    string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
         PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
@@ -91,13 +91,13 @@ int get_batch_no(string& batch_no) {
 int balance_enquiry() {
     map<string, string> map_data;
     map_data["CardNumber"] = g_card_no;
-    string post_string     = move(map_to_json(map_data));
+    string post_string = move(map_to_json(map_data));
     // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
         "balanceenquiry";
     vector<string> vecHeadInfo = g_vecHeadInfo;
-    string current_batch_no    = string("CurrentBatchNumber: ") + g_batch_no;
+    string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
     vecHeadInfo.push_back("Content-Type: application/json");
     int err_code;
@@ -110,8 +110,8 @@ int balance_enquiry() {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
-    string rsp_code                = map_return["ResponseCode"];
-    string rsp_msg                 = map_return["ResponseMessage"];
+    string rsp_code = map_return["ResponseCode"];
+    string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
         PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
@@ -126,16 +126,16 @@ int redeem() {
     map<string, string> map_data;
     map_data["Amount"] = g_amount;
     // map_data["BillAmount"] = g_card_amount;
-    map_data["InvoiceNumber"]  = order_id;
+    map_data["InvoiceNumber"] = order_id;
     map_data["IdempotencyKey"] = "abcdefghi";
-    map_data["CardNumber"]     = g_card_no;
-    map_data["CardPIN"]        = g_card_pin;
-    map_data["Notes"]          = "desc";
-    string post_string         = move(map_to_json(map_data));
+    map_data["CardNumber"] = g_card_no;
+    map_data["CardPIN"] = g_card_pin;
+    map_data["Notes"] = "desc";
+    string post_string = move(map_to_json(map_data));
     // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
-    string url                 = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/redeem";
+    string url = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/redeem";
     vector<string> vecHeadInfo = g_vecHeadInfo;
-    string transaction_id      = string("TransactionId: ") + order_id;
+    string transaction_id = string("TransactionId: ") + order_id;
     vecHeadInfo.push_back(transaction_id);
     string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
@@ -150,11 +150,11 @@ int redeem() {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
-    g_OriginalInvoiceNumber        = order_id;
-    g_OriginalBatchNumber          = g_batch_no;
-    g_OriginalTransactionId        = order_id;
-    string rsp_code                = map_return["ResponseCode"];
-    string rsp_msg                 = map_return["ResponseMessage"];
+    g_OriginalInvoiceNumber = order_id;
+    g_OriginalBatchNumber = g_batch_no;
+    g_OriginalTransactionId = order_id;
+    string rsp_code = map_return["ResponseCode"];
+    string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
         PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
@@ -166,18 +166,18 @@ int redeem() {
 int cancel_redeem() {
     string order_id = to_string(get_time_sec());
     map<string, string> map_data;
-    map_data["CardNumber"]            = g_card_no;
+    map_data["CardNumber"] = g_card_no;
     map_data["OriginalInvoiceNumber"] = g_OriginalInvoiceNumber;
-    map_data["OriginalAmount"]        = g_amount;
-    map_data["OriginalBatchNumber"]   = g_OriginalBatchNumber;
+    map_data["OriginalAmount"] = g_amount;
+    map_data["OriginalBatchNumber"] = g_OriginalBatchNumber;
     map_data["OriginalTransactionId"] = g_OriginalTransactionId;
-    string post_string                = move(map_to_json(map_data));
+    string post_string = move(map_to_json(map_data));
     // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
         "cancelredeem";
     vector<string> vecHeadInfo = g_vecHeadInfo;
-    string transaction_id      = string("TransactionId: ") + order_id;
+    string transaction_id = string("TransactionId: ") + order_id;
     vecHeadInfo.push_back(transaction_id);
     string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
@@ -192,8 +192,8 @@ int cancel_redeem() {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
-    string rsp_code                = map_return["ResponseCode"];
-    string rsp_msg                 = map_return["ResponseMessage"];
+    string rsp_code = map_return["ResponseCode"];
+    string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
         PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
@@ -205,15 +205,15 @@ int cancel_redeem() {
 int reverse_redeem() {
     string order_id = to_string(get_time_sec());
     map<string, string> map_data;
-    map_data["CardNumber"]    = g_card_no;
+    map_data["CardNumber"] = g_card_no;
     map_data["InvoiceNumber"] = order_id;
-    string post_string        = move(map_to_json(map_data));
+    string post_string = move(map_to_json(map_data));
     // PRINTF_DEBUG("post_string:[%s]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
         "reverseredeem";
     vector<string> vecHeadInfo = g_vecHeadInfo;
-    string transaction_id      = string("TransactionId: ") + order_id;
+    string transaction_id = string("TransactionId: ") + order_id;
     vecHeadInfo.push_back(transaction_id);
     string current_batch_no = string("CurrentBatchNumber: ") + g_batch_no;
     vecHeadInfo.push_back(current_batch_no);
@@ -228,8 +228,8 @@ int reverse_redeem() {
     }
     // PRINTF_DEBUG("rsp_string:[%s]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
-    string rsp_code                = map_return["ResponseCode"];
-    string rsp_msg                 = map_return["ResponseMessage"];
+    string rsp_code = map_return["ResponseCode"];
+    string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
         PRINTF_ERROR("rsp_code[%s] rsp_msg[%s]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;

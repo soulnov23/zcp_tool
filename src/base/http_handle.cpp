@@ -17,7 +17,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::vector<std::str
               // const std::string& strDnsList,
               // const std::string& strIpv4,
               bool https_verify) {
-    int ret         = 0;
+    int ret = 0;
     char cerr[1024] = {0};
 
     /* comment, gerryyang
@@ -153,7 +153,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::string& strUser
               // const std::string& strDnsList,
               // const std::string& strIpv4,
               bool https_verify) {
-    int ret         = 0;
+    int ret = 0;
     char cerr[1024] = {0};
 
     /* comment, gerryyang

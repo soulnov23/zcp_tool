@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
     }
 
     map<string, string> map_params;
-    XMLElement* root  = doc.RootElement();
+    XMLElement* root = doc.RootElement();
     XMLElement* child = root->FirstChildElement();
     while (child) {
         if (child->Name() && child->GetText()) {

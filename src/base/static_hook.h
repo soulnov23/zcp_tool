@@ -32,10 +32,10 @@ int static_hook(T old_func, T new_func) {
     new_addr.ip = reinterpret_cast<unsigned char*>(new_func);
 
     /* 解除内存保护，必须以页块的头为起始点 */
-    unsigned long mask   = sysconf(_SC_PAGE_SIZE) - 1;
+    unsigned long mask = sysconf(_SC_PAGE_SIZE) - 1;
     unsigned long remain = old_addr.val & mask;
-    unsigned long begin  = old_addr.val & ~mask;
-    ret                  = mprotect(reinterpret_cast<void*>(begin), remain + JMP_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC);
+    unsigned long begin = old_addr.val & ~mask;
+    ret = mprotect(reinterpret_cast<void*>(begin), remain + JMP_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC);
     if (ret != 0) {
         return 2;
     }

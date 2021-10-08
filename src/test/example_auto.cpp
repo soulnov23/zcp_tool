@@ -37,7 +37,7 @@ void PRINTF_MAP(map<T1, T2> &record, T3 &it) {
 
 int main(int argc, char* argv[]) {
     int i;
-    decltype(i) j         = 10;
+    decltype(i) j = 10;
     const type_info& info = typeid(j);
     cout << info.name() << endl;
 

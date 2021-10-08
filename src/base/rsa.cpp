@@ -33,8 +33,8 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
 
     int ret = 0;
 
-    RSA* rsa           = nullptr;
-    BIO* bio           = nullptr;
+    RSA* rsa = nullptr;
+    BIO* bio = nullptr;
     EVP_PKEY* evp_pkey = nullptr;
     unsigned char digest[SHA512_DIGEST_LENGTH];
     unsigned int digest_len = sizeof(digest);
@@ -133,8 +133,8 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
 
     int ret = 0;
 
-    RSA* rsa           = nullptr;
-    BIO* bio           = nullptr;
+    RSA* rsa = nullptr;
+    BIO* bio = nullptr;
     EVP_PKEY* evp_pkey = nullptr;
     unsigned char digest[SHA512_DIGEST_LENGTH];
     unsigned int digest_len = sizeof(digest);
@@ -298,7 +298,7 @@ int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in, int cipher_t
     }
     int cipher_size = cipher_tmp.size();
 
-    int clen         = RSA_size(rsa);
+    int clen = RSA_size(rsa);
     char* clear_data = (char*)malloc(sizeof(char) * clen);
     int clear_data_size;
     // RSA_PKCS1_OAEP_PADDING
@@ -357,8 +357,8 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 
     int ret = 0;
 
-    RSA* rsa           = nullptr;
-    BIO* bio           = nullptr;
+    RSA* rsa = nullptr;
+    BIO* bio = nullptr;
     EVP_PKEY* evp_pkey = nullptr;
     std::string format_private_key;
 
@@ -371,7 +371,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
     EVP_MD_CTX ctx;
 
     unsigned int sign_size = 0;
-    unsigned char* sign    = nullptr;
+    unsigned char* sign = nullptr;
 
     format_private_key = "-----BEGIN RSA PRIVATE KEY-----\n";
     //	int keyLen = private_key.size();
@@ -428,7 +428,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
 
     // calc sign
     sign_size = RSA_size(rsa);
-    sign      = (unsigned char*)malloc(sizeof(unsigned char) * sign_size);
+    sign = (unsigned char*)malloc(sizeof(unsigned char) * sign_size);
     memset(sign, 0x0, sizeof(unsigned char) * sign_size);
 
     // should include <openssl/rsa.h>
@@ -477,8 +477,8 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 
     int ret = 0;
 
-    RSA* rsa           = nullptr;
-    BIO* bio           = nullptr;
+    RSA* rsa = nullptr;
+    BIO* bio = nullptr;
     EVP_PKEY* evp_pkey = nullptr;
     std::string format_private_key;
 
@@ -491,7 +491,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
     EVP_MD_CTX ctx;
 
     unsigned int sign_size = 0;
-    unsigned char* sign    = nullptr;
+    unsigned char* sign = nullptr;
 
     format_private_key = "-----BEGIN RSA PRIVATE KEY-----\n";
     //	int keyLen = private_key.size();
@@ -548,7 +548,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
 
     // calc sign
     sign_size = RSA_size(rsa);
-    sign      = (unsigned char*)malloc(sizeof(unsigned char) * sign_size);
+    sign = (unsigned char*)malloc(sizeof(unsigned char) * sign_size);
     memset(sign, 0x0, sizeof(unsigned char) * sign_size);
 
     // should include <openssl/rsa.h>

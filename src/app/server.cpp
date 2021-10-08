@@ -20,10 +20,10 @@
 #define UDP_RCV_BUF     SIZE_1K
 
 server::server() {
-    m_epoll_fd  = -1;
+    m_epoll_fd = -1;
     m_listen_fd = -1;
     m_client_fd = -1;
-    m_flag      = true;
+    m_flag = true;
 }
 
 server::~server() { stop(); }
@@ -32,7 +32,7 @@ void server::signal_handle_func(int sig_no, siginfo_t* sig_info, void* data) {
     if (sig_no == SIGCHLD) {
         PRINTF_DEBUG("recv signal:SIGCHLD");
         while (true) {
-            int status  = 0;
+            int status = 0;
             __pid_t pid = waitpid(-1, &status, WNOHANG);
             //设置了WNOHANG没有子进程了
             if (pid == 0) {
@@ -127,9 +127,9 @@ int server::init_pid_file() {
         return -1;
     }
 
-    pid_t pid      = getpid();
+    pid_t pid = getpid();
     string str_pid = std::to_string(pid);
-    int ret        = -1;
+    int ret = -1;
     while ((ret = write(fd, str_pid.data(), str_pid.size()) == -1) && errno == EINTR)
         ;
     if (ret == -1) {
@@ -145,8 +145,8 @@ int server::init_pid_file() {
 
 int server::init_signal() {
     static const int sigs[] = {SIGINT, SIGTERM, SIGQUIT, SIGCHLD, SIGUSR1, SIGIO, SIGPIPE};
-    const int* begin        = std::begin(sigs);
-    const int* end          = std::end(sigs);
+    const int* begin = std::begin(sigs);
+    const int* end = std::end(sigs);
     for (; begin != end; begin++) {
         int ret = set_signal_handle(*begin, signal_handle_func);
         if (ret != 0) {
@@ -160,10 +160,10 @@ int server::init_signal() {
 int server::connect_timeout(int nsec, int usec) {
     int count;
     struct sockaddr_in server_addr;
-    server_addr.sin_family      = AF_INET;
-    server_addr.sin_port        = htons(TCP_LISTEN_PORT);
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(TCP_LISTEN_PORT);
     server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
-    m_client_fd                 = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
+    m_client_fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
     if (m_client_fd == -1) {
         PRINTF_ERROR("socket error");
         return -1;
@@ -179,7 +179,7 @@ int server::connect_timeout(int nsec, int usec) {
         goto error;
     }
     struct timeval timeout;
-    timeout.tv_sec  = nsec;
+    timeout.tv_sec = nsec;
     timeout.tv_usec = usec;
     fd_set write_set;
     FD_ZERO(&write_set);
@@ -195,7 +195,7 @@ int server::connect_timeout(int nsec, int usec) {
     }
     // count>0的情况
     if (FD_ISSET(m_client_fd, &write_set)) {
-        int err       = 0;
+        int err = 0;
         socklen_t len = sizeof(err);
         if (getsockopt(m_client_fd, SOL_SOCKET, SO_ERROR, &err, &len) == -1) {
             PRINTF_ERROR("getsockopt error");
@@ -219,8 +219,8 @@ error:
 
 int server::do_listen() {
     struct sockaddr_in server_addr;
-    server_addr.sin_family      = AF_INET;
-    server_addr.sin_port        = htons(TCP_LISTEN_PORT);
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(TCP_LISTEN_PORT);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     // server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
     m_listen_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -246,7 +246,7 @@ int server::do_listen() {
     }
     struct epoll_event event;
     event.data.fd = m_listen_fd;
-    event.events  = EPOLLIN | EPOLLET;
+    event.events = EPOLLIN | EPOLLET;
     if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_listen_fd, &event) == -1) {
         PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, m_listen_fd);
         goto error;
@@ -300,7 +300,7 @@ void server::do_accept() {
     while (true) {
         struct sockaddr_in addr;
         socklen_t addr_len = sizeof(addr);
-        int fd             = accept(m_listen_fd, (struct sockaddr*)&addr, &addr_len);
+        int fd = accept(m_listen_fd, (struct sockaddr*)&addr, &addr_len);
         if (fd == -1) {
             if (errno != EAGAIN) {
                 PRINTF_ERROR("accept error");
@@ -319,7 +319,7 @@ void server::do_accept() {
         }
         struct epoll_event event;
         event.data.fd = fd;
-        event.events  = EPOLLIN | EPOLLET;
+        event.events = EPOLLIN | EPOLLET;
         if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, fd, &event)) {
             PRINTF_ERROR("epoll_ctl(%d, EPOLL_CTL_ADD, %d) error", m_epoll_fd, fd);
         }
@@ -337,7 +337,7 @@ void server::do_recv(int fd) {
     auto conn = it->second;
     while (true) {
         char buf[1024] = {0};
-        ssize_t ret    = recv(fd, buf, 1024, 0);
+        ssize_t ret = recv(fd, buf, 1024, 0);
         if (ret > 0) {
             PRINTF_DEBUG("%s", buf);
             conn.get()->m_buffer.get()->append(buf, ret);
@@ -373,7 +373,7 @@ void server::do_send(int fd, const char* data, int len) {
         PRINTF_ERROR("m_fd_conn(map)没有发现连接对象的fd:%d", fd);
         return;
     }
-    auto conn      = it->second;
+    auto conn = it->second;
     int total_send = 0;
     while (total_send < len) {
         int ret = send(fd, data + total_send, len - total_send, 0);

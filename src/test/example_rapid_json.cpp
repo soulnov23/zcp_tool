@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
     if (doc.ObjectEmpty()) {
         return -1;
     }
-    Value* user_object           = get_object(doc, "user");
-    Value* id_object             = get_object(*user_object, "id");
+    Value* user_object = get_object(doc, "user");
+    Value* id_object = get_object(*user_object, "id");
     Value::MemberIterator member = id_object->FindMember("value");
     member->value.SetString("123456", doc.GetAllocator());
     string result = move(json_to_string(doc));

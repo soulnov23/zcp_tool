@@ -6,10 +6,10 @@
 using namespace std;
 
 enum status {
-    LOCKFREE_QUEUE_OK    = 0,   // 操作成功
-    LOCKFREE_QUEUE_ERR   = -1,  // 操作失败
-    LOCKFREE_QUEUE_FULL  = 1,   // 入队列失败，队列已满
-    LOCKFREE_QUEUE_EMPTY = 2    // 出队列失败，队列为空
+    LOCKFREE_QUEUE_OK = 0,    // 操作成功
+    LOCKFREE_QUEUE_ERR = -1,  // 操作失败
+    LOCKFREE_QUEUE_FULL = 1,  // 入队列失败，队列已满
+    LOCKFREE_QUEUE_EMPTY = 2  // 出队列失败，队列为空
 };
 
 template <typename T>
@@ -30,7 +30,7 @@ private:
         enqueue_seq_.store(0, memory_order_relaxed);
         dequeue_seq_.store(0, memory_order_relaxed);
     }
-    lockfree_queue_t(lockfree_queue_t&& rhs)      = delete;
+    lockfree_queue_t(lockfree_queue_t&& rhs) = delete;
     lockfree_queue_t(const lockfree_queue_t& rhs) = delete;
 
     lockfree_queue_t& operator=(lockfree_queue_t&& rhs) = delete;
@@ -44,12 +44,12 @@ public:
     size_t capacity() const { return capacity_.load(memory_order_relaxed); }
 
     int enqueue(const T& data) {
-        node_t* node       = nullptr;
+        node_t* node = nullptr;
         size_t enqueue_seq = enqueue_seq_.load(memory_order_relaxed);
         while (true) {
-            node            = &nodes_[enqueue_seq & mask_];
+            node = &nodes_[enqueue_seq & mask_];
             size_t node_seq = node->seq_.load(memory_order_acquire);
-            long dif        = node_seq - enqueue_seq;
+            long dif = node_seq - enqueue_seq;
             if (dif == 0) {
                 if (enqueue_seq_.compare_exchange_weak(enqueue_seq, enqueue_seq + 1, memory_order_relaxed)) {
                     break;
@@ -70,12 +70,12 @@ public:
     }
 
     int dequeue(T& data) {
-        node_t* node       = nullptr;
+        node_t* node = nullptr;
         size_t dequeue_seq = dequeue_seq_.load(memory_order_relaxed);
         while (true) {
-            node            = &nodes_[dequeue_seq & mask_];
+            node = &nodes_[dequeue_seq & mask_];
             size_t node_seq = node->seq_.load(memory_order_acquire);
-            long dif        = node_seq - (dequeue_seq + 1);
+            long dif = node_seq - (dequeue_seq + 1);
             if (dif == 0) {
                 if (dequeue_seq_.compare_exchange_weak(dequeue_seq, dequeue_seq + 1, memory_order_relaxed)) {
                     break;

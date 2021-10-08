@@ -23,5 +23,8 @@ IndentWidth: 4
 # tab
 TabWidth: 4
 
-# 枚举值一直都换行
-AllowShortEnumsOnASingleLine: false
+# 命名空间缩进
+NamespaceIndentation: All
+
+# 大括号换行方式
+BreakBeforeBraces: Attach

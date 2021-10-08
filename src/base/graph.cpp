@@ -164,8 +164,8 @@ string graph_adjvex_list_t::bfs_traverse() {
         // 查找顶点的所有未访问的邻接点
         while (!vertex_queue.empty()) {
             vertex_t* vertex = vertex_queue.front();
-            auto edge_set    = vertex->out_edge_set();
-            auto it_i        = edge_set.begin();
+            auto edge_set = vertex->out_edge_set();
+            auto it_i = edge_set.begin();
             for (; it_i != edge_set.end(); it_i++) {
                 if (!visited[(*it_i)->dst()]) {
                     vertex_queue.push((*it_i)->dst());
@@ -199,8 +199,8 @@ string graph_adjvex_list_t::dfs_traverse() {
         // 查找顶点的第一个未访问的邻接点，然后break出来继续访问子邻接点
         while (!vertex_stack.empty()) {
             vertex_t* vertex = vertex_stack.top();
-            auto edge_set    = vertex->out_edge_set();
-            auto it_i        = edge_set.begin();
+            auto edge_set = vertex->out_edge_set();
+            auto it_i = edge_set.begin();
             for (; it_i != edge_set.end(); it_i++) {
                 if (!visited[(*it_i)->dst()]) {
                     vertex_stack.push((*it_i)->dst());
@@ -256,7 +256,7 @@ string graph_adjvex_list_t::topological_sort() {
     size_t count = 0;
     while (!vertex_queue.empty()) {
         vertex_t* vertex = vertex_queue.front();
-        auto edge_set    = vertex->out_edge_set();
+        auto edge_set = vertex->out_edge_set();
         for (auto it_i : edge_set) {
             in_degree_map[it_i->dst()] = in_degree_map[it_i->dst()] - 1;
             if (in_degree_map[it_i->dst()] == 0) {
