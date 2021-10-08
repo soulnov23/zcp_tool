@@ -55,7 +55,7 @@ std::string uint_to_string(unsigned int i) {
 */
 
 void string_replace(string& data, const string& src, const string& dst) {
-    string::size_type pos    = 0;
+    string::size_type pos = 0;
     string::size_type srclen = src.size();
     string::size_type dstlen = dst.size();
     while ((pos = data.find(src, pos)) != string::npos) {
@@ -88,7 +88,7 @@ void str2vec(const string& buf, const char& field, vector_t& vec) {
 void str2vec(const string& buf, const string& field, vector_t& vec) {
     vec.clear();
     size_t offset = 0;
-    size_t next   = 0;
+    size_t next = 0;
     while (true) {
         next = buf.find_first_of(field, offset);
         if (next == string::npos) {
@@ -122,7 +122,7 @@ static bool get_value(const string& kv, string& key, string& value, const string
     if (pos == string::npos) {
         return false;
     }
-    key   = kv.substr(0, pos);
+    key = kv.substr(0, pos);
     value = kv.substr(pos + field.length());
     if (decode) {
         string result;
@@ -149,7 +149,7 @@ static bool get_value(const string& kv, string& key, string& value, const char& 
 
 void str2map(record_t& record, const string& buf, bool decode /*=true*/) {
     size_t offset = 0;
-    size_t next   = 0;
+    size_t next = 0;
     string kv;
     string key;
     string value;
@@ -190,3 +190,40 @@ string construct_string(const char* format, ...) {
         if (va_function(format))
 }
 */
+
+void escape_string(const string& sql, string& dest) {
+    char escape;
+    for (auto character : sql) {
+        switch (character) {
+            case 0: /* Must be escaped for 'mysql' */
+                escape = '0';
+                break;
+            case '\n': /* Must be escaped for logs */
+                escape = 'n';
+                break;
+            case '\r':
+                escape = 'r';
+                break;
+            case '\\':
+                escape = '\\';
+                break;
+            case '\'':
+                escape = '\'';
+                break;
+            case '"': /* Better safe than sorry */
+                escape = '"';
+                break;
+            case '\032': /* This gives problems on Win32 */
+                escape = 'Z';
+                break;
+            default:
+                escape = 0;
+        }
+        if (escape != 0) {
+            dest += '\\';
+            dest += escape;
+        } else {
+            dest += character;
+        }
+    }
+}

@@ -22,4 +22,6 @@ void str2map(record_t& record, const string& buf, bool decode = true);
 bool va_function(const char* format, ...);
 // bool va_function(const char* format, args...);
 
+void escape_string(const string& sql, string& dest);
+
 #endif
