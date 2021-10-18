@@ -20,8 +20,10 @@ void map2str(string& buf, const record_t& record, bool encode = true);
 void str2map(record_t& record, const string& buf, bool decode = true);
 
 bool va_function(const char* format, ...);
-// bool va_function(const char* format, args...);
+void str_format(string& dst, const char* format, ...);
 
 void escape_string(const string& sql, string& dest);
+void hex2str(string& dst, const string& src);
+void str2hex(string& dst, const string& src);
 
 #endif

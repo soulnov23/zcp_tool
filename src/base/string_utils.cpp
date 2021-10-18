@@ -184,12 +184,26 @@ bool va_function(const char* format, ...) {
     return true;
 }
 
-/*
-string construct_string(const char* format, ...) {
-        string data;
-        if (va_function(format))
+void str_format(string& dst, const char* format, ...) {
+    dst = "";
+    if (format == nullptr) {
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+    size_t len = vsnprintf(nullptr, 0, format, args);
+    if (len > 0) {
+        va_list args_tmp;
+        va_start(args_tmp, format);
+
+        dst.resize(len);
+        char* tmp = (char*)dst.c_str();
+        vsnprintf(tmp, len + 1, format, args_tmp);
+
+        va_end(args_tmp);
+    }
+    va_end(args);
 }
-*/
 
 void escape_string(const string& sql, string& dest) {
     char escape;
@@ -226,4 +240,46 @@ void escape_string(const string& sql, string& dest) {
             dest += character;
         }
     }
+}
+
+unsigned char hex2byte(char c) {
+    if (c >= '0' && c <= '9') {
+        return (unsigned char)(c - '0');
+    } else if (c >= 'a' && c <= 'f') {
+        return (unsigned char)(10 + c - 'a');
+    } else if (c >= 'A' && c <= 'F') {
+        return (unsigned char)(10 + c - 'A');
+    } else {  //出现异常字符
+        return 0xff;
+    }
+}
+
+void hex2str(string& dst, const string& src) {
+    dst = "";
+    unsigned char high, low;
+    const char* s = src.c_str();
+    while (*s) {
+        //高4位
+        high = hex2byte(*s++);
+        if (high == 0xff || *s == '\0') {
+            return;
+        }
+        //低4位
+        low = hex2byte(*s++);
+        if (low == 0xff) {
+            return;
+        }
+        dst.push_back((char)((high << 4) | low));
+    }
+}
+
+void str2hex(string& dst, const string& src) {
+    dst = "";
+    stringstream ss;
+    char hex[3] = {0};
+    for (auto s : src) {
+        snprintf(hex, sizeof(hex), "%02x", (unsigned char)s);
+        ss << hex;
+    }
+    dst = ss.str();
 }
