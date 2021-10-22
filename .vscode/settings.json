@@ -3,9 +3,6 @@
     //"http.proxy": "http://devnet-proxy.oa.com:8080",
     //"http.proxyStrictSSL": false,
     //"http.proxySupport": "on",
-    "window.zoomLevel": 0,
-    "problems.decorations.enabled": false,
-    "breadcrumbs.enabled": true,
     //editor选项
     "editor.fontSize": 18,
     "editor.wordWrap": "on",
@@ -82,6 +79,7 @@
     "remote.SSH.remotePlatform": {
         "cloud": "linux"
     },
+    "remote.SSH.configFile": "~\\.ssh\\config",
     //git选项
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
@@ -98,11 +96,17 @@
     "terminal.integrated.cursorStyle": "line",
     "terminal.integrated.scrollback": 5000,
     "terminal.integrated.wordSeparators": "`~!@#$%^&*()-=+[{]}\\\\|;:'\\\",.<>/?",
-    "terminal.integrated.defaultProfile.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
     //go选项
     "go.toolsManagement.autoUpdate": true,
     //xml选项
     "xmlTools.enableXmlTreeViewCursorSync": true,
     "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
-    "xmlTools.splitXmlnsOnFormat": false
+    "xmlTools.splitXmlnsOnFormat": false,
+    //其它
+    "window.zoomLevel": 0,
+    "problems.decorations.enabled": false,
+    "breadcrumbs.enabled": true,
+    "security.workspace.trust.untrustedFiles": "open",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "redhat.telemetry.enabled": false
 }
