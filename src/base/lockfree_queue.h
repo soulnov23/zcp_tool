@@ -5,6 +5,18 @@
 #include <memory>
 using namespace std;
 
+// class uncopyable
+#define CLASS_UNCOPYABLE(class_name)        \
+private:                                    \
+    class_name(const class_name&) = delete; \
+    class_name& operator=(const class_name&) = delete;
+
+// class unmovable
+#define CLASS_UNMOVABLE(class_name)          \
+private:                                     \
+    class_name(const class_name&&) = delete; \
+    class_name& operator=(const class_name&&) = delete;
+
 enum status {
     LOCKFREE_QUEUE_OK = 0,    // 操作成功
     LOCKFREE_QUEUE_ERR = -1,  // 操作失败
@@ -15,6 +27,9 @@ enum status {
 template <typename T>
 class lockfree_queue_t {
 private:
+    CLASS_UNCOPYABLE(lockfree_queue_t)
+    CLASS_UNMOVABLE(lockfree_queue_t)
+
     void init(size_t size) {
         bool size_is_power_of_2 = (size >= 2) && ((size & (size - 1)) == 0);
         if (!size_is_power_of_2) {
@@ -22,7 +37,7 @@ private:
         }
         nodes_ = make_unique<node_t[]>(size);
         for (size_t i = 0; i < size; i++) {
-            nodes_[i].seq_ = i;
+            nodes_[i].seq_.store(i, memory_order_relaxed);
         }
         size_ = size;
         mask_ = size - 1;
@@ -30,18 +45,13 @@ private:
         enqueue_seq_.store(0, memory_order_relaxed);
         dequeue_seq_.store(0, memory_order_relaxed);
     }
-    lockfree_queue_t(lockfree_queue_t&& rhs) = delete;
-    lockfree_queue_t(const lockfree_queue_t& rhs) = delete;
-
-    lockfree_queue_t& operator=(lockfree_queue_t&& rhs) = delete;
-    lockfree_queue_t& operator=(const lockfree_queue_t& rhs) = delete;
 
 public:
     lockfree_queue_t() { init(g_default_size); }
     lockfree_queue_t(size_t size) { init(size); }
     ~lockfree_queue_t() {}
     size_t size() const { return size_; }
-    size_t capacity() const { return capacity_.load(memory_order_relaxed); }
+    size_t capacity() const { return capacity_.load(memory_order_acquire); }
 
     int enqueue(const T& data) {
         node_t* node = nullptr;
@@ -99,6 +109,7 @@ private:
     static constexpr size_t hardware_destructive_interference_size = 128;  // 硬件破坏性干扰大小，内存对齐
     struct alignas(hardware_destructive_interference_size) node_t {
         T data_;
+        // seq_在线程1的load操作Synchronizes-with在线程2的store操作，原子操作的内存顺序都是memory_order_acquire和memory_order_release配合使用
         atomic<size_t> seq_;
     };
 
@@ -108,6 +119,8 @@ private:
     size_t mask_;                                  // size-1
     atomic<size_t> capacity_;                      // queue实际存储node大小
     unique_ptr<node_t[]> nodes_;
+    // enqueue_seq_和dequeue_seq_对于其它读写操作没有任何同步和重排的限制，仅要求保证原子性和内存一致性，所有原子操作的内存顺序都使用memory_order_relaxed
+    // enqueue_seq_和dequeue_seq_同时作为版本号，一直增加防止ABA问题，这里使用了mask_让nodes的索引一直都在size-1范围内
     alignas(hardware_destructive_interference_size) atomic<size_t> enqueue_seq_;
     alignas(hardware_destructive_interference_size) atomic<size_t> dequeue_seq_;
 };
