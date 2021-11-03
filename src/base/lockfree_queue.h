@@ -31,6 +31,7 @@ private:
     CLASS_UNMOVABLE(lockfree_queue_t)
 
     void init(size_t size) {
+        // 判断队列长度必须是2的幂，以便使用版本号和mask_&位操作，保证nodes的索引一直都在size-1范围内
         bool size_is_power_of_2 = (size >= 2) && ((size & (size - 1)) == 0);
         if (!size_is_power_of_2) {
             size = g_default_size;
@@ -120,7 +121,7 @@ private:
     atomic<size_t> capacity_;                      // queue实际存储node大小
     unique_ptr<node_t[]> nodes_;
     // enqueue_seq_和dequeue_seq_对于其它读写操作没有任何同步和重排的限制，仅要求保证原子性和内存一致性，所有原子操作的内存顺序都使用memory_order_relaxed
-    // enqueue_seq_和dequeue_seq_同时作为版本号，一直增加防止ABA问题，这里使用了mask_让nodes的索引一直都在size-1范围内
+    // enqueue_seq_和dequeue_seq_同时作为版本号，一直递增防止ABA问题
     alignas(hardware_destructive_interference_size) atomic<size_t> enqueue_seq_;
     alignas(hardware_destructive_interference_size) atomic<size_t> dequeue_seq_;
 };
