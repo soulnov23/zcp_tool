@@ -21,7 +21,7 @@ class singleton {
     CLASS_UNMOVABLE(singleton)
 
     singleton() {}
-    virtual ~singleton() {}
+    ~singleton() {}
 
 public:
     static T* get_instance_atomic() {
@@ -32,6 +32,7 @@ public:
             if (tmp == nullptr) {
                 tmp = new T;
                 instance_.store(tmp, std::memory_order_release);
+                atexit(release);
             }
         }
         return tmp;
@@ -39,7 +40,17 @@ public:
 
     static T* get_instance_call_once() {
         std::call_once(once_flag_, [&instance_] { instance_ = new T; });
+        atexit(release);
         return instance_;
+    }
+
+    static void release() {
+        std::lock_guard<std::mutex> lock(mutex_);
+        T* tmp = instance_.load(std::memory_order_acquire);
+        if (tmp != nullptr) {
+            delete tmp;
+            instance_.store(nullptr, , std::memory_order_release);
+        }
     }
 
 private:
