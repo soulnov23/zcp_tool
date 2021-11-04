@@ -3,17 +3,7 @@
 #include <atomic>
 #include <mutex>
 
-// class uncopyable
-#define CLASS_UNCOPYABLE(class_name)        \
-private:                                    \
-    class_name(const class_name&) = delete; \
-    class_name& operator=(const class_name&) = delete;
-
-// class unmovable
-#define CLASS_UNMOVABLE(class_name)          \
-private:                                     \
-    class_name(const class_name&&) = delete; \
-    class_name& operator=(const class_name&&) = delete;
+#include "src/base/macros.h"
 
 template <typename T>
 class singleton {
@@ -39,7 +29,7 @@ public:
     }
 
     static T* get_instance_call_once() {
-        std::call_once(once_flag_, [&instance_] { instance_ = new T; });
+        std::call_once(once_flag_, [&] { instance_ = new T; });
         atexit(release);
         return instance_;
     }
@@ -49,7 +39,7 @@ public:
         T* tmp = instance_.load(std::memory_order_acquire);
         if (tmp != nullptr) {
             delete tmp;
-            instance_.store(nullptr, , std::memory_order_release);
+            instance_.store(nullptr, std::memory_order_release);
         }
     }
 
