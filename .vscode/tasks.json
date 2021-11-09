@@ -7,8 +7,9 @@
             "label": "build",
             "type": "shell",
             "command": [
-                "make -C ${workspaceFolder}/src/test test && ",
-                "${workspaceFolder}/src/test/test"
+                "make -C ${workspaceFolder} &&",
+                "cd ${workspaceFolder}/src/test/bin &&",
+                "./test"
             ],
             "group": {
                 "kind": "build",
