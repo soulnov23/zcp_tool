@@ -1,4 +1,5 @@
 fmt-8.0.1
+gflags-2.2.2
 googletest-1.11.0
 picohttpparser
 rapidjson-1.1.0
