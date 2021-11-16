@@ -1,9 +1,6 @@
-#ifndef __FILE_UTILS_H__
-#define __FILE_UTILS_H__
+#pragma once
 
 #include <string>
-using namespace std;
 
-string file_to_string(const char* file_path);
-
-#endif
+std::string file_to_string(const char* file_path);
+int string_to_file(const char* file_path, const std::string& data);
