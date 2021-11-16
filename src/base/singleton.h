@@ -34,6 +34,7 @@ public:
         return instance_;
     }
 
+private:
     static void release() {
         std::lock_guard<std::mutex> lock(mutex_);
         T* tmp = instance_.load(std::memory_order_acquire);
