@@ -64,6 +64,15 @@ void string_replace(string& data, const string& src, const string& dst) {
     }
 }
 
+void string_replace(string& data, const string& src, size_t num, char character) {
+    string::size_type pos = 0;
+    string::size_type srclen = src.size();
+    while ((pos = data.find(src, pos)) != string::npos) {
+        data.replace(pos, srclen, num, character);
+        pos += num;
+    }
+}
+
 void string_lower(string& str) {
     for (auto& i : str) {
         i = tolower(i);

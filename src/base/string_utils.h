@@ -8,6 +8,7 @@ using namespace std;
 
 // void string_trim(string& str);
 void string_replace(string& data, const string& src, const string& dst);
+void string_replace(string& data, const string& src, size_t num, char character);
 void string_lower(string& str);
 void string_upper(string& str);
 
