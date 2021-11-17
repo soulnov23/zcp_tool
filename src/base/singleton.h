@@ -10,8 +10,9 @@ class singleton {
     CLASS_UNCOPYABLE(singleton)
     CLASS_UNMOVABLE(singleton)
 
-    singleton() {}
-    ~singleton() {}
+protected:
+    singleton() = default;
+    virtual ~singleton() = default;
 
 public:
     static T* get_instance_atomic() {
