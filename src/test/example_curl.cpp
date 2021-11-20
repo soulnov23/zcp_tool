@@ -5,13 +5,7 @@
 
 #include "src/base/printf_utils.h"
 using namespace std;
-#include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
-#include "rapidjson/rapidjson.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/writer.h"
 #include "src/base/http_handle.h"
-using namespace rapidjson;
 #include "src/base/json_parser.h"
 #include "src/base/string_utils.h"
 #include "src/base/time_utils.h"
