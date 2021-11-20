@@ -1,0 +1,16 @@
+server: #服务端配置
+  name: zcp_tool #进程服务名
+  process_num: 8 #工作进程大小
+  ip: 0.0.0.0 #服务监听ip地址
+  port: 8000 #服务监听端口
+  backlog: 2048 #连接队列大小
+
+log: #日志配置
+  file_name: ../log/run.log #本地文件滚动日志文件名
+  write_mode: 1 #日志写入模式，1-同步，2-异步，3-极速(异步丢弃), 不配置默认异步模式
+  roll_type: time #本地文件滚动日志的类型 size大小分隔，time时间分隔
+  max_age: 0 #日志最大保留时间，为0表示不清理旧文件
+  max_backups: 0 #日志最大文件数，为0表示不删除多余文件
+  compress: false #日志文件是否压缩
+  max_size: 1024 #本地文件滚动日志的大小 单位 MB
+  time_unit: day #本地文件滚动日志的类型配置time有效，按照day

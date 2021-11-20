@@ -1,9 +1,0 @@
-<root>
-<basic_config
-	ip="9.134.3.96"
-	port="8765"
-/>
-<app_config
-	count="8"
-/>
-</root>
