@@ -1,6 +1,6 @@
 include ../Inc.mk
 
-all: fmt googletest picohttpparser tinyxml2 yaml
+all: fmt googletest jsoncpp picohttpparser tinyxml2 yaml
 	
 fmt:
 	cd fmt && \
@@ -23,6 +23,16 @@ googletest:
 	cp -rf googletest/build/lib/libgtest*.so* $(LIB_DIR)
 	rm -rf googletest/build
 
+jsoncpp:
+	cd jsoncpp && \
+	rm -rf build && \
+	mkdir build && \
+	cd build && \
+	cmake3 -DCMAKE_BUILD_TYPE=Debug ../ && \
+	$(MAKE) -j32
+	cp -rf jsoncpp/build/lib/libjsoncpp.* $(LIB_DIR)
+	rm -rf jsoncpp/build
+
 picohttpparser:
 	$(MAKE) -C picohttpparser -j32
 
@@ -40,6 +50,6 @@ clean:
 	$(MAKE) -C tinyxml2 clean
 	$(MAKE) -C yaml clean
 
-.PHONY: fmt googletest picohttpparser tinyxml2 yaml clean
+.PHONY: fmt googletest jsoncpp picohttpparser tinyxml2 yaml clean
 
 .DEFAULT_GOAL: all
