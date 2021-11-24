@@ -46,7 +46,7 @@
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.workspaceSymbols": "All",
     "C_Cpp.default.intelliSenseMode": "gcc-x64",
-    "C_Cpp.intelliSenseCachePath": "/data/home/.vscode",
+    "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
     //"C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.default.includePath": [
         "/usr/include/**",
@@ -72,12 +72,14 @@
         "**/*.so": true,
         "**/*.so.*": true,
         "**/*.a": true,
-        "**/*.la": true
+        "**/*.la": true,
+        "**/.obj": true
     },
     //remote选项
     //"remote.SSH.showLoginTerminal": true,
     "remote.SSH.remotePlatform": {
-        "cloud": "linux"
+        "cloud": "linux",
+        "docker": "linux"
     },
     "remote.SSH.configFile": "~\\.ssh\\config",
     //git选项
@@ -89,7 +91,7 @@
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
     //terminal选项
-    "terminal.integrated.fontFamily": "Consolas, 'Courier New', monospace",
+    "terminal.integrated.fontFamily": "DejaVu Sans Mono, monospace",
     "terminal.integrated.fontSize": 21,
     "terminal.integrated.copyOnSelection": true,
     "terminal.integrated.cursorBlinking": true,
