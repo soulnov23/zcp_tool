@@ -41,7 +41,7 @@
     //C_Cpp选项
     //"C_Cpp.default.cppStandard": "c++20",
     //"C_Cpp.default.cStandard": "c18",
-    "C_Cpp.errorSquiggles": "Disabled",
+    "C_Cpp.errorSquiggles": "Enabled",
     "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.workspaceSymbols": "All",
