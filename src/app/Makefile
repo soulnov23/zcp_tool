@@ -8,7 +8,7 @@ CFLAGS   +=
 CXXFLAGS +=
 INCLUDE  +=
 LDFLAGS  += -lpthread -lssl -lcrypto -lcurl -L$(LIB_DIR) -lfmt  \
-		    -lpicohttpparser -ltinyxml2 -lyaml -lbase
+		    -lpicohttpparser -ltinyxml2 -lyaml -ljsoncpp -lbase
 
 all: $(BIN)
 	
