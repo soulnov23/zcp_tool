@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "src/base/arg.h"
-#include "src/base/buffer.h"
 using namespace std;
 
 class connector {
@@ -17,7 +16,7 @@ private:
 
 public:
     int m_fd;
-    shared_ptr<buffer> m_buffer;
+    shared_ptr<string> m_buffer;
     char m_ip[20];
     arg* m_data;
 };

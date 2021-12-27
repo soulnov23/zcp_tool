@@ -2,7 +2,7 @@
 
 #include "src/base/printf_utils.h"
 
-int get_conf(tinyxml2::XMLDocument& doc, const char* file_path) {
+int xml_load_file(const char* file_path, tinyxml2::XMLDocument& doc) {
     auto ret = doc.LoadFile(file_path);
     if (ret != tinyxml2::XML_SUCCESS) {
         PRINTF_ERROR("load file failed : %s", file_path);
@@ -11,16 +11,16 @@ int get_conf(tinyxml2::XMLDocument& doc, const char* file_path) {
     return 0;
 }
 
-int get_conf(tinyxml2::XMLDocument& doc, const char* data, size_t len) {
-    auto ret = doc.Parse(data, len);
+int xml_load_data(std::string& data, tinyxml2::XMLDocument& doc) {
+    auto ret = doc.Parse(data.c_str(), data.length());
     if (ret != tinyxml2::XML_SUCCESS) {
-        PRINTF_ERROR("parse data failed : %s", data);
+        PRINTF_ERROR("parse data failed : %s", data.c_str());
         return -1;
     }
     return 0;
 }
 
-void get_node(map<string, tinyxml2::XMLElement*>& record, tinyxml2::XMLDocument& doc) {
+void xml_get_all_node(tinyxml2::XMLDocument& doc, std::map<std::string, tinyxml2::XMLElement*>& record) {
     auto* node = doc.FirstChildElement();
     while (node != nullptr) {
         record.insert(pair<string, decltype(node)>(node->Name(), node));
@@ -28,7 +28,7 @@ void get_node(map<string, tinyxml2::XMLElement*>& record, tinyxml2::XMLDocument&
     }
 }
 
-void get_node(map<string, tinyxml2::XMLElement*>& record, tinyxml2::XMLElement* node) {
+void xml_get_all_node(tinyxml2::XMLElement* node, std::map<std::string, tinyxml2::XMLElement*>& record) {
     auto* child_node = node->FirstChildElement();
     while (child_node != nullptr) {
         record.insert(pair<string, decltype(child_node)>(child_node->Name(), child_node));
@@ -36,7 +36,29 @@ void get_node(map<string, tinyxml2::XMLElement*>& record, tinyxml2::XMLElement* 
     }
 }
 
-void get_attri(map<string, string>& record, tinyxml2::XMLElement* node) {
+tinyxml2::XMLElement* xml_get_node(tinyxml2::XMLDocument& doc, const std::string& key) {
+    auto* node = doc.FirstChildElement();
+    while (node != nullptr) {
+        if (key == node->Name()) {
+            return node;
+        }
+        node = node->NextSiblingElement();
+    }
+    return nullptr;
+}
+
+tinyxml2::XMLElement* xml_get_node(tinyxml2::XMLElement* node, const std::string& key) {
+    auto* child_node = node->FirstChildElement();
+    while (child_node != nullptr) {
+        if (key == child_node->Name()) {
+            return child_node;
+        }
+        child_node = child_node->NextSiblingElement();
+    }
+    return nullptr;
+}
+
+void xml_get_all_attri(tinyxml2::XMLElement* node, std::map<std::string, std::string>& record) {
     auto* attri = node->FirstAttribute();
     while (attri != nullptr) {
         record.insert(pair<string, string>(attri->Name(), attri->Value()));
@@ -44,42 +66,13 @@ void get_attri(map<string, string>& record, tinyxml2::XMLElement* node) {
     }
 }
 
-int xml_to_map(map<string, string>& record, const char* file_path) {
-    tinyxml2::XMLDocument doc;
-    auto ret = doc.LoadFile(file_path);
-    if (ret != tinyxml2::XML_SUCCESS) {
-        PRINTF_ERROR("load file failed : %s", file_path);
-        return -1;
-    }
-    auto* root = doc.RootElement();
-    auto* node = root->FirstChildElement();
-    while (node != nullptr) {
-        auto* attri = node->FirstAttribute();
-        while (attri != nullptr) {
-            record.insert(pair<string, string>(attri->Name(), attri->Value()));
-            attri = attri->Next();
+std::string xml_get_attri(tinyxml2::XMLElement* node, const std::string& key) {
+    auto* attri = node->FirstAttribute();
+    while (attri != nullptr) {
+        if (key == attri->Name()) {
+            return attri->Value();
         }
-        node = node->NextSiblingElement();
+        attri = attri->Next();
     }
-    return 0;
-}
-
-int xml_to_map(map<string, string>& record, const char* data, size_t len) {
-    tinyxml2::XMLDocument doc;
-    auto ret = doc.Parse(data, len);
-    if (ret != tinyxml2::XML_SUCCESS) {
-        PRINTF_ERROR("parse data failed : %s", data);
-        return -1;
-    }
-    auto* root = doc.RootElement();
-    auto* node = root->FirstChildElement();
-    while (node != nullptr) {
-        auto* attri = node->FirstAttribute();
-        while (attri != nullptr) {
-            record.insert(pair<string, string>(attri->Name(), attri->Value()));
-            attri = attri->Next();
-        }
-        node = node->NextSiblingElement();
-    }
-    return 0;
+    return "";
 }

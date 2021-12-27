@@ -1,20 +1,17 @@
-#ifndef __XML_PARSER_H__
-#define __XML_PARSER_H__
+#pragma once
 
 #include <map>
 #include <string>
-using namespace std;
+
 #include "tinyxml2.h"
 
-int get_conf(tinyxml2::XMLDocument& doc, const char* file_path);
-int get_conf(tinyxml2::XMLDocument& doc, const char* data, size_t len);
+int xml_load_file(const char* file_path, tinyxml2::XMLDocument& doc);
+int xml_load_data(std::string& data, tinyxml2::XMLDocument& doc);
 
-void get_node(map<string, tinyxml2::XMLElement*>& record, tinyxml2::XMLDocument& doc);
-void get_node(map<string, tinyxml2::XMLElement*>& record, tinyxml2::XMLElement* node);
+void xml_get_all_node(tinyxml2::XMLDocument& doc, std::map<std::string, tinyxml2::XMLElement*>& record);
+void xml_get_all_node(tinyxml2::XMLElement* node, std::map<std::string, tinyxml2::XMLElement*>& record);
+tinyxml2::XMLElement* xml_get_node(tinyxml2::XMLDocument& doc, const std::string& key);
+tinyxml2::XMLElement* xml_get_node(tinyxml2::XMLElement* node, const std::string& key);
 
-void get_attri(map<string, string>& record, tinyxml2::XMLElement* node);
-
-int xml_to_map(map<string, string>& record, const char* file_path);
-int xml_to_map(map<string, string>& record, const char* data, size_t len);
-
-#endif
+void xml_get_all_attri(tinyxml2::XMLElement* node, std::map<std::string, std::string>& record);
+std::string xml_get_attri(tinyxml2::XMLElement* node, const std::string& key);
