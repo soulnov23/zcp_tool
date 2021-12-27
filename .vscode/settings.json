@@ -39,8 +39,8 @@
     "workbench.view.alwaysShowHeaderActions": true,
     "workbench.startupEditor": "welcomePageInEmptyWorkbench",
     //C_Cpp选项
-    //"C_Cpp.default.cppStandard": "c++20",
-    //"C_Cpp.default.cStandard": "c18",
+    "C_Cpp.default.cppStandard": "c++20",
+    "C_Cpp.default.cStandard": "c17",
     "C_Cpp.errorSquiggles": "Enabled",
     "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
     "C_Cpp.autoAddFileAssociations": false,
@@ -49,9 +49,13 @@
     "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
     //"C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.default.includePath": [
-        "/usr/include/**",
-        "/usr/local/include/**",
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/third_party/fmt/include/**",
+        "${workspaceFolder}/third_party/picohttpparser/include/",
+        "${workspaceFolder}/third_party/jsoncpp/include/**",
+        "${workspaceFolder}/third_party/spdlog/include/**",
+        "${workspaceFolder}/third_party/tinyxml2/include/",
+        "${workspaceFolder}/third_party/yaml/include/**"
     ],
     "C_Cpp.clang_format_fallbackStyle": "none",
     "C_Cpp.clang_format_style": "file",
