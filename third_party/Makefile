@@ -1,8 +1,11 @@
+include Inc.mk
 include ../Inc.mk
 
 all: fmt googletest jsoncpp picohttpparser tinyxml2 yaml
 	
 fmt:
+	tar -zvxf ${FMT}.tar.gz
+	mv -f ${FMT} fmt
 	cd fmt && \
 	rm -rf build && \
 	mkdir build && \
@@ -13,6 +16,8 @@ fmt:
 	rm -rf fmt/build
 
 googletest:
+	tar -zvxf googletest-release-1.11.0.tar.gz
+	mv -f googletest-release-1.11.0.tar.gz googletest
 	cd googletest && \
 	rm -rf build && \
 	mkdir build && \
@@ -24,6 +29,8 @@ googletest:
 	rm -rf googletest/build
 
 jsoncpp:
+	tar -zvxf jsoncpp-1.9.5.tar.gz
+	mv -f jsoncpp-1.9.5.tar.gz jsoncpp
 	cd jsoncpp && \
 	rm -rf build && \
 	mkdir build && \
