@@ -3,10 +3,14 @@
 #include <string>
 #include <vector>
 
+#include "rapidjson/document.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+using namespace rapidjson;
 #include "src/base/printf_utils.h"
 using namespace std;
 #include "src/base/http_handle.h"
-#include "src/base/json_parser.h"
 #include "src/base/string_utils.h"
 #include "src/base/time_utils.h"
 
@@ -19,6 +23,71 @@ string g_OriginalInvoiceNumber;
 string g_OriginalBatchNumber;
 string g_OriginalTransactionId;
 string g_batch_no;
+
+map<string, string> json_to_map(const string& data) {
+    map<string, string> record;
+    Document content_json_doc;
+    content_json_doc.Parse(data.c_str());
+    if (content_json_doc.HasParseError() || !content_json_doc.IsObject()) {
+        PRINTF_ERROR("json error [%s]", data.c_str());
+        return record;
+    }
+    for (auto it = content_json_doc.MemberBegin(); it != content_json_doc.MemberEnd(); it++) {
+        if (it->value.IsInt()) {
+            record[it->name.GetString()] = to_string(it->value.GetInt());
+        } else if (it->value.IsInt64()) {
+            record[it->name.GetString()] = to_string(it->value.GetInt64());
+        } else if (it->value.IsBool()) {
+            record[it->name.GetString()] = to_string(it->value.GetBool());
+        } else if (it->value.IsUint()) {
+            record[it->name.GetString()] = to_string(it->value.GetUint());
+        } else if (it->value.IsUint64()) {
+            record[it->name.GetString()] = to_string(it->value.GetUint64());
+        } else if (it->value.IsDouble()) {
+            record[it->name.GetString()] = to_string(it->value.GetDouble());
+        } else if (it->value.IsString()) {
+            record[it->name.GetString()] = it->value.GetString();
+        } else {
+            continue;
+        }
+    }
+    return record;
+}
+
+string json_to_string(Document& doc) {
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    doc.Accept(writer);
+    string data = buffer.GetString();
+    return data;
+}
+
+string json_to_string(Value& value) {
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    value.Accept(writer);
+    string data = buffer.GetString();
+    return data;
+}
+
+string map_to_json(const map<string, string>& record) {
+    Document document;
+    document.SetObject();
+    auto& allocator = document.GetAllocator();
+    for (const auto& [first, second] : record) {
+        document.AddMember(StringRef(first.c_str()), StringRef(second.c_str()), allocator);
+    }
+    return json_to_string(document);
+}
+
+Document string_to_json(const string& data) {
+    Document doc;
+    doc.Parse(data.c_str());
+    if (doc.HasParseError() || !doc.IsObject()) {
+        PRINTF_ERROR("json error [%s]", data.c_str());
+    }
+    return doc;
+}
 
 void init() {
     g_vecHeadInfo.push_back("TerminalID: PUBG-MidasBuy-POS-01");

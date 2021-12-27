@@ -4,11 +4,11 @@ SRC := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp, %.o, $(SRC))
 BIN := $(patsubst %.cpp, ./bin/%, $(SRC))
 
-CFLAGS   +=
-CXXFLAGS +=
-INCLUDE  +=
+CFLAGS   += -Wno-class-memaccess
+CXXFLAGS += -Wno-class-memaccess
+INCLUDE  += -I$(PROJ_PATH)/third_party/rapidjson/include
 LDFLAGS  += -lpthread -lssl -lcrypto -lcurl -L$(LIB_DIR) -lfmt  \
-		    -lpicohttpparser -ltinyxml2 -lyaml -lbase
+		    -lpicohttpparser -ltinyxml2 -lyaml -ljsoncpp -lbase
 
 all: check $(BIN)
 	
@@ -22,9 +22,6 @@ all: check $(BIN)
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 ./bin/example_xml_parser: example_xml_parser.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/example_json_parser: example_json_parser.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 ./bin/example_rapid_json: example_rapid_json.o
@@ -43,6 +40,9 @@ all: check $(BIN)
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 ./bin/example_graph: example_graph.o
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
+
+./bin/example_coroutine: example_coroutine.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 clean:

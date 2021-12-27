@@ -20,8 +20,8 @@ INCLUDE  ?=
 LDFLAGS  ?=
 
 ifeq ($(BUILD), BUILD_DEBUG)
-CFLAGS   += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG -Wno-class-memaccess
-CXXFLAGS += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG -Wno-class-memaccess
+CFLAGS   += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
+CXXFLAGS += -Wall -ggdb3 -fPIC -pipe -Wl,-z -Wl,defs -DDEBUG
 INCLUDE  +=
 LDFLAGS  +=
 endif
@@ -40,13 +40,13 @@ OBJ_DIR = $(PROJ_PATH)/release/obj
 #由于第三方库代码里面include的路径就是按照原目录结构，导致引用第三方库不能直接使用全路径
 FMT_INC 			= $(PROJ_PATH)/third_party/fmt/include
 PICOHTTPPARSER_INC 	= $(PROJ_PATH)/third_party/picohttpparser/include
-RAPIDJSON_INC 		= $(PROJ_PATH)/third_party/rapidjson/include
+JSONCPP_INC 		= $(PROJ_PATH)/third_party/jsoncpp/include
 SPDLOG_INC 			= $(PROJ_PATH)/third_party/spdlog/include
 TINYXML2_INC 		= $(PROJ_PATH)/third_party/tinyxml2/include
 YAML_INC 			= $(PROJ_PATH)/third_party/yaml/include
 
 INCLUDE += -I$(PROJ_PATH) -I$(FMT_INC) -I$(PICOHTTPPARSER_INC) \
-		   -I$(RAPIDJSON_INC) -I$(SPDLOG_INC) -I$(TINYXML2_INC) \
+		   -I$(JSONCPP_INC) -I$(SPDLOG_INC) -I$(TINYXML2_INC) \
 		   -I$(YAML_INC)
 
 FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .clang-format
