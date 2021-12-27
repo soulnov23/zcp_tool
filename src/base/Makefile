@@ -11,7 +11,7 @@ CFLAGS   +=
 CXXFLAGS +=
 INCLUDE  +=
 LDFLAGS  += -ldl -lpthread -lssl -lcrypto -lcurl -L$(LIB_DIR) -lfmt  \
-		    -lpicohttpparser -ltinyxml2 -lyaml
+		    -lpicohttpparser -ltinyxml2 -lyaml -ljsoncpp
 
 all: $(SO_BIN) $(A_BIN)
 

@@ -7,7 +7,6 @@
 
 #include "src/base/fd_guard.h"
 #include "src/base/fd_lock_guard.h"
-#include "src/base/printf_utils.h"
 
 std::string file_to_string(const char* file_path) {
     std::string data;
