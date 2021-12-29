@@ -1,10 +1,11 @@
 include Inc.mk
 include ../Inc.mk
 
-all: fmt googletest jsoncpp picohttpparser tinyxml2 yaml
-	
+all: fmt googletest jsoncpp picohttpparser rapidjson spdlog tinyxml2 yaml
+
 fmt:
-	tar -zvxf ${FMT}.tar.gz
+	tar -zvxf zip/${FMT}.tar.gz
+	rm -rf fmt
 	mv -f ${FMT} fmt
 	cd fmt && \
 	rm -rf build && \
@@ -16,8 +17,9 @@ fmt:
 	rm -rf fmt/build
 
 googletest:
-	tar -zvxf googletest-release-1.11.0.tar.gz
-	mv -f googletest-release-1.11.0.tar.gz googletest
+	tar -zvxf zip/${GTEST}.tar.gz
+	rm -rf googletest
+	mv -f ${GTEST} googletest
 	cd googletest && \
 	rm -rf build && \
 	mkdir build && \
@@ -29,19 +31,38 @@ googletest:
 	rm -rf googletest/build
 
 jsoncpp:
-	tar -zvxf jsoncpp-1.9.5.tar.gz
-	mv -f jsoncpp-1.9.5.tar.gz jsoncpp
+	tar -zvxf zip/${JSONCPP}.tar.gz
+	rm -rf jsoncpp
+	mv -f ${JSONCPP} jsoncpp
 	cd jsoncpp && \
 	rm -rf build && \
 	mkdir build && \
 	cd build && \
-	cmake3 -DCMAKE_BUILD_TYPE=Debug ../ && \
+	cmake3 -DBUILD_SHARED_LIBS=TRUE -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE ../ && \
 	$(MAKE) -j32
 	cp -rf jsoncpp/build/lib/libjsoncpp.* $(LIB_DIR)
 	rm -rf jsoncpp/build
 
 picohttpparser:
 	$(MAKE) -C picohttpparser -j32
+
+rapidjson:
+	tar -zvxf zip/${RAPIDJSON}.tar.gz
+	rm -rf rapidjson
+	mv -f ${RAPIDJSON} rapidjson
+
+spdlog:
+	tar -zvxf zip/${SPDLOG}.tar.gz
+	rm -rf spdlog
+	mv -f ${SPDLOG} spdlog
+	cd spdlog && \
+	rm -rf build && \
+	mkdir build && \
+	cd build && \
+	cmake3 -DBUILD_SHARED_LIBS=TRUE -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE ../ && \
+	$(MAKE) -j32
+	cp -rf spdlog/build/libspdlog.so* $(LIB_DIR)
+	rm -rf spdlog/build
 
 tinyxml2:
 	$(MAKE) -C tinyxml2 -j32
@@ -57,6 +78,6 @@ clean:
 	$(MAKE) -C tinyxml2 clean
 	$(MAKE) -C yaml clean
 
-.PHONY: fmt googletest jsoncpp picohttpparser tinyxml2 yaml clean
+.PHONY: fmt googletest jsoncpp picohttpparser rapidjson spdlog tinyxml2 yaml clean
 
 .DEFAULT_GOAL: all
