@@ -39,9 +39,10 @@ OBJ_DIR = $(PROJ_PATH)/release/obj
 
 #由于第三方库代码里面include的路径就是按照原目录结构，导致引用第三方库不能直接使用全路径
 FMT_INC 			= $(PROJ_PATH)/third_party/fmt/include
-GTEST_INC			= $(PROJ_PATH)/third_party/googletest/googletest/include/
-GMOCK_INC			= $(PROJ_PATH)/third_party/googletest/googlemock/include/
+GTEST_INC			= $(PROJ_PATH)/third_party/googletest/googletest/include
+GMOCK_INC			= $(PROJ_PATH)/third_party/googletest/googlemock/include
 JSONCPP_INC 		= $(PROJ_PATH)/third_party/jsoncpp/include
+LIBUUID_INC			= $(PROJ_PATH)/third_party/libuuid
 PICOHTTPPARSER_INC 	= $(PROJ_PATH)/third_party/picohttpparser/include
 RAPIDJSON_INC		= $(PROJ_PATH)/third_party/rapidjson/include
 SPDLOG_INC 			= $(PROJ_PATH)/third_party/spdlog/include
@@ -49,8 +50,8 @@ TINYXML2_INC 		= $(PROJ_PATH)/third_party/tinyxml2/include
 YAML_INC 			= $(PROJ_PATH)/third_party/yaml/include
 
 INCLUDE += -I$(PROJ_PATH) -I$(FMT_INC) -I$(GTEST_INC) -I$(GMOCK_INC) \
-		   -I$(JSONCPP_INC) -I$(PICOHTTPPARSER_INC) -I$(RAPIDJSON_INC) \
-		   -I$(SPDLOG_INC) -I$(TINYXML2_INC) -I$(YAML_INC)
+		   -I$(JSONCPP_INC) -I$(LIBUUID_INC) -I$(PICOHTTPPARSER_INC) \
+		   -I$(RAPIDJSON_INC) -I$(SPDLOG_INC) -I$(TINYXML2_INC) -I$(YAML_INC)
 
 FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .clang-format
 FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
@@ -72,7 +73,7 @@ FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 %.o: %.cc
-	$(CXX) $(CFLAGS) $(INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 %.o: %.S
@@ -81,7 +82,7 @@ FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
 $(OBJ_DIR)%.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
 $(OBJ_DIR)%.o: %.cc
-	$(CXX) $(CFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
 $(OBJ_DIR)%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
 $(OBJ_DIR)%.o: %.S

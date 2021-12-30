@@ -1,7 +1,7 @@
 include ../../Inc.mk
 
 all:
-	$(MAKE) -C src -j32
+	$(MAKE) -C src
 
 clean:
 	$(MAKE) -C src clean
