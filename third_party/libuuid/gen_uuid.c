@@ -32,6 +32,12 @@
  * %End-Header%
  */
 
+/*
+ * Force inclusion of SVID stuff since we need it if we're compiling in
+ * gcc-wall wall mode
+ */
+#define _SVID_SOURCE
+
 #ifdef _WIN32
 #define _WIN32_WINNT 0x0500
 #include <windows.h>
@@ -85,16 +91,57 @@
 #include "uuidP.h"
 #include "uuidd.h"
 #include "randutils.h"
-#include "strutils.h"
 #include "c.h"
-#include "md5.h"
-#include "sha1.h"
 
 #ifdef HAVE_TLS
 #define THREAD_LOCAL static __thread
 #else
 #define THREAD_LOCAL static
 #endif
+
+#ifndef LOCK_EX
+/* flock() replacement */
+#define LOCK_EX 1
+#define LOCK_SH 2
+#define LOCK_UN 3
+#define LOCK_NB 4
+
+static int flock(int fd, int op)
+{
+    int rc = 0;
+
+#if defined(F_SETLK) && defined(F_SETLKW)
+    struct flock fl = {0};
+
+    switch (op & (LOCK_EX|LOCK_SH|LOCK_UN)) {
+    case LOCK_EX:
+        fl.l_type = F_WRLCK;
+        break;
+
+    case LOCK_SH:
+        fl.l_type = F_RDLCK;
+        break;
+
+    case LOCK_UN:
+        fl.l_type = F_UNLCK;
+        break;
+
+    default:
+        errno = EINVAL;
+        return -1;
+    }
+
+    fl.l_whence = SEEK_SET;
+    rc = fcntl (fd, op & LOCK_NB ? F_SETLK : F_SETLKW, &fl);
+
+    if (rc && (errno == EAGAIN))
+        errno = EWOULDBLOCK;
+#endif /* defined(F_SETLK) && defined(F_SETLKW)  */
+
+    return rc;
+}
+
+#endif /* LOCK_EX */
 
 #ifdef _WIN32
 static void gettimeofday (struct timeval *tv, void *dummy)
@@ -136,7 +183,7 @@ static int get_node_id(unsigned char *node_id)
 	struct ifconf	ifc;
 	char buf[1024];
 	int		n, i;
-	unsigned char	*a = NULL;
+	unsigned char	*a;
 #ifdef HAVE_NET_IF_DL_H
 	struct sockaddr_dl *sdlp;
 #endif
@@ -194,7 +241,7 @@ static int get_node_id(unsigned char *node_id)
 #endif /* HAVE_NET_IF_DL_H */
 #endif /* SIOCGENADDR */
 #endif /* SIOCGIFHWADDR */
-		if (a == NULL || (!a[0] && !a[1] && !a[2] && !a[3] && !a[4] && !a[5]))
+		if (!a[0] && !a[1] && !a[2] && !a[3] && !a[4] && !a[5])
 			continue;
 		if (node_id) {
 			memcpy(node_id, a, 6);
@@ -229,9 +276,6 @@ static int get_clock(uint32_t *clock_high, uint32_t *clock_low,
 	mode_t				save_umask;
 	int				len;
 	int				ret = 0;
-
-	if (state_fd == -1)
-		ret = -1;
 
 	if (state_fd == -2) {
 		save_umask = umask(0);
@@ -275,14 +319,14 @@ static int get_clock(uint32_t *clock_high, uint32_t *clock_low,
 	}
 
 	if ((last.tv_sec == 0) && (last.tv_usec == 0)) {
-		ul_random_get_bytes(&clock_seq, sizeof(clock_seq));
+		random_get_bytes(&clock_seq, sizeof(clock_seq));
 		clock_seq &= 0x3FFF;
-		gettimeofday(&last, NULL);
+		gettimeofday(&last, 0);
 		last.tv_sec--;
 	}
 
 try_again:
-	gettimeofday(&tv, NULL);
+	gettimeofday(&tv, 0);
 	if ((tv.tv_sec < last.tv_sec) ||
 	    ((tv.tv_sec == last.tv_sec) &&
 	     (tv.tv_usec < last.tv_usec))) {
@@ -314,8 +358,8 @@ try_again:
 	if (state_fd >= 0) {
 		rewind(state_f);
 		len = fprintf(state_f,
-			      "clock: %04x tv: %016ld %08ld adj: %08d\n",
-			      clock_seq, (long)last.tv_sec, (long)last.tv_usec, adjustment);
+			      "clock: %04x tv: %016lu %08lu adj: %08d\n",
+			      clock_seq, last.tv_sec, last.tv_usec, adjustment);
 		fflush(state_f);
 		if (ftruncate(state_fd, len) < 0) {
 			fprintf(state_f, "                   \n");
@@ -332,7 +376,6 @@ try_again:
 }
 
 #if defined(HAVE_UUIDD) && defined(HAVE_SYS_UN_H)
-
 /*
  * Try using the uuidd daemon to generate the UUID
  *
@@ -347,14 +390,11 @@ static int get_uuid_via_daemon(int op, uuid_t out, int *num)
 	int32_t reply_len = 0, expected = 16;
 	struct sockaddr_un srv_addr;
 
-	if (sizeof(UUIDD_SOCKET_PATH) > sizeof(srv_addr.sun_path))
-		return -1;
-
 	if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
 		return -1;
 
 	srv_addr.sun_family = AF_UNIX;
-	xstrncpy(srv_addr.sun_path, UUIDD_SOCKET_PATH, sizeof(srv_addr.sun_path));
+	strcpy(srv_addr.sun_path, UUIDD_SOCKET_PATH);
 
 	if (connect(s, (const struct sockaddr *) &srv_addr,
 		    sizeof(struct sockaddr_un)) < 0)
@@ -395,9 +435,7 @@ fail:
 }
 
 #else /* !defined(HAVE_UUIDD) && defined(HAVE_SYS_UN_H) */
-static int get_uuid_via_daemon(int op __attribute__((__unused__)),
-				uuid_t out __attribute__((__unused__)),
-				int *num __attribute__((__unused__)))
+static int get_uuid_via_daemon(int op, uuid_t out, int *num)
 {
 	return -1;
 }
@@ -413,7 +451,7 @@ int __uuid_generate_time(uuid_t out, int *num)
 
 	if (!has_init) {
 		if (get_node_id(node_id) <= 0) {
-			ul_random_get_bytes(node_id, 6);
+			random_get_bytes(node_id, 6);
 			/*
 			 * Set multicast bit, to prevent conflicts
 			 * with IEEE 802 addresses obtained from
@@ -448,7 +486,7 @@ static int uuid_generate_time_generic(uuid_t out) {
 	time_t				now;
 
 	if (num > 0) {
-		now = time(NULL);
+		now = time(0);
 		if (now > last_time+1)
 			num = 0;
 	}
@@ -456,7 +494,7 @@ static int uuid_generate_time_generic(uuid_t out) {
 		num = 1000;
 		if (get_uuid_via_daemon(UUIDD_OP_BULK_TIME_UUID,
 					out, &num) == 0) {
-			last_time = time(NULL);
+			last_time = time(0);
 			uuid_unpack(out, &uu);
 			num--;
 			return 0;
@@ -479,7 +517,7 @@ static int uuid_generate_time_generic(uuid_t out) {
 		return 0;
 #endif
 
-	return __uuid_generate_time(out, NULL);
+	return __uuid_generate_time(out, 0);
 }
 
 /*
@@ -499,11 +537,11 @@ int uuid_generate_time_safe(uuid_t out)
 }
 
 
-int __uuid_generate_random(uuid_t out, int *num)
+void __uuid_generate_random(uuid_t out, int *num)
 {
 	uuid_t	buf;
 	struct uuid uu;
-	int i, n, r = 0;
+	int i, n;
 
 	if (!num || !*num)
 		n = 1;
@@ -511,8 +549,7 @@ int __uuid_generate_random(uuid_t out, int *num)
 		n = *num;
 
 	for (i = 0; i < n; i++) {
-		if (ul_random_get_bytes(buf, sizeof(buf)))
-			r = -1;
+		random_get_bytes(buf, sizeof(buf));
 		uuid_unpack(buf, &uu);
 
 		uu.clock_seq = (uu.clock_seq & 0x3FFF) | 0x8000;
@@ -521,8 +558,6 @@ int __uuid_generate_random(uuid_t out, int *num)
 		uuid_pack(&uu, out);
 		out += sizeof(uuid_t);
 	}
-
-	return r;
 }
 
 void uuid_generate_random(uuid_t out)
@@ -534,66 +569,27 @@ void uuid_generate_random(uuid_t out)
 }
 
 /*
- * This is the generic front-end to __uuid_generate_random and
- * uuid_generate_time.  It uses __uuid_generate_random output
- * only if high-quality randomness is available.
+ * Check whether good random source (/dev/random or /dev/urandom)
+ * is available.
+ */
+static int have_random_source(void)
+{
+	struct stat s;
+
+	return (!stat("/dev/random", &s) || !stat("/dev/urandom", &s));
+}
+
+
+/*
+ * This is the generic front-end to uuid_generate_random and
+ * uuid_generate_time.  It uses uuid_generate_random only if
+ * /dev/urandom is available, since otherwise we won't have
+ * high-quality randomness.
  */
 void uuid_generate(uuid_t out)
 {
-	int num = 1;
-
-	if (__uuid_generate_random(out, &num))
+	if (have_random_source())
+		uuid_generate_random(out);
+	else
 		uuid_generate_time(out);
-}
-
-/*
- * Generate an MD5 hashed (predictable) UUID based on a well-known UUID
- * providing the namespace and an arbitrary binary string.
- */
-void uuid_generate_md5(uuid_t out, const uuid_t ns, const char *name, size_t len)
-{
-	UL_MD5_CTX ctx;
-	char hash[UL_MD5LENGTH];
-	uuid_t buf;
-	struct uuid uu;
-
-	ul_MD5Init(&ctx);
-	ul_MD5Update(&ctx, ns, sizeof(uuid_t));
-	ul_MD5Update(&ctx, (const unsigned char *)name, len);
-	ul_MD5Final((unsigned char *)hash, &ctx);
-
-	assert(sizeof(buf) <= sizeof(hash));
-
-	memcpy(buf, hash, sizeof(buf));
-	uuid_unpack(buf, &uu);
-
-	uu.clock_seq = (uu.clock_seq & 0x3FFF) | 0x8000;
-	uu.time_hi_and_version = (uu.time_hi_and_version & 0x0FFF) | 0x3000;
-	uuid_pack(&uu, out);
-}
-
-/*
- * Generate a SHA1 hashed (predictable) UUID based on a well-known UUID
- * providing the namespace and an arbitrary binary string.
- */
-void uuid_generate_sha1(uuid_t out, const uuid_t ns, const char *name, size_t len)
-{
-	UL_SHA1_CTX ctx;
-	char hash[UL_SHA1LENGTH];
-	uuid_t buf;
-	struct uuid uu;
-
-	ul_SHA1Init(&ctx);
-	ul_SHA1Update(&ctx, ns, sizeof(uuid_t));
-	ul_SHA1Update(&ctx, (const unsigned char *)name, len);
-	ul_SHA1Final((unsigned char *)hash, &ctx);
-
-	assert(sizeof(buf) <= sizeof(hash));
-
-	memcpy(buf, hash, sizeof(buf));
-	uuid_unpack(buf, &uu);
-
-	uu.clock_seq = (uu.clock_seq & 0x3FFF) | 0x8000;
-	uu.time_hi_and_version = (uu.time_hi_and_version & 0x0FFF) | 0x5000;
-	uuid_pack(&uu, out);
 }

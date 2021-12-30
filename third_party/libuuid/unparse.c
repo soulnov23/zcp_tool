@@ -1,7 +1,7 @@
 /*
- * predefined.c --- well-known UUIDs from the RFC-4122 namespace
+ * unparse.c -- convert a UUID to string
  *
- * Copyright (C) 2017 Philip Prindeville
+ * Copyright (C) 1996, 1997 Theodore Ts'o.
  *
  * %Begin-Header%
  * Redistribution and use in source and binary forms, with or without
@@ -32,52 +32,45 @@
  * %End-Header%
  */
 
-#include <string.h>
-#include "uuid.h"
+#include <stdio.h>
 
-/*
- * These are time-based UUIDs that are well-known in that they've
- * been canonized as part of RFC-4122, Appendex C.  They are to
- * be used as the namespace (ns) argument to the uuid_generate_md5()
- * and uuid_generate_sha1() functions.
- *
- * See Section 4.3 for the particulars of how namespace UUIDs
- * are combined with seed values to generate new UUIDs.
- */
+#include "uuidP.h"
 
-UUID_DEFINE(NameSpace_DNS,
-	0x6b, 0xa7, 0xb8, 0x10, 0x9d, 0xad, 0x11, 0xd1,
-	0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
+static const char *fmt_lower =
+	"%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x";
 
-UUID_DEFINE(NameSpace_URL,
-	0x6b, 0xa7, 0xb8, 0x11, 0x9d, 0xad, 0x11, 0xd1,
-	0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
+static const char *fmt_upper =
+	"%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X";
 
-UUID_DEFINE(NameSpace_OID,
-	0x6b, 0xa7, 0xb8, 0x12, 0x9d, 0xad, 0x11, 0xd1,
-	0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
+#ifdef UUID_UNPARSE_DEFAULT_UPPER
+#define FMT_DEFAULT fmt_upper
+#else
+#define FMT_DEFAULT fmt_lower
+#endif
 
-UUID_DEFINE(NameSpace_X500,
-	0x6b, 0xa7, 0xb8, 0x14, 0x9d, 0xad, 0x11, 0xd1,
-	0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
-
-const uuid_t *uuid_get_template(const char *alias)
+static void uuid_unparse_x(const uuid_t uu, char *out, const char *fmt)
 {
-	if (!alias || !*alias)
-		return NULL;
+	struct uuid uuid;
 
-	if (!strcmp(alias, "dns"))
-		return &NameSpace_DNS;
-
-	if (!strcmp(alias, "url"))
-		return &NameSpace_URL;
-
-	if (!strcmp(alias, "oid"))
-		return &NameSpace_OID;
-
-	if (!strcmp(alias, "x500") || !strcmp(alias, "x.500"))
-		return &NameSpace_X500;
-
-	return NULL;
+	uuid_unpack(uu, &uuid);
+	sprintf(out, fmt,
+		uuid.time_low, uuid.time_mid, uuid.time_hi_and_version,
+		uuid.clock_seq >> 8, uuid.clock_seq & 0xFF,
+		uuid.node[0], uuid.node[1], uuid.node[2],
+		uuid.node[3], uuid.node[4], uuid.node[5]);
 }
 
+void uuid_unparse_lower(const uuid_t uu, char *out)
+{
+	uuid_unparse_x(uu, out,	fmt_lower);
+}
+
+void uuid_unparse_upper(const uuid_t uu, char *out)
+{
+	uuid_unparse_x(uu, out,	fmt_upper);
+}
+
+void uuid_unparse(const uuid_t uu, char *out)
+{
+	uuid_unparse_x(uu, out, FMT_DEFAULT);
+}
