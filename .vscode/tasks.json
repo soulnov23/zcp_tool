@@ -4,12 +4,45 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "make install",
             "type": "shell",
             "command": [
-                "make -C ${workspaceFolder} &&",
+                "make -C ${workspaceFolder} install -j32"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "make uninstall",
+            "type": "shell",
+            "command": [
+                "make -C ${workspaceFolder} uninstall"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "make",
+            "type": "shell",
+            "command": [
+                "make -C ${workspaceFolder} -j32 &&",
                 "cd ${workspaceFolder}/src/test/bin &&",
                 "./test"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "make clean",
+            "type": "shell",
+            "command": [
+                "make -C ${workspaceFolder} clean"
             ],
             "group": {
                 "kind": "build",

@@ -54,6 +54,7 @@
         "${workspaceFolder}/third_party/googletest/googletest/include/**",
         "${workspaceFolder}/third_party/googletest/googlemock/include/**",
         "${workspaceFolder}/third_party/jsoncpp/include/**",
+        "${workspaceFolder}/third_party/libuuid/**",
         "${workspaceFolder}/third_party/picohttpparser/include/",
         "${workspaceFolder}/third_party/rapidjson/include/**",
         "${workspaceFolder}/third_party/spdlog/include/**",
