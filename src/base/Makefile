@@ -10,8 +10,9 @@ A_BIN = $(LIB_DIR)/$(A_NAME)
 CFLAGS   +=
 CXXFLAGS +=
 INCLUDE  +=
-LDFLAGS  += -ldl -lpthread -lssl -lcrypto -lcurl -L$(LIB_DIR) -lfmt  \
-		    -lpicohttpparser -ltinyxml2 -lyaml -ljsoncpp -luuid
+LDFLAGS  += -ldl -lpthread -lssl -lcrypto -lcurl -L$(LIB_DIR) -lfmt \
+			-lgmock_main -lgmock -lgtest_main -lgtest -ljsoncpp \
+			-lpicohttpparser -lspdlog -ltinyxml2 -luuid -lyaml
 
 all: $(SO_BIN) $(A_BIN)
 

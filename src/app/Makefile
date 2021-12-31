@@ -7,8 +7,9 @@ BIN = $(BIN_DIR)/zcp_server
 CFLAGS   +=
 CXXFLAGS +=
 INCLUDE  +=
-LDFLAGS  += -lpthread -lssl -lcrypto -lcurl -L$(LIB_DIR) -lfmt  \
-		    -lpicohttpparser -ltinyxml2 -lyaml -ljsoncpp -lbase
+LDFLAGS  += -ldl -lpthread -lssl -lcrypto -lcurl -L$(LIB_DIR) -lbase -lfmt \
+			-lgmock_main -lgmock -lgtest_main -lgtest -ljsoncpp -lpicohttpparser \
+		    -lspdlog -ltinyxml2 -luuid -lyaml
 
 all: $(BIN)
 	

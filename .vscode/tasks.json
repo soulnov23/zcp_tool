@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "make install",
+            "label": "make install -j32",
             "type": "shell",
             "command": [
                 "make -C ${workspaceFolder} install -j32"
@@ -26,7 +26,7 @@
             }
         },
         {
-            "label": "make",
+            "label": "make -j32",
             "type": "shell",
             "command": [
                 "make -C ${workspaceFolder} -j32 &&",
