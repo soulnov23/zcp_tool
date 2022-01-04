@@ -85,7 +85,7 @@ void string_upper(string& str) {
     }
 }
 
-void str2vec(const string& buf, const char& field, vector_t& vec) {
+void string_split(const string& buf, const char& field, vector_t& vec) {
     vec.clear();
     stringstream input(buf);
     string value;
@@ -94,7 +94,7 @@ void str2vec(const string& buf, const char& field, vector_t& vec) {
     }
 }
 
-void str2vec(const string& buf, const string& field, vector_t& vec) {
+void string_split(const string& buf, const string& field, vector_t& vec) {
     vec.clear();
     size_t offset = 0;
     size_t next = 0;

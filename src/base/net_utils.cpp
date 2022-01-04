@@ -127,7 +127,7 @@ uint32_t str2net_int_ip(const string& ip) {
         return 0;
     }
     vector_t vec;
-    str2vec(ip, ".", vec);
+    string_split(ip, ".", vec);
     if (vec.size() != 4) {
         return 0;
     }

@@ -13,8 +13,8 @@ void string_lower(string& str);
 void string_upper(string& str);
 
 typedef vector<string> vector_t;
-void str2vec(const string& buf, const char& field, vector_t& vec);
-void str2vec(const string& buf, const string& field, vector_t& vec);
+void string_split(const string& buf, const char& field, vector_t& vec);
+void string_split(const string& buf, const string& field, vector_t& vec);
 
 typedef map<string, string> record_t;
 void map2str(string& buf, const record_t& record, bool encode = true);
