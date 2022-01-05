@@ -8,8 +8,7 @@ CFLAGS   +=
 CXXFLAGS +=
 INCLUDE  +=
 LDFLAGS  += -ldl -lpthread -lssl -lcrypto -lcurl -L$(LIB_DIR) -lbase -lfmt \
-			-lgmock_main -lgmock -lgtest_main -lgtest -ljsoncpp -lpicohttpparser \
-		    -lspdlog -ltinyxml2 -luuid -lyaml
+			-ljsoncpp -lpicohttpparser -lspdlog -ltinyxml2 -luuid -lyaml
 
 all: $(BIN)
 	
