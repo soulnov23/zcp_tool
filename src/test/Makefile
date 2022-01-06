@@ -21,9 +21,6 @@ all: check $(BIN)
 ./bin/server: server.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
-./bin/example_xml_parser: example_xml_parser.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
 ./bin/example_rapid_json: example_rapid_json.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
@@ -33,16 +30,16 @@ all: check $(BIN)
 ./bin/example_epoll: example_epoll.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
-./bin/example_auto: example_auto.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/example_lambda: example_lambda.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
 ./bin/example_graph: example_graph.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 ./bin/example_coroutine: example_coroutine.o
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
+
+./bin/map_utils_test: map_utils_test.o
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
+
+./bin/xml_parser_test: xml_parser_test.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 clean:
