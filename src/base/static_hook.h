@@ -51,7 +51,7 @@ int static_hook(T old_func, T new_func) {
 #endif
 
 /*
-#include "src/base/printf_utils.h"
+#include "src/base/process_util.h"
 #include "src/base/static_hook.h"
 
 void old_printf() { PRINTF_DEBUG("starsdyang"); }

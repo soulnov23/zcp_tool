@@ -1,6 +1,6 @@
 #include "src/base/xml_parser.h"
 
-#include "src/base/printf_utils.h"
+#include "src/base/printf_util.h"
 
 bool xml_load_file(const char* file_path, tinyxml2::XMLDocument& doc) {
     bool ret = true;

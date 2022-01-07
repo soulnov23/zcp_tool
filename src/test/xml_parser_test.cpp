@@ -5,7 +5,7 @@
 #include <string>
 
 #include "gtest/gtest.h"
-#include "src/base/file_utils.h"
+#include "src/base/file_util.h"
 
 class test_fixture_t : public testing::Test {
 public:

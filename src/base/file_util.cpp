@@ -1,4 +1,4 @@
-#include "src/base/file_utils.h"
+#include "src/base/file_util.h"
 
 #include <fcntl.h>
 
@@ -7,6 +7,7 @@
 
 #include "src/base/fd_guard.h"
 #include "src/base/fd_lock_guard.h"
+#include "src/base/printf_util.h"
 
 std::string file_to_string(const char* file_path) {
     std::string data;

@@ -1,10 +1,10 @@
-#include "src/base/time_utils.h"
+#include "src/base/time_util.h"
 
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
 
-#include "src/base/printf_utils.h"
+#include "src/base/printf_util.h"
 
 /*localtime非线程安全
 int get_time_now(string& str_now) {

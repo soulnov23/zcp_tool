@@ -7,8 +7,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "src/base/net_utils.h"
-#include "src/base/printf_utils.h"
+#include "src/base/net_util.h"
+#include "src/base/printf_util.h"
 #include "src/test/const.h"
 
 shared_ptr<server> server::g_server = make_shared<server>();

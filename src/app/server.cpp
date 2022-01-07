@@ -8,7 +8,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "src/base/printf_utils.h"
+#include "src/base/printf_util.h"
 
 #define SIZE_1K (1024)
 #define SIZE_1M (SIZE_1K) * (SIZE_1K)

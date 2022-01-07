@@ -1,5 +1,5 @@
 #include "src/base/graph.h"
-#include "src/base/printf_utils.h"
+#include "src/base/printf_util.h"
 
 int main(int argc, char* argv[]) {
     graph_adjvex_list_t list;

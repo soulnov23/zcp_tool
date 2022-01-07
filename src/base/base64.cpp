@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "src/base/string_utils.h"
+#include "src/base/string_util.h"
 
 void base64_encode(const std::string& str_in, std::string& str_out) {
     static const char base64_encode_table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

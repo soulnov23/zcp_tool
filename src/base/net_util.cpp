@@ -1,4 +1,4 @@
-#include "src/base/net_utils.h"
+#include "src/base/net_util.h"
 
 #include <arpa/inet.h>
 #include <fcntl.h>
@@ -10,8 +10,8 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-#include "src/base/printf_utils.h"
-#include "src/base/string_utils.h"
+#include "src/base/printf_util.h"
+#include "src/base/string_util.h"
 
 int make_socket_blocking(int fd) {
     int flags;

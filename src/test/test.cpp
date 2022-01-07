@@ -5,7 +5,7 @@
 #include "src/base/fd_guard.h"
 #include "src/base/fd_lock_guard.h"
 #include "src/base/lockfree_queue.h"
-#include "src/base/printf_utils.h"
+#include "src/base/printf_util.h"
 #include "yaml-cpp/node/node.h"
 #include "yaml-cpp/yaml.h"
 

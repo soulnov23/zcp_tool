@@ -7,9 +7,9 @@ using namespace std;
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 using namespace rapidjson;
-#include "src/base/file_utils.h"
-#include "src/base/printf_utils.h"
-#include "src/base/string_utils.h"
+#include "src/base/file_util.h"
+#include "src/base/printf_util.h"
+#include "src/base/string_util.h"
 
 map<string, string> json_to_map(const string& data) {
     map<string, string> record;

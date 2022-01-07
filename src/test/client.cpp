@@ -10,8 +10,8 @@
 
 #include <string>
 using namespace std;
-#include "src/base/net_utils.h"
-#include "src/base/printf_utils.h"
+#include "src/base/net_util.h"
+#include "src/base/printf_util.h"
 #include "src/test/const.h"
 
 shared_ptr<client> client::g_client = make_shared<client>();
