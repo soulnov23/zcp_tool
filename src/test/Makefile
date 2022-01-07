@@ -36,7 +36,7 @@ all: check $(BIN)
 ./bin/example_coroutine: example_coroutine.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
-./bin/map_utils_test: map_utils_test.o
+./bin/map_util_test: map_util_test.o
 	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
 ./bin/xml_parser_test: xml_parser_test.o
