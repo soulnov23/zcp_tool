@@ -1,5 +1,4 @@
-#ifndef __PRINTF_UTILS_H__
-#define __PRINTF_UTILS_H__
+#pragma once
 
 #include <errno.h>
 #include <stdio.h>
@@ -23,54 +22,31 @@
 
 /*
 gcc支持的做法，支持arg可变参传入
-#define PRINTF_DEBUG(format, args...) \
-                printf("DEBUG [%s:%d %s()] " format"\n", __FILE__, __LINE__,
-__PRETTY_FUNCTION__, ##args)
-#define PRINTF_DEBUG(format, args...) \
-                printf("DEBUG [%s:%d %s()] " format"\n", __FILE__, __LINE__,
-__PRETTY_FUNCTION__, ##args)
+#define PRINTF_DEBUG(format, args...)                                                                      \
+    do {                                                                                                   \
+        printf("[%s] [" GREEN_PRINT_BEG "debug" GREEN_PRINT_END "] [process %d][%s:%d %s()] " format "\n", \
+               get_time_now().c_str(), getpid(), __FILE__, __LINE__, __FUNCTION__, ##args);                \
+        fflush(stdout);                                                                                    \
+    } while (0)
+
+#define PRINTF_ERROR(format, args...)                                                                                    \
+    do {                                                                                                                 \
+        printf("[%s] [" RED_PRINT_BEG "error" RED_PRINT_END "] [process %d][%s:%d %s()] [errno:%d err:%s] " format "\n", \
+               get_time_now().c_str(), getpid(), __FILE__, __LINE__, __FUNCTION__, errno, strerror(errno), ##args);      \
+        fflush(stdout);                                                                                                  \
+    } while (0)
 */
 
-#define PRINTF_DEBUG(format, ...)                                                                                        \
-    {                                                                                                                    \
-        printf("[%s] " GREEN_PRINT_BEG "DEBUG" GREEN_PRINT_END " [%d][%s:%d %s()] " format "\n", get_time_now().c_str(), \
-               getpid(), __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__);                                               \
-        fflush(stdout);                                                                                                  \
-    }
+#define PRINTF_DEBUG(format, ...)                                                                          \
+    do {                                                                                                   \
+        printf("[%s] [" GREEN_PRINT_BEG "debug" GREEN_PRINT_END "] [process %d][%s:%d %s()] " format "\n", \
+               get_time_now().c_str(), getpid(), __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__);         \
+        fflush(stdout);                                                                                    \
+    } while (0)
 
 #define PRINTF_ERROR(format, ...)                                                                                          \
-    {                                                                                                                      \
-        printf("[%s] " RED_PRINT_BEG "ERROR" RED_PRINT_END " [%d][%s:%d %s()] [errno:%d err:%s] " format "\n",             \
+    do {                                                                                                                   \
+        printf("[%s] [" RED_PRINT_BEG "error" RED_PRINT_END "] [process %d][%s:%d %s()] [errno:%d err:%s] " format "\n",   \
                get_time_now().c_str(), getpid(), __FILE__, __LINE__, __FUNCTION__, errno, strerror(errno), ##__VA_ARGS__); \
         fflush(stdout);                                                                                                    \
-    }
-
-#define RETURN_ON_ERROR(expr)                \
-    do {                                     \
-        int __ret = (expr);                  \
-        if (__ret != 0) {                    \
-            PRINTF_ERROR("call expr error"); \
-            return __ret;                    \
-        }                                    \
     } while (0)
-
-#define RETURN_ON_ERROR_OR_DO(expr, sucess_expr) \
-    do {                                         \
-        int __ret = (expr);                      \
-        if (__ret != 0) {                        \
-            PRINTF_ERROR("call expr error");     \
-            return __ret;                        \
-        }                                        \
-        sucess_expr;                             \
-    } while (0)
-
-#define ON_ERROR_RETURN(expr, ret_err)           \
-    do {                                         \
-        if ((expr) != 0)                         \
-            if (__ret != 0) {                    \
-                PRINTF_ERROR("call expr error"); \
-                return (ret_err);                \
-            }                                    \
-    } while (0)
-
-#endif
