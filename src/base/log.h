@@ -1,19 +1,42 @@
 #pragma once
 
+#define SPDLOG_FMT_EXTERNAL
+
+#include <string.h>
+#include <unistd.h>
+
+#include <iostream>
+
 #include "fmt/format.h"
-#include "spdlog/async_logger.h"
-#include "spdlog/common.h"
-#include "spdlog/sinks/daily_file_sink.h"
-#include "spdlog/sinks/hourly_file_sink.h"
-#include "spdlog/sinks/rotating_file_sink.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
-#include "src/base/printf_util.h"
 #include "src/base/singleton.h"
+#include "src/base/time_util.h"
+
+#define RED_PRINT_BEG    "\e[1;31m"
+#define RED_PRINT_END    "\e[m"
+#define GREEN_PRINT_BEG  "\e[1;32m"
+#define GREEN_PRINT_END  "\e[m"
+#define YELLOW_PRINT_BEG "\e[1;33m"
+#define YELLOW_PRINT_END "\e[m"
+#define BLUE_PRINT_BEG   "\e[1;34m"
+#define BLUE_PRINT_END   "\e[m"
+
+#define CONSOLE_DEBUG(formatter, args...)                                                                           \
+    do {                                                                                                            \
+        std::cout << fmt::format("[{}] [{}] [" GREEN_PRINT_BEG "debug" GREEN_PRINT_END "] [{}:{} {}()] " formatter, \
+                                 get_time_now(), getpid(), __FILE__, __LINE__, __FUNCTION__, ##args)                \
+                  << std::endl;                                                                                     \
+    } while (0)
+
+#define CONSOLE_ERROR(formatter, args...)                                                                                       \
+    do {                                                                                                                        \
+        std::cout << fmt::format("[{}] [{}] [" RED_PRINT_BEG "error" RED_PRINT_END "] [{}:{} {}()] " formatter, get_time_now(), \
+                                 getpid(), __FILE__, __LINE__, __FUNCTION__, ##args);                                           \
+    } while (0)
 
 struct logger_config {
     std::string logger_name = "default_logger";
-    std::string format = "[%Y-%m-%d %H:%M:%S.%f] [process %P] [%^%l%$] [%s:%# %!()] %v";
+    std::string format = "[%Y-%m-%d %H:%M:%S.%f] [%P] [%^%l%$] [%s:%# %!()] %v";
     std::string filename = "default.log";
     // by_size按大小分割 by_day按天分割 by_hour按小时分割
     std::string roll_type = "by_day";
@@ -23,57 +46,20 @@ struct logger_config {
     unsigned int rotation_hour = 0;
     unsigned int rotation_minute = 0;
     unsigned int async_thread_pool_size = 1;
-
-    void debug() const {
-        PRINTF_DEBUG(
-            "formatter: %s, filename: %s, roll_type: %s, reserve_count: %u, roll_size: %u, rotation_hour: %u, "
-            "rotation_minute: %u, async_thread_pool_size: %u",
-            format.c_str(), filename.c_str(), roll_type.c_str(), reserve_count, roll_size, rotation_hour, rotation_minute,
-            async_thread_pool_size);
-    }
 };
-
-logger_config default_logger_config;
 
 class logger : public singleton<logger> {
     friend class singleton<logger>;
     CLASS_UNCOPYABLE(logger)
     CLASS_UNMOVABLE(logger)
 public:
-    logger() { set_config(default_logger_config); }
-    ~logger() { spdlog::drop_all(); }
+    logger();
+    ~logger();
 
-    int set_config(const logger_config& config = default_logger_config) {
-        if (config.roll_type == "by_size") {
-            sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(config.filename, config.roll_size,
-                                                                           config.reserve_count, true);
-        } else if (config.roll_type == "by_day") {
-            sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(config.filename, config.rotation_hour,
-                                                                        config.rotation_minute, false, config.reserve_count);
-        } else if (config.roll_type == "by_hour") {
-            sink_ = std::make_shared<spdlog::sinks::hourly_file_sink_mt>(config.filename, false, config.reserve_count);
-        } else {
-            PRINTF_DEBUG("roll_type: %s err", config.roll_type.c_str());
-            return -1;
-        }
-        auto formatter = std::make_unique<spdlog::pattern_formatter>(config.format, spdlog::pattern_time_type::local,
-                                                                     spdlog::details::os::default_eol);
-        sink_->set_formatter(std::move(formatter));
-        thread_pool_ = std::make_shared<spdlog::details::thread_pool>(config.async_thread_pool_size, 1);
-        logger_ =
-            std::make_shared<spdlog::async_logger>(config.logger_name, sink_, thread_pool_, spdlog::async_overflow_policy::block);
-        // 设置默认刷新级别和打印级别
-        logger_->flush_on(spdlog::level::trace);
-        logger_->set_level(spdlog::level::trace);
-        // 注册到spdlog
-        spdlog::register_logger(logger_);
-        return 0;
-    }
+    int set_config(const logger_config& config);
 
     void log(const char* filename_in, int line_in, const char* funcname_in, spdlog::level::level_enum level,
-             const std::string& msg) {
-        logger_->log(spdlog::source_loc{filename_in, line_in, funcname_in}, level, msg);
-    }
+             const std::string& msg);
 
 private:
     std::shared_ptr<spdlog::sinks::sink> sink_;
