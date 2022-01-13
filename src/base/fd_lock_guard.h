@@ -3,8 +3,8 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#include "src/base/log.h"
 #include "src/base/macros.h"
-#include "src/base/printf_util.h"
 
 class fd_lock_guard {
     CLASS_UNCOPYABLE(fd_lock_guard)
@@ -27,16 +27,16 @@ public:
             // 非阻塞用来判断是否加锁
             if (-1 == fcntl(fd_, F_SETLK, &fd_lock)) {
                 if (errno == EACCES || errno == EAGAIN) {
-                    PRINTF_ERROR("fcntl lock by other process");
+                    CONSOLE_ERROR("fcntl lock by other process");
                     return -2;
                 }
-                PRINTF_ERROR("fcntl err");
+                CONSOLE_ERROR("fcntl err");
                 return -1;
             }
         } else {
             // 阻塞用来判断是否写
             if (-1 == fcntl(fd_, F_SETLKW, &fd_lock)) {
-                PRINTF_ERROR("fcntl err");
+                CONSOLE_ERROR("fcntl err");
                 return -1;
             }
         }
@@ -49,7 +49,7 @@ public:
         fd_lock.l_start = 0;
         fd_lock.l_len = 0;
         if (-1 == fcntl(fd_, F_SETLK, &fd_lock)) {
-            PRINTF_ERROR("fcntl err");
+            CONSOLE_ERROR("fcntl err");
             return -1;
         }
         return 0;

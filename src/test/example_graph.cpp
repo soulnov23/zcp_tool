@@ -1,5 +1,5 @@
 #include "src/base/graph.h"
-#include "src/base/printf_util.h"
+#include "src/base/log.h"
 
 int main(int argc, char* argv[]) {
     graph_adjvex_list_t list;
@@ -23,26 +23,26 @@ int main(int argc, char* argv[]) {
     list.add_edge(H, F, "6");
 
     string data = list.dump_dot();
-    PRINTF_DEBUG("%s", data.c_str());
+    CONSOLE_DEBUG("{}", data.c_str());
 
     if (list.find_edge("A", "B")) {
-        PRINTF_DEBUG("AB");
+        CONSOLE_DEBUG("AB");
     }
     if (list.find_edge("B", "C")) {
-        PRINTF_DEBUG("BC");
+        CONSOLE_DEBUG("BC");
     }
     if (list.find_edge("A", "C")) {
-        PRINTF_DEBUG("AC");
+        CONSOLE_DEBUG("AC");
     }
 
     data = list.dfs_traverse_recursion();
-    PRINTF_DEBUG("%s", data.c_str());
+    CONSOLE_DEBUG("{}", data.c_str());
     data = list.dfs_traverse();
-    PRINTF_DEBUG("%s", data.c_str());
+    CONSOLE_DEBUG("{}", data.c_str());
     data = list.bfs_traverse();
-    PRINTF_DEBUG("%s", data.c_str());
+    CONSOLE_DEBUG("{}", data.c_str());
     data = list.topological_sort();
-    PRINTF_DEBUG("%s", data.c_str());
+    CONSOLE_DEBUG("{}", data.c_str());
 
     return 0;
 }

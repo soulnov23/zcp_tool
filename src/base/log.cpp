@@ -28,7 +28,7 @@ int logger::set_config(const logger_config& config) {
         } else if (config.roll_type == "by_hour") {
             sink_ = std::make_shared<spdlog::sinks::hourly_file_sink_mt>(config.filename, false, config.reserve_count);
         } else {
-            CONSOLE_DEBUG("roll_type: %s err", config.roll_type.c_str());
+            CONSOLE_DEBUG("roll_type: {} err", config.roll_type.c_str());
             return 1;
         }
         auto formatter = std::make_unique<spdlog::pattern_formatter>(config.format, spdlog::pattern_time_type::local,

@@ -3,7 +3,7 @@
 #include <queue>
 #include <stack>
 using namespace std;
-#include "src/base/printf_util.h"
+#include "src/base/log.h"
 
 graph_adjvex_list_t::graph_adjvex_list_t() {}
 
@@ -268,7 +268,7 @@ string graph_adjvex_list_t::topological_sort() {
         content += vertex->name() + " -> ";
     }
     if (count < vertex_count()) {
-        PRINTF_ERROR("DAG have cycle");
+        CONSOLE_ERROR("DAG have cycle");
         return "";
     }
     return content.substr(0, content.length() - 4);

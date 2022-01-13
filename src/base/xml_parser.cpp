@@ -1,12 +1,12 @@
 #include "src/base/xml_parser.h"
 
-#include "src/base/printf_util.h"
+#include "src/base/log.h"
 
 bool xml_load_file(const char* file_path, tinyxml2::XMLDocument& doc) {
     bool ret = true;
     if (doc.LoadFile(file_path) != tinyxml2::XML_SUCCESS) {
         ret = false;
-        PRINTF_ERROR("load file err: %s", file_path);
+        CONSOLE_ERROR("load file err: {}", file_path);
     }
     return ret;
 }
@@ -15,7 +15,7 @@ bool xml_load_data(const std::string& data, tinyxml2::XMLDocument& doc) {
     bool ret = true;
     if (doc.Parse(data.c_str(), data.length()) != tinyxml2::XML_SUCCESS) {
         ret = false;
-        PRINTF_ERROR("load data err: %s", data.c_str());
+        CONSOLE_ERROR("load data err: {}", data.c_str());
     }
     return ret;
 }

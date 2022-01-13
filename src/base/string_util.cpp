@@ -35,7 +35,7 @@ void string_trim(string& str) {
 
 std::string int_to_string(int i) {
         char szTemp[64];
-        snprintf(szTemp,sizeof(szTemp),"%d",i);
+        snprintf(szTemp,sizeof(szTemp),"{}",i);
         return std::string(szTemp);
 }
 

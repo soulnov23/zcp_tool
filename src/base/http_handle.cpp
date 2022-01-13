@@ -1,6 +1,6 @@
 #include "src/base/http_handle.h"
 
-#include "src/base/printf_util.h"
+#include "src/base/log.h"
 
 size_t recv_proc(void* ptr, size_t size, size_t nmemb, std::string* p) {
     if (p == nullptr) return 0;
@@ -34,7 +34,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::vector<std::str
 
     CURL* curl = curl_easy_init();
     if (!curl) {
-        PRINTF_ERROR("[curl]curl_easy_init error");
+        CONSOLE_ERROR("[curl]curl_easy_init error");
         strErrmsg = cerr;
         return -501;
     }
@@ -43,7 +43,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::vector<std::str
     if (pvecHeadInfo != nullptr) {
         for (unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
             headerlist = curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
-            // PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
+            // CONSOLE_DEBUG("{}", (*pvecHeadInfo)[i].c_str());
         }
     } else {
         headerlist = curl_slist_append(headerlist, "Accept: */*");
@@ -108,7 +108,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::vector<std::str
     if (res != CURLE_OK) {
         ret = -502;
 
-        PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
+        CONSOLE_ERROR("[curl]{}({})", curl_easy_strerror(res), res);
         strErrmsg = cerr;
         switch (res) {
             case CURLE_URL_MALFORMAT:;
@@ -124,11 +124,11 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::vector<std::str
         res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &iRet);
         if (res != CURLE_OK) {
             ret = -503;
-            PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
+            CONSOLE_ERROR("[curl]{}({})", curl_easy_strerror(res), res);
             strErrmsg = cerr;
         } else if (iRet != 200) {
             ret = -504;
-            PRINTF_ERROR("[curl]Http Response FAIL(%ld)", iRet);
+            CONSOLE_ERROR("[curl]Http Response FAIL({})", iRet);
             strErrmsg = cerr;
         }
     }
@@ -170,7 +170,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::string& strUser
 
     CURL* curl = curl_easy_init();
     if (!curl) {
-        PRINTF_ERROR("[curl]curl_easy_init error");
+        CONSOLE_ERROR("[curl]curl_easy_init error");
         strErrmsg = cerr;
         return -501;
     }
@@ -179,7 +179,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::string& strUser
     if (pvecHeadInfo != nullptr) {
         for (unsigned int i = 0; i < pvecHeadInfo->size(); i++) {
             headerlist = curl_slist_append(headerlist, (*pvecHeadInfo)[i].c_str());
-            // PRINTF_DEBUG("%s", (*pvecHeadInfo)[i].c_str());
+            // CONSOLE_DEBUG("{}", (*pvecHeadInfo)[i].c_str());
         }
     } else {
         headerlist = curl_slist_append(headerlist, "Accept: */*");
@@ -247,7 +247,7 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::string& strUser
     if (res != CURLE_OK) {
         ret = -502;
 
-        PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
+        CONSOLE_ERROR("[curl]{}({})", curl_easy_strerror(res), res);
         strErrmsg = cerr;
         switch (res) {
             case CURLE_URL_MALFORMAT:;
@@ -263,11 +263,11 @@ int http_proc(const std::string& strUrl, unsigned iTimeout, std::string& strUser
         res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &iRet);
         if (res != CURLE_OK) {
             ret = -503;
-            PRINTF_ERROR("[curl]%s(%d)", curl_easy_strerror(res), res);
+            CONSOLE_ERROR("[curl]{}({})", curl_easy_strerror(res), res);
             strErrmsg = cerr;
         } else if (iRet != 200) {
             ret = -504;
-            PRINTF_ERROR("[curl]Http Response FAIL(%ld)", iRet);
+            CONSOLE_ERROR("[curl]Http Response FAIL({})", iRet);
             strErrmsg = cerr;
         }
     }
