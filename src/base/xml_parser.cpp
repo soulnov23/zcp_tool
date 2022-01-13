@@ -2,19 +2,19 @@
 
 #include "src/base/log.h"
 
-bool xml_load_file(const char* file_path, tinyxml2::XMLDocument& doc) {
-    bool ret = true;
+int xml_load_file(const char* file_path, tinyxml2::XMLDocument& doc) {
+    int ret = 0;
     if (doc.LoadFile(file_path) != tinyxml2::XML_SUCCESS) {
-        ret = false;
+        ret = -1;
         CONSOLE_ERROR("load file err: {}", file_path);
     }
     return ret;
 }
 
-bool xml_load_data(const std::string& data, tinyxml2::XMLDocument& doc) {
-    bool ret = true;
+int xml_load_data(const std::string& data, tinyxml2::XMLDocument& doc) {
+    int ret = 0;
     if (doc.Parse(data.c_str(), data.length()) != tinyxml2::XML_SUCCESS) {
-        ret = false;
+        ret = -1;
         CONSOLE_ERROR("load data err: {}", data.c_str());
     }
     return ret;
