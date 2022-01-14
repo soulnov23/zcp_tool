@@ -18,38 +18,43 @@ logger::logger() {
 logger::~logger() { spdlog::drop_all(); }
 
 int logger::set_config(const logger_config& config) {
-    try {
-        if (config.roll_type == "by_size") {
-            sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(config.filename, config.roll_size,
-                                                                           config.reserve_count, true);
-        } else if (config.roll_type == "by_day") {
-            sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(config.filename, config.rotation_hour,
-                                                                        config.rotation_minute, false, config.reserve_count);
-        } else if (config.roll_type == "by_hour") {
-            sink_ = std::make_shared<spdlog::sinks::hourly_file_sink_mt>(config.filename, false, config.reserve_count);
-        } else {
-            CONSOLE_DEBUG("roll_type: {} err", config.roll_type.c_str());
-            return 1;
+    int ret = 0;
+    do {
+        try {
+            if (config.roll_type == "by_size") {
+                sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(config.filename, config.roll_size,
+                                                                               config.reserve_count, true);
+            } else if (config.roll_type == "by_day") {
+                sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(config.filename, config.rotation_hour,
+                                                                            config.rotation_minute, false, config.reserve_count);
+            } else if (config.roll_type == "by_hour") {
+                sink_ = std::make_shared<spdlog::sinks::hourly_file_sink_mt>(config.filename, false, config.reserve_count);
+            } else {
+                ret = 1;
+                CONSOLE_DEBUG("roll_type: {} err", config.roll_type.c_str());
+                break;
+            }
+            auto formatter = std::make_unique<spdlog::pattern_formatter>(config.format, spdlog::pattern_time_type::local,
+                                                                         spdlog::details::os::default_eol);
+            // unique_ptr不能复制，无法通过值传递调用set_formatter，只能使用move
+            sink_->set_formatter(std::move(formatter));
+            thread_pool_ = std::make_shared<spdlog::details::thread_pool>(config.async_thread_pool_size, 1);
+            logger_ = std::make_shared<spdlog::async_logger>(config.logger_name, sink_, thread_pool_,
+                                                             spdlog::async_overflow_policy::block);
+            // 设置默认刷新级别和打印级别
+            logger_->flush_on(spdlog::level::trace);
+            logger_->set_level(spdlog::level::trace);
+            // 注册到spdlog
+            spdlog::register_logger(logger_);
+        } catch (const std::exception& ex) {
+            ret = -1;
+            CONSOLE_ERROR("{}", ex.what());
+        } catch (...) {
+            ret = -1;
+            CONSOLE_ERROR("unknow exception");
         }
-        auto formatter = std::make_unique<spdlog::pattern_formatter>(config.format, spdlog::pattern_time_type::local,
-                                                                     spdlog::details::os::default_eol);
-        sink_->set_formatter(std::move(formatter));
-        thread_pool_ = std::make_shared<spdlog::details::thread_pool>(config.async_thread_pool_size, 1);
-        logger_ =
-            std::make_shared<spdlog::async_logger>(config.logger_name, sink_, thread_pool_, spdlog::async_overflow_policy::block);
-        // 设置默认刷新级别和打印级别
-        logger_->flush_on(spdlog::level::trace);
-        logger_->set_level(spdlog::level::trace);
-        // 注册到spdlog
-        spdlog::register_logger(logger_);
-    } catch (const std::exception& ex) {
-        CONSOLE_ERROR("{}", ex.what());
-        return -1;
-    } catch (...) {
-        CONSOLE_ERROR("unknow exception");
-        return -1;
-    }
-    return 0;
+    } while (0);
+    return ret;
 }
 
 void logger::log(const char* filename_in, int line_in, const char* funcname_in, spdlog::level::level_enum level,

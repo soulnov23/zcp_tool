@@ -31,7 +31,8 @@
 #define CONSOLE_ERROR(formatter, args...)                                                                                       \
     do {                                                                                                                        \
         std::cout << fmt::format("[{}] [{}] [" RED_PRINT_BEG "error" RED_PRINT_END "] [{}:{} {}()] " formatter, get_time_now(), \
-                                 getpid(), __FILE__, __LINE__, __FUNCTION__, ##args);                                           \
+                                 getpid(), __FILE__, __LINE__, __FUNCTION__, ##args)                                            \
+                  << std::endl;                                                                                                 \
     } while (0)
 
 struct logger_config {
