@@ -30,9 +30,16 @@ public:
     int start(int argc, char* argv[]);
 
 private:
+    int get_option(int argc, char* argv[]);
+    void show_help_info();
+    void show_version_info();
     int read_config(const char* file_path);
     int fork_child();
 
 private:
+    bool show_help_ = false;
+    bool show_version_ = false;
+    char* config_file_path_;
+    char* signal_cmd_;
     system_config config_;
 };
