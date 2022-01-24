@@ -2,10 +2,15 @@
 #include "src/base/log.h"
 
 int main(int argc, char* argv[]) {
-    app* instance = app::get_instance_atomic();
-    if (instance == nullptr) {
-        CONSOLE_ERROR("single instance err");
+    logger* logger_instance = logger::get_instance_atomic();
+    if (logger_instance == nullptr) {
+        LOG_ERROR("logger single instance error");
         return -1;
     }
-    return instance->start(argc, argv);
+    app* app_instance = app::get_instance_atomic();
+    if (app_instance == nullptr) {
+        LOG_ERROR("app single instance error");
+        return -1;
+    }
+    return app_instance->start(argc, argv);
 }
