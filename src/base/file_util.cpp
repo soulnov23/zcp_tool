@@ -1,41 +1,66 @@
 #include "src/base/file_util.h"
 
 #include <fcntl.h>
+#include <sys/uio.h>
+#include <unistd.h>
 
 #include <fstream>
 #include <streambuf>
 
 #include "src/base/fd_guard.h"
 #include "src/base/fd_lock_guard.h"
+#include "src/base/io_util.h"
 #include "src/base/log.h"
+#include "src/base/retry_do.h"
 
-std::string file_to_string(const char* file_path) {
+off_t get_file_size(const char* file_path) {
+    struct stat64 temp_stat;
+    if (retry_do(stat64, file_path, &temp_stat) == -1) {
+        LOG_SYSTEM_ERROR("stat64");
+        return -1;
+    }
+    return temp_stat.st_size;
+}
+
+std::string load_file_data(const char* file_path) {
     std::string data;
     std::ifstream file(file_path);
     if (!file.is_open()) {
-        CONSOLE_ERROR("open file failed : {}", file_path);
+        LOG_SYSTEM_ERROR("ifstream file({})", file_path);
         return data;
     }
     data.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
     return data;
 }
 
-int string_to_file(const char* file_path, const string& data) {
-    fd_guard fd(open(file_path, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRWXU));
-    if (fd == -1) {
-        CONSOLE_ERROR("open {} err", file_path);
-        return -1;
+ssize_t read_file(int fd, void* data, size_t size, loff_t offset) {
+    ssize_t ret = wrap(pread64, fd, data, size, offset);
+    if (ret == -1) {
+        LOG_SYSTEM_ERROR("pread64");
     }
-    fd_lock_guard fd_lock(fd);
-    if (fd_lock.lock(false) == -1) {
-        CONSOLE_ERROR("fd_lock.lock err");
-        return -1;
+    return ret;
+}
+
+ssize_t write_file(int fd, void* data, size_t size, loff_t offset) {
+    ssize_t ret = wrap(pwrite64, fd, data, size, offset);
+    if (ret == -1) {
+        LOG_SYSTEM_ERROR("pwrite64");
     }
-    // 这里是阻塞写入文件，不需要用while循环
-    ssize_t size = write(fd, data.c_str(), data.size());
-    if (size != data.size()) {
-        CONSOLE_ERROR("write err");
-        return -1;
+    return ret;
+}
+
+ssize_t readv_file(int fd, iovec* iov, int count, loff_t offset) {
+    ssize_t ret = wrapv(preadv64, fd, iov, count, offset);
+    if (ret == -1) {
+        LOG_SYSTEM_ERROR("preadv64");
     }
-    return 0;
+    return ret;
+}
+
+ssize_t writev_file(int fd, iovec* iov, int count, loff_t offset) {
+    ssize_t ret = wrapv(pwritev64, fd, iov, count, offset);
+    if (ret == -1) {
+        LOG_SYSTEM_ERROR("pwritev64");
+    }
+    return ret;
 }
