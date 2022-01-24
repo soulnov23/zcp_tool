@@ -3,6 +3,8 @@
 #include <getopt.h>
 
 #include "src/app/server.h"
+#include "src/base/fd_guard.h"
+#include "src/base/fd_lock_guard.h"
 #include "src/base/file_util.h"
 #include "src/base/log.h"
 #include "src/base/process_util.h"
@@ -27,7 +29,7 @@ int app::get_option(int argc, char* argv[]) {
         }
         switch (character) {
             case '?':
-                CONSOLE_ERROR("invalid option: -{}", char(optopt));
+                LOG_ERROR("invalid option: -{}", char(optopt));
                 return -1;
             case 'h':
                 show_help_ = true;
@@ -42,12 +44,12 @@ int app::get_option(int argc, char* argv[]) {
                 signal_cmd_ = optarg;
                 if (strcmp(signal_cmd_, "stop") != 0 || strcmp(signal_cmd_, "quit") != 0 || strcmp(signal_cmd_, "reopen") != 0 ||
                     strcmp(signal_cmd_, "reload") != 0) {
-                    CONSOLE_ERROR("invalid signal: {}", *signal_cmd_);
+                    LOG_ERROR("invalid signal: {}", *signal_cmd_);
                     return -1;
                 }
                 break;
             case ':':
-                CONSOLE_ERROR("requires parameter: -{}", char(optopt));
+                LOG_ERROR("requires parameter: -{}", char(optopt));
                 return -1;
             default:
                 break;
@@ -67,10 +69,30 @@ void app::show_help_info() {
 
 void app::show_version_info() { std::cout << "zcp_tool version: 0.0.1" << endl; }
 
+int app::create_pid_file() {
+    const char* pid_file = "zcp_tool.pid";
+    fd_guard fd(open(pid_file, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRWXU));
+    if (fd == -1) {
+        LOG_SYSTEM_ERROR("open");
+        return -1;
+    }
+    fd_lock_guard fd_lock(fd);
+    if (fd_lock.lock(false) == -1) {
+        LOG_ERROR("fd_lock.lock error");
+        return -1;
+    }
+    std::string data = std::to_string(getpid());
+    if (write_file(fd, data.data(), data.size()) == -1) {
+        LOG_ERROR("write_file error");
+        return -1;
+    }
+    return 0;
+}
+
 int app::fork_child() {
     __pid_t pid = fork();
     if (pid == -1) {
-        CONSOLE_ERROR("fork error");
+        LOG_ERROR("fork error");
         return -1;
     } else if (pid == 0) {
         //子进程
@@ -82,17 +104,17 @@ int app::fork_child() {
     // pid > 0
     else {
         //父进程
-        CONSOLE_DEBUG("fork child pid:{}", pid);
+        LOG_DEBUG("fork child pid:{}", pid);
     }
     return 0;
 }
 
 int app::start(int argc, char* argv[]) {
 #ifdef DEBUG
-    CONSOLE_DEBUG("this is debug version");
+    LOG_DEBUG("this is debug version");
 #endif
     if (get_option(argc, argv) != 0) {
-        CONSOLE_ERROR("get option error");
+        LOG_ERROR("get option error");
         return -1;
     }
     if (show_version_) {
@@ -101,21 +123,25 @@ int app::start(int argc, char* argv[]) {
     if (show_help_) {
         show_help_info();
     }
+    if (create_pid_file() != 0) {
+        LOG_ERROR("create pid file error");
+        return -1;
+    }
     /*
-    CONSOLE_DEBUG("ip:{} port:{} count:{}", config["ip"].c_str(), config["port"].c_str(), config["count"].c_str());
+    LOG_DEBUG("ip:{} port:{} count:{}", config["ip"].c_str(), config["port"].c_str(), config["count"].c_str());
 
     int count = strtol(config["count"].c_str(), nullptr, 10);
 
     //读完配置再daemon，因为daemon要是改变了工作目录，那么相对路径的配置文件会找不到
-    CONSOLE_DEBUG("daemonize begin");
+    LOG_DEBUG("daemonize begin");
     if (daemon_process() != 0) {
-        CONSOLE_ERROR("daemonize failed");
+        LOG_ERROR("daemonize failed");
         return -1;
     }
 
     for (int i = 0; i < count; i++) {
         if (fork_child() != 0) {
-            CONSOLE_ERROR("fork_child error");
+            LOG_ERROR("fork_child error");
             return -1;
         }
     }
