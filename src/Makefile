@@ -5,21 +5,21 @@ DIR_MODULES = base \
 all:
 	@for dir in $(DIR_MODULES); \
 	do \
-		$(MAKE) -C $$dir; \
+		$(MAKE) -C $$dir || exit $$?; \
 		echo; \
 	done
 
 clean:
 	@for dir in $(DIR_MODULES); \
 	do \
-		$(MAKE) -C $$dir clean; \
+		$(MAKE) -C $$dir clean || exit $$?; \
 		echo; \
 	done
 
 format:
 	@for dir in $(DIR_MODULES); \
 	do \
-		$(MAKE) -C $$dir format; \
+		$(MAKE) -C $$dir format || exit $$?; \
 		echo; \
 	done
 
