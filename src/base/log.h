@@ -46,7 +46,7 @@
 
 struct logger_config {
     std::string logger_name = "default_logger";
-    std::string format = "[%Y-%m-{} %H:%M:%S.%f] [%P] [%^%l%$] [{}:%# %!()] %v";
+    std::string format = "[%Y-%m-%d %H:%M:%S.%f] [%P] [%^%l%$] [%s:%# %!()] %v";
     std::string filename = "../log/default.log";
     // by_size按大小分割 by_day按天分割 by_hour按小时分割
     std::string roll_type = "by_day";
