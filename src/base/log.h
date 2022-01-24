@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "fmt/format.h"
+#include "spdlog/common.h"
 #include "spdlog/spdlog.h"
 #include "src/base/singleton.h"
 #include "src/base/time_util.h"
@@ -35,10 +36,18 @@
                   << std::endl;                                                                                                 \
     } while (0)
 
+#define CONSOLE_SYSTEM_ERROR(formatter, args...)                                                                             \
+    do {                                                                                                                     \
+        std::cout << fmt::format("[{}] [{}] [" RED_PRINT_BEG "error" RED_PRINT_END "] [{}:{} {}()] " formatter               \
+                                 " errno: {}, errmsg: {}",                                                                   \
+                                 get_time_now(), getpid(), __FILE__, __LINE__, __FUNCTION__, ##args, errno, strerror(errno)) \
+                  << std::endl;                                                                                              \
+    } while (0)
+
 struct logger_config {
     std::string logger_name = "default_logger";
     std::string format = "[%Y-%m-{} %H:%M:%S.%f] [%P] [%^%l%$] [{}:%# %!()] %v";
-    std::string filename = "default.log";
+    std::string filename = "../log/default.log";
     // by_size按大小分割 by_day按天分割 by_hour按小时分割
     std::string roll_type = "by_day";
     unsigned int reserve_count = 10;
@@ -75,3 +84,9 @@ private:
 
 #define LOG_DEBUG(format, args...) LOG_IMPL(spdlog::level::debug, format, ##args)
 #define LOG_ERROR(format, args...) LOG_IMPL(spdlog::level::err, format, ##args)
+
+#define LOG_SYSTEM_ERROR(formatter, args...)                                                                                 \
+    do {                                                                                                                     \
+        logger::get_instance_atomic()->log(__FILE__, __LINE__, __FUNCTION__, spdlog::level::err,                             \
+                                           fmt::format(formatter " errno: {}, errmsg: {}", ##args, errno, strerror(errno))); \
+    } while (0)

@@ -1,7 +1,6 @@
 #include "src/base/log.h"
 
 #include "spdlog/async_logger.h"
-#include "spdlog/common.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/hourly_file_sink.h"
 #include "spdlog/sinks/rotating_file_sink.h"
@@ -31,7 +30,7 @@ int logger::set_config(const logger_config& config) {
                 sink_ = std::make_shared<spdlog::sinks::hourly_file_sink_mt>(config.filename, false, config.reserve_count);
             } else {
                 ret = 1;
-                CONSOLE_DEBUG("roll_type: {} err", config.roll_type.c_str());
+                CONSOLE_ERROR("invalid roll_type: {}", config.roll_type.c_str());
                 break;
             }
             auto formatter = std::make_unique<spdlog::pattern_formatter>(config.format, spdlog::pattern_time_type::local,
