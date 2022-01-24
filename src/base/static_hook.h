@@ -54,15 +54,15 @@ int static_hook(T old_func, T new_func) {
 #include "src/base/process_util.h"
 #include "src/base/static_hook.h"
 
-void old_printf() { CONSOLE_DEBUG("starsdyang"); }
+void old_printf() { LOG_DEBUG("starsdyang"); }
 
-void new_printf() { CONSOLE_DEBUG("chrisqguo"); }
+void new_printf() { LOG_DEBUG("chrisqguo"); }
 
 int main(int argc, char* argv[]) {
     old_printf();
     int ret = static_hook(old_printf, new_printf);
     if (ret != 0) {
-        CONSOLE_ERROR("static_hook err");
+        LOG_ERROR("static_hook err");
         return -1;
     }
     old_printf();

@@ -14,14 +14,14 @@ using FUNC = int(*)(int);
 int get_lib_func(const char* file_path, const char* func_name) {
     void* handle = dlopen(file_path, RTLD_LAZY);
     if (!handle) {
-        CONSOLE_ERROR();
+        LOG_SYSTEM_ERROR("dlopen");
         return -1;
     }
     dlerror();
     int (*func)(int);
     *(void**)(&func) = dlsym(handle, func_name);
     if (dlerror() != nullptr) {
-        CONSOLE_ERROR();
+        LOG_SYSTEM_ERROR("dlsym");
         dlclose(handle);
         return -1;
     }

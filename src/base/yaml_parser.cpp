@@ -7,7 +7,7 @@ int yaml_load_data(const std::string& data, YAML::Node& root) {
     root = YAML::Load(data);
     if (root.IsNull()) {
         ret = -1;
-        CONSOLE_ERROR("Load err: {}", data.c_str());
+        LOG_ERROR("Load data: {} error", data);
     }
     return ret;
 }
@@ -18,10 +18,10 @@ int yaml_load_file(const std::string& file_path, YAML::Node& root) {
         root = YAML::LoadFile(file_path);
     } catch (const std::exception& ex) {
         ret = -1;
-        CONSOLE_ERROR("{}", ex.what());
+        LOG_ERROR("{}", ex.what());
     } catch (...) {
         ret = 1;
-        CONSOLE_ERROR("unknow exception");
+        LOG_ERROR("unknow exception");
     }
     return ret;
 }

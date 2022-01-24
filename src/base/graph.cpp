@@ -268,7 +268,7 @@ string graph_adjvex_list_t::topological_sort() {
         content += vertex->name() + " -> ";
     }
     if (count < vertex_count()) {
-        CONSOLE_ERROR("DAG have cycle");
+        LOG_ERROR("DAG have cycle");
         return "";
     }
     return content.substr(0, content.length() - 4);

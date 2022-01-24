@@ -7,6 +7,7 @@ using namespace std;
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 using namespace rapidjson;
+
 #include "src/base/file_util.h"
 #include "src/base/log.h"
 #include "src/base/string_util.h"
@@ -16,7 +17,7 @@ map<string, string> json_to_map(const string& data) {
     Document content_json_doc;
     content_json_doc.Parse(data.c_str());
     if (content_json_doc.HasParseError() || !content_json_doc.IsObject()) {
-        CONSOLE_ERROR("json error [{}]", data.c_str());
+        LOG_ERROR("json error [{}]", data.c_str());
         return record;
     }
     for (auto it = content_json_doc.MemberBegin(); it != content_json_doc.MemberEnd(); it++) {
@@ -71,7 +72,7 @@ Document string_to_json(const string& data) {
     Document doc;
     doc.Parse(data.c_str());
     if (doc.HasParseError() || !doc.IsObject()) {
-        CONSOLE_ERROR("json error [{}]", data.c_str());
+        LOG_ERROR("json error [{}]", data.c_str());
     }
     return doc;
 }
@@ -81,7 +82,7 @@ Value* get_object(Value& rapid_value, const char* name) {
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsObject())) {
         string ret_info = move(string(name) + " is not in json or not int format");
-        CONSOLE_ERROR("{}", ret_info.c_str());
+        LOG_ERROR("{}", ret_info.c_str());
         return value;
     }
     value = &(member->value);
@@ -93,7 +94,7 @@ Value* get_array(Value& rapid_value, const char* name) {
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsArray())) {
         string ret_info = move(string(name) + " is not in json or not int format");
-        CONSOLE_ERROR("{}", ret_info.c_str());
+        LOG_ERROR("{}", ret_info.c_str());
         return value;
     }
     value = &(member->value);
@@ -105,7 +106,7 @@ string get_string(Value& rapid_value, const char* name) {
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsString())) {
         string ret_info = move(string(name) + " is not in json or not int format");
-        CONSOLE_ERROR("{}", ret_info.c_str());
+        LOG_ERROR("{}", ret_info.c_str());
         return value;
     }
     value = member->value.GetString();
@@ -117,7 +118,7 @@ int64_t get_int64(Value& rapid_value, const char* name) {
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsInt64())) {
         string ret_info = move(string(name) + " is not in json or not int format");
-        CONSOLE_ERROR("{}", ret_info.c_str());
+        LOG_ERROR("{}", ret_info.c_str());
         return value;
     }
     value = member->value.GetInt64();
@@ -129,7 +130,7 @@ uint64_t get_uint64(Value& rapid_value, const char* name) {
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsUint64())) {
         string ret_info = move(string(name) + " is not in json or not int format");
-        CONSOLE_ERROR("{}", ret_info.c_str());
+        LOG_ERROR("{}", ret_info.c_str());
         return value;
     }
     value = member->value.GetUint64();
@@ -141,7 +142,7 @@ double get_double(Value& rapid_value, const char* name) {
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsDouble())) {
         string ret_info = move(string(name) + " is not in json or not int format");
-        CONSOLE_ERROR("{}", ret_info.c_str());
+        LOG_ERROR("{}", ret_info.c_str());
         return value;
     }
     value = member->value.GetDouble();
@@ -153,7 +154,7 @@ bool get_bool(Value& rapid_value, const char* name) {
     Value::MemberIterator member = rapid_value.FindMember(name);
     if ((member == rapid_value.MemberEnd()) || (!member->value.IsBool())) {
         string ret_info = move(string(name) + " is not in json or not int format");
-        CONSOLE_ERROR("{}", ret_info.c_str());
+        LOG_ERROR("{}", ret_info.c_str());
         return value;
     }
     value = member->value.GetBool();
@@ -178,9 +179,9 @@ void PRINTF_MAP(map<T1, T2>& record, T3& it) {
 }
 
 int main(int argc, char* argv[]) {
-    string data = file_to_string("/home/src/conf/server.json");
+    string data = load_file_data("/home/src/conf/server.json");
     if (data.empty()) {
-        CONSOLE_ERROR("file_to_json error");
+        LOG_ERROR("file_to_json error");
         return -1;
     }
     map<string, string> record = move(json_to_map(data));

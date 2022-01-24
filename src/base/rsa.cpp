@@ -13,9 +13,9 @@
 #include "src/base/coder.h"
 #include "src/base/log.h"
 
-#define SET_SSL_ERROR()                                                                            \
-    do {                                                                                           \
-        CONSOLE_ERROR("errno:{} {}", ERR_get_error(), ERR_error_string(ERR_get_error(), nullptr)); \
+#define SET_SSL_ERROR()                                                                        \
+    do {                                                                                       \
+        LOG_ERROR("errno:{} {}", ERR_get_error(), ERR_error_string(ERR_get_error(), nullptr)); \
     } while (0)
 
 int hex_decode(std::string& src, std::string& dst) {
@@ -45,13 +45,13 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
     std::string coded_sign = sign;
 
     if (digest_algo != DIGEST_SHA1) {
-        CONSOLE_ERROR("invalid digest algorithm: {}", std::to_string(digest_algo).c_str());
+        LOG_ERROR("invalid digest algorithm: {}", std::to_string(digest_algo).c_str());
         ret = RSA_PARAM_TYPE_ERROR;
         goto ready_ret;
     }
 
     if (sign_type < SIGN_CODE_RAW || sign_type > SIGN_CODE_HEX) {
-        CONSOLE_ERROR("invalid sign type: {}", std::to_string(sign_type).c_str());
+        LOG_ERROR("invalid sign type: {}", std::to_string(sign_type).c_str());
         ret = RSA_PARAM_TYPE_ERROR;
         goto ready_ret;
     }
@@ -96,7 +96,7 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
     EVP_DigestFinal(&ctx, digest, &digest_len);
 
     if (digest_len > SHA512_DIGEST_LENGTH) {
-        CONSOLE_ERROR("SHA1 digest length error");
+        LOG_ERROR("SHA1 digest length error");
         ret = RSA_PARAM_TYPE_ERROR;
         goto free_evp_pkey;
     }
@@ -105,7 +105,7 @@ int verify_rsa_sign(const std::string& data_in, const std::string& sign, const s
 
     if (sign_type == SIGN_CODE_BASE64) {
         if (base64_decode(sign, coded_sign) != 0) {
-            CONSOLE_ERROR("base64 decode sign error");
+            LOG_ERROR("base64 decode sign error");
             ret = RSA_PARAM_TYPE_ERROR;
             goto free_evp_pkey;
         }
@@ -145,13 +145,13 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
     std::string coded_sign = sign;
 
     if (digest_algo != DIGEST_SHA256) {
-        CONSOLE_ERROR("invalid digest algorithm: {}", std::to_string(digest_algo).c_str());
+        LOG_ERROR("invalid digest algorithm: {}", std::to_string(digest_algo).c_str());
         ret = RSA_PARAM_TYPE_ERROR;
         goto ready_ret;
     }
 
     if (sign_type < SIGN_CODE_RAW || sign_type > SIGN_CODE_HEX) {
-        CONSOLE_ERROR("invalid sign type: {}", std::to_string(sign_type).c_str());
+        LOG_ERROR("invalid sign type: {}", std::to_string(sign_type).c_str());
         ret = RSA_PARAM_TYPE_ERROR;
         goto ready_ret;
     }
@@ -196,7 +196,7 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
     EVP_DigestFinal(&ctx, digest, &digest_len);
 
     if (digest_len > SHA512_DIGEST_LENGTH) {
-        CONSOLE_ERROR("SHA1 digest length error");
+        LOG_ERROR("SHA1 digest length error");
         ret = RSA_PARAM_TYPE_ERROR;
         goto free_evp_pkey;
     }
@@ -205,7 +205,7 @@ int verify_rsa2_sign(const std::string& data_in, const std::string& sign, const 
 
     if (sign_type == SIGN_CODE_BASE64) {
         if (base64_decode(sign, coded_sign) != 0) {
-            CONSOLE_ERROR("base64 decode sign error");
+            LOG_ERROR("base64 decode sign error");
             ret = RSA_PARAM_TYPE_ERROR;
             goto free_evp_pkey;
         }
@@ -249,7 +249,7 @@ int public_key_str2rsa(const std::string& public_key_in, RSA*& rsa) {
     if ((bio = BIO_new_mem_buf(pub_key_tmp, pub_key.length())) == nullptr) {
         char err_buf[512] = {0};
         ERR_error_string_n(ERR_get_error(), err_buf, sizeof(err_buf));
-        CONSOLE_ERROR("BIO_new_mem_buf err {}", err_buf);
+        LOG_ERROR("BIO_new_mem_buf err {}", err_buf);
         ret = RSA_KEY_ERROR;
         return ret;
     }
@@ -259,7 +259,7 @@ int public_key_str2rsa(const std::string& public_key_in, RSA*& rsa) {
     if (rsa == nullptr) {
         char err_buf[512] = {0};
         ERR_error_string_n(ERR_get_error(), err_buf, sizeof(err_buf));
-        CONSOLE_ERROR("PEM_read_bio_RSA_PUBKEY err {}", err_buf);
+        LOG_ERROR("PEM_read_bio_RSA_PUBKEY err {}", err_buf);
         ret = RSA_KEY_ERROR;
         return ret;
     }
@@ -276,7 +276,7 @@ int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in, int cipher_t
     // private key allocation, EVP_PKEY_free() frees up the private key
     pKey = EVP_PKEY_new();
     if (pKey == nullptr) {
-        CONSOLE_ERROR("EVP_PKEY_new err");
+        LOG_ERROR("EVP_PKEY_new err");
         ret = RSA_KEY_ERROR;
         return ret;
     }
@@ -285,7 +285,7 @@ int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in, int cipher_t
     // set the key referenced by pKey to rsa
     // return 1 for success or 0 for failure
     if (EVP_PKEY_set1_RSA(pKey, rsa) != 1) {
-        CONSOLE_ERROR("EVP_PKEY_set1_RSA err");
+        LOG_ERROR("EVP_PKEY_set1_RSA err");
         ret = RSA_KEY_ERROR;
         EVP_PKEY_free(pKey);
         return ret;
@@ -314,7 +314,7 @@ int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in, int cipher_t
         clear_data_size = RSA_public_decrypt(cipher_size, (const unsigned char*)cipher_tmp.c_str(), (unsigned char*)clear_data,
                                              rsa, RSA_NO_PADDING);
     } else {
-        CONSOLE_ERROR("PaddingMode is invalid");
+        LOG_ERROR("PaddingMode is invalid");
         ret = RSA_DECRYPT_ERROR;
         free(clear_data);
         EVP_PKEY_free(pKey);
@@ -322,7 +322,7 @@ int rsa_public_decrypt(RSA* rsa, const std::string& cipher_data_in, int cipher_t
     }
 
     if (clear_data_size < 0) {
-        CONSOLE_ERROR("RSA_public_decrypt err");
+        LOG_ERROR("RSA_public_decrypt err");
         ret = RSA_DECRYPT_ERROR;
         free(clear_data);
         EVP_PKEY_free(pKey);
@@ -423,7 +423,7 @@ int calculate_rsa_sign(const std::string& data_in, const std::string& private_ke
     EVP_DigestFinal(&ctx, digest, &digest_len);
 
     if (digest_len > SHA512_DIGEST_LENGTH) {
-        CONSOLE_ERROR("SHA256 digest length error");
+        LOG_ERROR("SHA256 digest length error");
         ret = RSA_PARAM_TYPE_ERROR;
         goto free_ctx;
     }
@@ -543,7 +543,7 @@ int calculate_rsa2_sign(const std::string& data_in, const std::string& private_k
     EVP_DigestFinal(&ctx, digest, &digest_len);
 
     if (digest_len > SHA512_DIGEST_LENGTH) {
-        CONSOLE_ERROR("SHA256 digest length error");
+        LOG_ERROR("SHA256 digest length error");
         ret = RSA_PARAM_TYPE_ERROR;
         goto free_ctx;
     }

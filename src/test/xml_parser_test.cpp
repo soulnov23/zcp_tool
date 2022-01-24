@@ -41,7 +41,7 @@ TEST_F(test_fixture_t, xml_load_file) {
 
 TEST_F(test_fixture_t, xml_load_data) {
     tinyxml2::XMLDocument doc;
-    std::string data = file_to_string("test.xml");
+    std::string data = load_file_data("test.xml");
     EXPECT_FALSE(data.empty());
     EXPECT_TRUE(xml_load_data(data, doc));
 }

@@ -22,16 +22,16 @@ int fd_lock_guard::lock(bool non_blocking) {
         // 非阻塞用来判断是否加锁
         if (-1 == fcntl(fd_, F_SETLK, &fd_lock)) {
             if (errno == EACCES || errno == EAGAIN) {
-                CONSOLE_ERROR("fcntl lock by other process");
+                LOG_ERROR("fcntl lock by other process");
                 return -2;
             }
-            CONSOLE_ERROR("fcntl err");
+            LOG_SYSTEM_ERROR("fcntl fd: {}", fd_);
             return -1;
         }
     } else {
         // 阻塞用来判断是否写
         if (-1 == fcntl(fd_, F_SETLKW, &fd_lock)) {
-            CONSOLE_ERROR("fcntl err");
+            LOG_SYSTEM_ERROR("fcntl");
             return -1;
         }
     }
@@ -45,7 +45,7 @@ int fd_lock_guard::unlock() {
     fd_lock.l_start = 0;
     fd_lock.l_len = 0;
     if (-1 == fcntl(fd_, F_SETLK, &fd_lock)) {
-        CONSOLE_ERROR("fcntl err");
+        LOG_SYSTEM_ERROR("fcntl fd: {}", fd_);
         return -1;
     }
     return 0;

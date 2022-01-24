@@ -23,26 +23,26 @@ int main(int argc, char* argv[]) {
     list.add_edge(H, F, "6");
 
     string data = list.dump_dot();
-    CONSOLE_DEBUG("{}", data.c_str());
+    LOG_DEBUG("{}", data.c_str());
 
     if (list.find_edge("A", "B")) {
-        CONSOLE_DEBUG("AB");
+        LOG_DEBUG("AB");
     }
     if (list.find_edge("B", "C")) {
-        CONSOLE_DEBUG("BC");
+        LOG_DEBUG("BC");
     }
     if (list.find_edge("A", "C")) {
-        CONSOLE_DEBUG("AC");
+        LOG_DEBUG("AC");
     }
 
     data = list.dfs_traverse_recursion();
-    CONSOLE_DEBUG("{}", data.c_str());
+    LOG_DEBUG("{}", data.c_str());
     data = list.dfs_traverse();
-    CONSOLE_DEBUG("{}", data.c_str());
+    LOG_DEBUG("{}", data.c_str());
     data = list.bfs_traverse();
-    CONSOLE_DEBUG("{}", data.c_str());
+    LOG_DEBUG("{}", data.c_str());
     data = list.topological_sort();
-    CONSOLE_DEBUG("{}", data.c_str());
+    LOG_DEBUG("{}", data.c_str());
 
     return 0;
 }

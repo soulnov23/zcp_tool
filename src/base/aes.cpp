@@ -7,19 +7,19 @@
 #include "src/base/coder.h"
 #include "src/base/log.h"
 
-#define SET_SSL_ERROR() CONSOLE_ERROR("errno:{} {}", ERR_get_error(), ERR_error_string(ERR_get_error(), nullptr))
+#define SET_SSL_ERROR() LOG_ERROR("errno:{} {}", ERR_get_error(), ERR_error_string(ERR_get_error(), nullptr))
 
 int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string& msg, int bit_type, int sign_type,
                     std::string& encrypt_msg) {
     ERR_load_crypto_strings();
 
     if (bit_type < AES_BIT_128 || bit_type > AES_BIT_256) {
-        CONSOLE_ERROR("invalid bit type: {}", std::to_string(bit_type).c_str());
+        LOG_ERROR("invalid bit type: {}", std::to_string(bit_type).c_str());
         return AES_PARAM_TYPE_ERROR;
     }
 
     if (sign_type < AES_SIGN_CODE_BASE64 || sign_type > AES_SIGN_CODE_HEX) {
-        CONSOLE_ERROR("invalid sign type: {}", std::to_string(sign_type).c_str());
+        LOG_ERROR("invalid sign type: {}", std::to_string(sign_type).c_str());
         return AES_PARAM_TYPE_ERROR;
     }
 
@@ -37,12 +37,12 @@ int aes_cbc_encrypt(const std::string& key, unsigned char* iv, const std::string
 
     int key_len = EVP_CIPHER_key_length(cipher);
     if (key_len != int(key.length())) {
-        CONSOLE_ERROR("key length {} not equal EVP_CIPHER_key_length {}", key.length(), key_len);
+        LOG_ERROR("key length {} not equal EVP_CIPHER_key_length {}", key.length(), key_len);
         return AES_KEY_LENGTH_ERROR;
     }
     int iv_len = EVP_CIPHER_iv_length(cipher);
     if (iv_len != int(strlen((const char*)iv))) {
-        CONSOLE_ERROR("iv length {} not equal EVP_CIPHER_iv_length {}", strlen((const char*)iv), iv_len);
+        LOG_ERROR("iv length {} not equal EVP_CIPHER_iv_length {}", strlen((const char*)iv), iv_len);
         return AES_IV_LENGTH_ERROR;
     }
 
@@ -90,19 +90,19 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string
     ERR_load_crypto_strings();
 
     if (bit_type < AES_BIT_128 || bit_type > AES_BIT_256) {
-        CONSOLE_ERROR("invalid bit type: {}", std::to_string(bit_type).c_str());
+        LOG_ERROR("invalid bit type: {}", std::to_string(bit_type).c_str());
         return AES_PARAM_TYPE_ERROR;
     }
 
     if (sign_type < AES_SIGN_CODE_BASE64 || sign_type > AES_SIGN_CODE_HEX) {
-        CONSOLE_ERROR("invalid sign type: {}", std::to_string(sign_type).c_str());
+        LOG_ERROR("invalid sign type: {}", std::to_string(sign_type).c_str());
         return AES_PARAM_TYPE_ERROR;
     }
 
     std::string decode_encrypt_msg;
     if (sign_type == AES_SIGN_CODE_BASE64) {
         if (base64_decode(encrypt_msg, decode_encrypt_msg) != 0) {
-            CONSOLE_ERROR("base64 decode sign error");
+            LOG_ERROR("base64 decode sign error");
             return AES_PARAM_TYPE_ERROR;
         }
     } else {
@@ -123,12 +123,12 @@ int aes_cbc_decrypt(const std::string& key, unsigned char* iv, const std::string
 
     int key_len = EVP_CIPHER_key_length(cipher);
     if (key_len != int(key.length())) {
-        CONSOLE_ERROR("key length {} not equal EVP_CIPHER_key_length {}", key.length(), key_len);
+        LOG_ERROR("key length {} not equal EVP_CIPHER_key_length {}", key.length(), key_len);
         return AES_KEY_LENGTH_ERROR;
     }
     int iv_len = EVP_CIPHER_iv_length(cipher);
     if (iv_len != int(strlen((const char*)iv))) {
-        CONSOLE_ERROR("iv length {} not equal EVP_CIPHER_iv_length {}", strlen((const char*)iv), iv_len);
+        LOG_ERROR("iv length {} not equal EVP_CIPHER_iv_length {}", strlen((const char*)iv), iv_len);
         return AES_IV_LENGTH_ERROR;
     }
 

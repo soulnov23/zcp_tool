@@ -62,7 +62,7 @@ bool is_legal_utf8(const string& data) {
 string to_utf8(const char* charset, const string& data) {
     iconv_t conv = iconv_open("UTF-8", charset);
     if (conv == (iconv_t)-1) {
-        CONSOLE_ERROR("iconv_open error");
+        LOG_SYSTEM_ERROR("iconv_open");
         return "";
     }
     const char* str = data.c_str();
@@ -72,18 +72,18 @@ string to_utf8(const char* charset, const string& data) {
     char* out_str = (char*)alloca(max_len + 16);
     if (out_str == nullptr) {
         iconv_close(conv);
-        CONSOLE_ERROR("alloca error");
+        LOG_SYSTEM_ERROR("alloca");
         return "";
     }
     int ret = iconv(conv, (char**)&str, &len, &out_str, &out_len);
     if (ret == -1) {
         iconv_close(conv);
-        CONSOLE_ERROR("iconv error");
+        LOG_SYSTEM_ERROR("iconv");
         return "";
     }
     if (out_len > max_len) {
         iconv_close(conv);
-        CONSOLE_ERROR("buffer lenth not enough");
+        LOG_ERROR("buffer lenth not enough");
         return "";
     }
     iconv_close(conv);
@@ -93,7 +93,7 @@ string to_utf8(const char* charset, const string& data) {
 string utf8_to(const char* charset, const string& data) {
     iconv_t conv = iconv_open(charset, "UTF-8");
     if (conv == (iconv_t)-1) {
-        CONSOLE_ERROR("iconv_open error");
+        LOG_SYSTEM_ERROR("iconv_open");
         return "";
     }
     const char* str = data.c_str();
@@ -103,18 +103,18 @@ string utf8_to(const char* charset, const string& data) {
     char* out_str = (char*)alloca(max_len + 16);
     if (out_str == nullptr) {
         iconv_close(conv);
-        CONSOLE_ERROR("alloca error");
+        LOG_SYSTEM_ERROR("alloca");
         return "";
     }
     int ret = iconv(conv, (char**)&str, &len, &out_str, &out_len);
     if (ret == -1) {
         iconv_close(conv);
-        CONSOLE_ERROR("iconv error");
+        LOG_SYSTEM_ERROR("iconv");
         return "";
     }
     if (out_len > max_len) {
         iconv_close(conv);
-        CONSOLE_ERROR("buffer lenth not enough");
+        LOG_ERROR("buffer lenth not enough");
         return "";
     }
     iconv_close(conv);

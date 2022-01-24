@@ -45,12 +45,12 @@ TEST_F(test_fixture_t, yaml_load_file) {
         for (auto include : include_node) {
             std::string os = yaml_get_value<std::string>(include, "os");
             std::string compiler = yaml_get_value<std::string>(include, "compiler");
-            CONSOLE_DEBUG("os: {}, compiler: {}", os, compiler);
+            LOG_DEBUG("os: {}, compiler: {}", os, compiler);
         }
 
     } catch (const std::exception& ex) {
-        CONSOLE_ERROR("{}", ex.what());
+        LOG_ERROR("{}", ex.what());
     } catch (...) {
-        CONSOLE_ERROR("unknow exception");
+        LOG_ERROR("unknow exception");
     }
 }

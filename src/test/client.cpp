@@ -32,41 +32,41 @@ shared_ptr<client> client::get_instance() { return g_client; }
 
 void client::signal_handler_t(int signum) {
     if (signum == SIGPIPE) {
-        CONSOLE_DEBUG("recv SIGPIPE signal");
+        LOG_DEBUG("recv SIGPIPE signal");
     }
     if (signum == SIGINT) {
-        CONSOLE_DEBUG("recv SIGINT signal");
+        LOG_DEBUG("recv SIGINT signal");
         g_client->stop();
     }
     if (signum == SIGTERM) {
-        CONSOLE_DEBUG("recv SIGTERM signal");
+        LOG_DEBUG("recv SIGTERM signal");
     }
 }
 
 int client::start() {
     m_epoll_fd = epoll_create1(0);
     if (-1 == m_epoll_fd) {
-        CONSOLE_ERROR("epoll_create1 error");
+        LOG_ERROR("epoll_create1 error");
         return -1;
     }
     if (SIG_ERR == signal(SIGPIPE, signal_handler_t)) {
-        CONSOLE_ERROR("signal error");
+        LOG_ERROR("signal error");
         return -1;
     }
     if (SIG_ERR == signal(SIGINT, signal_handler_t)) {
-        CONSOLE_ERROR("signal error");
+        LOG_ERROR("signal error");
         return -1;
     }
     if (SIG_ERR == signal(SIGTERM, signal_handler_t)) {
-        CONSOLE_ERROR("signal error");
+        LOG_ERROR("signal error");
         return -1;
     }
     if (-1 == tcp_socket_start()) {
-        CONSOLE_ERROR("tcp_socket_start error");
+        LOG_ERROR("tcp_socket_start error");
         return -1;
     }
     if (-1 == udp_socket_start()) {
-        CONSOLE_ERROR("udp_socket_start error");
+        LOG_ERROR("udp_socket_start error");
         return -1;
     }
     event_loop();
@@ -102,11 +102,11 @@ int client::tcp_socket_start() {
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(TCP_LISTEN_PORT);
     server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
-    CONSOLE_DEBUG("server ip:{}", SERVER_IP);
+    LOG_DEBUG("server ip:{}", SERVER_IP);
     m_tcp_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     int ret = connect_timeout(m_tcp_fd, (struct sockaddr*)&server_addr, sizeof(server_addr), 3, 0);
     if (ret == -1) {
-        CONSOLE_ERROR("connect error");
+        LOG_ERROR("connect error");
         close(m_tcp_fd);
         m_tcp_fd = -1;
         return -1;
@@ -115,7 +115,7 @@ int client::tcp_socket_start() {
     event.data.fd = m_tcp_fd;
     event.events = EPOLLIN | EPOLLET;
     if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_tcp_fd, &event)) {
-        CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_ADD, {}) error", m_epoll_fd, m_tcp_fd);
+        LOG_ERROR("epoll_ctl({}, EPOLL_CTL_ADD, {}) error", m_epoll_fd, m_tcp_fd);
         return -1;
     }
     m_tcp_conn = make_shared<connector>(m_tcp_fd, inet_ntoa(server_addr.sin_addr), nullptr);
@@ -124,17 +124,17 @@ int client::tcp_socket_start() {
 
 int client::connect_timeout(int fd, const struct sockaddr* addr, socklen_t addrlen, int nsec, int usec) {
     if (-1 == make_socket_nonblocking(fd)) {
-        CONSOLE_ERROR("make_socket_nonblocking({}) error", fd);
+        LOG_ERROR("make_socket_nonblocking({}) error", fd);
         return -1;
     }
     int ret = connect(fd, addr, addrlen);
     if (ret == 0) {
-        CONSOLE_DEBUG("connect直接成功");
+        LOG_DEBUG("connect直接成功");
         return 0;
     }
     // ret=-1的情况
     if (errno != EINPROGRESS) {
-        CONSOLE_ERROR("connect error");
+        LOG_ERROR("connect error");
         return -1;
     }
     struct timeval timeout;
@@ -145,11 +145,11 @@ int client::connect_timeout(int fd, const struct sockaddr* addr, socklen_t addrl
     FD_SET(fd, &write_set);
     int count = select(fd + 1, nullptr, &write_set, nullptr, &timeout);
     if (count == 0) {
-        CONSOLE_ERROR("select timeout");
+        LOG_ERROR("select timeout");
         return -1;
     }
     if (count == -1) {
-        CONSOLE_ERROR("select error");
+        LOG_ERROR("select error");
         return -1;
     }
     // count>0的情况
@@ -157,16 +157,16 @@ int client::connect_timeout(int fd, const struct sockaddr* addr, socklen_t addrl
         int err = 0;
         socklen_t len = sizeof(err);
         if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &err, &len) == -1) {
-            CONSOLE_ERROR("getsockopt error");
+            LOG_ERROR("getsockopt error");
             return -1;
         }
         if (err != 0) {
-            CONSOLE_ERROR("connect error");
+            LOG_ERROR("connect error");
             return -1;
         }
         return 0;
     } else {
-        CONSOLE_ERROR("FD_ISSET error");
+        LOG_ERROR("FD_ISSET error");
         return -1;
     }
 }
@@ -180,25 +180,25 @@ int client::udp_socket_start() {
     // TCP套接字调用connect会引发三次握手，而UDP套接字则不会引发三次握手，只是检查是否存在错误，然后立即返回
     int ret = connect(m_udp_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
     if (-1 == ret) {
-        CONSOLE_DEBUG("connect ip:{} port:{} failure", SERVER_IP, TCP_LISTEN_PORT);
+        LOG_DEBUG("connect ip:{} port:{} failure", SERVER_IP, TCP_LISTEN_PORT);
     }
     if (-1 == make_socket_nonblocking(m_udp_fd)) {
-        CONSOLE_ERROR("make_socket_nonblocking({}) error", m_udp_fd);
+        LOG_ERROR("make_socket_nonblocking({}) error", m_udp_fd);
         return -1;
     }
     if (-1 == set_socket_rcvbuf(m_udp_fd, UDP_RCV_BUF)) {
-        CONSOLE_ERROR("set_socket_rcvbuf({}, {}) error", m_udp_fd, UDP_RCV_BUF);
+        LOG_ERROR("set_socket_rcvbuf({}, {}) error", m_udp_fd, UDP_RCV_BUF);
         return -1;
     }
     if (-1 == set_socket_sndbuf(m_udp_fd, UDP_SND_BUF)) {
-        CONSOLE_ERROR("set_socket_sndbuf({}, {}) error", m_udp_fd, UDP_SND_BUF);
+        LOG_ERROR("set_socket_sndbuf({}, {}) error", m_udp_fd, UDP_SND_BUF);
         return -1;
     }
     struct epoll_event event;
     event.data.fd = m_udp_fd;
     event.events = EPOLLIN | EPOLLET;
     if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_udp_fd, &event)) {
-        CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_ADD, {}) error", m_epoll_fd, m_udp_fd);
+        LOG_ERROR("epoll_ctl({}, EPOLL_CTL_ADD, {}) error", m_epoll_fd, m_udp_fd);
         return -1;
     }
     return 0;
@@ -209,7 +209,7 @@ void client::event_loop() {
     while (m_flag) {
         int count = epoll_wait(m_epoll_fd, events, 128, -1);
         if (-1 == count) {
-            CONSOLE_ERROR("epoll_wait({}) error", m_epoll_fd);
+            LOG_ERROR("epoll_wait({}) error", m_epoll_fd);
             return;
         }
         for (int i = 0; i < count; i++) {
@@ -220,7 +220,7 @@ void client::event_loop() {
                     do_udp_recvfrom();
                 }
             } else if (events[i].events & EPOLLOUT) {
-                CONSOLE_DEBUG("EPOLLOUT");
+                LOG_DEBUG("EPOLLOUT");
             }
         }
     }
@@ -239,17 +239,17 @@ void client::do_tcp_recv() {
             } else if (errno == EINTR) {
                 continue;
             } else {
-                CONSOLE_ERROR("fd:{} abnormal disconnection", m_tcp_fd);
+                LOG_ERROR("fd:{} abnormal disconnection", m_tcp_fd);
                 if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_tcp_fd, nullptr)) {
-                    CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_tcp_fd);
+                    LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_tcp_fd);
                 }
                 break;
             }
         }
         if (ret == 0) {
-            CONSOLE_ERROR("fd:{} normal disconnection", m_tcp_fd);
+            LOG_ERROR("fd:{} normal disconnection", m_tcp_fd);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_tcp_fd, nullptr)) {
-                CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_tcp_fd);
+                LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_tcp_fd);
             }
             break;
         }
@@ -269,17 +269,17 @@ void client::do_tcp_send(int fd, const char* data, int len) {
             } else if (errno == EINTR) {
                 continue;
             } else {
-                CONSOLE_ERROR("fd:{} ip:{} abnormal disconnection", fd, m_tcp_conn->m_ip);
+                LOG_ERROR("fd:{} ip:{} abnormal disconnection", fd, m_tcp_conn->m_ip);
                 if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                    CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
+                    LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
                 }
                 break;
             }
         }
         if (ret == 0) {
-            CONSOLE_ERROR("fd:{} ip:{} normal disconnection", fd, m_tcp_conn->m_ip);
+            LOG_ERROR("fd:{} ip:{} normal disconnection", fd, m_tcp_conn->m_ip);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
+                LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
             }
             break;
         }
@@ -293,7 +293,7 @@ void client::do_udp_recvfrom() {
         socklen_t addr_len = sizeof(addr);
         ssize_t ret = recvfrom(m_udp_fd, buf, UDP_RCV_BUF, 0, (struct sockaddr*)&addr, &addr_len);
         if (ret > 0) {
-            CONSOLE_DEBUG("fd:{} recvfrom:{} data:{}", m_udp_fd, inet_ntoa(addr.sin_addr), buf);
+            LOG_DEBUG("fd:{} recvfrom:{} data:{}", m_udp_fd, inet_ntoa(addr.sin_addr), buf);
             continue;
         } else if (ret == -1) {
             if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
@@ -301,9 +301,9 @@ void client::do_udp_recvfrom() {
             } else if (errno == EINTR) {
                 continue;
             } else {
-                CONSOLE_ERROR("fd:{} abnormal disconnection", m_udp_fd);
+                LOG_ERROR("fd:{} abnormal disconnection", m_udp_fd);
                 if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, nullptr)) {
-                    CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_udp_fd);
+                    LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_udp_fd);
                 }
                 close(m_udp_fd);
                 m_udp_fd = -1;
@@ -311,9 +311,9 @@ void client::do_udp_recvfrom() {
             }
         }
         if (ret == 0) {
-            CONSOLE_ERROR("fd:{} normal disconnection", m_udp_fd);
+            LOG_ERROR("fd:{} normal disconnection", m_udp_fd);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_udp_fd, nullptr)) {
-                CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_udp_fd);
+                LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_udp_fd);
             }
             close(m_udp_fd);
             m_udp_fd = -1;
@@ -336,9 +336,9 @@ void client::do_udp_sendto(int fd, const char* data, int len, struct sockaddr_in
             } else if (errno == EINTR) {
                 continue;
             } else {
-                CONSOLE_ERROR("fd:{} abnormal disconnection", fd);
+                LOG_ERROR("fd:{} abnormal disconnection", fd);
                 if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                    CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
+                    LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
                 }
                 close(fd);
                 fd = -1;
@@ -346,9 +346,9 @@ void client::do_udp_sendto(int fd, const char* data, int len, struct sockaddr_in
             }
         }
         if (ret == 0) {
-            CONSOLE_ERROR("fd:{} normal disconnection", fd);
+            LOG_ERROR("fd:{} normal disconnection", fd);
             if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                CONSOLE_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
+                LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
             }
             close(fd);
             fd = -1;

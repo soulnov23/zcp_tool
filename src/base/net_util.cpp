@@ -16,11 +16,11 @@
 int make_socket_blocking(int fd) {
     int flags;
     if ((flags = fcntl(fd, F_GETFL, nullptr)) == -1) {
-        CONSOLE_ERROR("fcntl({}, F_GETFL) error", fd);
+        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
         return -1;
     }
     if (fcntl(fd, F_SETFL, flags & ~O_NONBLOCK) == -1) {
-        CONSOLE_ERROR("fcntl({}, F_SETFL) error", fd);
+        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
         return -1;
     }
     return 0;
@@ -29,11 +29,11 @@ int make_socket_blocking(int fd) {
 int make_socket_nonblocking(int fd) {
     int flags;
     if ((flags = fcntl(fd, F_GETFL, nullptr)) == -1) {
-        CONSOLE_ERROR("fcntl({}, F_GETFL) error", fd);
+        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
         return -1;
     }
     if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
-        CONSOLE_ERROR("fcntl({}, F_SETFL) error", fd);
+        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
         return -1;
     }
     return 0;
@@ -62,11 +62,11 @@ int make_socket_keepalive(int fd) {
 int make_socket_cloexec(int fd) {
     int flags;
     if ((flags = fcntl(fd, F_GETFD, nullptr)) == -1) {
-        CONSOLE_ERROR("fcntl({}, F_GETFD) error", fd);
+        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
         return -1;
     }
     if (fcntl(fd, F_SETFD, flags | FD_CLOEXEC) == -1) {
-        CONSOLE_ERROR("fcntl({}, F_SETFD) error", fd);
+        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
         return -1;
     }
     return 0;
@@ -84,16 +84,16 @@ bool is_private_ip(const string& ip) {
     int ret = inet_pton(AF_INET, ip.c_str(), &addr);
     // IP格式校验
     if (ret == 0) {
-        CONSOLE_ERROR("ip error");
+        LOG_ERROR("ip error");
         return false;
     } else if (ret == -1) {
-        CONSOLE_ERROR("inet_pton error");
+        LOG_SYSTEM_ERROR("inet_pton ip: {}", ip);
         return false;
     }
     unsigned int ip_piece[2];
     //取IP前两段
     if (sscanf(ip.c_str(), "%u.%u", &ip_piece[0], &ip_piece[1]) != 2) {
-        CONSOLE_ERROR("sscanf error");
+        LOG_SYSTEM_ERROR("sscanf");
         return false;
     }
     unsigned int value = ip_piece[0] * 256 * 256 * 256 + ip_piece[1] * 256 * 256;
@@ -114,7 +114,7 @@ string net_int_ip2str(uint32_t ip) {
     char buf[128] = {0};
     addr_in.sin_addr.s_addr = ip;
     if (inet_ntop(AF_INET, &addr_in.sin_addr, buf, sizeof(buf)) == nullptr) {
-        CONSOLE_ERROR("inet_ntop error");
+        LOG_SYSTEM_ERROR("inet_ntop");
         return "";
     }
     return buf;
@@ -135,10 +135,10 @@ uint32_t str2net_int_ip(const string& ip) {
     int ret = inet_pton(AF_INET, ip.c_str(), &addr_in.sin_addr);
     // IP格式校验
     if (ret == 0) {
-        CONSOLE_ERROR("ip error");
+        LOG_ERROR("ip error");
         return 0;
     } else if (ret == -1) {
-        CONSOLE_ERROR("inet_pton error");
+        LOG_SYSTEM_ERROR("inet_ntop");
         return 0;
     }
     return addr_in.sin_addr.s_addr;
@@ -150,7 +150,7 @@ int get_peer_name(int fd, uint32_t& peer_addr, uint16_t& peer_port) {
     struct sockaddr_in addr;
     socklen_t len = sizeof(addr);
     if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
-        CONSOLE_ERROR("getpeername({}) error", fd);
+        LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
         return -1;
     }
     peer_addr = addr.sin_addr.s_addr;
@@ -162,7 +162,7 @@ int get_sock_name(int fd, uint32_t& peer_addr, uint16_t& peer_port) {
     struct sockaddr_in addr;
     socklen_t len = sizeof(addr);
     if (getsockname(fd, (struct sockaddr*)(&addr), &len) == -1) {
-        CONSOLE_ERROR("getsockname({}) error", fd);
+        LOG_SYSTEM_ERROR("getsockname fd: {}", fd);
         return -1;
     }
     peer_addr = addr.sin_addr.s_addr;
@@ -194,14 +194,14 @@ bool get_local_ip(const char* eth_name, string& ip) {
         int num = ifc.ifc_len/sizeof(struct ifreq);
         for (int i = num; i > 0; i--) {
                 //设备名称
-                CONSOLE_DEBUG("interface name:[{}]",
+                LOG_DEBUG("interface name:[{}]",
 interface[i].ifr_ifrn.ifrn_name);
                 if (strstr(interface[i].ifr_ifrn.ifrn_name, eth_name) !=
 nullptr) {
                         if (ioctl(fd, SIOCGIFADDR, (char*)&interface[i]) == 0) {
                                 ip = net_int_ip2str((((struct
 sockaddr_in*)(&(interface[i].ifr_ifru.ifru_addr)))->sin_addr.s_addr));
-                                CONSOLE_DEBUG("ip:[{}]", ip.c_str());
+                                LOG_DEBUG("ip:[{}]", ip.c_str());
                                 ret = true;
                         }
                 }
@@ -216,7 +216,7 @@ bool get_local_ip(const char* eth_name, string& ip) {
 
     int fd = -1;
     if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-        CONSOLE_ERROR();
+        LOG_SYSTEM_ERROR("socket");
         return ret;
     }
 
@@ -226,7 +226,7 @@ bool get_local_ip(const char* eth_name, string& ip) {
         ip = net_int_ip2str((((struct sockaddr_in*)(&(interface.ifr_ifru.ifru_addr)))->sin_addr.s_addr));
         ret = true;
     } else {
-        CONSOLE_ERROR();
+        LOG_SYSTEM_ERROR("ioctl fd: {}", fd);
     }
     close(fd);
     return ret;
@@ -237,7 +237,7 @@ bool get_local_mac(const char* eth_name, string& mac) {
 
     int fd = -1;
     if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-        CONSOLE_ERROR();
+        LOG_SYSTEM_ERROR("socket");
         return ret;
     }
 
@@ -253,7 +253,7 @@ bool get_local_mac(const char* eth_name, string& mac) {
         mac = temp_mac;
         ret = true;
     } else {
-        CONSOLE_ERROR();
+        LOG_SYSTEM_ERROR("ioctl fd: {}", fd);
     }
     close(fd);
     return ret;
@@ -265,7 +265,7 @@ int set_signal_handle(int sig_no, void (*handle)(int, siginfo_t*, void*)) {
     sig.sa_flags = SA_SIGINFO;
     sig.sa_sigaction = handle;
     if (sigaction(sig_no, &sig, nullptr) != 0) {
-        CONSOLE_ERROR();
+        LOG_SYSTEM_ERROR("sigaction sig: {}", sig_no);
         return -1;
     }
     return 0;

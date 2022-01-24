@@ -30,7 +30,7 @@ map<string, string> json_to_map(const string& data) {
     Document content_json_doc;
     content_json_doc.Parse(data.c_str());
     if (content_json_doc.HasParseError() || !content_json_doc.IsObject()) {
-        CONSOLE_ERROR("json error [{}]", data.c_str());
+        LOG_ERROR("json error [{}]", data.c_str());
         return record;
     }
     for (auto it = content_json_doc.MemberBegin(); it != content_json_doc.MemberEnd(); it++) {
@@ -85,7 +85,7 @@ Document string_to_json(const string& data) {
     Document doc;
     doc.Parse(data.c_str());
     if (doc.HasParseError() || !doc.IsObject()) {
-        CONSOLE_ERROR("json error [{}]", data.c_str());
+        LOG_ERROR("json error [{}]", data.c_str());
     }
     return doc;
 }
@@ -116,27 +116,27 @@ int get_batch_no(string& batch_no) {
     string post_string("");
     int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
-        CONSOLE_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
+        LOG_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
         return -1;
     }
-    // CONSOLE_DEBUG("rsp_string:[{}]", rsp_string.c_str());
+    // LOG_DEBUG("rsp_string:[{}]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        CONSOLE_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
+        LOG_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
 
     Document doc;
     doc.Parse(rsp_string.c_str());
     if (doc.HasParseError() || !doc.IsObject()) {
-        CONSOLE_ERROR("json error json=[{}]", rsp_string.c_str());
+        LOG_ERROR("json error json=[{}]", rsp_string.c_str());
         return -1;
     }
     Value::MemberIterator api_web_mem = doc.FindMember("ApiWebProperties");
     if ((api_web_mem == doc.MemberEnd()) || !api_web_mem->value.IsObject()) {
-        CONSOLE_ERROR("ApiWebProperties is not in json or not int format");
+        LOG_ERROR("ApiWebProperties is not in json or not int format");
         return -1;
     }
     Value api_web_object(kObjectType);
@@ -144,11 +144,11 @@ int get_batch_no(string& batch_no) {
 
     Value::MemberIterator batch_no_mem = api_web_object.FindMember("CurrentBatchNumber");
     if ((batch_no_mem == api_web_object.MemberEnd()) || !batch_no_mem->value.IsInt()) {
-        CONSOLE_ERROR("value is not in json or not int format");
+        LOG_ERROR("value is not in json or not int format");
         return -1;
     }
     g_batch_no = to_string(batch_no_mem->value.GetInt());
-    CONSOLE_DEBUG("CurrentBatchNumber[{}]", g_batch_no.c_str());
+    LOG_DEBUG("CurrentBatchNumber[{}]", g_batch_no.c_str());
     return 0;
 }
 
@@ -156,7 +156,7 @@ int balance_enquiry() {
     map<string, string> map_data;
     map_data["CardNumber"] = g_card_no;
     string post_string = move(map_to_json(map_data));
-    // CONSOLE_DEBUG("post_string:[{}]", post_string.c_str());
+    // LOG_DEBUG("post_string:[{}]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
         "balanceenquiry";
@@ -169,19 +169,19 @@ int balance_enquiry() {
     string rsp_string;
     int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
-        CONSOLE_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
+        LOG_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
         return -1;
     }
-    // CONSOLE_DEBUG("rsp_string:[{}]", rsp_string.c_str());
+    // LOG_DEBUG("rsp_string:[{}]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        CONSOLE_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
+        LOG_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
     string balance = map_return["Amount"];
-    CONSOLE_DEBUG("Amount[{}]", balance.c_str());
+    LOG_DEBUG("Amount[{}]", balance.c_str());
     return 0;
 }
 
@@ -196,7 +196,7 @@ int redeem() {
     map_data["CardPIN"] = g_card_pin;
     map_data["Notes"] = "desc";
     string post_string = move(map_to_json(map_data));
-    // CONSOLE_DEBUG("post_string:[{}]", post_string.c_str());
+    // LOG_DEBUG("post_string:[{}]", post_string.c_str());
     string url = "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/redeem";
     vector<string> vecHeadInfo = g_vecHeadInfo;
     string transaction_id = string("TransactionId: ") + order_id;
@@ -209,10 +209,10 @@ int redeem() {
     string rsp_string;
     int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
-        CONSOLE_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
+        LOG_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
         return -1;
     }
-    // CONSOLE_DEBUG("rsp_string:[{}]", rsp_string.c_str());
+    // LOG_DEBUG("rsp_string:[{}]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
     g_OriginalInvoiceNumber = order_id;
     g_OriginalBatchNumber = g_batch_no;
@@ -220,10 +220,10 @@ int redeem() {
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        CONSOLE_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
+        LOG_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
-    CONSOLE_DEBUG("redeem {} success", g_amount.c_str());
+    LOG_DEBUG("redeem {} success", g_amount.c_str());
     return 0;
 }
 
@@ -236,7 +236,7 @@ int cancel_redeem() {
     map_data["OriginalBatchNumber"] = g_OriginalBatchNumber;
     map_data["OriginalTransactionId"] = g_OriginalTransactionId;
     string post_string = move(map_to_json(map_data));
-    // CONSOLE_DEBUG("post_string:[{}]", post_string.c_str());
+    // LOG_DEBUG("post_string:[{}]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
         "cancelredeem";
@@ -251,18 +251,18 @@ int cancel_redeem() {
     string rsp_string;
     int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
-        CONSOLE_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
+        LOG_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
         return -1;
     }
-    // CONSOLE_DEBUG("rsp_string:[{}]", rsp_string.c_str());
+    // LOG_DEBUG("rsp_string:[{}]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        CONSOLE_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
+        LOG_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
-    CONSOLE_DEBUG("cancel redeem {} success", g_amount.c_str());
+    LOG_DEBUG("cancel redeem {} success", g_amount.c_str());
     return 0;
 }
 
@@ -272,7 +272,7 @@ int reverse_redeem() {
     map_data["CardNumber"] = g_card_no;
     map_data["InvoiceNumber"] = order_id;
     string post_string = move(map_to_json(map_data));
-    // CONSOLE_DEBUG("post_string:[{}]", post_string.c_str());
+    // LOG_DEBUG("post_string:[{}]", post_string.c_str());
     string url =
         "https://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/gc/"
         "reverseredeem";
@@ -287,15 +287,15 @@ int reverse_redeem() {
     string rsp_string;
     int ret = http_proc(url, 10, &vecHeadInfo, post_string, rsp_string, err_code, err_msg);
     if (ret != 0) {
-        CONSOLE_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
+        LOG_ERROR("err_code:[{}] err_msg:[{}]", err_code, err_msg.c_str());
         return -1;
     }
-    // CONSOLE_DEBUG("rsp_string:[{}]", rsp_string.c_str());
+    // LOG_DEBUG("rsp_string:[{}]", rsp_string.c_str());
     map<string, string> map_return = move(json_to_map(rsp_string));
     string rsp_code = map_return["ResponseCode"];
     string rsp_msg = map_return["ResponseMessage"];
     if (rsp_code != "0") {
-        CONSOLE_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
+        LOG_ERROR("rsp_code[{}] rsp_msg[{}]", rsp_code.c_str(), rsp_msg.c_str());
         return -1;
     }
     return 0;
