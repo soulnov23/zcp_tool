@@ -9,4 +9,4 @@ export LD_LIBRARY_PATH=$LIB_PATH:$LD_LIBRARY_PATH
 ulimit -c unlimited
 mkdir -p ../log
 
-echo "[$curtime] [echo] init zcp_server success"
+echo "[$curtime] [echo] init zcp_tool success"

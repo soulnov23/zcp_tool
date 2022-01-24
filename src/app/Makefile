@@ -2,7 +2,7 @@ include ../../Inc.mk
 
 SRC := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp, %.o, $(SRC))
-BIN = $(BIN_DIR)/zcp_server
+BIN = $(BIN_DIR)/zcp_tool
 
 CFLAGS   +=
 CXXFLAGS +=
