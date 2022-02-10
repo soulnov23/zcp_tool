@@ -11,7 +11,11 @@ fd_lock_guard::fd_lock_guard(int fd) : fd_(fd) {}
 
 fd_lock_guard::~fd_lock_guard() { unlock(); };
 
+fd_lock_guard::operator int() { return fd_; }
+
 void fd_lock_guard::operator=(int fd) { fd_ = fd; }
+
+bool fd_lock_guard::operator==(int fd) { return fd_ == fd; }
 
 int fd_lock_guard::lock(bool non_blocking) {
     struct flock fd_lock;

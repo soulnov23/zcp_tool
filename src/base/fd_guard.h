@@ -23,6 +23,8 @@ public:
     operator int() { return fd_; }
     // 支持fd_guard等号赋值int类型
     void operator=(int fd) { fd_ = fd; }
+    // 支持fd_guard比较int类型
+    bool operator==(int fd) { return fd_ == fd; }
 
 private:
     int fd_;
