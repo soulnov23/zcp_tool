@@ -5,12 +5,13 @@
 
 #include "src/base/log.h"
 
+fd_lock_guard::fd_lock_guard() : fd_(-1) {}
+
 fd_lock_guard::fd_lock_guard(int fd) : fd_(fd) {}
 
-fd_lock_guard::~fd_lock_guard() {
-    // 解锁除非系统调用失败，否则都是成功
-    unlock();
-};
+fd_lock_guard::~fd_lock_guard() { unlock(); };
+
+void fd_lock_guard::operator=(int fd) { fd_ = fd; }
 
 int fd_lock_guard::lock(bool non_blocking) {
     struct flock fd_lock;
@@ -31,22 +32,18 @@ int fd_lock_guard::lock(bool non_blocking) {
     } else {
         // 阻塞用来判断是否写
         if (-1 == fcntl(fd_, F_SETLKW, &fd_lock)) {
-            LOG_SYSTEM_ERROR("fcntl");
+            LOG_SYSTEM_ERROR("fcntl fd: {}", fd_);
             return -1;
         }
     }
     return 0;
 }
 
-int fd_lock_guard::unlock() {
+void fd_lock_guard::unlock() {
     struct flock fd_lock;
     fd_lock.l_type = F_UNLCK;
     fd_lock.l_whence = SEEK_SET;
     fd_lock.l_start = 0;
     fd_lock.l_len = 0;
-    if (-1 == fcntl(fd_, F_SETLK, &fd_lock)) {
-        LOG_SYSTEM_ERROR("fcntl fd: {}", fd_);
-        return -1;
-    }
-    return 0;
+    fcntl(fd_, F_SETLK, &fd_lock);
 }
