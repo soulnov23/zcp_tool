@@ -259,11 +259,11 @@ bool get_local_mac(const char* eth_name, string& mac) {
     return ret;
 }
 
-int set_signal_handle(int sig_no, void (*handle)(int, siginfo_t*, void*)) {
+int set_signal_handler(int sig_no, void (*handler)(int, siginfo_t*, void*)) {
     struct sigaction sig;
     memset(&sig, 0, sizeof(struct sigaction));
     sig.sa_flags = SA_SIGINFO;
-    sig.sa_sigaction = handle;
+    sig.sa_sigaction = handler;
     if (sigaction(sig_no, &sig, nullptr) != 0) {
         LOG_SYSTEM_ERROR("sigaction sig: {}", sig_no);
         return -1;

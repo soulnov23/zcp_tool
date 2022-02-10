@@ -33,6 +33,6 @@ int get_sock_name(int fd, uint32_t& peer_addr, uint16_t& peer_port);
 bool get_local_ip(const char* eth_name, string& ip);
 bool get_local_mac(const char* eth_name, string& mac);
 
-int set_signal_handle(int sig_no, void (*handle)(int, siginfo_t*, void*));
+int set_signal_handler(int sig_no, void (*handler)(int, siginfo_t*, void*));
 
 #endif
