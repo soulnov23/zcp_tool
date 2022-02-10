@@ -45,9 +45,10 @@
     } while (0)
 
 struct logger_config {
-    std::string logger_name = "default_logger";
+    std::string name = "default_logger";
+    spdlog::level::level_enum level = spdlog::level::trace;
     std::string format = "[%Y-%m-%d %H:%M:%S.%f] [%P] [%^%l%$] [%s:%# %!()] %v";
-    std::string filename = "../log/default.log";
+    std::string file_name = "../log/default.log";
     // by_size按大小分割 by_day按天分割 by_hour按小时分割
     std::string roll_type = "by_day";
     unsigned int reserve_count = 10;
@@ -68,7 +69,7 @@ public:
 
     int set_config(const logger_config& config);
 
-    void log(const char* filename_in, int line_in, const char* funcname_in, spdlog::level::level_enum level,
+    void log(const char* file_name_in, int line_in, const char* func_name_in, spdlog::level::level_enum level,
              const std::string& msg);
 
 private:

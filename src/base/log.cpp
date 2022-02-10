@@ -21,13 +21,13 @@ int logger::set_config(const logger_config& config) {
     do {
         try {
             if (config.roll_type == "by_size") {
-                sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(config.filename, config.roll_size,
+                sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(config.file_name, config.roll_size,
                                                                                config.reserve_count, true);
             } else if (config.roll_type == "by_day") {
-                sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(config.filename, config.rotation_hour,
+                sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(config.file_name, config.rotation_hour,
                                                                             config.rotation_minute, false, config.reserve_count);
             } else if (config.roll_type == "by_hour") {
-                sink_ = std::make_shared<spdlog::sinks::hourly_file_sink_mt>(config.filename, false, config.reserve_count);
+                sink_ = std::make_shared<spdlog::sinks::hourly_file_sink_mt>(config.file_name, false, config.reserve_count);
             } else {
                 ret = 1;
                 CONSOLE_ERROR("invalid roll_type: {}", config.roll_type.c_str());
@@ -38,11 +38,11 @@ int logger::set_config(const logger_config& config) {
             // unique_ptr不能复制，无法通过值传递调用set_formatter，只能使用move
             sink_->set_formatter(std::move(formatter));
             thread_pool_ = std::make_shared<spdlog::details::thread_pool>(config.async_thread_pool_size, 1);
-            logger_ = std::make_shared<spdlog::async_logger>(config.logger_name, sink_, thread_pool_,
-                                                             spdlog::async_overflow_policy::block);
+            logger_ =
+                std::make_shared<spdlog::async_logger>(config.name, sink_, thread_pool_, spdlog::async_overflow_policy::block);
             // 设置默认刷新级别和打印级别
             logger_->flush_on(spdlog::level::trace);
-            logger_->set_level(spdlog::level::trace);
+            logger_->set_level(config.level);
             // 注册到spdlog
             spdlog::register_logger(logger_);
         } catch (const std::exception& ex) {
@@ -56,10 +56,10 @@ int logger::set_config(const logger_config& config) {
     return ret;
 }
 
-void logger::log(const char* filename_in, int line_in, const char* funcname_in, spdlog::level::level_enum level,
+void logger::log(const char* file_name_in, int line_in, const char* func_name_in, spdlog::level::level_enum level,
                  const std::string& msg) {
     try {
-        logger_->log(spdlog::source_loc{filename_in, line_in, funcname_in}, level, msg);
+        logger_->log(spdlog::source_loc{file_name_in, line_in, func_name_in}, level, msg);
     } catch (const std::exception& ex) {
         CONSOLE_ERROR("{}", ex.what());
     } catch (...) {
