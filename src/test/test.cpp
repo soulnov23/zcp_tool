@@ -36,7 +36,7 @@ int lock(int fd_) {
             CONSOLE_ERROR("fd lock by other process");
             return -1;
         }
-        CONSOLE_ERROR("fd lock err");
+        CONSOLE_SYSTEM_ERROR("fcntl fd: {}", fd_);
         return -1;
     }
     return 0;
@@ -49,7 +49,8 @@ int unlock(int fd_) {
     fd_lock.l_start = 0;
     fd_lock.l_len = 0;
     if (-1 == fcntl(fd_, F_SETLK, &fd_lock)) {
-        CONSOLE_ERROR("fd unlock err");
+        CONSOLE_SYSTEM_ERROR("fcntl fd: {}", fd_);
+        return -1;
     }
     return 0;
 }
@@ -69,26 +70,28 @@ int main(int argc, char* argv[]) {
     YAML::Node env = node["matrix"]["env"];
     get_type(env);
     */
-    fd_guard fd(open("test.txt", O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRWXU));
-    if (fd == -1) {
+    fd_guard fd1(open("test.txt", O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRWXU));
+    if (fd1 == -1) {
         CONSOLE_ERROR("open err");
         return -1;
     }
-    unlock(fd);
-    if (lock(fd) == -1) {
+    unlock(fd1);
+    if (lock(fd1) == -1) {
         CONSOLE_ERROR("fd_lock.lock err");
         return -1;
     }
-    if (lock(fd) == -1) {
+    if (lock(fd1) == -1) {
         CONSOLE_ERROR("fd_lock.lock err");
         return -1;
     }
-    ssize_t size = write(fd, "123", 3);
+    ssize_t size = write(fd1, "123", 3);
     if (size != 3) {
         CONSOLE_ERROR("write err");
         return -1;
     }
-    unlock(fd);
+    while (true) {
+        sleep(3);
+    }
 
     return 0;
 }
