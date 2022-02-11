@@ -18,17 +18,15 @@ struct signal_hander {
     void (*handler)(int, siginfo_t*, void*);
 };
 
-signal_hander signals[] = {
-    {SIGHUP, "SIGHUP", "reload", app::signal_handler_func},
-    {SIGINT, "SIGINT", "", app::signal_handler_func},
-    {SIGQUIT, "SIGQUIT", "quit", app::signal_handler_func},
-    {SIGUSR1, "SIGUSR1", "reopen", app::signal_handler_func},
-    {SIGUSR2, "SIGUSR2", "", app::signal_handler_func},
-    {SIGPIPE, "SIGPIPE", "", app::signal_handler_func},
-    {SIGTERM, "SIGTERM", "stop", app::signal_handler_func},
-    {SIGCHLD, "SIGCHLD", "", app::signal_handler_func},
-    {0, 0, 0, 0},
-};
+signal_hander signals[] = {{SIGHUP, "SIGHUP", "reload", app::signal_handler_func},
+                           {SIGINT, "SIGINT", "", app::signal_handler_func},
+                           {SIGQUIT, "SIGQUIT", "quit", app::signal_handler_func},
+                           {SIGUSR1, "SIGUSR1", "reopen", app::signal_handler_func},
+                           {SIGUSR2, "SIGUSR2", "", app::signal_handler_func},
+                           {SIGPIPE, "SIGPIPE", "", app::signal_handler_func},
+                           {SIGTERM, "SIGTERM", "stop", app::signal_handler_func},
+                           {SIGCHLD, "SIGCHLD", "", app::signal_handler_func},
+                           {0, "", "", nullptr}};
 
 void app::signal_handler_func(int sig_no, siginfo_t* sig_info, void* data) {
     if (sig_no == SIGHUP) {
@@ -127,6 +125,7 @@ int app::start(int argc, char* argv[]) {
     }
     // 至少创建一个子进程
     int n = config_.server.process_num;
+    LOG_DEBUG("n: {}", n);
     do {
         if (fork_child() != 0) {
             LOG_ERROR("fork child error");
@@ -142,13 +141,11 @@ int app::start(int argc, char* argv[]) {
 
 int app::get_option(int argc, char* argv[]) {
     while (true) {
-        static struct option long_options[] = {
-            {"help", no_argument, nullptr, 'h'},
-            {"version", no_argument, nullptr, 'v'},
-            {"conf", required_argument, nullptr, 'c'},
-            {"signal", required_argument, nullptr, 's'},
-            {0, 0, 0, 0},
-        };
+        static struct option long_options[] = {{"help", no_argument, nullptr, 'h'},
+                                               {"version", no_argument, nullptr, 'v'},
+                                               {"conf", required_argument, nullptr, 'c'},
+                                               {"signal", required_argument, nullptr, 's'},
+                                               {0, 0, 0, 0}};
         //关闭getopt_long向stderr打印错误信息
         opterr = 0;
         int option_index = 0;
@@ -218,9 +215,11 @@ int app::signal_process() {
 
 int app::init_signal() {
     for (const auto& signal : signals) {
-        if (set_signal_handler(signal.sig_no, signal.handler) != 0) {
-            LOG_ERROR("set signal handler error");
-            return -1;
+        if (signal.sig_no != 0) {
+            if (set_signal_handler(signal.sig_no, signal.handler) != 0) {
+                LOG_ERROR("set signal handler error");
+                return -1;
+            }
         }
     }
     return 0;
@@ -254,6 +253,9 @@ int app::config_process() {
         LOG_ERROR("unknow exception");
         return -1;
     }
+    LOG_DEBUG("name: {}, process_num: {}, ip: {}, port: {}, backlog: {}, event_num: {}", config_.server.name,
+              config_.server.process_num, config_.server.ip, config_.server.port, config_.server.backlog,
+              config_.server.event_num);
     return 0;
 }
 
@@ -283,6 +285,7 @@ int app::daemon_process() {
 }
 
 int app::create_pid_file() {
+    LOG_DEBUG("create_pid_file");
     fd_guard fd(open(pid_file_.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRWXU));
     if (fd == -1) {
         LOG_SYSTEM_ERROR("open");
@@ -302,6 +305,7 @@ int app::create_pid_file() {
 }
 
 int app::fork_child() {
+    LOG_DEBUG("fork_child");
     pid_t pid = fork();
     if (pid == -1) {
         LOG_SYSTEM_ERROR("fork");
