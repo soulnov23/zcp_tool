@@ -38,9 +38,9 @@ TEST_F(test_fixture_t, console) {
     CONSOLE_DEBUG("{} {}", hello, world);
     CONSOLE_DEBUG("{} {}", world, hello);
     logger_config config;
-    config.filename = "test.log";
+    config.file_name = "test.log";
     EXPECT_EQ(-1, logger::get_instance_atomic()->set_config(config));
-    config.logger_name = "test_logger";
+    config.name = "test_logger";
     EXPECT_EQ(0, logger::get_instance_atomic()->set_config(config));
     CONSOLE_DEBUG("{} {}", hello, world);
     CONSOLE_DEBUG("{} {}", world, hello);
@@ -53,9 +53,9 @@ TEST_F(test_fixture_t, log) {
     LOG_DEBUG("{} {}", hello, world);
     LOG_DEBUG("{1} {0}", world, hello);
     logger_config config;
-    config.filename = "test.log";
+    config.file_name = "test.log";
     EXPECT_EQ(-1, logger::get_instance_atomic()->set_config(config));
-    config.logger_name = "test_logger";
+    config.name = "test_logger";
     EXPECT_EQ(0, logger::get_instance_atomic()->set_config(config));
     LOG_DEBUG("{} {}", hello, world);
     LOG_DEBUG("{1} {0}", world, hello);
