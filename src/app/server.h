@@ -1,42 +1,28 @@
-#ifndef __SERVER_H__
-#define __SERVER_H__
+#pragma once
 
-#include <map>
-#include <memory>
-using namespace std;
-#include "src/base/connector.h"
-#include "src/base/net_util.h"
+#include <atomic>
+
+#include "src/base/fd_guard.h"
 
 class server {
 public:
     server();
     ~server();
 
-    int start();
+    int start(std::string ip, uint16_t port, int backlog, int event_num);
 
 private:
     void stop();
 
 private:
-    static void signal_handle_func(int sig_no, siginfo_t* sig_info, void* data);
+    void handler_accept();
+    void handler_read(int fd);
+    void handler_write(int fd, char* data, size_t size);
+
+    int connect_timeout(int fd, const struct sockaddr_in addr, long nsec, long usec);
 
 private:
-    int init_pid_file();
-    int init_signal();
-    int connect_timeout(int nsec, int usec);
-    int do_listen();
-    void do_accept();
-    void do_recv(int fd);
-    void do_send(int fd, const char* data, int len);
-    void event_loop();
-    void force_exit();
-
-private:
-    bool m_flag;
-    int m_epoll_fd;
-    int m_listen_fd;
-    int m_client_fd;
-    map<int, shared_ptr<connector>> m_fd_conn;
+    std::atomic<bool> terminate_;
+    fd_guard epoll_fd_;
+    fd_guard listen_fd_;
 };
-
-#endif

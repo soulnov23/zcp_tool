@@ -32,14 +32,14 @@ class app : public singleton<app> {
     CLASS_UNCOPYABLE(app)
     CLASS_UNMOVABLE(app)
 
+public:
+    static void signal_handler_func(int sig_no, siginfo_t* sig_info, void* data);
+
+public:
     app();
     ~app();
 
-public:
     int start(int argc, char* argv[]);
-
-public:
-    static void signal_handler_func(int sig_no, siginfo_t* sig_info, void* data);
 
 private:
     int get_option(int argc, char* argv[]);

@@ -309,9 +309,9 @@ int app::fork_child() {
     } else if (pid == 0) {
         //子进程
         server svr;
-        svr.start(config_.server.ip, config_.server.port, config_.server.backlog);
+        int status = svr.start(config_.server.ip, config_.server.port, config_.server.backlog, config_.server.event_num);
         //退出，不然还会接着执行for循环创建更多的子进程的子进程
-        _exit(0);
+        _exit(status);
     }
     // pid > 0
     else {
@@ -320,3 +320,5 @@ int app::fork_child() {
     }
     return 0;
 }
+
+void app::check() {}

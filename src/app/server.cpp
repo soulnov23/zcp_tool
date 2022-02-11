@@ -8,167 +8,100 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "src/base/io_util.h"
 #include "src/base/log.h"
+#include "src/base/net_util.h"
 
-#define SIZE_1K (1024)
-#define SIZE_1M (SIZE_1K) * (SIZE_1K)
+#define SIZE_1K          (1024)
+#define SIZE_1M          (SIZE_1K) * (SIZE_1K)
+#define EPOLL_EVENT_SIZE 10240
 
-#define SERVER_IP       "172.16.1.103"
-#define TCP_LISTEN_PORT 8765
-#define UDP_LISTEN_PORT 5678
-#define UDP_SND_BUF     SIZE_1K
-#define UDP_RCV_BUF     SIZE_1K
+server::server() : epoll_fd_(-1), listen_fd_(-1) {}
 
-server::server() {
-    m_epoll_fd = -1;
-    m_listen_fd = -1;
-    m_client_fd = -1;
-    m_flag = true;
-}
-
-server::~server() { stop(); }
-
-void server::signal_handle_func(int sig_no, siginfo_t* sig_info, void* data) {
-    if (sig_no == SIGCHLD) {
-        LOG_DEBUG("recv signal:SIGCHLD");
-        while (true) {
-            int status = 0;
-            __pid_t pid = waitpid(-1, &status, WNOHANG);
-            //设置了WNOHANG没有子进程了
-            if (pid == 0) {
-                break;
-            } else if (pid == -1) {
-                //设置了WNOHANG没有子进程了
-                if (errno == ECHILD) {
-                    break;
-                } else {
-                    LOG_SYSTEM_ERROR("waitpid");
-                    continue;
-                }
-            }
-            //成功回收pid>0
-            int result = WIFEXITED(status);
-            if (result == 0) {
-                //正常退出
-                LOG_DEBUG("pid:{} normal exit return 0", pid);
-            } else {
-                //异常退出
-                int return_result = WEXITSTATUS(status);
-                LOG_DEBUG("pid:{} abnormal exit return {}", pid, return_result);
-            }
+server::~server() {
+    if (epoll_fd_ != -1) {
+        close(epoll_fd_);
+        epoll_fd_ = -1;
+    }
+    if (listen_fd_ != -1) {
+        if (epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, listen_fd_, nullptr) == -1) {
+            LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", int(listen_fd_));
         }
-    } else if (sig_no == SIGINT) {
-        LOG_DEBUG("recv signal:SIGINT");
-        _exit(0);
-        ;
-    } else if (sig_no == SIGTERM) {
-        LOG_DEBUG("recv signal:SIGTERM");
-        _exit(0);
-        ;
-    } else if (sig_no == SIGQUIT) {
-        LOG_DEBUG("recv signal:SIGQUIT");
-        _exit(0);
-        ;
-    } else if (sig_no == SIGUSR1) {
-        LOG_DEBUG("recv signal:SIGUSR1");
-    } else if (sig_no == SIGIO) {
-        LOG_DEBUG("recv signal:SIGIO");
-    } else if (sig_no == SIGPIPE) {
-        LOG_DEBUG("recv signal:SIGPIPE");
-    } else {
-        LOG_DEBUG("no set signal:{}", sig_no);
+        close(listen_fd_);
+        listen_fd_ = -1;
     }
 }
 
-int server::start() {
-    m_epoll_fd = epoll_create1(EPOLL_CLOEXEC);
-    if (m_epoll_fd == -1) {
-        LOG_ERROR("epoll_create1 error");
+int server::start(std::string ip, uint16_t port, int backlog, int event_num) {
+    epoll_fd_ = epoll_create1(EPOLL_CLOEXEC);
+    if (epoll_fd_ == -1) {
+        LOG_SYSTEM_ERROR("epoll_create1");
         return -1;
     }
-    if (init_signal() == -1) {
-        LOG_ERROR("init_signal error");
-        return -1;
-    }
-    if (do_listen() == -1) {
-        LOG_ERROR("do_listen error");
-        return -1;
-    }
-    event_loop();
-    return 0;
-}
-
-void server::stop() {
-    m_flag = false;
-    if (m_epoll_fd != -1) {
-        close(m_epoll_fd);
-        m_epoll_fd = -1;
-    }
-    if (m_listen_fd != -1) {
-        if (epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_listen_fd, nullptr) == -1) {
-            LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_listen_fd);
-        }
-        close(m_listen_fd);
-        m_listen_fd = -1;
-    }
-    if (m_client_fd != -1) {
-        if (epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, m_client_fd, nullptr) == -1) {
-            LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, m_client_fd);
-        }
-        close(m_client_fd);
-        m_client_fd = -1;
-    }
-}
-
-int server::init_pid_file() {
-    int fd = open("server.pid", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0644);
-    if (fd < 0) {
-        LOG_ERROR("open pid file failed");
-        return -1;
-    }
-
-    pid_t pid = getpid();
-    string str_pid = std::to_string(pid);
-    int ret = -1;
-    while ((ret = write(fd, str_pid.data(), str_pid.size()) == -1) && errno == EINTR)
-        ;
-    if (ret == -1) {
-        LOG_ERROR("write pid file failed");
-        unlink("server.pid");
-    } else {
-        ret = 0;
-    }
-
-    close(fd);
-    return ret;
-}
-
-int server::init_signal() {
-    static const int sigs[] = {SIGINT, SIGTERM, SIGQUIT, SIGCHLD, SIGUSR1, SIGIO, SIGPIPE};
-    const int* begin = std::begin(sigs);
-    const int* end = std::end(sigs);
-    for (; begin != end; begin++) {
-        int ret = set_signal_handle(*begin, signal_handle_func);
-        if (ret != 0) {
-            LOG_ERROR("set_signal_handle error");
-            return -1;
-        }
-    }
-    return 0;
-}
-
-int server::connect_timeout(int nsec, int usec) {
-    int count;
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(TCP_LISTEN_PORT);
-    server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
-    m_client_fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
-    if (m_client_fd == -1) {
-        LOG_ERROR("socket error");
+    server_addr.sin_addr.s_addr = inet_addr(ip.c_str());
+    server_addr.sin_port = htons(port);
+    listen_fd_ = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (listen_fd_ == -1) {
+        LOG_SYSTEM_ERROR("socket");
         return -1;
     }
-    int ret = connect(m_client_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+    if (make_socket_nonblocking(listen_fd_) == -1) {
+        LOG_ERROR("make_socket_nonblocking fd: {} error", int(listen_fd_));
+        return -1;
+    }
+    if (make_socket_cloexec(listen_fd_) == -1) {
+        LOG_ERROR("make_socket_cloexec fd: {} error", int(listen_fd_));
+        return -1;
+    }
+    if (make_socket_reuseaddr(listen_fd_) == -1) {
+        LOG_ERROR("make_socket_reuseaddr fd: {} error", int(listen_fd_));
+        return -1;
+    }
+    if (make_socket_reuseport(listen_fd_) == -1) {
+        LOG_ERROR("make_socket_reuseport fd: {} error", int(listen_fd_));
+        return -1;
+    }
+    struct epoll_event event;
+    event.data.fd = listen_fd_;
+    event.events = EPOLLIN | EPOLLET;
+    if (epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, listen_fd_, &event) == -1) {
+        LOG_SYSTEM_ERROR("epoll_ctl add fd: {}", int(listen_fd_));
+        return -1;
+    }
+    if (::bind(listen_fd_, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
+        LOG_SYSTEM_ERROR("bind addr: {}", inet_ntoa(server_addr.sin_addr));
+        return -1;
+    }
+    if (listen(listen_fd_, backlog) == -1) {
+        LOG_SYSTEM_ERROR("listen backlog: {}", backlog);
+        return -1;
+    }
+    struct epoll_event* event_list = new epoll_event[event_num];
+    while (true) {
+        int count = epoll_wait(epoll_fd_, event_list, event_num, -1);
+        if (count == -1) {
+            LOG_SYSTEM_ERROR("epoll_wait");
+        }
+        for (int i = 0; i < count; i++) {
+            if (event_list[i].events & EPOLLIN) {
+                if (event_list[i].data.fd == listen_fd_) {
+                    handler_accept();
+                } else {
+                    handler_read(event_list[i].data.fd);
+                }
+            } else if (event_list[i].events & EPOLLOUT) {
+                handler_write(event_list[i].data.fd, "hello world", 11);
+            }
+        }
+    }
+    delete[] event_list;
+    return 0;
+}
+
+int server::connect_timeout(int fd, const struct sockaddr_in addr, long nsec, long usec) {
+    int ret = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
     if (ret == 0) {
         LOG_DEBUG("connect直接成功");
         return 0;
@@ -176,223 +109,136 @@ int server::connect_timeout(int nsec, int usec) {
     // ret=-1的情况
     if (errno != EINPROGRESS) {
         LOG_ERROR("connect error");
-        goto error;
+        return -1;
     }
     struct timeval timeout;
     timeout.tv_sec = nsec;
     timeout.tv_usec = usec;
     fd_set write_set;
     FD_ZERO(&write_set);
-    FD_SET(m_client_fd, &write_set);
-    count = select(m_client_fd + 1, nullptr, &write_set, nullptr, &timeout);
+    FD_SET(fd, &write_set);
+    int count = select(fd + 1, nullptr, &write_set, nullptr, &timeout);
     if (count == 0) {
         LOG_ERROR("select timeout");
-        goto error;
+        return -1;
     }
     if (count == -1) {
         LOG_ERROR("select error");
-        goto error;
+        return -1;
     }
     // count>0的情况
-    if (FD_ISSET(m_client_fd, &write_set)) {
+    if (FD_ISSET(fd, &write_set)) {
         int err = 0;
         socklen_t len = sizeof(err);
-        if (getsockopt(m_client_fd, SOL_SOCKET, SO_ERROR, &err, &len) == -1) {
+        if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &err, &len) == -1) {
             LOG_ERROR("getsockopt error");
-            goto error;
+            return -1;
         }
         if (err != 0) {
             LOG_ERROR("connect error");
-            goto error;
+            return -1;
         }
         return 0;
     } else {
         LOG_ERROR("FD_ISSET error");
-        goto error;
-    }
-
-error:
-    close(m_client_fd);
-    m_client_fd = -1;
-    return -1;
-}
-
-int server::do_listen() {
-    struct sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(TCP_LISTEN_PORT);
-    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    // server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    m_listen_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (m_listen_fd == -1) {
-        LOG_ERROR("socket error");
         return -1;
     }
-    if (make_socket_nonblocking(m_listen_fd) == -1) {
-        LOG_ERROR("make_socket_nonblocking({}) error", m_listen_fd);
-        goto error;
-    }
-    if (make_socket_cloexec(m_listen_fd) == -1) {
-        LOG_ERROR("make_socket_cloexec({}) error", m_listen_fd);
-        goto error;
-    }
-    if (make_socket_reuseaddr(m_listen_fd) == -1) {
-        LOG_ERROR("make_socket_reuseaddr({}) error", m_listen_fd);
-        goto error;
-    }
-    if (make_socket_reuseport(m_listen_fd) == -1) {
-        LOG_ERROR("make_socket_reuseport({}) error", m_listen_fd);
-        goto error;
-    }
-    struct epoll_event event;
-    event.data.fd = m_listen_fd;
-    event.events = EPOLLIN | EPOLLET;
-    if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_listen_fd, &event) == -1) {
-        LOG_ERROR("epoll_ctl({}, EPOLL_CTL_ADD, {}) error", m_epoll_fd, m_listen_fd);
-        goto error;
-    }
-    if (bind(m_listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
-        LOG_ERROR("bind({}, {}) error", m_listen_fd, inet_ntoa(server_addr.sin_addr));
-        goto error;
-    }
-    if (listen(m_listen_fd, 128) == -1) {
-        LOG_ERROR("listen({}, 128) error", m_listen_fd);
-        goto error;
-    }
-    return 0;
-
-error:
-    close(m_listen_fd);
-    m_listen_fd = -1;
-    return -1;
 }
 
-void server::event_loop() {
-    struct epoll_event events[128];
-    while (m_flag) {
-        int count = epoll_wait(m_epoll_fd, events, 128, -1);
-        if (-1 == count) {
-            LOG_ERROR("epoll_wait({}) error", m_epoll_fd);
-            return;
-        }
-        for (int i = 0; i < count; i++) {
-            if (events[i].events & EPOLLIN) {
-                if (events[i].data.fd == m_listen_fd) {
-                    do_accept();
-                } else {
-                    do_recv(events[i].data.fd);
-                }
-            } else if (events[i].events & EPOLLOUT) {
-                do_send(events[i].data.fd, "hello world", 11);
-            }
-        }
-    }
-}
-
-void server::force_exit() {
-    LOG_DEBUG("now force exit, killall -9(SIGKILL)");
-    if (kill(0, SIGKILL) != 0) {
-        LOG_ERROR("kill error");
-    }
-}
-
-void server::do_accept() {
+void server::handler_accept() {
     while (true) {
         struct sockaddr_in addr;
         socklen_t addr_len = sizeof(addr);
-        int fd = accept(m_listen_fd, (struct sockaddr*)&addr, &addr_len);
+        int fd = accept(listen_fd_, (struct sockaddr*)&addr, &addr_len);
         if (fd == -1) {
-            if (errno != EAGAIN) {
-                LOG_ERROR("accept error");
+            if (errno == EAGAIN) {
+                break;
+            } else if (errno == EINTR) {
+                continue;
+            } else {
+                LOG_SYSTEM_ERROR("accept");
+                break;
             }
-            break;
         }
-        LOG_DEBUG("(TCP)New accept ip:{} socket:{} pid:{}", inet_ntoa(addr.sin_addr), fd, getpid());
-        if (-1 == make_socket_nonblocking(fd)) {
-            LOG_ERROR("make_socket_nonblocking({}) error", fd);
+        LOG_DEBUG("(TCP)new accept ip: {} socket: {} pid: {}", inet_ntoa(addr.sin_addr), fd, getpid());
+        if (make_socket_nonblocking(fd) == -1) {
+            LOG_ERROR("make_socket_nonblocking fd: {} error", fd);
+            continue;
         }
-        if (-1 == make_socket_cloexec(fd)) {
-            LOG_ERROR("make_socket_cloexec({}) error", fd);
+        if (make_socket_cloexec(fd) == -1) {
+            LOG_ERROR("make_socket_cloexec fd: {} error", fd);
+            continue;
         }
-        if (-1 == make_socket_tcpnodelay(fd)) {
-            LOG_ERROR("make_socket_tcpnodelay({}) error", fd);
+        if (make_socket_tcpnodelay(fd) == -1) {
+            LOG_ERROR("make_socket_tcpnodelay fd: {} error", fd);
+            continue;
         }
         struct epoll_event event;
         event.data.fd = fd;
         event.events = EPOLLIN | EPOLLET;
-        if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, fd, &event)) {
-            LOG_ERROR("epoll_ctl({}, EPOLL_CTL_ADD, {}) error", m_epoll_fd, fd);
+        if (-1 == epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &event)) {
+            LOG_SYSTEM_ERROR("epoll_ctl add fd: {}", fd);
+            continue;
         }
-        auto conn = make_shared<connector>(fd, inet_ntoa(addr.sin_addr), nullptr);
-        m_fd_conn.insert(make_pair(fd, conn));
+        // TODO保存连接
     }
 }
 
-void server::do_recv(int fd) {
-    auto it = m_fd_conn.find(fd);
-    if (it == m_fd_conn.end()) {
-        LOG_ERROR("m_fd_conn(map)没有发现连接对象的fd:{}", fd);
+void server::handler_read(int fd) {
+    char data[SIZE_1K] = {0};
+    ssize_t ret = wrap(read, fd, data, SIZE_1K);
+    if (ret == 0) {
+        struct sockaddr_in addr;
+        socklen_t len = sizeof(addr);
+        if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
+            LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
+            return;
+        }
+        LOG_DEBUG("fd:{} ip:{} normal disconnection", fd, inet_ntoa(addr.sin_addr));
+        if (epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr) == -1) {
+            LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", fd);
+            return;
+        }
         return;
     }
-    auto conn = it->second;
-    while (true) {
-        char buf[1024] = {0};
-        ssize_t ret = recv(fd, buf, 1024, 0);
-        if (ret > 0) {
-            LOG_DEBUG("{}", buf);
-            conn.get()->m_buffer.get()->append(buf, ret);
-            continue;
-        } else if (ret == -1) {
-            if (errno == EAGAIN) {
-                break;
-            } else if (errno == EINTR) {
-                continue;
-            } else {
-                LOG_ERROR("fd:{} ip:{} abnormal disconnection", fd, conn.get()->m_ip);
-                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                    LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
-                }
-                m_fd_conn.erase(it);
-                break;
+    if (ret == -1) {
+        if (errno != EAGAIN) {
+            LOG_SYSTEM_ERROR("read");
+            struct sockaddr_in addr;
+            socklen_t len = sizeof(addr);
+            if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
+                LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
+                return;
             }
-        }
-        if (ret == 0) {
-            LOG_DEBUG("fd:{} ip:{} normal disconnection", fd, conn.get()->m_ip);
-            if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
+            LOG_ERROR("fd: {} ip: {} abnormal disconnection", fd, inet_ntoa(addr.sin_addr));
+            if (epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr) == -1) {
+                LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", fd);
+                return;
             }
-            m_fd_conn.erase(it);
-            break;
+            return;
         }
     }
+    LOG_DEBUG("read data: {}", data);
 }
 
-void server::do_send(int fd, const char* data, int len) {
-    auto it = m_fd_conn.find(fd);
-    if (it == m_fd_conn.end()) {
-        LOG_ERROR("m_fd_conn(map)没有发现连接对象的fd:{}", fd);
-        return;
-    }
-    auto conn = it->second;
-    int total_send = 0;
-    while (total_send < len) {
-        int ret = send(fd, data + total_send, len - total_send, 0);
-        if (ret > 0) {
-            total_send += ret;
-            continue;
-        } else if (ret == -1) {
-            if (errno == EAGAIN) {
-                break;
-            } else if (errno == EINTR) {
-                continue;
-            } else {
-                LOG_ERROR("fd:{} ip:{} abnormal disconnection", fd, conn.get()->m_ip);
-                if (-1 == epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, fd, nullptr)) {
-                    LOG_ERROR("epoll_ctl({}, EPOLL_CTL_DEL, {}) error", m_epoll_fd, fd);
-                }
-                m_fd_conn.erase(it);
-                break;
+void server::handler_write(int fd, char* data, size_t size) {
+    ssize_t ret = wrap(write, fd, data, size);
+    if (ret == -1) {
+        if (errno != EAGAIN) {
+            // SIGPIPE
+            LOG_SYSTEM_ERROR("write");
+            struct sockaddr_in addr;
+            socklen_t len = sizeof(addr);
+            if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
+                LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
+                return;
             }
+            LOG_ERROR("fd: {} ip: {} abnormal disconnection", fd, inet_ntoa(addr.sin_addr));
+            if (epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr) == -1) {
+                LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", fd);
+                return;
+            }
+            return;
         }
     }
 }
