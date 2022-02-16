@@ -111,12 +111,5 @@
     //xml选项
     "xmlTools.enableXmlTreeViewCursorSync": true,
     "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
-    "xmlTools.splitXmlnsOnFormat": false,
-    //其它
-    "window.zoomLevel": 0,
-    "problems.decorations.enabled": false,
-    "breadcrumbs.enabled": true,
-    "security.workspace.trust.untrustedFiles": "open",
-    "diffEditor.ignoreTrimWhitespace": false,
-    "redhat.telemetry.enabled": false
+    "xmlTools.splitXmlnsOnFormat": false
 }
