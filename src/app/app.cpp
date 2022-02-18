@@ -119,6 +119,10 @@ int app::start(int argc, char* argv[]) {
         LOG_ERROR("daemon process error");
         return -1;
     }
+    if (log_process() != 0) {
+        LOG_ERROR("log process error");
+        return -1;
+    }
     if (create_pid_file() != 0) {
         LOG_ERROR("create pid file error");
         return -1;
@@ -277,15 +281,29 @@ int app::daemon_process() {
     const int daemon_unchange_dir = 1;
     const int daemon_redirect_io = 0;
     const int daemon_un_redirect_io = 1;
-    if (daemon(daemon_unchange_dir, daemon_un_redirect_io) == -1) {
+    if (::daemon(daemon_unchange_dir, daemon_redirect_io) == -1) {
         LOG_SYSTEM_ERROR("daemon");
         return -1;
     }
     return 0;
 }
 
+int app::log_process() {
+    logger_config config;
+    config.name = config_.log.name;
+    config.level = spdlog::level::level_enum(config_.log.level);
+    config.file_name = config_.log.file_name;
+    config.roll_type = config_.log.roll_type;
+    config.reserve_count = config_.log.reserve_count;
+    config.roll_size = config_.log.roll_size;
+    if (logger::get_instance_atomic()->set_config(config) != 0) {
+        LOG_ERROR("set_config error");
+        return -1;
+    }
+    return 0;
+}
+
 int app::create_pid_file() {
-    LOG_DEBUG("create_pid_file");
     fd_guard fd(open(pid_file_.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRWXU));
     if (fd == -1) {
         LOG_SYSTEM_ERROR("open");
@@ -305,7 +323,6 @@ int app::create_pid_file() {
 }
 
 int app::fork_child() {
-    LOG_DEBUG("fork_child");
     pid_t pid = fork();
     if (pid == -1) {
         LOG_SYSTEM_ERROR("fork");

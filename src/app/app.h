@@ -50,6 +50,7 @@ private:
     int config_process();
     int single_process();
     int daemon_process();
+    int log_process();
     int create_pid_file();
     int fork_child();
     void check();
