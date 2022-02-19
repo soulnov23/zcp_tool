@@ -49,8 +49,8 @@ private:
     int signal_process();
     int init_signal();
     int config_process();
-    int single_process();
     int daemon_process();
+    int single_process();
     int log_process();
     int create_pid_file();
     int fork_child();

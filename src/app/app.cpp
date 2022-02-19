@@ -113,12 +113,12 @@ int app::start(int argc, char* argv[]) {
         LOG_ERROR("config process error");
         return -1;
     }
-    if (single_process() != 0) {
-        LOG_ERROR("single process error");
-        return -1;
-    }
     if (daemon_process() != 0) {
         LOG_ERROR("daemon process error");
+        return -1;
+    }
+    if (single_process() != 0) {
+        LOG_ERROR("single process error");
         return -1;
     }
     if (create_pid_file() != 0) {
@@ -261,6 +261,18 @@ int app::config_process() {
     return 0;
 }
 
+int app::daemon_process() {
+    // const int daemon_change_dir = 0;
+    const int daemon_unchange_dir = 1;
+    // const int daemon_redirect_io = 0;
+    const int daemon_un_redirect_io = 1;
+    if (::daemon(daemon_unchange_dir, daemon_un_redirect_io) == -1) {
+        LOG_SYSTEM_ERROR("daemon");
+        return -1;
+    }
+    return 0;
+}
+
 int app::single_process() {
     single_process_ = open(lock_file_.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRWXU);
     if (single_process_ == -1) {
@@ -269,18 +281,6 @@ int app::single_process() {
     }
     if (single_process_.lock() != 0) {
         LOG_ERROR("lock fd: {} error", int(single_process_));
-        return -1;
-    }
-    return 0;
-}
-
-int app::daemon_process() {
-    // const int daemon_change_dir = 0;
-    const int daemon_unchange_dir = 1;
-    // const int daemon_redirect_io = 0;
-    const int daemon_un_redirect_io = 1;
-    if (::daemon(daemon_unchange_dir, daemon_un_redirect_io) == -1) {
-        LOG_SYSTEM_ERROR("daemon");
         return -1;
     }
     return 0;
