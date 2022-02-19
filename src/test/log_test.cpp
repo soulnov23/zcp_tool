@@ -34,16 +34,16 @@ public:
 TEST_F(test_fixture_t, console) {
     std::string hello("hello");
     std::string world("world");
-    CONSOLE_DEBUG("hello world");
-    CONSOLE_DEBUG("{} {}", hello, world);
-    CONSOLE_DEBUG("{} {}", world, hello);
+    LOG_DEBUG("hello world");
+    LOG_DEBUG("{} {}", hello, world);
+    LOG_DEBUG("{} {}", world, hello);
     logger_config config;
     config.file_name = "test.log";
     EXPECT_EQ(-1, logger::get_instance_atomic()->set_config(config));
     config.name = "test_logger";
     EXPECT_EQ(0, logger::get_instance_atomic()->set_config(config));
-    CONSOLE_DEBUG("{} {}", hello, world);
-    CONSOLE_DEBUG("{} {}", world, hello);
+    LOG_DEBUG("{} {}", hello, world);
+    LOG_DEBUG("{} {}", world, hello);
 }
 
 TEST_F(test_fixture_t, log) {

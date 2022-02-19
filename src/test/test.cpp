@@ -11,17 +11,17 @@
 
 void get_type(YAML::Node& node) {
     if (node.Type() == YAML::NodeType::Undefined) {
-        CONSOLE_DEBUG("YAML::NodeType::Undefined");
+        LOG_DEBUG("YAML::NodeType::Undefined");
     } else if (node.Type() == YAML::NodeType::Null) {
-        CONSOLE_DEBUG("YAML::NodeType::Null");
+        LOG_DEBUG("YAML::NodeType::Null");
     } else if (node.Type() == YAML::NodeType::Scalar) {
-        CONSOLE_DEBUG("YAML::NodeType::Scalar");
+        LOG_DEBUG("YAML::NodeType::Scalar");
     } else if (node.Type() == YAML::NodeType::Sequence) {
-        CONSOLE_DEBUG("YAML::NodeType::Sequence");
+        LOG_DEBUG("YAML::NodeType::Sequence");
     } else if (node.Type() == YAML::NodeType::Map) {
-        CONSOLE_DEBUG("YAML::NodeType::Map");
+        LOG_DEBUG("YAML::NodeType::Map");
     } else {
-        CONSOLE_DEBUG("error");
+        LOG_DEBUG("error");
     }
 }
 
@@ -33,10 +33,10 @@ int lock(int fd_) {
     fd_lock.l_len = 0;
     if (-1 == fcntl(fd_, F_SETLK, &fd_lock)) {
         if (errno == EACCES || errno == EAGAIN) {
-            CONSOLE_ERROR("fd lock by other process");
+            LOG_ERROR("fd lock by other process");
             return -1;
         }
-        CONSOLE_SYSTEM_ERROR("fcntl fd: {}", fd_);
+        LOG_SYSTEM_ERROR("fcntl fd: {}", fd_);
         return -1;
     }
     return 0;
@@ -49,7 +49,7 @@ int unlock(int fd_) {
     fd_lock.l_start = 0;
     fd_lock.l_len = 0;
     if (-1 == fcntl(fd_, F_SETLK, &fd_lock)) {
-        CONSOLE_SYSTEM_ERROR("fcntl fd: {}", fd_);
+        LOG_SYSTEM_ERROR("fcntl fd: {}", fd_);
         return -1;
     }
     return 0;
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
     /*
     YAML::Node node = YAML::LoadFile("./test.yaml");
     if (node.IsNull()) {
-        CONSOLE_DEBUG("error");
+        LOG_DEBUG("error");
         return -1;
     }
     get_type(node);
@@ -72,21 +72,21 @@ int main(int argc, char* argv[]) {
     */
     fd_guard fd1(open("test.txt", O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, S_IRWXU));
     if (fd1 == -1) {
-        CONSOLE_ERROR("open err");
+        LOG_ERROR("open err");
         return -1;
     }
     unlock(fd1);
     if (lock(fd1) == -1) {
-        CONSOLE_ERROR("fd_lock.lock err");
+        LOG_ERROR("fd_lock.lock err");
         return -1;
     }
     if (lock(fd1) == -1) {
-        CONSOLE_ERROR("fd_lock.lock err");
+        LOG_ERROR("fd_lock.lock err");
         return -1;
     }
     ssize_t size = write(fd1, "123", 3);
     if (size != 3) {
-        CONSOLE_ERROR("write err");
+        LOG_ERROR("write err");
         return -1;
     }
     while (true) {
