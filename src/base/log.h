@@ -5,50 +5,18 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <iostream>
-
 #include "fmt/format.h"
 #include "spdlog/common.h"
 #include "spdlog/spdlog.h"
 #include "src/base/singleton.h"
-#include "src/base/time_util.h"
 
-#define RED_PRINT_BEG    "\e[1;31m"
-#define RED_PRINT_END    "\e[m"
-#define GREEN_PRINT_BEG  "\e[1;32m"
-#define GREEN_PRINT_END  "\e[m"
-#define YELLOW_PRINT_BEG "\e[1;33m"
-#define YELLOW_PRINT_END "\e[m"
-#define BLUE_PRINT_BEG   "\e[1;34m"
-#define BLUE_PRINT_END   "\e[m"
-
-#define CONSOLE_DEBUG(formatter, args...)                                                                           \
-    do {                                                                                                            \
-        std::cout << fmt::format("[{}] [{}] [" GREEN_PRINT_BEG "debug" GREEN_PRINT_END "] [{}:{} {}()] " formatter, \
-                                 get_time_now(), getpid(), __FILE__, __LINE__, __FUNCTION__, ##args)                \
-                  << std::endl;                                                                                     \
-    } while (0)
-
-#define CONSOLE_ERROR(formatter, args...)                                                                                       \
-    do {                                                                                                                        \
-        std::cout << fmt::format("[{}] [{}] [" RED_PRINT_BEG "error" RED_PRINT_END "] [{}:{} {}()] " formatter, get_time_now(), \
-                                 getpid(), __FILE__, __LINE__, __FUNCTION__, ##args)                                            \
-                  << std::endl;                                                                                                 \
-    } while (0)
-
-#define CONSOLE_SYSTEM_ERROR(formatter, args...)                                                                             \
-    do {                                                                                                                     \
-        std::cout << fmt::format("[{}] [{}] [" RED_PRINT_BEG "error" RED_PRINT_END "] [{}:{} {}()] " formatter               \
-                                 " errno: {}, errmsg: {}",                                                                   \
-                                 get_time_now(), getpid(), __FILE__, __LINE__, __FUNCTION__, ##args, errno, strerror(errno)) \
-                  << std::endl;                                                                                              \
-    } while (0)
+#define DEFAULT_FORMAT "[%Y-%m-%d %H:%M:%S.%f] [%P] [%^%l%$] [%s:%# %!()] %v"
 
 struct logger_config {
-    std::string name = "default_logger";
+    std::string name = "run_logger";
     spdlog::level::level_enum level = spdlog::level::trace;
-    std::string format = "[%Y-%m-%d %H:%M:%S.%f] [%P] [%^%l%$] [%s:%# %!()] %v";
-    std::string file_name = "../log/default.log";
+    std::string format = DEFAULT_FORMAT;
+    std::string file_name = "../log/run.log";
     // by_size按大小分割 by_day按天分割 by_hour按小时分割
     std::string roll_type = "by_day";
     unsigned int reserve_count = 10;
@@ -56,6 +24,7 @@ struct logger_config {
     // 表示按天切割的时刻，具体是时刻通过rotation_hour:rotation_minute指定
     unsigned int rotation_hour = 0;
     unsigned int rotation_minute = 0;
+    // 异步日志线程池大小
     unsigned int async_thread_pool_size = 1;
 };
 
@@ -73,9 +42,10 @@ public:
              const std::string& msg);
 
 private:
-    std::shared_ptr<spdlog::sinks::sink> sink_;
-    std::shared_ptr<spdlog::logger> logger_;
+    std::shared_ptr<spdlog::logger> console_logger_;
+    std::shared_ptr<spdlog::logger> run_logger_;
     std::shared_ptr<spdlog::details::thread_pool> thread_pool_;
+    bool run_logger_inited_;
 };
 
 #define LOG_IMPL(level, formatter, args...)                                                                          \
