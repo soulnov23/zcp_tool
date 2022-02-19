@@ -121,10 +121,6 @@ int app::start(int argc, char* argv[]) {
         LOG_ERROR("daemon process error");
         return -1;
     }
-    if (log_process() != 0) {
-        LOG_ERROR("log process error");
-        return -1;
-    }
     if (create_pid_file() != 0) {
         LOG_ERROR("create pid file error");
         return -1;
@@ -332,6 +328,10 @@ int app::fork_child() {
         return -1;
     } else if (pid == 0) {
         //子进程
+        if (log_process() != 0) {
+            LOG_ERROR("log process error");
+            return -1;
+        }
         server svr;
         int status = svr.start(config_.server.ip, config_.server.port, config_.server.backlog, config_.server.event_num);
         //退出，不然还会接着执行for循环创建更多的子进程的子进程
