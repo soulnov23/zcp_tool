@@ -3,6 +3,8 @@
 #include <getopt.h>
 #include <sys/wait.h>
 
+#include <iostream>
+
 #include "src/app/server.h"
 #include "src/base/fd_guard.h"
 #include "src/base/fd_lock_guard.h"
@@ -129,7 +131,6 @@ int app::start(int argc, char* argv[]) {
     }
     // 至少创建一个子进程
     int n = config_.server.process_num;
-    LOG_DEBUG("n: {}", n);
     do {
         if (fork_child() != 0) {
             LOG_ERROR("fork child error");
@@ -250,6 +251,7 @@ int app::config_process() {
         config_.log.roll_type = yaml_get_value<std::string>(log_node, "roll_type");
         config_.log.reserve_count = yaml_get_value<unsigned int>(log_node, "reserve_count");
         config_.log.roll_size = yaml_get_value<unsigned int>(log_node, "roll_size");
+        config_.log.async_thread_pool_size = yaml_get_value<unsigned int>(log_node, "async_thread_pool_size");
     } catch (const std::exception& ex) {
         LOG_ERROR("{}", ex.what());
         return -1;
@@ -277,11 +279,11 @@ int app::single_process() {
 }
 
 int app::daemon_process() {
-    const int daemon_change_dir = 0;
+    // const int daemon_change_dir = 0;
     const int daemon_unchange_dir = 1;
-    const int daemon_redirect_io = 0;
+    // const int daemon_redirect_io = 0;
     const int daemon_un_redirect_io = 1;
-    if (::daemon(daemon_unchange_dir, daemon_redirect_io) == -1) {
+    if (::daemon(daemon_unchange_dir, daemon_un_redirect_io) == -1) {
         LOG_SYSTEM_ERROR("daemon");
         return -1;
     }
@@ -296,6 +298,7 @@ int app::log_process() {
     config.roll_type = config_.log.roll_type;
     config.reserve_count = config_.log.reserve_count;
     config.roll_size = config_.log.roll_size;
+    config.async_thread_pool_size = config_.log.async_thread_pool_size;
     if (logger::get_instance_atomic()->set_config(config) != 0) {
         LOG_ERROR("set_config error");
         return -1;

@@ -21,6 +21,7 @@ struct log_config {
     std::string roll_type;
     unsigned int reserve_count;
     unsigned int roll_size;
+    unsigned int async_thread_pool_size;
 };
 struct app_config {
     server_config server;

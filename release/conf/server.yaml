@@ -13,3 +13,4 @@ log:
   roll_type: by_day
   reserve_count: 0
   roll_size: 104857600
+  async_thread_pool_size: 1
