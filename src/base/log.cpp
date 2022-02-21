@@ -9,13 +9,13 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 logger::logger() {
-    // 设置打印日志时异常处理函数
-    spdlog::set_error_handler([](const std::string& msg) {
-        std::cout << fmt::format("[{}:{} {}()] {}", __FILE__, __LINE__, __FUNCTION__, msg) << std::endl;
-    });
-
-    // 设置console logger
     try {
+        // 设置打印日志时异常处理函数
+        spdlog::set_error_handler([](const std::string& msg) {
+            std::cout << fmt::format("[{}:{} {}()] {}", __FILE__, __LINE__, __FUNCTION__, msg) << std::endl;
+        });
+
+        // 设置console logger
         auto sink_ = std::make_shared<spdlog::sinks::ansicolor_stdout_sink_mt>();
         auto formatter = std::make_unique<spdlog::pattern_formatter>(DEFAULT_FORMAT, spdlog::pattern_time_type::local,
                                                                      spdlog::details::os::default_eol);
