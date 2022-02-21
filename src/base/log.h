@@ -36,6 +36,7 @@ public:
     logger();
     ~logger();
 
+    // 在构造函数中创建了console作为默认打印，调用set_config后改为file打印
     int set_config(const logger_config& config);
 
     void log(const char* file_name_in, int line_in, const char* func_name_in, spdlog::level::level_enum level,
