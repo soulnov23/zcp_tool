@@ -8,6 +8,3 @@ LIB_PATH=../lib
 export LD_LIBRARY_PATH=$LIB_PATH:$LD_LIBRARY_PATH
 ulimit -c unlimited
 mkdir -p ../log
-
-curtime=`date "+%Y-%m-%d %H:%M:%S.%6N"`
-echo "[$curtime] [echo] init zcp_tool success"
