@@ -15,7 +15,7 @@ protected:
     virtual ~singleton() = default;
 
 public:
-    static T* get_instance_atomic() {
+    static T* get_instance() {
         T* tmp = instance_.load(std::memory_order_acquire);
         if (tmp == nullptr) {
             std::lock_guard<std::mutex> lock(mutex_);
@@ -29,11 +29,13 @@ public:
         return tmp;
     }
 
-    static T* get_instance_call_once() {
+    /*
+    static T* get_instance() {
         std::call_once(once_flag_, [&] { instance_ = new T; });
         atexit(release);
         return instance_;
     }
+    */
 
 private:
     static void release() {

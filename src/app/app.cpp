@@ -295,7 +295,7 @@ int app::log_process() {
     config.reserve_count = config_.log.reserve_count;
     config.roll_size = config_.log.roll_size;
     config.async_thread_pool_size = config_.log.async_thread_pool_size;
-    if (logger::get_instance_atomic()->set_config(config) != 0) {
+    if (logger::get_instance()->set_config(config) != 0) {
         LOG_ERROR("set_config error");
         return -1;
     }

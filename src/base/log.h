@@ -48,16 +48,16 @@ private:
     bool run_logger_inited_;
 };
 
-#define LOG_IMPL(level, formatter, args...)                                                                          \
-    do {                                                                                                             \
-        logger::get_instance_atomic()->log(__FILE__, __LINE__, __FUNCTION__, level, fmt::format(formatter, ##args)); \
+#define LOG_IMPL(level, formatter, args...)                                                                   \
+    do {                                                                                                      \
+        logger::get_instance()->log(__FILE__, __LINE__, __FUNCTION__, level, fmt::format(formatter, ##args)); \
     } while (0)
 
 #define LOG_DEBUG(format, args...) LOG_IMPL(spdlog::level::debug, format, ##args)
 #define LOG_ERROR(format, args...) LOG_IMPL(spdlog::level::err, format, ##args)
 
-#define LOG_SYSTEM_ERROR(formatter, args...)                                                                                 \
-    do {                                                                                                                     \
-        logger::get_instance_atomic()->log(__FILE__, __LINE__, __FUNCTION__, spdlog::level::err,                             \
-                                           fmt::format(formatter " errno: {}, errmsg: {}", ##args, errno, strerror(errno))); \
+#define LOG_SYSTEM_ERROR(formatter, args...)                                                                          \
+    do {                                                                                                              \
+        logger::get_instance()->log(__FILE__, __LINE__, __FUNCTION__, spdlog::level::err,                             \
+                                    fmt::format(formatter " errno: {}, errmsg: {}", ##args, errno, strerror(errno))); \
     } while (0)
