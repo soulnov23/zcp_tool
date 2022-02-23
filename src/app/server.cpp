@@ -65,7 +65,7 @@ int server::start(std::string ip, uint16_t port, int backlog, int event_num) {
     }
     struct epoll_event event;
     event.data.fd = listen_fd_;
-    event.events = EPOLLIN | EPOLLET;
+    event.events = EPOLLET | EPOLLIN;
     if (epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, listen_fd_, &event) == -1) {
         LOG_SYSTEM_ERROR("epoll_ctl add fd: {}", int(listen_fd_));
         return -1;
@@ -85,14 +85,40 @@ int server::start(std::string ip, uint16_t port, int backlog, int event_num) {
             LOG_SYSTEM_ERROR("epoll_wait");
         }
         for (int i = 0; i < count; i++) {
-            if (event_list[i].events & EPOLLIN) {
-                if (event_list[i].data.fd == listen_fd_) {
+            int fd = event_list[i].data.fd;
+            if ((event_list[i].events & EPOLLRDHUP) || (event_list[i].events & EPOLLHUP)) {
+                // shutdown读关闭
+                // close关闭
+                struct sockaddr_in addr;
+                socklen_t len = sizeof(addr);
+                if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
+                    LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
+                    continue;
+                }
+                LOG_DEBUG("fd:{} ip:{} normal disconnection", fd, inet_ntoa(addr.sin_addr));
+                if (epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr) == -1) {
+                    LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", fd);
+                }
+            } else if (event_list[i].events & EPOLLERR) {
+                // 异常关闭
+                struct sockaddr_in addr;
+                socklen_t len = sizeof(addr);
+                if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
+                    LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
+                    continue;
+                }
+                LOG_DEBUG("fd:{} ip:{} abnormal disconnection", fd, inet_ntoa(addr.sin_addr));
+                if (epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr) == -1) {
+                    LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", fd);
+                }
+            } else if (event_list[i].events & EPOLLIN) {
+                if (fd == listen_fd_) {
                     handler_accept();
                 } else {
-                    handler_read(event_list[i].data.fd);
+                    handler_read(fd);
                 }
             } else if (event_list[i].events & EPOLLOUT) {
-                handler_write(event_list[i].data.fd, "hello world", 11);
+                handler_write(fd, "hello world", 11);
             }
         }
     }
@@ -175,7 +201,7 @@ void server::handler_accept() {
         }
         struct epoll_event event;
         event.data.fd = fd;
-        event.events = EPOLLIN | EPOLLET;
+        event.events = EPOLLET | EPOLLIN | EPOLLOUT | EPOLLRDHUP | EPOLLERR | EPOLLHUP;
         if (-1 == epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &event)) {
             LOG_SYSTEM_ERROR("epoll_ctl add fd: {}", fd);
             continue;
@@ -188,33 +214,11 @@ void server::handler_read(int fd) {
     char data[SIZE_1K] = {0};
     ssize_t ret = wrap(read, fd, data, SIZE_1K);
     if (ret == 0) {
-        struct sockaddr_in addr;
-        socklen_t len = sizeof(addr);
-        if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
-            LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
-            return;
-        }
-        LOG_DEBUG("fd:{} ip:{} normal disconnection", fd, inet_ntoa(addr.sin_addr));
-        if (epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr) == -1) {
-            LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", fd);
-            return;
-        }
         return;
     }
     if (ret == -1) {
         if (errno != EAGAIN) {
             LOG_SYSTEM_ERROR("read");
-            struct sockaddr_in addr;
-            socklen_t len = sizeof(addr);
-            if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
-                LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
-                return;
-            }
-            LOG_ERROR("fd: {} ip: {} abnormal disconnection", fd, inet_ntoa(addr.sin_addr));
-            if (epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr) == -1) {
-                LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", fd);
-                return;
-            }
             return;
         }
     }
@@ -227,18 +231,8 @@ void server::handler_write(int fd, char* data, size_t size) {
         if (errno != EAGAIN) {
             // SIGPIPE
             LOG_SYSTEM_ERROR("write");
-            struct sockaddr_in addr;
-            socklen_t len = sizeof(addr);
-            if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
-                LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
-                return;
-            }
-            LOG_ERROR("fd: {} ip: {} abnormal disconnection", fd, inet_ntoa(addr.sin_addr));
-            if (epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr) == -1) {
-                LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", fd);
-                return;
-            }
             return;
         }
     }
+    LOG_DEBUG("write data: {}", data);
 }
