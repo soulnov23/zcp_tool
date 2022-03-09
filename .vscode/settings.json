@@ -111,5 +111,12 @@
     //xml选项
     "xmlTools.enableXmlTreeViewCursorSync": true,
     "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
-    "xmlTools.splitXmlnsOnFormat": false
+    "xmlTools.splitXmlnsOnFormat": false,
+    //工作区信任选项
+    "security.workspace.trust.banner": "never",
+    "security.workspace.trust.enabled": false,
+    "security.workspace.trust.startupPrompt": "never",
+    "security.workspace.trust.untrustedFiles": "open",
+    //visual studio选项
+    "vsintellicode.modelDownloadPath": "${workspaceFolder}/.vscode"
 }

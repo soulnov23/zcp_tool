@@ -1,5 +1,7 @@
-Language: Cpp
 BasedOnStyle: Google
+
+Language: Cpp
+Standard: c++20
 
 # public,private向左偏移4空格
 AccessModifierOffset: -4
