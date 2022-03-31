@@ -32,6 +32,12 @@
     //"editor.formatOnType": true,
     "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
     "editor.maxTokenizationLineLength": 1000000000000000000000000000000000000,
+    "editor.accessibilitySupport": "off",
+    "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.revealDefinition",
+    "editor.gotoLocation.alternativeDeclarationCommand": "editor.action.revealDeclaration",
+    "editor.gotoLocation.alternativeImplementationCommand": "editor.action.goToImplementation",
+    "editor.gotoLocation.alternativeReferenceCommand": "editor.action.goToReferences",
+    "editor.gotoLocation.alternativeTypeDefinitionCommand": "editor.action.goToTypeDefinition",
     //workbench选项
     "workbench.editor.enablePreview": false,
     "workbench.activityBar.visible": true,
