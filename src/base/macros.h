@@ -1,5 +1,7 @@
 #pragma once
 
+#include <errno.h>
+
 // class uncopyable
 #define CLASS_UNCOPYABLE(class_name)        \
 private:                                    \
@@ -19,3 +21,25 @@ private:                                     \
             return __ret;     \
         }                     \
     } while (0)
+
+#define HANDLE_EINTR(x)                                                                          \
+    ({                                                                                           \
+        int eintr_wrapper_counter = 0;                                                           \
+        decltype(x) eintr_wrapper_result;                                                        \
+        do {                                                                                     \
+            eintr_wrapper_result = (x);                                                          \
+        } while (eintr_wrapper_result == -1 && errno == EINTR && eintr_wrapper_counter++ < 100); \
+        eintr_wrapper_result;                                                                    \
+    })
+
+#define IGNORE_EINTR(x)                                         \
+    ({                                                          \
+        decltype(x) eintr_wrapper_result;                       \
+        do {                                                    \
+            eintr_wrapper_result = (x);                         \
+            if (eintr_wrapper_result == -1 && errno == EINTR) { \
+                eintr_wrapper_result = 0;                       \
+            }                                                   \
+        } while (0);                                            \
+        eintr_wrapper_result;                                   \
+    })
