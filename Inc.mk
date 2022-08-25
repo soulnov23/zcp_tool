@@ -48,10 +48,11 @@ RAPIDJSON_INC		= $(PROJ_PATH)/third_party/rapidjson/include
 SPDLOG_INC 			= $(PROJ_PATH)/third_party/spdlog/include
 TINYXML2_INC 		= $(PROJ_PATH)/third_party/tinyxml2/include
 YAML_INC 			= $(PROJ_PATH)/third_party/yaml/include
+OAUTH_INC			= $(PROJ_PATH)/third_party/oauth/include
 
 INCLUDE += -I$(PROJ_PATH) -I$(FMT_INC) -I$(GTEST_INC) -I$(GMOCK_INC) \
 		   -I$(JSONCPP_INC) -I$(LIBUUID_INC) -I$(PICOHTTPPARSER_INC) \
-		   -I$(RAPIDJSON_INC) -I$(SPDLOG_INC) -I$(TINYXML2_INC) -I$(YAML_INC)
+		   -I$(RAPIDJSON_INC) -I$(SPDLOG_INC) -I$(TINYXML2_INC) -I$(YAML_INC) -I$(OAUTH_INC)
 
 FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .clang-format
 FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i

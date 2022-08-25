@@ -6,9 +6,9 @@ BIN := $(patsubst %.cpp, ./bin/%, $(SRC))
 
 CFLAGS   += -Wno-class-memaccess
 CXXFLAGS += -Wno-class-memaccess
-INCLUDE  +=
+INCLUDE  += 
 LDFLAGS  += -ldl -lpthread -lssl -lcrypto -lcurl \
-			-L$(LIB_DIR) -lbase -lfmt -lgtest_main -lgtest -lgmock -ljsoncpp -lpicohttpparser -lspdlog -ltinyxml2 -luuid -lyaml
+			-L$(LIB_DIR) -lbase -lfmt -lgtest_main -lgtest -lgmock -ljsoncpp -lpicohttpparser -lspdlog -ltinyxml2 -luuid -lyaml -loauth
 
 all: check $(BIN)
 	
