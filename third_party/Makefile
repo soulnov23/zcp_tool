@@ -1,7 +1,7 @@
 include Inc.mk
 include ../Inc.mk
 
-all: fmt googletest jsoncpp libuuid picohttpparser rapidjson spdlog tinyxml2 yaml
+all: fmt googletest jsoncpp libuuid picohttpparser rapidjson spdlog tinyxml2 yaml oauth
 
 fmt:
 	tar -zvxf zip/${FMT}.tar.gz
@@ -72,6 +72,9 @@ tinyxml2:
 
 yaml:
 	$(MAKE) -C yaml
+
+oauth:
+	$(MAKE) -C oauth
 
 clean:
 	rm -rf $(LIB_DIR)/libfmt.*
