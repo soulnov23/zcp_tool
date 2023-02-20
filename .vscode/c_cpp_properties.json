@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/third_party/fmt/include/**",
+                "${workspaceFolder}/third_party/googletest/googletest/include/**",
+                "${workspaceFolder}/third_party/googletest/googlemock/include/**",
+                "${workspaceFolder}/third_party/jsoncpp/include/**",
+                "${workspaceFolder}/third_party/libuuid/include/**",
+                "${workspaceFolder}/third_party/picohttpparser/include/",
+                "${workspaceFolder}/third_party/rapidjson/include/**",
+                "${workspaceFolder}/third_party/spdlog/include/**",
+                "${workspaceFolder}/third_party/tinyxml2/include/",
+                "${workspaceFolder}/third_party/yaml/include/**",
+                "${workspaceFolder}/third_party/oauth/include/**"
+            ]
+        }
+    ],
+    "version": 4
+}

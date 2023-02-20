@@ -53,29 +53,17 @@
     //C_Cpp选项
     //"C_Cpp.default.cppStandard": "c++20",
     //"C_Cpp.default.cStandard": "c18",
-    "C_Cpp.errorSquiggles": "Enabled",
+    "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.workspaceSymbols": "All",
-    "C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.intelliSenseMemoryLimit": 10240,
     "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
-    "C_Cpp.default.includePath": [
-        "${workspaceFolder}/**",
-        "${workspaceFolder}/third_party/fmt/include/**",
-        "${workspaceFolder}/third_party/googletest/googletest/include/**",
-        "${workspaceFolder}/third_party/googletest/googlemock/include/**",
-        "${workspaceFolder}/third_party/jsoncpp/include/**",
-        "${workspaceFolder}/third_party/libuuid/include/**",
-        "${workspaceFolder}/third_party/picohttpparser/include/",
-        "${workspaceFolder}/third_party/rapidjson/include/**",
-        "${workspaceFolder}/third_party/spdlog/include/**",
-        "${workspaceFolder}/third_party/tinyxml2/include/",
-        "${workspaceFolder}/third_party/yaml/include/**",
-        "${workspaceFolder}/third_party/oauth/include/**"
-    ],
+    "C_Cpp.intelliSenseCacheSize": 10240,
     "C_Cpp.clang_format_fallbackStyle": "none",
     "C_Cpp.clang_format_style": "file",
-    "C_Cpp.intelliSenseCacheSize": 10240,
     //files选项
     "files.autoGuessEncoding": true,
     "files.autoSave": "onFocusChange",
@@ -94,7 +82,7 @@
         "**/*.la": true,
         "**/.obj": true
     },
-    "files.defaultLanguage": "markdown",
+    "files.defaultLanguage": "json",
     //remote选项
     //"remote.SSH.showLoginTerminal": true,
     "remote.SSH.remotePlatform": {
@@ -142,4 +130,11 @@
     ],
     //显示子文件夹的git
     "git-graph.maxDepthOfRepoSearch": 3,
+    "window.title": "${dirty}${separator}${rootName}",
+    //excalidraw导出图片质量
+    "excalidraw.image": {
+        "exportScale": 3,
+        "exportWithBackground": true,
+        "exportWithDarkMode": false
+    },
 }
