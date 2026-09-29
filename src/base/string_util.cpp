@@ -7,8 +7,6 @@
 #include <algorithm>
 #include <sstream>
 
-#include "src/base/coder.h"
-
 #define FIELD_FLAG "&"
 #define VALUE_FLAG "="
 
@@ -291,4 +289,55 @@ void str2hex(string& dst, const string& src) {
         ss << hex;
     }
     dst = ss.str();
+}
+
+//RFC3986 2.3节定义的unreserved字符，无需百分号编码
+static bool is_unreserved(unsigned char c) {
+    return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' || c == '.' ||
+           c == '_' || c == '~';
+}
+
+int url_encode(const string& str_in, string& str_out) {
+    //RFC3986 2.1节建议百分号编码使用大写十六进制
+    static const char* hex_table = "0123456789ABCDEF";
+    string result;
+    //每个字节最多展开成3字节，预留容量避免反复扩容
+    result.reserve(str_in.size() * 3);
+    for (auto s : str_in) {
+        unsigned char character = (unsigned char)s;
+        if (is_unreserved(character)) {
+            result.push_back((char)character);
+        } else {
+            result.push_back('%');
+            result.push_back(hex_table[(character >> 4) & 0x0F]);
+            result.push_back(hex_table[character & 0x0F]);
+        }
+    }
+    //先写临时变量再赋值，兼容str_in和str_out是同一对象的调用
+    str_out = result;
+    return 0;
+}
+
+//RFC3986不把+视作空格，此处原样保留；表单场景（x-www-form-urlencoded）需另行处理
+int url_decode(const string& str_in, string& str_out) {
+    string result;
+    result.reserve(str_in.size());
+    for (size_t i = 0; i < str_in.length(); i++) {
+        if (str_in[i] != '%') {
+            result.push_back(str_in[i]);
+            continue;
+        }
+        if (i + 2 >= str_in.length()) {  //%后不足两位
+            return -1;
+        }
+        unsigned char high = hex2byte(str_in[i + 1]);
+        unsigned char low = hex2byte(str_in[i + 2]);
+        if (high == 0xff || low == 0xff) {  //非十六进制字符
+            return -1;
+        }
+        result.push_back((char)((high << 4) | low));
+        i += 2;
+    }
+    str_out = result;
+    return 0;
 }
