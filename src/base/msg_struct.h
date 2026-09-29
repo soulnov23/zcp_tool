@@ -1,6 +1,9 @@
 #ifndef __MSG_STRUCT_H_
 #define __MSG_STRUCT_H_
 
+#include <stddef.h>
+#include <stdint.h>
+
 #define PACK_4 __attribute((aligned(4)))
 #define PACK_1 __attribute__((packed))
 
