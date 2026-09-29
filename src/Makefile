@@ -25,4 +25,4 @@ format:
 
 .PHONY: all clean format
 
-.DEFAULT_GOAL: all
+.DEFAULT_GOAL := all

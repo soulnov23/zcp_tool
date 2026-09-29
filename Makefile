@@ -27,4 +27,4 @@ check:
 
 .PHONY: all clean format install uninstall check
 
-.DEFAULT_GOAL: all
+.DEFAULT_GOAL := all

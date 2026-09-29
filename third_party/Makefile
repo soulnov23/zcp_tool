@@ -86,7 +86,10 @@ clean:
 	rm -rf $(LIB_DIR)/libspdlog.so*
 	$(MAKE) -C tinyxml2 clean
 	$(MAKE) -C yaml clean
+	$(MAKE) -C oauth clean
 
-.PHONY: fmt googletest jsoncpp libuuid picohttpparser rapidjson spdlog tinyxml2 yaml clean
+#所有目标名都和同名目录重名，不声明为PHONY的话make会认为"目录已存在即最新"
+#而直接跳过（oauth原先就漏了，导致make install根本不编译它）
+.PHONY: all fmt googletest jsoncpp libuuid picohttpparser rapidjson spdlog tinyxml2 yaml oauth clean
 
-.DEFAULT_GOAL: all
+.DEFAULT_GOAL := all

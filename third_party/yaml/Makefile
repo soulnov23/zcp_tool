@@ -8,4 +8,4 @@ clean:
 
 .PHONY: all clean
 
-.DEFAULT_GOAL: all
+.DEFAULT_GOAL := all
