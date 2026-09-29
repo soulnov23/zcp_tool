@@ -5,7 +5,7 @@
     //"http.proxyStrictSSL": false,
     //"http.proxySupport": "on",
     //editor选项
-    "editor.fontSize": 18,
+    "editor.fontSize": 20,
     "editor.wordWrap": "on",
     "editor.minimap.enabled": false,
     "editor.renderControlCharacters": true,
@@ -15,13 +15,23 @@
     "editor.suggest.insertMode": "replace",
     "editor.suggest.shareSuggestSelections": true,
     "editor.suggestSelection": "recentlyUsedByPrefix",
-    //"editor.defaultFormatter": "ms-vscode.cpptools",
-    //"editor.formatOnPaste": true,
+    "editor.suggest.preview": true,
+    "editor.suggest.showStatusBar": true,
+    "editor.quickSuggestions": {
+        "comments": "on",
+        "strings": "on"
+    },
+    "editor.suggest.localityBonus": true,
+    "editor.quickSuggestionsDelay": 0,
+    "editor.tabSize": 4,
+    "editor.indentSize": "tabSize",
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
     "editor.formatOnSave": true,
-    //"editor.formatOnType": true,
-    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
-    "editor.maxTokenizationLineLength": 1000000000000000000000000000000000000,
+    "editor.wordSeparators": " `~!@#$%^&*()-=+[{]}\\\\|;:'\\\",.<>/?",
+    "editor.maxTokenizationLineLength": 1e+36,
     "editor.accessibilitySupport": "off",
+    "editor.guides.bracketPairs": true,
     "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.revealDefinition",
     "editor.gotoLocation.alternativeDeclarationCommand": "editor.action.revealDeclaration",
     "editor.gotoLocation.alternativeImplementationCommand": "editor.action.goToImplementation",
@@ -29,10 +39,18 @@
     "editor.gotoLocation.alternativeTypeDefinitionCommand": "editor.action.goToTypeDefinition",
     //format选项
     "[go]": {
-        "editor.defaultFormatter": "golang.go",
+        "editor.defaultFormatter": "golang.go"
     },
     "[cpp]": {
-        "editor.defaultFormatter": "ms-vscode.cpptools"
+        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.formatOnSave": false
+    },
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "always",
+            "source.organizeImports": "always"
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
@@ -40,30 +58,42 @@
     "[xml]": {
         "editor.defaultFormatter": "DotJoshJohnson.xml"
     },
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml",
+        "editor.tabSize": 4
+    },
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[sql]": {
+        "editor.defaultFormatter": "dbcode.dbcode",
+        "editor.formatOnSave": false
+    },
+    "[proto]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
     "[proto3]": {
         "editor.defaultFormatter": "xaver.clang-format"
     },
-    "clang-format.language.proto.style": "{BasedOnStyle: Google,IndentWidth: 2,ColumnLimit: 130}",
+    "clang-format.language.proto.style": "{BasedOnStyle: Google,IncludeBlocks: Regroup,TabWidth: 4,IndentWidth: 4,ColumnLimit: 0}",
     //workbench选项
+    "workbench.colorTheme": "Default Dark+",
     "workbench.editor.enablePreview": false,
-    "workbench.activityBar.visible": true,
-    "workbench.tree.renderIndentGuides": "none",
+    "workbench.tree.renderIndentGuides": "always",
     "workbench.view.alwaysShowHeaderActions": true,
     "workbench.startupEditor": "welcomePageInEmptyWorkbench",
-    //C_Cpp选项
-    //"C_Cpp.default.cppStandard": "c++20",
-    //"C_Cpp.default.cStandard": "c18",
-    "C_Cpp.errorSquiggles": "enabled",
-    "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
-    "C_Cpp.autoAddFileAssociations": false,
-    "C_Cpp.workspaceSymbols": "All",
-    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
-    "C_Cpp.intelliSenseEngine": "default",
-    "C_Cpp.intelliSenseMemoryLimit": 10240,
-    "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode",
-    "C_Cpp.intelliSenseCacheSize": 10240,
-    "C_Cpp.clang_format_fallbackStyle": "none",
-    "C_Cpp.clang_format_style": "file",
+    "workbench.layoutControl.enabled": false,
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.editorLargeFileConfirmation": 1024,
+    //clangd选项
+    "clangd.path": "/usr/bin/clangd",
+    "clangd.arguments": [
+        "--resource-dir=/usr/lib/clang/17",
+        "--background-index-priority=normal",
+        "--limit-references=0",
+        "-j=16",
+        "--pch-storage=memory"
+    ],
     //files选项
     "files.autoGuessEncoding": true,
     "files.autoSave": "onFocusChange",
@@ -82,34 +112,57 @@
         "**/*.la": true,
         "**/.obj": true
     },
-    "files.defaultLanguage": "json",
-    //remote选项
-    //"remote.SSH.showLoginTerminal": true,
-    "remote.SSH.remotePlatform": {
-        "cloud": "linux",
-        "docker": "linux"
+    "files.defaultLanguage": "jsonc",
+    "files.associations": {
+        "*.json*": "jsonc",
+        "*.log.*": "jsonc",
+        "*.tterm*": "jsonc"
     },
-    "remote.SSH.configFile": "~\\.ssh\\config",
     //git选项
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.fetchOnPull": true,
+    "git.openRepositoryInParentFolders": "always",
+    "git.autorefresh": true,
+    "git.branchPrefix": "feature/",
+    "git.defaultBranchName": "master",
+    "git.repositoryScanMaxDepth": -1,
+    "git.statusLimit": 0,
+    "git.supportCancellation": true,
+    "git.verboseCommit": true,
     //explorer选项
-    "explorer.confirmDelete": false,
-    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": true,
+    "explorer.confirmDragAndDrop": true,
+    "explorer.compactFolders": false,
     //terminal选项
-    "terminal.integrated.fontSize": 22,
+    "terminal.integrated.fontSize": 24,
     "terminal.integrated.copyOnSelection": true,
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
     "terminal.integrated.cursorBlinking": true,
     "terminal.integrated.cursorStyle": "line",
     "terminal.integrated.scrollback": 5000,
-    "terminal.integrated.wordSeparators": "`~!@#$%^&*()-=+[{]}\\\\|;:'\\\",.<>/?",
+    "terminal.integrated.wordSeparators": " `~!@#$%^&*()-=+[{]}\\\\|;:'\\\",.<>/?",
+    "terminal.integrated.initialHint": false,
     //go选项
+    "go.diagnostic.vulncheck": "Imports",
     "go.toolsManagement.autoUpdate": true,
+    "go.toolsManagement.checkForUpdates": "proxy",
+    "go.testFlags": [
+        "-race",
+        "-v",
+        "-count=1",
+        "-timeout=24h"
+    ],
+    "gopls": {
+        "formatting.gofumpt": true
+    },
     //xml选项
     "xmlTools.enableXmlTreeViewCursorSync": true,
     "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
     "xmlTools.splitXmlnsOnFormat": false,
+    //shellfmt选项
+    "shellformat.path": "/data/home/project/gopath/bin/shfmt",
+    "shellformat.flag": "-ln bash -i 4 -ci",
     //工作区信任选项
     "security.workspace.trust.banner": "never",
     "security.workspace.trust.enabled": false,
@@ -118,23 +171,168 @@
     //redhat选项
     "redhat.telemetry.enabled": false,
     //proto文件include目录
-    "protoc": {
-        "options": [
-            "--proto_path=${workspaceFolder}/protocol",
-        ]
-    },
-    //go test打印详细输出，禁用cached
-    "go.testFlags": [
-        "-v",
-        "-count=1"
+    "protobuf.includes": [
+        "/data/home/project/trpc-protocol/trpc"
     ],
+    "protobuf.protoc.path": "/usr/local/bin/protoc",
     //显示子文件夹的git
     "git-graph.maxDepthOfRepoSearch": 3,
-    "window.title": "${dirty}${separator}${rootName}",
-    //excalidraw导出图片质量
-    "excalidraw.image": {
-        "exportScale": 3,
-        "exportWithBackground": true,
-        "exportWithDarkMode": false
+    "git-graph.date.format": "ISO Date & Time",
+    "git-graph.showStatusBarItem": true,
+    //编辑器窗口
+    "window.title": "${dirty}${separator}${folderName}",
+    "window.titleBarStyle": "custom",
+    "window.commandCenter": false,
+    "window.restoreWindows": "none",
+    //yaml工具
+    "yaml-plus-json": {
+        "convertOnRename": true,
+        "yamlIndent": 4,
+        "fileExtensions": {
+            "yaml": ".yaml",
+            "json": ".json"
+        },
+        "keepOriginalFiles": "always",
+        "overwriteExistentFiles": "always"
     },
+    //diffEditor
+    "diffEditor.ignoreTrimWhitespace": false,
+    "diffEditor.maxComputationTime": 0,
+    //remote选项
+    "remote.explorerType": [
+        "ssh-remote"
+    ],
+    "remote.SSH.remotePlatform": {
+        "cloud": "linux",
+        "anydev": "linux"
+    },
+    "remote.autoForwardPorts": false,
+    "remote.autoForwardPortsSource": "process",
+    //gitlens选项
+    "gitlens.advanced.fileHistoryShowAllBranches": true,
+    "gitlens.views.scm.grouped.views": {
+        "fileHistory": false,
+        "searchAndCompare": false
+    },
+    "gitlens.currentLine.dateFormat": "YYYY-MM-DD HH:mm:ss",
+    "gitlens.codeLens.dateFormat": "YYYY-MM-DD HH:mm:ss",
+    "gitlens.statusBar.dateFormat": "YYYY-MM-DD HH:mm:ss",
+    "gitlens.blame.dateFormat": "YYYY-MM-DD HH:mm:ss",
+    "gitlens.graph.dateFormat": "YYYY-MM-DD HH:mm:ss",
+    "gitlens.defaultTimeFormat": "YYYY-MM-DD HH:mm:ss",
+    "gitlens.defaultDateFormat": "YYYY-MM-DD HH:mm:ss",
+    //cursor选项
+    "workbench.activityBar.orientation": "vertical",
+    "workbench.agentsWindowButton.enabled": false,
+    "cursor.cpp.enablePartialAccepts": true,
+    "cursor.composer.collapsePaneInputBoxPills": true,
+    "cursor.diffs.useCharacterLevelDiffs": true,
+    "cursor.terminal.usePreviewBox": true,
+    "cursor.cpp.disabledLanguages": [],
+    "cursor.composer.usageSummaryDisplay": "always",
+    //隐藏GitHub Copilot
+    "chat.commandCenter.enabled": false,
+    "chat.agent.enabled": false,
+    "chat.disableAIFeatures": true,
+    //python选项
+    //"python.terminal.activateEnvironment": true,
+    //"python.venvPath": "/data/home/venv",
+    //"python.defaultInterpreterPath": "/data/home/venv/bin/python"
+    //database-client选项
+    "database-client.autoSync": true,
+    "database-client.showSecurity": false,
+    "database-client.terminalLocation": "Panel",
+    // gongfeng选项
+    "gongfeng.copilot.enableCompletionLanguage": {
+        "scminput": true,
+        "markdown": true
+    },
+    "gongfeng.copilot.enableCodelensForFunctions": true,
+    // codebuddy选项
+    "codingcopilot.enableInlineChat": true,
+    "codingcopilot.enableInlineChatIDEShortcutsTip": false,
+    "codingcopilot.commitMessageStyle": "Auto",
+    "codingcopilot.commitMessageLanguage": "zh_CN",
+    "codingcopilot.toolbarOnSelection": false,
+    "codingcopilot.enableAutoCompletions": true,
+    "codingcopilot.enableNextEditSuggestions": true,
+    "codingcopilot.generationPreference": "intelligentMode",
+    "codingcopilot.selectedCompletionModel": "",
+    "codingcopilot.enableCompletionLanguage": {
+        "scmInput": false
+    },
+    "codingcopilot.enableFloatShortcut": true,
+    "codingcopilot.enableIDENotification": true,
+    "codingcopilot.taskList": true,
+    "codingcopilot.enabledWebSearch": true,
+    "codingcopilot.autoAcceptWebSearch": true,
+    "codingcopilot.standaloneTerminal": true,
+    "codingcopilot.enableImageGen": true,
+    // dbcode选项
+    "dbcode.formatting.keywordCase": "lower",
+    "dbcode.formatting.dataTypeCase": "lower",
+    "dbcode.formatting.functionCase": "lower",
+    "dbcode.formatting.identifierCase": "preserve",
+    "dbcode.formatting.indentStyle": "standard",
+    "dbcode.formatting.logicalOperatorNewline": "after",
+    "dbcode.formatting.tabulateAlias": true,
+    "dbcode.formatting.expressionWidth": 5,
+    "dbcode.formatting.linesBetweenQueries": 1,
+    "dbcode.formatting.denseOperators": true,
+    "dbcode.formatting.newlineBeforeSemicolon": false,
+    "dbcode.formatting.preserveShortStatements": 0,
+    "dbcode.ai.inlineCompletion": false,
+    "dbcode.enableLinting": true,
+    "dbcode.useExecuteCodeLens": false,
+    "dbcode.connections": [
+        {
+            "connectionId": "开发tdsql",
+            "name": "开发tdsql",
+            "driver": "mysql",
+            "connectionType": "host",
+            "host": "21.6.145.72",
+            "port": 3306,
+            "ssl": false,
+            "authMethod": "password",
+            "username": "tdsql_admin",
+            "password": "",
+            "savePassword": "secretStorage",
+            "readOnly": false,
+            "postConnectionSqlType": "inline",
+            "connectionTimeout": 30,
+            "pinnedConnectionTimeout": "0",
+            "driverOptions": {
+                "retrievePublickey": false,
+                "disableMultiStatements": false,
+                "permitLocalInfile": true
+            },
+            "introspection": {
+                "progressive": false
+            },
+            "driverSettings": {
+                "charset": "utf8mb4",
+                "collation": "utf8mb4_bin"
+            }
+        },
+        {
+            "connectionId": "开发redis",
+            "name": "开发redis",
+            "driver": "redis",
+            "connectionType": "host",
+            "host": "9.135.127.16",
+            "port": 6380,
+            "ssl": false,
+            "password": "",
+            "savePassword": "secretStorage",
+            "readOnly": false,
+            "connectionTimeout": 30,
+            "driverOptions": {
+                "maxScanKeys": 50000
+            }
+        }
+    ],
+    // yaml选项
+    "yaml.format.printWidth": 1e+36,
+    // extensions选项
+    "extensions.ignoreRecommendations": true
 }
