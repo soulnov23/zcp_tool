@@ -1,0 +1,42 @@
+CompileFlags:
+    Add:
+        - -DDEBUG
+        - -Wno-reserved-user-defined-literal
+        - -I.
+        - -Ithird_party/fmt/include
+        - -Ithird_party/googletest/googletest/include
+        - -Ithird_party/googletest/googlemock/include
+        - -Ithird_party/jsoncpp/include
+        - -Ithird_party/libuuid/include
+        - -Ithird_party/picohttpparser/include
+        - -Ithird_party/rapidjson/include
+        - -Ithird_party/spdlog/include
+        - -Ithird_party/tinyxml2/include
+        - -Ithird_party/yaml/include
+        - -Ithird_party/oauth/include
+---
+If:
+    PathMatch: [.*\.c]
+CompileFlags:
+    Add:
+        - -xc
+        - -std=c17
+---
+If:
+    PathExclude: [.*\.c]
+CompileFlags:
+    Add:
+        - -xc++
+        - -std=c++20
+---
+Diagnostics:
+    UnusedIncludes: None
+    MissingIncludes: None
+    ClangTidy:
+        Remove: ["*"]
+
+InlayHints:
+    Enabled: No
+
+Completion:
+    HeaderInsertion: Never
