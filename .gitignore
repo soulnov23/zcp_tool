@@ -1,5 +1,6 @@
-.vscode/ipch
+.claude
 *.o
+*.d
 *.lo
 *.so.*
 *.so
