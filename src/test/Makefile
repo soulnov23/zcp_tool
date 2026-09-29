@@ -7,57 +7,27 @@ BIN := $(patsubst %.cpp, ./bin/%, $(SRC))
 CFLAGS   += -Wno-class-memaccess
 CXXFLAGS += -Wno-class-memaccess
 INCLUDE  += 
-LDFLAGS  += -ldl -lpthread -lssl -lcrypto -lcurl \
-			-L$(LIB_DIR) -lbase -lfmt -lgtest_main -lgtest -lgmock -ljsoncpp -lpicohttpparser -lspdlog -ltinyxml2 -luuid -lyaml -loauth
+LDFLAGS  += -L$(LIB_DIR) -lbase -lfmt -lgtest_main -lgtest -lgmock -ljsoncpp -lpicohttpparser \
+			-lspdlog -ltinyxml2 -luuid -lyaml -loauth \
+			-ldl -lpthread -lssl -lcrypto -lcurl
 
 all: check $(BIN)
-	
-./bin/test: test.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
 
-./bin/client: client.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/server: server.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/example_rapid_json: example_rapid_json.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/example_curl: example_curl.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/example_epoll: example_epoll.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/example_graph: example_graph.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/example_coroutine: example_coroutine.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/map_util_test: map_util_test.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/xml_parser_test: xml_parser_test.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/yaml_parser_test: yaml_parser_test.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
-
-./bin/log_test: log_test.o
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $(LDFLAGS) $^ -o $@
+#一条静态模式规则覆盖所有用例，新增.cpp无需再加规则
+#（原先12条规则逐个手写，漏写就会报 No rule to make target）
+#链接顺序：目标文件在前、库在后
+$(BIN): ./bin/%: %.o
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $< $(LDFLAGS) -o $@
 
 clean:
-	rm -rf $(OBJS) $(BIN)
+	rm -rf $(OBJS) $(DEPS) $(BIN)
 
 format:
 	$(FORMAT) ./*.cpp ./*.h
 
-check: 
+check:
 	mkdir -p bin
 
 .PHONY: all clean format check
 
-.DEFAULT_GOAL: all
-	
+.DEFAULT_GOAL := all

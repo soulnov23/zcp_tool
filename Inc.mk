@@ -11,8 +11,8 @@ MAKE = make
 CC = gcc
 CXX = g++ -std=c++20
 AR = ar
-ARFLAGS = -scurv
-RANLIB = ranlib
+ARFLAGS = -rcsD
+RANLIB = ranlib -D
 
 CFLAGS 	 ?=
 CXXFLAGS ?=
@@ -32,7 +32,7 @@ INCLUDE  +=
 LDFLAGS  +=
 endif
 
-PROJ_PATH = $(shell pwd | awk -F'/zcp_tool' '{print $$1}')/zcp_tool
+PROJ_PATH := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 BIN_DIR = $(PROJ_PATH)/release/bin
 LIB_DIR = $(PROJ_PATH)/release/lib
 OBJ_DIR = $(PROJ_PATH)/release/obj
@@ -54,31 +54,21 @@ INCLUDE += -I$(PROJ_PATH) -I$(FMT_INC) -I$(GTEST_INC) -I$(GMOCK_INC) \
 		   -I$(JSONCPP_INC) -I$(LIBUUID_INC) -I$(PICOHTTPPARSER_INC) \
 		   -I$(RAPIDJSON_INC) -I$(SPDLOG_INC) -I$(TINYXML2_INC) -I$(YAML_INC) -I$(OAUTH_INC)
 
-FORMAT_INIT = $(PROJ_PATH)/tool/clang-format --style=Google --dump-config > .clang-format
-FORMAT = $(PROJ_PATH)/tool/clang-format --style=file --fallback-style=none -i
+FORMAT = clang-format --style=file --fallback-style=none -i
 
-#自动计算文件的依赖关系
-%.d: %.c
-	$(CC) $(INCLUDE) -MD $< > $@
-	@$(CC) $(INCLUDE) -MD $< | sed s/"^"/"\."/ | sed s/"^\. "/" "/ | \
-                sed s/"\.o"/"\.d"/  >> $@
-%.d: %.cc
-	$(CXX) $(INCLUDE) -MD $< > $@
-	@$(CXX) $(INCLUDE) -MD $< | sed s/"^"/"\."/ | sed s/"^\. "/" "/ | \
-                sed s/"\.o"/"\.d"/  >> $@
-%.d: %.cpp
-	$(CXX) $(INCLUDE) -MD $< > $@
-	@$(CXX) $(INCLUDE) -MD $< | sed s/"^"/"\."/ | sed s/"^\. "/" "/ | \
-                sed s/"\.o"/"\.d"/  >> $@
+DEPFLAGS := -MMD -MP
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDE) $(DEPFLAGS) -c $< -o $@
 %.o: %.cc
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(DEPFLAGS) -c $< -o $@
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(DEPFLAGS) -c $< -o $@
 %.o: %.S
-	$(CXX) $(CXXFLAGS) -D__WITH_FLOAT_SUPPORT -c $^ -o $@
+	$(CXX) $(CXXFLAGS) $(DEPFLAGS) -D__WITH_FLOAT_SUPPORT -c $< -o $@
+
+DEPS := $(wildcard *.d)
+-include $(DEPS)
 
 $(OBJ_DIR)%.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o

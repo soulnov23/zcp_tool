@@ -10,24 +10,27 @@ A_BIN = $(LIB_DIR)/$(A_NAME)
 CFLAGS   +=
 CXXFLAGS +=
 INCLUDE  +=
-LDFLAGS  += -ldl -lpthread -lssl -lcrypto -lcurl \
-			-L$(LIB_DIR) -lfmt -ljsoncpp -lpicohttpparser -lspdlog -ltinyxml2 -luuid -lyaml
+LDFLAGS  += -L$(LIB_DIR) -lfmt -ljsoncpp -lpicohttpparser -lspdlog -ltinyxml2 -luuid -lyaml \
+			-ldl -lpthread -lssl -lcrypto -lcurl
 
 all: $(SO_BIN) $(A_BIN)
 
+#链接顺序：目标文件在前、库在后，否则静态库中的符号不会被解析
 $(SO_BIN): $(OBJS)
-	$(CXX) $(CXXFLAGS) -shared -Wl,-rpath=$(LIB_DIR) -Wl,-soname,$(SO_NAME) $(LDFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) -shared -Wl,-rpath=$(LIB_DIR) -Wl,-soname,$(SO_NAME) $^ $(LDFLAGS) -o $@
 
+#用$^而不是$?：$?只含比目标新的依赖，源文件删除后旧成员会永久留在.a里
 $(A_BIN): $(OBJS)
-	$(AR) $(ARFLAGS) $@ $?
+	rm -f $@
+	$(AR) $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 
 clean:
-	rm -rf $(OBJS) $(SO_BIN) $(A_BIN)
+	rm -rf $(OBJS) $(DEPS) $(SO_BIN) $(A_BIN)
 
 format:
 	$(FORMAT) ./*.cpp ./*.h
 
 .PHONY: all clean format
 
-.DEFAULT_GOAL: all
+.DEFAULT_GOAL := all
