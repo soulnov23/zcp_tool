@@ -65,16 +65,7 @@ DEPFLAGS := -MMD -MP
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(DEPFLAGS) -c $< -o $@
 %.o: %.S
-	$(CXX) $(CXXFLAGS) $(DEPFLAGS) -D__WITH_FLOAT_SUPPORT -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEPFLAGS) -c $< -o $@
 
 DEPS := $(wildcard *.d)
 -include $(DEPS)
-
-$(OBJ_DIR)%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
-$(OBJ_DIR)%.o: %.cc
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
-$(OBJ_DIR)%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $(OBJ_DIR)$*.o
-$(OBJ_DIR)%.o: %.S
-	$(CXX) $(CXXFLAGS) -D__WITH_FLOAT_SUPPORT -c $^ -o $(OBJ_DIR)$*.o
