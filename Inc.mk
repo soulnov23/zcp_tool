@@ -21,7 +21,7 @@ CFLAGS   += -Wall -g -fPIC -pipe -O3
 CXXFLAGS += -Wall -g -fPIC -pipe -O3
 endif
 
-LDFLAGS += -Wl,-z -Wl,defs
+LDFLAGS += -Wl,-z,defs
 
 PROJ_PATH := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 BIN_DIR = $(PROJ_PATH)/release/bin
