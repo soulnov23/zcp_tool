@@ -6,7 +6,7 @@
 
 2. 源文件文件夹中的Makefile必须include ../Inc.mk，因为需要自动计算目标文件生成的规则，必须赋值INCLUDE和LDFLAGS，INCLUDE是给Inc.mk中目标文件生成使用的，LDFLAGS是给本Makefile生成可执行文件使用的，两个变量需要根据自己引用的头文件和库文件而定
 
-3. 所有的可执行程序都生成在zcp_tool/release/bin目录，所有的库文件都生成在zcp_tool/release/lib目录，zcp_tool/release/obj文件夹可选，在源文件文件夹找那个的Makefile中，OBJS变量前面加上了OBJ_DIR，那么就选择生成在zcp_tool/release/obj
+3. 所有的可执行程序都生成在zcp_tool/release/bin目录，所有的库文件都生成在zcp_tool/release/lib目录，.o目标文件就地生成在各自的源文件文件夹中，由make clean清理
 
 ```
 Some influential environment variables:

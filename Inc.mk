@@ -35,7 +35,6 @@ endif
 PROJ_PATH := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 BIN_DIR = $(PROJ_PATH)/release/bin
 LIB_DIR = $(PROJ_PATH)/release/lib
-OBJ_DIR = $(PROJ_PATH)/release/obj
 
 #由于第三方库代码里面include的路径就是按照原目录结构，导致引用第三方库不能直接使用全路径
 FMT_INC 			= $(PROJ_PATH)/third_party/fmt/include
