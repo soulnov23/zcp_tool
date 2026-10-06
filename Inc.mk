@@ -32,14 +32,12 @@ FMT_INC 			= $(PROJ_PATH)/third_party/fmt/include
 GTEST_INC			= $(PROJ_PATH)/third_party/googletest/googletest/include
 GMOCK_INC			= $(PROJ_PATH)/third_party/googletest/googlemock/include
 JSONCPP_INC 		= $(PROJ_PATH)/third_party/jsoncpp/include
-PICOHTTPPARSER_INC 	= $(PROJ_PATH)/third_party/picohttpparser/include
 RAPIDJSON_INC		= $(PROJ_PATH)/third_party/rapidjson/include
 SPDLOG_INC 			= $(PROJ_PATH)/third_party/spdlog/include
 TINYXML2_INC 		= $(PROJ_PATH)/third_party/tinyxml2/include
 YAML_INC 			= $(PROJ_PATH)/third_party/yaml/include
 
-INCLUDE += -I$(PROJ_PATH) -I$(FMT_INC) -I$(GTEST_INC) -I$(GMOCK_INC) \
-		   -I$(JSONCPP_INC) -I$(PICOHTTPPARSER_INC) \
+INCLUDE += -I$(PROJ_PATH) -I$(FMT_INC) -I$(GTEST_INC) -I$(GMOCK_INC) -I$(JSONCPP_INC) \
 		   -I$(RAPIDJSON_INC) -I$(SPDLOG_INC) -I$(TINYXML2_INC) -I$(YAML_INC)
 
 FORMAT = clang-format --style=file --fallback-style=none -i

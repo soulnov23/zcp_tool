@@ -1,7 +1,7 @@
 include Inc.mk
 include ../Inc.mk
 
-all: fmt googletest jsoncpp libuuid picohttpparser rapidjson spdlog tinyxml2 yaml oauth
+all: fmt googletest jsoncpp rapidjson spdlog tinyxml2 yaml
 
 fmt:
 	tar -zvxf zip/${FMT}.tar.gz
@@ -43,12 +43,6 @@ jsoncpp:
 	cp -rf jsoncpp/build/lib/libjsoncpp.* $(LIB_DIR)
 	rm -rf jsoncpp/build
 
-libuuid:
-	$(MAKE) -C libuuid
-
-picohttpparser:
-	$(MAKE) -C picohttpparser
-
 rapidjson:
 	tar -zvxf zip/${RAPIDJSON}.tar.gz
 	rm -rf rapidjson
@@ -73,23 +67,16 @@ tinyxml2:
 yaml:
 	$(MAKE) -C yaml
 
-oauth:
-	$(MAKE) -C oauth
-
 clean:
 	rm -rf $(LIB_DIR)/libfmt.*
 	rm -rf $(LIB_DIR)/libgmock*.*
 	rm -rf $(LIB_DIR)/libgtest*.*
 	rm -rf $(LIB_DIR)/libjsoncpp.*
-	$(MAKE) -C libuuid clean
-	$(MAKE) -C picohttpparser clean
 	rm -rf $(LIB_DIR)/libspdlog.so*
 	$(MAKE) -C tinyxml2 clean
 	$(MAKE) -C yaml clean
-	$(MAKE) -C oauth clean
 
-#所有目标名都和同名目录重名，不声明为PHONY的话make会认为"目录已存在即最新"
-#而直接跳过（oauth原先就漏了，导致make install根本不编译它）
-.PHONY: all fmt googletest jsoncpp libuuid picohttpparser rapidjson spdlog tinyxml2 yaml oauth clean
+#所有目标名都和同名目录重名，不声明为PHONY的话make会认为"目录已存在即最新"而直接跳过
+.PHONY: all fmt googletest jsoncpp rapidjson spdlog tinyxml2 yaml clean
 
 .DEFAULT_GOAL := all
