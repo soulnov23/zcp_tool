@@ -21,7 +21,6 @@ $(SO_BIN): $(OBJS)
 $(A_BIN): $(OBJS)
 	rm -f $@
 	$(AR) $(ARFLAGS) $@ $^
-	$(RANLIB) $@
 
 clean:
 	rm -rf $(OBJS) $(DEPS) $(SO_BIN) $(A_BIN)
