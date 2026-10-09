@@ -1,9 +1,10 @@
+#include "src/base/map_util.h"
+
 #include <iostream>
 #include <map>
 #include <string>
 
 #include "gtest/gtest.h"
-#include "src/base/map_util.h"
 
 class test_fixture_t : public testing::Test {
 public:

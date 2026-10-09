@@ -12,13 +12,13 @@ class vertex_t;
 // 边
 class edge_t {
 public:
-    edge_t(){};
+    edge_t() {};
     edge_t(vertex_t* src, vertex_t* dst, const string& weight) {
         src_ = src;
         dst_ = dst;
         weight_ = weight;
     }
-    ~edge_t(){};
+    ~edge_t() {};
     vertex_t* src() { return src_; }
     vertex_t* dst() { return dst_; }
     string weight() { return weight_; }
@@ -33,7 +33,7 @@ private:
 // 顶点
 class vertex_t {
 public:
-    vertex_t(){};
+    vertex_t() {};
     vertex_t(const string& name) { name_ = name; }
     ~vertex_t() {}
     // 入度

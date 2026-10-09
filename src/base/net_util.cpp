@@ -91,7 +91,7 @@ bool is_private_ip(const string& ip) {
         return false;
     }
     unsigned int ip_piece[2];
-    //取IP前两段
+    // 取IP前两段
     if (sscanf(ip.c_str(), "%u.%u", &ip_piece[0], &ip_piece[1]) != 2) {
         LOG_SYSTEM_ERROR("sscanf");
         return false;

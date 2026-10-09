@@ -27,8 +27,8 @@ void escape_string(const string& sql, string& dest);
 void hex2str(string& dst, const string& src);
 void str2hex(string& dst, const string& src);
 
-//URL编解码，严格遵循RFC3986：unreserved字符集为A-Za-z0-9-._~，空格编码为%20而非+
-//返回0表示成功，其余失败
+// URL编解码，严格遵循RFC3986：unreserved字符集为A-Za-z0-9-._~，空格编码为%20而非+
+// 返回0表示成功，其余失败
 int url_encode(const string& str_in, string& str_out);
 int url_decode(const string& str_in, string& str_out);
 

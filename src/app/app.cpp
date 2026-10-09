@@ -50,11 +50,11 @@ void app::signal_handler_func(int sig_no, siginfo_t* sig_info, void* data) {
         while (true) {
             int status = 0;
             __pid_t pid = waitpid(-1, &status, WNOHANG);
-            //设置了WNOHANG没有子进程了
+            // 设置了WNOHANG没有子进程了
             if (pid == 0) {
                 break;
             } else if (pid == -1) {
-                //设置了WNOHANG没有子进程了
+                // 设置了WNOHANG没有子进程了
                 if (errno == ECHILD) {
                     break;
                 } else {
@@ -65,13 +65,13 @@ void app::signal_handler_func(int sig_no, siginfo_t* sig_info, void* data) {
                     break;
                 }
             }
-            //成功回收pid>0
+            // 成功回收pid>0
             int result = WIFEXITED(status);
             if (result == 0) {
-                //正常退出
+                // 正常退出
                 LOG_DEBUG("pid: {} normal exit return 0", pid);
             } else {
-                //异常退出
+                // 异常退出
                 int return_result = WEXITSTATUS(status);
                 LOG_DEBUG("pid: {} abnormal exit return {}", pid, return_result);
             }
@@ -147,12 +147,12 @@ int app::get_option(int argc, char* argv[]) {
                                                {"conf", required_argument, nullptr, 'c'},
                                                {"signal", required_argument, nullptr, 's'},
                                                {0, 0, 0, 0}};
-        //关闭getopt_long向stderr打印错误信息
+        // 关闭getopt_long向stderr打印错误信息
         opterr = 0;
         int option_index = 0;
         int character = getopt_long(argc, argv, ":hvc:s:", long_options, &option_index);
         if (character == -1) {
-            //全部解析完成
+            // 全部解析完成
             break;
         }
         switch (character) {
@@ -327,19 +327,19 @@ int app::fork_child() {
         LOG_SYSTEM_ERROR("fork");
         return -1;
     } else if (pid == 0) {
-        //子进程
+        // 子进程
         if (log_process() != 0) {
             LOG_ERROR("log process error");
             return -1;
         }
         server svr;
         int status = svr.start(config_.server.ip, config_.server.port, config_.server.backlog, config_.server.event_num);
-        //退出，不然还会接着执行for循环创建更多的子进程的子进程
+        // 退出，不然还会接着执行for循环创建更多的子进程的子进程
         _exit(status);
     }
     // pid > 0
     else {
-        //父进程
+        // 父进程
         LOG_DEBUG("fork child pid: {}", pid);
     }
     return 0;
