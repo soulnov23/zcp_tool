@@ -3,17 +3,7 @@ CompileFlags:
         - -DDEBUG
         - -Wno-reserved-user-defined-literal
         - -I.
-        - -Ithird_party/fmt/include
-        - -Ithird_party/googletest/googletest/include
-        - -Ithird_party/googletest/googlemock/include
-        - -Ithird_party/jsoncpp/include
-        - -Ithird_party/libuuid/include
-        - -Ithird_party/picohttpparser/include
-        - -Ithird_party/rapidjson/include
-        - -Ithird_party/spdlog/include
-        - -Ithird_party/tinyxml2/include
-        - -Ithird_party/yaml/include
-        - -Ithird_party/oauth/include
+        - -Ithird_party/include
 ---
 If:
     PathMatch: [.*\.c]
