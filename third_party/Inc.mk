@@ -1,5 +1,6 @@
-FMT = fmt-8.0.1
-GTEST = googletest-release-1.11.0
-JSONCPP = jsoncpp-1.9.5
-RAPIDJSON = rapidjson-1.1.0
-SPDLOG = spdlog-1.9.2
+SPDLOG = v1.17.0
+YAML_CPP = 0.9.0
+NLOHMANN = v3.12.0
+ABSEIL_CPP = 20260817.0
+RE2 = 2025-11-05
+GTEST = v1.18.0
