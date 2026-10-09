@@ -3,8 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "spdlog/fmt/fmt.h"
 #include "spdlog/common.h"
+#include "spdlog/fmt/fmt.h"
 #include "spdlog/spdlog.h"
 #include "src/base/singleton.h"
 
