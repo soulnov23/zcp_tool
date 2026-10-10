@@ -26,19 +26,26 @@ struct logger_config {
     unsigned int async_thread_pool_size = 1;
 };
 
-class logger : public singleton<logger> {
-    friend class singleton<logger>;
-    CLASS_UNCOPYABLE(logger)
-    CLASS_UNMOVABLE(logger)
-public:
+// 日志单例必须活到其它静态对象析构之后，故采用no_destroy策略，
+// 由此析构函数不会执行，使用方须在退出前调用shutdown()刷盘并回收异步线程
+class logger : public singleton<logger, singleton_policy::no_destroy> {
+    friend class singleton<logger, singleton_policy::no_destroy>;
+
+private:
+    // 构造和析构私有，实例只能通过singleton::instance()获取
     logger();
     ~logger();
 
+public:
     // 在构造函数中创建了console作为默认打印，调用set_config后改为file打印
     int set_config(const logger_config& config);
 
     void log(const char* file_name_in, int line_in, const char* func_name_in, spdlog::level::level_enum level,
              const std::string& msg);
+
+    // 刷盘并回收异步日志线程。no_destroy策略下析构函数不会执行，
+    // 须在进程退出前显式调用，否则缓冲中的异步日志会丢失
+    void shutdown();
 
 private:
     std::shared_ptr<spdlog::logger> console_logger_;
@@ -47,16 +54,16 @@ private:
     bool run_logger_inited_;
 };
 
-#define LOG_IMPL(level, formatter, args...)                                                                   \
-    do {                                                                                                      \
-        logger::get_instance()->log(__FILE__, __LINE__, __FUNCTION__, level, fmt::format(formatter, ##args)); \
+#define LOG_IMPL(level, formatter, args...)                                                              \
+    do {                                                                                                 \
+        logger::instance().log(__FILE__, __LINE__, __FUNCTION__, level, fmt::format(formatter, ##args)); \
     } while (0)
 
 #define LOG_DEBUG(format, args...) LOG_IMPL(spdlog::level::debug, format, ##args)
 #define LOG_ERROR(format, args...) LOG_IMPL(spdlog::level::err, format, ##args)
 
-#define LOG_SYSTEM_ERROR(formatter, args...)                                                                          \
-    do {                                                                                                              \
-        logger::get_instance()->log(__FILE__, __LINE__, __FUNCTION__, spdlog::level::err,                             \
-                                    fmt::format(formatter " errno: {}, errmsg: {}", ##args, errno, strerror(errno))); \
+#define LOG_SYSTEM_ERROR(formatter, args...)                                                                     \
+    do {                                                                                                         \
+        logger::instance().log(__FILE__, __LINE__, __FUNCTION__, spdlog::level::err,                             \
+                               fmt::format(formatter " errno: {}, errmsg: {}", ##args, errno, strerror(errno))); \
     } while (0)

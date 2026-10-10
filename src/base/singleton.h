@@ -1,63 +1,43 @@
 #pragma once
 
-#include <atomic>
-#include <mutex>
+#include <cstddef>
+#include <new>
 
-#include "src/base/macros.h"
-
-template <typename T>
-class singleton {
-    CLASS_UNCOPYABLE(singleton)
-    CLASS_UNMOVABLE(singleton)
-
-protected:
-    singleton() = default;
-    virtual ~singleton() = default;
-
-public:
-    static T* get_instance() {
-        T* tmp = instance_.load(std::memory_order_acquire);
-        if (tmp == nullptr) {
-            std::lock_guard<std::mutex> lock(mutex_);
-            tmp = instance_.load(std::memory_order_relaxed);
-            if (tmp == nullptr) {
-                tmp = new T;
-                instance_.store(tmp, std::memory_order_release);
-                atexit(release);
-            }
-        }
-        return tmp;
-    }
-
-    /*
-    static T* get_instance() {
-        std::call_once(once_flag_, [&] { instance_ = new T; });
-        atexit(release);
-        return instance_;
-    }
-    */
-
-private:
-    static void release() {
-        std::lock_guard<std::mutex> lock(mutex_);
-        T* tmp = instance_.load(std::memory_order_acquire);
-        if (tmp != nullptr) {
-            delete tmp;
-            instance_.store(nullptr, std::memory_order_release);
-        }
-    }
-
-private:
-    static std::mutex mutex_;
-    static std::atomic<T*> instance_;
-    static std::once_flag once_flag_;
+// 单例的析构策略
+enum class singleton_policy {
+    // 退出时按构造的逆序析构，默认策略
+    destroy,
+    // 永不析构，适用于必须活到其它静态对象析构之后的单例（如日志）。
+    // 此类单例需提供显式的收尾接口，用来刷盘、回收线程等
+    no_destroy,
 };
 
-template <class T>
-std::mutex singleton<T>::mutex_;
+// CRTP单例基类。
+// 线程安全由C++11起的magic static规则保证（[stmt.dcl]/4）：函数局部static的初始化
+// 线程安全，并发到达时其它线程阻塞等待，不需要手写double-checked locking。
+// 派生类须将构造和析构函数声明为private，并声明friend class singleton<派生类[, 策略]>
+template <typename T, singleton_policy policy = singleton_policy::destroy>
+class singleton {
+    singleton(const singleton&) = delete;
+    singleton& operator=(const singleton&) = delete;
+    singleton(singleton&&) = delete;
+    singleton& operator=(singleton&&) = delete;
 
-template <class T>
-std::atomic<T*> singleton<T>::instance_{nullptr};
+public:
+    static T& instance() {
+        if constexpr (policy == singleton_policy::no_destroy) {
+            // 在静态存储上原地构造且不注册析构，规避退出期的析构顺序问题
+            alignas(T) static std::byte storage[sizeof(T)];
+            static T* inst = new (&storage) T;
+            return *inst;
+        } else {
+            static T inst;
+            return inst;
+        }
+    }
 
-template <class T>
-std::once_flag singleton<T>::once_flag_;
+protected:
+    // 非virtual：CRTP基类不作多态使用，virtual会给每个单例引入无用的vptr
+    singleton() = default;
+    ~singleton() = default;
+};

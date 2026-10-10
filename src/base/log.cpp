@@ -35,7 +35,19 @@ logger::logger() {
     }
 }
 
-logger::~logger() { spdlog::drop_all(); }
+// no_destroy策略下不会执行，收尾逻辑统一放在shutdown()中
+logger::~logger() { shutdown(); }
+
+void logger::shutdown() {
+    // 刷盘并回收异步日志线程：thread_pool_是线程池的唯一owner
+    // （async_logger只持有weak_ptr），释放它才会post terminate并join线程
+    spdlog::shutdown();
+    run_logger_.reset();
+    thread_pool_.reset();
+    // 回退到console打印：no_destroy策略下本对象一直存活，
+    // shutdown之后仍可能有静态对象在析构时打日志，不能让log()解引用空指针
+    run_logger_inited_ = false;
+}
 
 int logger::set_config(const logger_config& config) {
     try {

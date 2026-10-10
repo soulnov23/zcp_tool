@@ -2,15 +2,10 @@
 #include "src/base/log.h"
 
 int main(int argc, char* argv[]) {
-    logger* logger_instance = logger::get_instance();
-    if (logger_instance == nullptr) {
-        LOG_ERROR("logger single instance error");
-        return -1;
-    }
-    app* app_instance = app::get_instance();
-    if (app_instance == nullptr) {
-        LOG_ERROR("app single instance error");
-        return -1;
-    }
-    return app_instance->start(argc, argv);
+    // instance()返回引用且保证构造完成，无需判空
+    logger& logger_instance = logger::instance();
+    int ret = app::instance().start(argc, argv);
+    // logger采用no_destroy策略，退出前显式刷盘并回收异步线程
+    logger_instance.shutdown();
+    return ret;
 }

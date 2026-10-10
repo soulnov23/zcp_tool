@@ -2,6 +2,9 @@
 
 #include <signal.h>
 
+#include <cstdint>
+#include <string>
+
 #include "src/base/fd_lock_guard.h"
 #include "src/base/macros.h"
 #include "src/base/singleton.h"
@@ -30,15 +33,14 @@ struct app_config {
 
 class app : public singleton<app> {
     friend class singleton<app>;
-    CLASS_UNCOPYABLE(app)
-    CLASS_UNMOVABLE(app)
+
+private:
+    // 构造和析构私有，实例只能通过singleton::instance()获取
+    app();
+    ~app();
 
 public:
     static void signal_handler_func(int sig_no, siginfo_t* sig_info, void* data);
-
-public:
-    app();
-    ~app();
 
     int start(int argc, char* argv[]);
 
