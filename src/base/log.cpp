@@ -1,81 +1,45 @@
 #include "src/base/log.h"
 
+#include <cstdlib>
 #include <iostream>
 
-#include "spdlog/async_logger.h"
-#include "spdlog/sinks/daily_file_sink.h"
-#include "spdlog/sinks/hourly_file_sink.h"
-#include "spdlog/sinks/rotating_file_sink.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/basic_file_sink.h"
+#include "spdlog/sinks/stdout_sinks.h"
+
+static std::shared_ptr<spdlog::logger> make_logger(const logger_config& config) {
+    auto console_sink = std::make_shared<spdlog::sinks::stdout_sink_mt>();
+    console_sink->set_pattern(config.format);
+
+    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(config.file_name);
+    file_sink->set_pattern(config.format);
+
+    auto new_logger = std::make_shared<spdlog::logger>(config.name, spdlog::sinks_init_list{console_sink, file_sink});
+    new_logger->set_level(config.level);
+    new_logger->flush_on(spdlog::level::trace);
+    return new_logger;
+}
 
 logger::logger() {
-    run_logger_inited_ = false;
     try {
         // 设置打印日志时异常处理函数
         spdlog::set_error_handler([](const std::string& msg) {
             std::cout << fmt::format("[{}:{} {}()] {}", __FILE__, __LINE__, __FUNCTION__, msg) << std::endl;
         });
-
-        // 设置console logger
-        auto sink_ = std::make_shared<spdlog::sinks::ansicolor_stdout_sink_mt>();
-        auto formatter = std::make_unique<spdlog::pattern_formatter>(DEFAULT_FORMAT, spdlog::pattern_time_type::local,
-                                                                     spdlog::details::os::default_eol);
-        // unique_ptr不能复制，无法通过值传递调用set_formatter，只能使用move
-        sink_->set_formatter(std::move(formatter));
-        console_logger_ = std::make_shared<spdlog::logger>("console_logger", std::move(sink_));
-        // 设置默认刷新级别和打印级别
-        console_logger_->flush_on(spdlog::level::trace);
-        console_logger_->set_level(spdlog::level::trace);
-        // 注册到spdlog
-        spdlog::register_logger(console_logger_);
+        // 用默认配置先把console和file建起来，set_config之前的日志也不会丢
+        logger_.store(make_logger(logger_config()));
     } catch (const std::exception& ex) {
         std::cout << fmt::format("[{}:{} {}()] {}", __FILE__, __LINE__, __FUNCTION__, ex.what()) << std::endl;
+        ::exit(1);
     } catch (...) {
         std::cout << fmt::format("[{}:{} {}()] unknow exception", __FILE__, __LINE__, __FUNCTION__) << std::endl;
+        ::exit(1);
     }
-}
-
-// no_destroy策略下不会执行，收尾逻辑统一放在shutdown()中
-logger::~logger() { shutdown(); }
-
-void logger::shutdown() {
-    // 刷盘并回收异步日志线程：thread_pool_是线程池的唯一owner
-    // （async_logger只持有weak_ptr），释放它才会post terminate并join线程
-    spdlog::shutdown();
-    run_logger_.reset();
-    thread_pool_.reset();
-    // 回退到console打印：no_destroy策略下本对象一直存活，
-    // shutdown之后仍可能有静态对象在析构时打日志，不能让log()解引用空指针
-    run_logger_inited_ = false;
 }
 
 int logger::set_config(const logger_config& config) {
     try {
-        std::shared_ptr<spdlog::sinks::sink> sink_;
-        if (config.roll_type == "by_size") {
-            sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(config.file_name, config.roll_size,
-                                                                           config.reserve_count, true);
-        } else if (config.roll_type == "by_day") {
-            sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(config.file_name, config.rotation_hour,
-                                                                        config.rotation_minute, false, config.reserve_count);
-        } else if (config.roll_type == "by_hour") {
-            sink_ = std::make_shared<spdlog::sinks::hourly_file_sink_mt>(config.file_name, false, config.reserve_count);
-        } else {
-            LOG_ERROR("invalid roll_type: {}", config.roll_type.c_str());
-            return 1;
-        }
-        auto formatter = std::make_unique<spdlog::pattern_formatter>(config.format, spdlog::pattern_time_type::local,
-                                                                     spdlog::details::os::default_eol);
-        // unique_ptr不能复制，无法通过值传递调用set_formatter，只能使用move
-        sink_->set_formatter(std::move(formatter));
-        thread_pool_ = std::make_shared<spdlog::details::thread_pool>(config.async_thread_pool_size, 1);
-        run_logger_ = std::make_shared<spdlog::async_logger>(config.name, std::move(sink_), thread_pool_,
-                                                             spdlog::async_overflow_policy::block);
-        // 设置默认刷新级别和打印级别
-        run_logger_->flush_on(spdlog::level::trace);
-        run_logger_->set_level(config.level);
-        // 注册到spdlog
-        spdlog::register_logger(run_logger_);
+        // 构造成功后再整体替换，中途失败不影响已有的输出
+        logger_.store(make_logger(config));
     } catch (const std::exception& ex) {
         LOG_ERROR("{}", ex.what());
         return -1;
@@ -83,21 +47,16 @@ int logger::set_config(const logger_config& config) {
         LOG_ERROR("unknow exception");
         return -1;
     }
-    run_logger_inited_ = true;
     return 0;
 }
 
 void logger::log(const char* file_name_in, int line_in, const char* func_name_in, spdlog::level::level_enum level,
                  const std::string& msg) {
     try {
-        if (run_logger_inited_) {
-            run_logger_->log(spdlog::source_loc{file_name_in, line_in, func_name_in}, level, msg);
-        } else {
-            console_logger_->log(spdlog::source_loc{file_name_in, line_in, func_name_in}, level, msg);
-        }
+        logger_.load()->log(spdlog::source_loc{file_name_in, line_in, func_name_in}, level, msg);
     } catch (const std::exception& ex) {
-        LOG_ERROR("{}", ex.what());
+        std::cout << fmt::format("[{}:{} {}()] {}", __FILE__, __LINE__, __FUNCTION__, ex.what()) << std::endl;
     } catch (...) {
-        LOG_ERROR("unknow exception");
+        std::cout << fmt::format("[{}:{} {}()] unknow exception", __FILE__, __LINE__, __FUNCTION__) << std::endl;
     }
 }

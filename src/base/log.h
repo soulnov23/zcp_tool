@@ -1,7 +1,11 @@
 #pragma once
 
+#include <errno.h>
 #include <string.h>
-#include <unistd.h>
+
+#include <atomic>
+#include <memory>
+#include <string>
 
 #include "spdlog/common.h"
 #include "spdlog/fmt/fmt.h"
@@ -11,47 +15,31 @@
 #define DEFAULT_FORMAT "[%Y-%m-%d %H:%M:%S.%f] [%P] [%^%l%$] [%s:%# %!()] %v"
 
 struct logger_config {
-    std::string name = "run_logger";
+    std::string name = "run";
     spdlog::level::level_enum level = spdlog::level::trace;
     std::string format = DEFAULT_FORMAT;
     std::string file_name = "../log/run.log";
-    // by_size按大小分割 by_day按天分割 by_hour按小时分割
-    std::string roll_type = "by_day";
-    unsigned int reserve_count = 10;
-    unsigned int roll_size = 1024 * 1024 * 100;  // 默认100 MB
-    // 表示按天切割的时刻，具体是时刻通过rotation_hour:rotation_minute指定
-    unsigned int rotation_hour = 0;
-    unsigned int rotation_minute = 0;
-    // 异步日志线程池大小
-    unsigned int async_thread_pool_size = 1;
 };
 
-// 日志单例必须活到其它静态对象析构之后，故采用no_destroy策略，
-// 由此析构函数不会执行，使用方须在退出前调用shutdown()刷盘并回收异步线程
+// 日志单例必须活到其它静态对象析构之后，故采用no_destroy策略，析构函数不会执行
 class logger : public singleton<logger, singleton_policy::no_destroy> {
     friend class singleton<logger, singleton_policy::no_destroy>;
 
 private:
-    // 构造和析构私有，实例只能通过singleton::instance()获取
+    // 构造和析构私有，实例只能通过singleton::instance()获取。
+    // 构造时就按logger_config的默认值把console和file建好，建不起来直接退出进程
     logger();
-    ~logger();
+    ~logger() = default;
 
 public:
-    // 在构造函数中创建了console作为默认打印，调用set_config后改为file打印
+    // 换成新配置，失败返回-1且保持原有输出不变
     int set_config(const logger_config& config);
 
     void log(const char* file_name_in, int line_in, const char* func_name_in, spdlog::level::level_enum level,
              const std::string& msg);
 
-    // 刷盘并回收异步日志线程。no_destroy策略下析构函数不会执行，
-    // 须在进程退出前显式调用，否则缓冲中的异步日志会丢失
-    void shutdown();
-
 private:
-    std::shared_ptr<spdlog::logger> console_logger_;
-    std::shared_ptr<spdlog::logger> run_logger_;
-    std::shared_ptr<spdlog::details::thread_pool> thread_pool_;
-    bool run_logger_inited_;
+    std::atomic<std::shared_ptr<spdlog::logger>> logger_;
 };
 
 #define LOG_IMPL(level, formatter, args...)                                                              \
@@ -59,9 +47,14 @@ private:
         logger::instance().log(__FILE__, __LINE__, __FUNCTION__, level, fmt::format(formatter, ##args)); \
     } while (0)
 
-#define LOG_DEBUG(format, args...) LOG_IMPL(spdlog::level::debug, format, ##args)
-#define LOG_ERROR(format, args...) LOG_IMPL(spdlog::level::err, format, ##args)
+#define LOG_TRACE(formatter, args...)    LOG_IMPL(spdlog::level::trace, formatter, ##args)
+#define LOG_DEBUG(formatter, args...)    LOG_IMPL(spdlog::level::debug, formatter, ##args)
+#define LOG_INFO(formatter, args...)     LOG_IMPL(spdlog::level::info, formatter, ##args)
+#define LOG_WARN(formatter, args...)     LOG_IMPL(spdlog::level::warn, formatter, ##args)
+#define LOG_ERROR(formatter, args...)    LOG_IMPL(spdlog::level::err, formatter, ##args)
+#define LOG_CRITICAL(formatter, args...) LOG_IMPL(spdlog::level::critical, formatter, ##args)
 
+// 在消息末尾附上errno和对应的错误描述
 #define LOG_SYSTEM_ERROR(formatter, args...)                                                                     \
     do {                                                                                                         \
         logger::instance().log(__FILE__, __LINE__, __FUNCTION__, spdlog::level::err,                             \
