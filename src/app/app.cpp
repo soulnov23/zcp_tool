@@ -1,11 +1,15 @@
 #include "src/app/app.h"
 
+#include <fcntl.h>
 #include <getopt.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 
 #include <iostream>
+#include <map>
 
 #include "src/app/server.h"
+#include "src/base/eintr.h"
 #include "src/base/fd_guard.h"
 #include "src/base/fd_lock_guard.h"
 #include "src/base/file_util.h"
@@ -241,13 +245,9 @@ int app::config_process() {
         config_.server.backlog = yaml_get_value<uint16_t>(server_node, "backlog");
         config_.server.event_num = yaml_get_value<uint16_t>(server_node, "event_num");
         YAML::Node log_node = yaml_get_value<YAML::Node>(root, "log");
-        config_.log.name = yaml_get_value<std::string>(log_node, "name");
-        config_.log.level = yaml_get_value<uint8_t>(log_node, "level");
-        config_.log.file_name = yaml_get_value<std::string>(log_node, "file_name");
-        config_.log.roll_type = yaml_get_value<std::string>(log_node, "roll_type");
-        config_.log.reserve_count = yaml_get_value<unsigned int>(log_node, "reserve_count");
-        config_.log.roll_size = yaml_get_value<unsigned int>(log_node, "roll_size");
-        config_.log.async_thread_pool_size = yaml_get_value<unsigned int>(log_node, "async_thread_pool_size");
+        if (parse_log_config(log_node) != 0) {
+            return -1;
+        }
     } catch (const std::exception& ex) {
         LOG_ERROR("{}", ex.what());
         return -1;
@@ -258,6 +258,24 @@ int app::config_process() {
     LOG_DEBUG("name: {}, process_num: {}, ip: {}, port: {}, backlog: {}, event_num: {}", config_.server.name,
               config_.server.process_num, config_.server.ip, config_.server.port, config_.server.backlog,
               config_.server.event_num);
+    return 0;
+}
+
+// level用名字配置，其余键都可以不写，缺省值见logger_config
+int app::parse_log_config(YAML::Node& log_node) {
+    logger_config config;
+    config.name = yaml_get_value<std::string>(log_node, "name", config.name);
+    config.format = yaml_get_value<std::string>(log_node, "format", config.format);
+    config.file_name = yaml_get_value<std::string>(log_node, "file_name", config.file_name);
+    std::string level = yaml_get_value<std::string>(log_node, "level", std::string("trace"));
+    // spdlog的级别名：trace debug info warning error critical off，
+    // 认不出来时返回off，这里当配置写错处理
+    config.level = spdlog::level::from_str(level);
+    if (config.level == spdlog::level::off && level != "off") {
+        LOG_ERROR("invalid log level: {}", level);
+        return -1;
+    }
+    config_.log = std::move(config);
     return 0;
 }
 
@@ -287,15 +305,7 @@ int app::single_process() {
 }
 
 int app::log_process() {
-    logger_config config;
-    config.name = config_.log.name;
-    config.level = spdlog::level::level_enum(config_.log.level);
-    config.file_name = config_.log.file_name;
-    config.roll_type = config_.log.roll_type;
-    config.reserve_count = config_.log.reserve_count;
-    config.roll_size = config_.log.roll_size;
-    config.async_thread_pool_size = config_.log.async_thread_pool_size;
-    if (logger::instance().set_config(config) != 0) {
+    if (logger::instance().set_config(config_.log) != 0) {
         LOG_ERROR("set_config error");
         return -1;
     }
@@ -314,8 +324,8 @@ int app::create_pid_file() {
         return -1;
     }
     std::string data = std::to_string(getpid());
-    if (write_file(fd, data.data(), data.size()) == -1) {
-        LOG_ERROR("write file error");
+    if (handle_eintr([&] { return ::write(fd, data.data(), data.size()); }) == -1) {
+        LOG_SYSTEM_ERROR("write");
         return -1;
     }
     return 0;

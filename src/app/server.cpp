@@ -8,7 +8,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "src/base/io_util.h"
+#include "src/base/eintr.h"
 #include "src/base/log.h"
 #include "src/base/net_util.h"
 
@@ -212,7 +212,7 @@ void server::handler_accept() {
 
 void server::handler_read(int fd) {
     char data[SIZE_1K] = {0};
-    ssize_t ret = wrap(read, fd, data, SIZE_1K);
+    ssize_t ret = handle_eintr([&] { return ::read(fd, data, SIZE_1K); });
     if (ret == 0) {
         return;
     }
@@ -226,7 +226,7 @@ void server::handler_read(int fd) {
 }
 
 void server::handler_write(int fd, char* data, size_t size) {
-    ssize_t ret = wrap(write, fd, data, size);
+    ssize_t ret = handle_eintr([&] { return ::write(fd, data, size); });
     if (ret == -1) {
         if (errno != EAGAIN) {
             // SIGPIPE

@@ -6,8 +6,13 @@
 #include <string>
 
 #include "src/base/fd_lock_guard.h"
+#include "src/base/log.h"
 #include "src/base/macros.h"
 #include "src/base/singleton.h"
+
+namespace YAML {
+    class Node;
+}
 
 struct server_config {
     std::string name;
@@ -17,18 +22,10 @@ struct server_config {
     uint16_t backlog;
     uint16_t event_num;
 };
-struct log_config {
-    std::string name;
-    uint8_t level;
-    std::string file_name;
-    std::string roll_type;
-    unsigned int reserve_count;
-    unsigned int roll_size;
-    unsigned int async_thread_pool_size;
-};
 struct app_config {
     server_config server;
-    log_config log;
+    // 直接复用日志模块的配置结构，不再在这里重复一份
+    logger_config log;
 };
 
 class app : public singleton<app> {
@@ -51,6 +48,7 @@ private:
     int signal_process();
     int init_signal();
     int config_process();
+    int parse_log_config(YAML::Node& log_node);
     int daemon_process();
     int single_process();
     int log_process();
