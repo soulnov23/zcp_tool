@@ -12,7 +12,7 @@
 #include "spdlog/spdlog.h"
 #include "src/base/singleton.h"
 
-#define DEFAULT_FORMAT "[%Y-%m-%d %H:%M:%S.%f] [%P] [%^%l%$] [%s:%# %!()] %v"
+#define DEFAULT_FORMAT "[%Y-%m-%d %H:%M:%S.%e] [%P] [%^%l%$] [%s:%# %!] %v"
 
 struct logger_config {
     std::string name = "run";
