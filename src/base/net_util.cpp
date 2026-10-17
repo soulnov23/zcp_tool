@@ -1,270 +1,90 @@
 #include "src/base/net_util.h"
 
-#include <arpa/inet.h>
 #include <fcntl.h>
-#include <net/if.h>
-#include <net/if_arp.h>
+#include <netinet/in.h>
 #include <netinet/tcp.h>
-#include <string.h>
-#include <sys/ioctl.h>
 #include <sys/socket.h>
-#include <sys/types.h>
 
 #include "src/base/log.h"
-#include "src/base/string_util.h"
 
-int make_socket_blocking(int fd) {
-    int flags;
-    if ((flags = fcntl(fd, F_GETFL, nullptr)) == -1) {
-        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
-        return -1;
-    }
-    if (fcntl(fd, F_SETFL, flags & ~O_NONBLOCK) == -1) {
-        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
-        return -1;
-    }
-    return 0;
-}
+namespace {
 
-int make_socket_nonblocking(int fd) {
-    int flags;
-    if ((flags = fcntl(fd, F_GETFL, nullptr)) == -1) {
-        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
-        return -1;
-    }
-    if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
-        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
-        return -1;
-    }
-    return 0;
-}
-
-int make_socket_reuseaddr(int fd) {
-    int flags = 1;
-    return setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &fd, sizeof(flags));
-}
-
-int make_socket_reuseport(int fd) {
-    int flags = 1;
-    return setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &fd, sizeof(flags));
-}
-
-int make_socket_tcpnodelay(int fd) {
-    int flags = 1;
-    return setsockopt(fd, SOL_SOCKET, TCP_NODELAY, &flags, sizeof(flags));
-}
-
-int make_socket_keepalive(int fd) {
-    int flags = 1;
-    return setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &flags, sizeof(flags));
-}
-
-int make_socket_cloexec(int fd) {
-    int flags;
-    if ((flags = fcntl(fd, F_GETFD, nullptr)) == -1) {
-        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
-        return -1;
-    }
-    if (fcntl(fd, F_SETFD, flags | FD_CLOEXEC) == -1) {
-        LOG_SYSTEM_ERROR("fcntl fd: {}", fd);
-        return -1;
-    }
-    return 0;
-}
-
-int set_socket_rcvbuf(int fd, int bufsize) { return setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &bufsize, sizeof(bufsize)); }
-
-int set_socket_sndbuf(int fd, int bufsize) { return setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof(bufsize)); }
-
-bool is_private_ip(const string& ip) {
-    if (ip.empty()) {
-        return false;
-    }
-    struct in_addr addr;
-    int ret = inet_pton(AF_INET, ip.c_str(), &addr);
-    // IP格式校验
-    if (ret == 0) {
-        LOG_ERROR("ip error");
-        return false;
-    } else if (ret == -1) {
-        LOG_SYSTEM_ERROR("inet_pton ip: {}", ip);
-        return false;
-    }
-    unsigned int ip_piece[2];
-    // 取IP前两段
-    if (sscanf(ip.c_str(), "%u.%u", &ip_piece[0], &ip_piece[1]) != 2) {
-        LOG_SYSTEM_ERROR("sscanf");
-        return false;
-    }
-    unsigned int value = ip_piece[0] * 256 * 256 * 256 + ip_piece[1] * 256 * 256;
-    // "10.0.0.0" >> 24 == 0xA
-    // "9.0.0.0" >> 24 == 0x9
-    // "172.16.0.0" >> 20 == 0xAC1
-    // "192.168.0.0" >> 16 == 0xC0A8
-    // "100.64.0.0" >> 22 == 0x191
-    if (value >> 24 == 0xA || value >> 24 == 0x9 || value >> 20 == 0xAC1 || value >> 16 == 0xC0A8 || value >> 22 == 0x191) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-string net_int_ip2str(uint32_t ip) {
-    struct sockaddr_in addr_in;
-    char buf[128] = {0};
-    addr_in.sin_addr.s_addr = ip;
-    if (inet_ntop(AF_INET, &addr_in.sin_addr, buf, sizeof(buf)) == nullptr) {
-        LOG_SYSTEM_ERROR("inet_ntop");
-        return "";
-    }
-    return buf;
-}
-
-string host_int_ip2str(uint32_t ip) { return net_int_ip2str(htonl(ip)); }
-
-uint32_t str2net_int_ip(const string& ip) {
-    if (ip.empty()) {
-        return 0;
-    }
-    vector_t vec;
-    string_split(ip, ".", vec);
-    if (vec.size() != 4) {
-        return 0;
-    }
-    struct sockaddr_in addr_in;
-    int ret = inet_pton(AF_INET, ip.c_str(), &addr_in.sin_addr);
-    // IP格式校验
-    if (ret == 0) {
-        LOG_ERROR("ip error");
-        return 0;
-    } else if (ret == -1) {
-        LOG_SYSTEM_ERROR("inet_ntop");
-        return 0;
-    }
-    return addr_in.sin_addr.s_addr;
-}
-
-uint32_t str2host_int_ip(const string& ip) { return ntohl(str2net_int_ip(ip)); }
-
-int get_peer_name(int fd, uint32_t& peer_addr, uint16_t& peer_port) {
-    struct sockaddr_in addr;
-    socklen_t len = sizeof(addr);
-    if (getpeername(fd, (struct sockaddr*)(&addr), &len) == -1) {
-        LOG_SYSTEM_ERROR("getpeername fd: {}", fd);
-        return -1;
-    }
-    peer_addr = addr.sin_addr.s_addr;
-    peer_port = addr.sin_port;
-    return 0;
-}
-
-int get_sock_name(int fd, uint32_t& peer_addr, uint16_t& peer_port) {
-    struct sockaddr_in addr;
-    socklen_t len = sizeof(addr);
-    if (getsockname(fd, (struct sockaddr*)(&addr), &len) == -1) {
-        LOG_SYSTEM_ERROR("getsockname fd: {}", fd);
-        return -1;
-    }
-    peer_addr = addr.sin_addr.s_addr;
-    peer_port = addr.sin_port;
-    return 0;
-}
-
-/*
-bool get_local_ip(const char* eth_name, string& ip) {
-        //定义设备最大数量
-        #define MAXINTERFACES 16
-        bool ret = false;
-
-        int fd = -1;
-        if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-                return ret;
+    // 置上一个布尔型的套接字选项。
+    // 选项值统一走这里，避免在每个make_socket_xxx里重复写setsockopt时把参数传错
+    int set_socket_bool_option(int fd, int level, int optname, const char* optname_str) {
+        const int flag = 1;
+        if (setsockopt(fd, level, optname, &flag, sizeof(flag)) == -1) {
+            LOG_SYSTEM_ERROR("setsockopt fd: {}, option: {}", fd, optname_str);
+            return -1;
         }
+        return 0;
+    }
 
-        //所有的设备信息数组
-        struct ifreq interface[MAXINTERFACES];
-        struct ifconf ifc;
-        ifc.ifc_len = sizeof(interface);
-        ifc.ifc_ifcu.ifcu_buf = (caddr_t)interface;
-        if (!ioctl(fd, SIOCGIFCONF, (char*)&ifc) == -1) {
-                close(fd);
-                return ret;
+    int set_socket_int_option(int fd, int level, int optname, int value, const char* optname_str) {
+        if (setsockopt(fd, level, optname, &value, sizeof(value)) == -1) {
+            LOG_SYSTEM_ERROR("setsockopt fd: {}, option: {}, value: {}", fd, optname_str, value);
+            return -1;
         }
+        return 0;
+    }
 
-        int num = ifc.ifc_len/sizeof(struct ifreq);
-        for (int i = num; i > 0; i--) {
-                //设备名称
-                LOG_DEBUG("interface name:[{}]",
-interface[i].ifr_ifrn.ifrn_name);
-                if (strstr(interface[i].ifr_ifrn.ifrn_name, eth_name) !=
-nullptr) {
-                        if (ioctl(fd, SIOCGIFADDR, (char*)&interface[i]) == 0) {
-                                ip = net_int_ip2str((((struct
-sockaddr_in*)(&(interface[i].ifr_ifru.ifru_addr)))->sin_addr.s_addr));
-                                LOG_DEBUG("ip:[{}]", ip.c_str());
-                                ret = true;
-                        }
-                }
+    // 读出fd的标志位，置上add_flags、清掉del_flags之后写回。
+    // get_cmd/set_cmd成对传F_GETFL/F_SETFL（文件状态标志）或者F_GETFD/F_SETFD（描述符标志），
+    // 两组标志位的取值空间不同，不能混用
+    int update_fd_flags(int fd, int get_cmd, int set_cmd, int add_flags, int del_flags) {
+        // F_GETFL/F_GETFD不取第三个参数，不传多余的实参
+        const int old_flags = fcntl(fd, get_cmd);
+        if (old_flags == -1) {
+            LOG_SYSTEM_ERROR("fcntl get flags fd: {}", fd);
+            return -1;
         }
-        close(fd);
-        return ret;
-}
-*/
-
-bool get_local_ip(const char* eth_name, string& ip) {
-    bool ret = false;
-
-    int fd = -1;
-    if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-        LOG_SYSTEM_ERROR("socket");
-        return ret;
+        const int new_flags = (old_flags | add_flags) & ~del_flags;
+        // 标志位没有变化时省掉一次系统调用
+        if (new_flags == old_flags) {
+            return 0;
+        }
+        if (fcntl(fd, set_cmd, new_flags) == -1) {
+            LOG_SYSTEM_ERROR("fcntl set flags fd: {}", fd);
+            return -1;
+        }
+        return 0;
     }
 
-    struct ifreq interface;
-    strncpy(interface.ifr_ifrn.ifrn_name, eth_name, IFNAMSIZ);
-    if (ioctl(fd, SIOCGIFADDR, (char*)&interface) == 0) {
-        ip = net_int_ip2str((((struct sockaddr_in*)(&(interface.ifr_ifru.ifru_addr)))->sin_addr.s_addr));
-        ret = true;
-    } else {
-        LOG_SYSTEM_ERROR("ioctl fd: {}", fd);
+}  // namespace
+
+int make_socket_blocking(int fd) { return update_fd_flags(fd, F_GETFL, F_SETFL, 0, O_NONBLOCK); }
+
+int make_socket_nonblocking(int fd) { return update_fd_flags(fd, F_GETFL, F_SETFL, O_NONBLOCK, 0); }
+
+// FD_CLOEXEC是描述符标志，走F_GETFD/F_SETFD而不是F_GETFL/F_SETFL
+int make_socket_cloexec(int fd) { return update_fd_flags(fd, F_GETFD, F_SETFD, FD_CLOEXEC, 0); }
+
+int make_socket_reuseaddr(int fd) { return set_socket_bool_option(fd, SOL_SOCKET, SO_REUSEADDR, "SO_REUSEADDR"); }
+
+int make_socket_reuseport(int fd) { return set_socket_bool_option(fd, SOL_SOCKET, SO_REUSEPORT, "SO_REUSEPORT"); }
+
+// TCP_NODELAY在IPPROTO_TCP层，不在SOL_SOCKET层。
+// 两个常量的值都是1，传错层不会报错而是变成了设置另一个选项（SO_DEBUG）
+int make_socket_tcpnodelay(int fd) { return set_socket_bool_option(fd, IPPROTO_TCP, TCP_NODELAY, "TCP_NODELAY"); }
+
+int make_socket_keepalive(int fd) { return set_socket_bool_option(fd, SOL_SOCKET, SO_KEEPALIVE, "SO_KEEPALIVE"); }
+
+int set_socket_rcvbuf(int fd, int bufsize) { return set_socket_int_option(fd, SOL_SOCKET, SO_RCVBUF, bufsize, "SO_RCVBUF"); }
+
+int set_socket_sndbuf(int fd, int bufsize) { return set_socket_int_option(fd, SOL_SOCKET, SO_SNDBUF, bufsize, "SO_SNDBUF"); }
+
+int set_signal_handler(int sig_no, void (*handler)(int, siginfo_t*, void*), int flags) {
+    struct sigaction action{};
+    // sigset_t是不透明类型，清零不保证等于空信号集，必须用sigemptyset
+    if (sigemptyset(&action.sa_mask) == -1) {
+        LOG_SYSTEM_ERROR("sigemptyset");
+        return -1;
     }
-    close(fd);
-    return ret;
-}
-
-bool get_local_mac(const char* eth_name, string& mac) {
-    bool ret = false;
-
-    int fd = -1;
-    if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-        LOG_SYSTEM_ERROR("socket");
-        return ret;
-    }
-
-    struct ifreq interface;
-    strncpy(interface.ifr_ifrn.ifrn_name, eth_name, IFNAMSIZ);
-    if (ioctl(fd, SIOCGIFHWADDR, (char*)&interface) == 0) {
-        char temp_mac[20];
-        snprintf(
-            temp_mac, sizeof(temp_mac), "%02x:%02x:%02x:%02x:%02x:%02x", (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[0],
-            (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[1], (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[2],
-            (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[3], (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[4],
-            (unsigned char)interface.ifr_ifru.ifru_hwaddr.sa_data[5]);
-        mac = temp_mac;
-        ret = true;
-    } else {
-        LOG_SYSTEM_ERROR("ioctl fd: {}", fd);
-    }
-    close(fd);
-    return ret;
-}
-
-int set_signal_handler(int sig_no, void (*handler)(int, siginfo_t*, void*)) {
-    struct sigaction sig;
-    memset(&sig, 0, sizeof(struct sigaction));
-    sig.sa_flags = SA_SIGINFO;
-    sig.sa_sigaction = handler;
-    if (sigaction(sig_no, &sig, nullptr) != 0) {
+    // handler带siginfo_t参数，必须赋给sa_sigaction并置上SA_SIGINFO，
+    // 否则内核按sa_handler的签名调用，多出来的两个参数是未定义的
+    action.sa_flags = flags | SA_SIGINFO;
+    action.sa_sigaction = handler;
+    if (sigaction(sig_no, &action, nullptr) == -1) {
         LOG_SYSTEM_ERROR("sigaction sig: {}", sig_no);
         return -1;
     }

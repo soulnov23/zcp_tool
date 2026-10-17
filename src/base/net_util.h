@@ -1,10 +1,6 @@
-#ifndef __NET_UTILS_H__
-#define __NET_UTILS_H__
+#pragma once
 
-#include <string>
-using namespace std;
 #include <signal.h>
-#include <unistd.h>
 
 int make_socket_blocking(int fd);
 int make_socket_nonblocking(int fd);
@@ -17,22 +13,8 @@ int make_socket_cloexec(int fd);
 int set_socket_rcvbuf(int fd, int bufsize);
 int set_socket_sndbuf(int fd, int bufsize);
 
-bool is_private_ip(const string& ip);
-// 网络字节序整型ip转换为点分十进制字符串ip
-string net_int_ip2str(uint32_t ip);
-// 主机字节序整型ip转换为点分十进制字符串ip
-string host_int_ip2str(uint32_t ip);
-// 点分十进制字符串ip转换为网络字节序整型ip
-uint32_t str2net_int_ip(const string& ip);
-// 点分十进制字符串ip转换为主机字节序整型ip
-uint32_t str2host_int_ip(const string& ip);
-
-int get_peer_name(int fd, uint32_t& peer_addr, uint16_t& peer_port);
-int get_sock_name(int fd, uint32_t& peer_addr, uint16_t& peer_port);
-
-bool get_local_ip(const char* eth_name, string& ip);
-bool get_local_mac(const char* eth_name, string& mac);
-
-int set_signal_handler(int sig_no, void (*handler)(int, siginfo_t*, void*));
-
-#endif
+// 注册信号处理函数，成功返回0失败返回-1。
+// flags直接传给sigaction的sa_flags，SA_SIGINFO由函数内部补上。
+// 刻意不默认加SA_RESTART：本项目的策略是在调用点用eintr.h的handle_eintr处理EINTR，
+// 需要让慢系统调用自动重启的话，由调用方显式传SA_RESTART
+int set_signal_handler(int sig_no, void (*handler)(int, siginfo_t*, void*), int flags = 0);
