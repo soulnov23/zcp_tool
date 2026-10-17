@@ -1,19 +1,17 @@
 include ../../Inc.mk
 
-SRC := $(wildcard *.cpp)
-OBJS := $(patsubst %.cpp, %.o, $(SRC))
 BIN = $(BIN_DIR)/zcp_tool
 
 CFLAGS   +=
 CXXFLAGS +=
 INCLUDE  +=
-LDFLAGS  += -L$(LIB_DIR) -lbase -lyaml-cpp -lpthread
+LDFLAGS  += -lbase -lyaml-cpp -lpthread
 
 all: $(BIN)
 
 #链接顺序：目标文件在前、库在后
 $(BIN): $(OBJS)
-	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic -Wl,-rpath=$(LIB_DIR) $^ $(LDFLAGS) -o $@
+	$(CXX) $(CXXFLAGS) -Wl,--export-dynamic $^ $(LDFLAGS) -o $@
 
 clean:
 	rm -rf $(OBJS) $(DEPS) $(BIN)

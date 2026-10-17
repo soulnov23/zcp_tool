@@ -1,6 +1,6 @@
 include Inc.mk
 
-all: check
+all:
 	$(MAKE) -C src
 
 clean:
@@ -9,16 +9,12 @@ clean:
 format:
 	$(MAKE) -C src format
 
-install: check
+install:
 	$(MAKE) -C third_party
 
 uninstall:
 	$(MAKE) -C third_party clean
 
-check:
-	mkdir -p $(BIN_DIR)
-	mkdir -p $(LIB_DIR)
-
-.PHONY: all clean format install uninstall check
+.PHONY: all clean format install uninstall
 
 .DEFAULT_GOAL := all

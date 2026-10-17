@@ -21,13 +21,13 @@ CFLAGS   += -Wall -g -fPIC -pipe -O3
 CXXFLAGS += -Wall -g -fPIC -pipe -O3
 endif
 
-LDFLAGS += -Wl,-z,defs
-
 PROJ_PATH := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-BIN_DIR = $(PROJ_PATH)/release/bin
-LIB_DIR = $(PROJ_PATH)/release/lib
+BIN_DIR = $(PROJ_PATH)/build/bin
+LIB_DIR = $(PROJ_PATH)/build/lib
 
 INCLUDE += -I$(PROJ_PATH) -I$(PROJ_PATH)/third_party/include
+
+LDFLAGS += -Wl,-z,defs -L$(LIB_DIR) -Wl,-rpath=$(LIB_DIR)
 
 FORMAT = clang-format --style=file --fallback-style=none -i
 
@@ -44,3 +44,6 @@ DEPFLAGS := -MMD -MP
 
 DEPS := $(wildcard *.d)
 -include $(DEPS)
+
+SRC ?= $(wildcard *.cpp)
+OBJS := $(patsubst %.cpp,%.o,$(SRC))
