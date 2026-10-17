@@ -7,7 +7,7 @@ Standard: c++20
 AccessModifierOffset: -4
 
 # 宏定义对齐
-AlignConsecutiveMacros: true
+AlignConsecutiveMacros: AcrossEmptyLinesAndComments
 
 # 每行限长130
 ColumnLimit: 130
