@@ -1,5 +1,4 @@
-#ifndef __MSG_STRUCT_H_
-#define __MSG_STRUCT_H_
+#pragma once
 
 #include <stddef.h>
 #include <stdint.h>
@@ -42,5 +41,3 @@ memcpy(ipc_hdr->data, buf, len);
 send(fd, (char*)ipc_hdr, IPC_HEADER_SZ+len);
 free(ipc_hdr);
 */
-
-#endif
