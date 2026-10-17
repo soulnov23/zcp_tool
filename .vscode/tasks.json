@@ -30,7 +30,7 @@
             "type": "shell",
             "command": [
                 "make -C ${workspaceFolder} -j32 &&",
-                "cd ${workspaceFolder}/release/bin &&",
+                "cd ${workspaceFolder}/build/bin &&",
                 "./restart.sh"
             ],
             "group": {
