@@ -11,12 +11,10 @@
 #include "spdlog/spdlog.h"
 #include "src/base/singleton.h"
 
-#define DEFAULT_FORMAT "[%Y-%m-%d %H:%M:%S.%e] [%P] [%^%l%$] [%s:%# %!] %v"
-
 struct logger_config {
     std::string name = "run";
     spdlog::level::level_enum level = spdlog::level::trace;
-    std::string format = DEFAULT_FORMAT;
+    std::string format = "[%Y-%m-%d %H:%M:%S.%e] [%P] [%^%l%$] [%s:%# %!] %v";
     std::string file_name = "run.log";
 };
 
