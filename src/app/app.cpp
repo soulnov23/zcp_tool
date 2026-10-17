@@ -15,7 +15,7 @@
 #include "src/base/file_util.h"
 #include "src/base/log.h"
 #include "src/base/net_util.h"
-#include "src/base/yaml_parser.h"
+#include "yaml-cpp/yaml.h"
 
 struct signal_hander {
     int sig_no;
@@ -231,28 +231,34 @@ int app::init_signal() {
 }
 
 int app::config_process() {
-    YAML::Node root;
-    if (yaml_load_file(config_file_, root) != 0) {
-        LOG_ERROR("yaml load file: {} error", config_file_);
-        return -1;
-    }
     try {
-        YAML::Node server_node = yaml_get_value<YAML::Node>(root, "server");
-        config_.server.name = yaml_get_value<std::string>(server_node, "name");
-        config_.server.process_num = yaml_get_value<uint8_t>(server_node, "process_num");
-        config_.server.ip = yaml_get_value<std::string>(server_node, "ip");
-        config_.server.port = yaml_get_value<uint16_t>(server_node, "port");
-        config_.server.backlog = yaml_get_value<uint16_t>(server_node, "backlog");
-        config_.server.event_num = yaml_get_value<uint16_t>(server_node, "event_num");
-        YAML::Node log_node = yaml_get_value<YAML::Node>(root, "log");
+        // 用const Node：缺失的key会得到一个无效节点，取值时抛InvalidNode并带上key名，
+        // 非const的operator[]则会往树里插一个未定义节点，报错也只剩下bad conversion
+        const YAML::Node root = YAML::LoadFile(config_file_);
+        const YAML::Node server_node = root["server"];
+        if (!server_node) {
+            LOG_ERROR("config: {} has no server section", config_file_);
+            return -1;
+        }
+        config_.server.name = server_node["name"].as<std::string>();
+        config_.server.process_num = server_node["process_num"].as<uint8_t>();
+        config_.server.ip = server_node["ip"].as<std::string>();
+        config_.server.port = server_node["port"].as<uint16_t>();
+        config_.server.backlog = server_node["backlog"].as<uint16_t>();
+        config_.server.event_num = server_node["event_num"].as<uint16_t>();
+        const YAML::Node log_node = root["log"];
+        if (!log_node) {
+            LOG_ERROR("config: {} has no log section", config_file_);
+            return -1;
+        }
         if (parse_log_config(log_node) != 0) {
             return -1;
         }
     } catch (const std::exception& ex) {
-        LOG_ERROR("{}", ex.what());
+        LOG_ERROR("parse config: {} error: {}", config_file_, ex.what());
         return -1;
     } catch (...) {
-        LOG_ERROR("unknow exception");
+        LOG_ERROR("parse config: {} unknow exception", config_file_);
         return -1;
     }
     LOG_DEBUG("name: {}, process_num: {}, ip: {}, port: {}, backlog: {}, event_num: {}", config_.server.name,
@@ -262,12 +268,13 @@ int app::config_process() {
 }
 
 // level用名字配置，其余键都可以不写，缺省值见logger_config
-int app::parse_log_config(YAML::Node& log_node) {
+// as<T>(fallback)在key缺失、值为空、类型对不上这三种情况下都返回缺省值，不抛异常
+int app::parse_log_config(const YAML::Node& log_node) {
     logger_config config;
-    config.name = yaml_get_value<std::string>(log_node, "name", config.name);
-    config.format = yaml_get_value<std::string>(log_node, "format", config.format);
-    config.file_name = yaml_get_value<std::string>(log_node, "file_name", config.file_name);
-    std::string level = yaml_get_value<std::string>(log_node, "level", std::string("trace"));
+    config.name = log_node["name"].as<std::string>(config.name);
+    config.format = log_node["format"].as<std::string>(config.format);
+    config.file_name = log_node["file_name"].as<std::string>(config.file_name);
+    std::string level = log_node["level"].as<std::string>(std::string("trace"));
     // spdlog的级别名：trace debug info warning error critical off，
     // 认不出来时返回off，这里当配置写错处理
     config.level = spdlog::level::from_str(level);

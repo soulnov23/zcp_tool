@@ -48,7 +48,7 @@ private:
     int signal_process();
     int init_signal();
     int config_process();
-    int parse_log_config(YAML::Node& log_node);
+    int parse_log_config(const YAML::Node& log_node);
     int daemon_process();
     int single_process();
     int log_process();
