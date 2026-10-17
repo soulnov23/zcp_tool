@@ -1,7 +1,9 @@
-#include "src/base/yaml_parser.h"
+#include <map>
+#include <string>
 
 #include "gtest/gtest.h"
 #include "src/base/log.h"
+#include "yaml-cpp/yaml.h"
 
 class test_fixture_t : public testing::Test {
 public:
@@ -30,27 +32,41 @@ public:
     std::map<std::string, std::string> map_data_;
 };
 
-TEST_F(test_fixture_t, yaml_load_file) {
-    YAML::Node root;
-    // IsDefined无法判断节点是否有效，还是要用IsNull
-    EXPECT_FALSE(root.IsDefined());
-    EXPECT_TRUE(root.IsNull());
-    EXPECT_EQ(0, yaml_load_file("test.yaml", root));
-    EXPECT_TRUE(root.IsDefined());
-    EXPECT_FALSE(root.IsNull());
-    try {
-        std::string language = yaml_get_value<std::string>(root, "language");
-        YAML::Node matrix_node = yaml_get_value<YAML::Node>(root, "matrix");
-        YAML::Node include_node = yaml_get_value<YAML::Node>(matrix_node, "include");
-        for (auto include : include_node) {
-            std::string os = yaml_get_value<std::string>(include, "os");
-            std::string compiler = yaml_get_value<std::string>(include, "compiler");
-            LOG_DEBUG("os: {}, compiler: {}", os, compiler);
-        }
-
-    } catch (const std::exception& ex) {
-        LOG_ERROR("{}", ex.what());
-    } catch (...) {
-        LOG_ERROR("unknow exception");
+TEST_F(test_fixture_t, load_file) {
+    YAML::Node root = YAML::LoadFile("test.yaml");
+    EXPECT_TRUE(root.IsMap());
+    EXPECT_EQ("c++", root["language"].as<std::string>());
+    const YAML::Node include_node = root["matrix"]["include"];
+    ASSERT_TRUE(include_node.IsSequence());
+    for (const auto& include : include_node) {
+        LOG_DEBUG("os: {}, compiler: {}", include["os"].as<std::string>(), include["compiler"].as<std::string>());
     }
+}
+
+TEST_F(test_fixture_t, load_file_error) {
+    // 文件不存在抛BadFile，解析失败抛ParserException，两者都是YAML::Exception的派生
+    EXPECT_THROW(YAML::LoadFile("no_such_file.yaml"), YAML::BadFile);
+    EXPECT_THROW(YAML::Load("[1, 2"), YAML::ParserException);
+}
+
+TEST_F(test_fixture_t, missing_key) {
+    const YAML::Node root = YAML::Load("a: 1");
+    // const的operator[]对缺失的key返回无效节点，所以能用operator bool判断，
+    // 但取值会抛InvalidNode而不是返回空值
+    const YAML::Node node = root["no_such_key"];
+    EXPECT_FALSE(static_cast<bool>(node));
+    EXPECT_FALSE(node.IsDefined());
+    EXPECT_THROW(node.as<int>(), YAML::InvalidNode);
+    // as<T>(fallback)连类型错误一起吞掉，所以它只适合"值可错也无所谓"的场景
+    EXPECT_EQ(5, node.as<int>(5));
+    EXPECT_EQ(1, root["a"].as<int>(5));
+    EXPECT_EQ(7, YAML::Load("a: not_a_number")["a"].as<int>(7));
+}
+
+TEST_F(test_fixture_t, default_node) {
+    YAML::Node root;
+    // 默认构造的节点是个有效的空节点：IsDefined为真，判空要用IsNull
+    EXPECT_TRUE(root.IsNull());
+    EXPECT_TRUE(root.IsDefined());
+    EXPECT_TRUE(static_cast<bool>(root));
 }
