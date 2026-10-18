@@ -5,23 +5,26 @@
 #include <netinet/tcp.h>
 #include <sys/socket.h>
 
+#include <string_view>
+
 #include "src/base/log.h"
 
 namespace {
 
     // 置上一个布尔型的套接字选项。
     // 选项值统一走这里，避免在每个make_socket_xxx里重复写setsockopt时把参数传错
-    int set_socket_bool_option(int fd, int level, int optname, const char* optname_str) {
+    int set_socket_bool_option(int fd, int level, int optname, std::string_view optname_str) {
         const int flag = 1;
-        if (setsockopt(fd, level, optname, &flag, sizeof(flag)) == -1) {
+        // sizeof返回size_t，setsockopt的第五个参数是socklen_t，-Wconversion下会报窄化
+        if (setsockopt(fd, level, optname, &flag, static_cast<socklen_t>(sizeof(flag))) == -1) {
             LOG_SYSTEM_ERROR("setsockopt fd: {}, option: {}", fd, optname_str);
             return -1;
         }
         return 0;
     }
 
-    int set_socket_int_option(int fd, int level, int optname, int value, const char* optname_str) {
-        if (setsockopt(fd, level, optname, &value, sizeof(value)) == -1) {
+    int set_socket_int_option(int fd, int level, int optname, int value, std::string_view optname_str) {
+        if (setsockopt(fd, level, optname, &value, static_cast<socklen_t>(sizeof(value))) == -1) {
             LOG_SYSTEM_ERROR("setsockopt fd: {}, option: {}, value: {}", fd, optname_str, value);
             return -1;
         }
@@ -67,14 +70,30 @@ int make_socket_reuseport(int fd) { return set_socket_bool_option(fd, SOL_SOCKET
 // 两个常量的值都是1，传错层不会报错而是变成了设置另一个选项（SO_DEBUG）
 int make_socket_tcpnodelay(int fd) { return set_socket_bool_option(fd, IPPROTO_TCP, TCP_NODELAY, "TCP_NODELAY"); }
 
-int make_socket_keepalive(int fd) { return set_socket_bool_option(fd, SOL_SOCKET, SO_KEEPALIVE, "SO_KEEPALIVE"); }
+int make_socket_keepalive(int fd, int cnt, int intvl, int idle) {
+    if (set_socket_bool_option(fd, SOL_SOCKET, SO_KEEPALIVE, "SO_KEEPALIVE") != 0) {
+        return -1;
+    }
+    // 三个选项都在IPPROTO_TCP层。不先打开SO_KEEPALIVE的话它们不生效也不报错，
+    // 所以顺序不能反
+    if (set_socket_int_option(fd, IPPROTO_TCP, TCP_KEEPCNT, cnt, "TCP_KEEPCNT") != 0) {
+        return -1;
+    }
+    if (set_socket_int_option(fd, IPPROTO_TCP, TCP_KEEPINTVL, intvl, "TCP_KEEPINTVL") != 0) {
+        return -1;
+    }
+    if (set_socket_int_option(fd, IPPROTO_TCP, TCP_KEEPIDLE, idle, "TCP_KEEPIDLE") != 0) {
+        return -1;
+    }
+    return 0;
+}
 
 int set_socket_rcvbuf(int fd, int bufsize) { return set_socket_int_option(fd, SOL_SOCKET, SO_RCVBUF, bufsize, "SO_RCVBUF"); }
 
 int set_socket_sndbuf(int fd, int bufsize) { return set_socket_int_option(fd, SOL_SOCKET, SO_SNDBUF, bufsize, "SO_SNDBUF"); }
 
 int set_signal_handler(int sig_no, void (*handler)(int, siginfo_t*, void*), int flags) {
-    struct sigaction action{};
+    struct sigaction action {};
     // sigset_t是不透明类型，清零不保证等于空信号集，必须用sigemptyset
     if (sigemptyset(&action.sa_mask) == -1) {
         LOG_SYSTEM_ERROR("sigemptyset");

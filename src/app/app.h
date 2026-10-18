@@ -5,9 +5,7 @@
 #include <cstdint>
 #include <string>
 
-#include "src/base/fd_lock_guard.h"
 #include "src/base/log.h"
-#include "src/base/macros.h"
 #include "src/base/singleton.h"
 
 namespace YAML {
@@ -32,37 +30,30 @@ class app : public singleton<app> {
     friend class singleton<app>;
 
 private:
-    // 构造和析构私有，实例只能通过singleton::instance()获取
     app();
     ~app();
 
 public:
-    static void signal_handler_func(int sig_no, siginfo_t* sig_info, void* data);
+    // master 的信号处理函数：只置一个 sig_atomic_t 标志，主循环里再转发给子进程
+    static void master_signal_handler(int sig_no, siginfo_t* sig_info, void* data);
+
+    // worker 的信号处理函数：收到退出信号时往 eventfd 写 8 字节，唤醒 epoll
+    static void worker_signal_handler(int sig_no, siginfo_t* sig_info, void* data);
 
     int start(int argc, char* argv[]);
 
 private:
-    int get_option(int argc, char* argv[]);
-    void show_help_info();
-    void show_version_info();
-    int signal_process();
-    int init_signal();
-    int config_process();
+    int config_process(const std::string& config_file);
     int parse_log_config(const YAML::Node& log_node);
     int daemon_process();
-    int single_process();
-    int log_process();
-    int create_pid_file();
-    int fork_child();
-    void check();
+    int init_master_signal();
+    int init_worker_signal();
+    int fork_worker();
+    void run();
+    void forward_signal(int sig_no);
+    void reap_worker();
 
 private:
-    std::string pid_file_;
-    std::string lock_file_;
-    bool show_help_;
-    bool show_version_;
     std::string config_file_;
-    std::string signal_cmd_;
-    fd_lock_guard single_process_;
     app_config config_;
 };

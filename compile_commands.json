@@ -31,45 +31,18 @@
         "arguments": [
             "clang++",
             "-c",
-            "src/base/base64.cpp"
+            "src/base/epoll.cpp"
         ],
-        "file": "src/base/base64.cpp"
+        "file": "src/base/epoll.cpp"
     },
     {
         "directory": "/data/home/project/zcp_tool",
         "arguments": [
             "clang++",
             "-c",
-            "src/base/connector.cpp"
+            "src/base/epoll_event.cpp"
         ],
-        "file": "src/base/connector.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/base/fd_lock_guard.cpp"
-        ],
-        "file": "src/base/fd_lock_guard.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/base/file_util.cpp"
-        ],
-        "file": "src/base/file_util.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/base/graph.cpp"
-        ],
-        "file": "src/base/graph.cpp"
+        "file": "src/base/epoll_event.cpp"
     },
     {
         "directory": "/data/home/project/zcp_tool",
@@ -85,15 +58,6 @@
         "arguments": [
             "clang++",
             "-c",
-            "src/base/module.cpp"
-        ],
-        "file": "src/base/module.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
             "src/base/net_util.cpp"
         ],
         "file": "src/base/net_util.cpp"
@@ -103,125 +67,8 @@
         "arguments": [
             "clang++",
             "-c",
-            "src/base/string_util.cpp"
+            "src/base/socket.cpp"
         ],
-        "file": "src/base/string_util.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/base/time_util.cpp"
-        ],
-        "file": "src/base/time_util.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/base/yaml_parser.cpp"
-        ],
-        "file": "src/base/yaml_parser.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/client.cpp"
-        ],
-        "file": "src/test/client.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/example_coroutine.cpp"
-        ],
-        "file": "src/test/example_coroutine.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/example_curl.cpp"
-        ],
-        "file": "src/test/example_curl.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/example_epoll.cpp"
-        ],
-        "file": "src/test/example_epoll.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/example_graph.cpp"
-        ],
-        "file": "src/test/example_graph.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/example_rapid_json.cpp"
-        ],
-        "file": "src/test/example_rapid_json.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/log_test.cpp"
-        ],
-        "file": "src/test/log_test.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/map_util_test.cpp"
-        ],
-        "file": "src/test/map_util_test.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/server.cpp"
-        ],
-        "file": "src/test/server.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/xml_parser_test.cpp"
-        ],
-        "file": "src/test/xml_parser_test.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/test/yaml_parser_test.cpp"
-        ],
-        "file": "src/test/yaml_parser_test.cpp"
+        "file": "src/base/socket.cpp"
     }
 ]
