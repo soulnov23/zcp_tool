@@ -49,7 +49,11 @@ public:
 public:
     static T& instance() {
         if constexpr (policy == singleton_policy::no_destroy) {
-            // 在静态存储上原地构造且不注册析构，规避退出期的析构顺序问题
+            // 在静态存储上原地构造且不注册析构，规避退出期的析构顺序问题。
+            // 这里不能用std::construct_at：它在标准库内部执行new表达式，访问检查
+            // 发生在标准库的上下文里，而派生类的构造函数是private，会报访问错误。
+            // placement new写在singleton的成员函数里，访问权限足够。
+            // this是singleton的基类，但构造完成前它只提供存储，不必launder
             alignas(T) static std::byte storage[sizeof(T)];
             static T* inst = new (&storage) T;
             return *inst;

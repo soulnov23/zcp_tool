@@ -2,9 +2,9 @@
 
 #include <atomic>
 #include <cerrno>
-#include <cstring>
 #include <memory>
 #include <string>
+#include <system_error>
 
 #include "spdlog/common.h"
 #include "spdlog/fmt/fmt.h"
@@ -66,7 +66,7 @@ private:
 #define LOG_SYSTEM_ERROR(formatter, ...)                                                                       \
     do {                                                                                                       \
         const int log_saved_errno = errno;                                                                     \
-        logger::instance().log(__FILE__, __LINE__, __FUNCTION__, spdlog::level::err,                           \
+        logger::instance().log(__FILE__, __LINE__, __FUNCTION__, spdlog::level::err,                               \
                                formatter " errno: {}, errmsg: {}" __VA_OPT__(, ) __VA_ARGS__, log_saved_errno, \
-                               std::strerror(log_saved_errno));                                                \
+                               std::error_code(log_saved_errno, std::generic_category()).message());             \
     } while (0)
