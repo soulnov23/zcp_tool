@@ -17,7 +17,7 @@ clean:
 	rm -rf $(OBJS) $(DEPS) $(BIN)
 
 format:
-	$(FORMAT) ./*.cpp ./*.h
+	$(if $(FORMAT_FILES),$(FORMAT) $(FORMAT_FILES))
 
 .PHONY: all clean format
 

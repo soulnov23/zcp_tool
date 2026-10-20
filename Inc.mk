@@ -30,6 +30,7 @@ INCLUDE += -I$(PROJ_PATH) -I$(PROJ_PATH)/third_party/include
 LDFLAGS += -Wl,-z,defs -L$(LIB_DIR) -Wl,-rpath=$(LIB_DIR)
 
 FORMAT = clang-format --style=file --fallback-style=none -i
+FORMAT_FILES = $(wildcard *.cpp *.h)
 
 DEPFLAGS := -MMD -MP
 
