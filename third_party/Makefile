@@ -3,14 +3,16 @@ include ../Inc.mk
 
 all: googletest spdlog yaml-cpp nlohmann abseil-cpp
 
+#cmake构建行以+开头且不写-j：让cmake生成的make加入上层jobserver，总并发受顶层-j控制，
+#写死-j32会重置jobserver，多个库同时编译时并发数叠加；代价是make -n时这些行也会真正执行
 googletest:
 	wget https://github.com/google/googletest/archive/refs/tags/$(GTEST).tar.gz
 	tar -zvxf $(GTEST).tar.gz
 	rm -rf $(GTEST).tar.gz
 	rm -rf include/gtest include/gmock
-	cd googletest-$(GTEST:v%=%) && mkdir -p build && cd build && \
+	+cd googletest-$(GTEST:v%=%) && mkdir -p build && cd build && \
 	cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_STANDARD=20 -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(PROJ_PATH)/third_party/googletest-$(GTEST:v%=%)/install .. && \
-	cmake --build . -j32 && cmake --install .
+	cmake --build . && cmake --install .
 	cp -rf googletest-$(GTEST:v%=%)/install/include/gtest include/
 	cp -rf googletest-$(GTEST:v%=%)/install/include/gmock include/
 	cp -rf googletest-$(GTEST:v%=%)/install/lib/libgmock*.so* $(LIB_DIR)
@@ -30,9 +32,9 @@ yaml-cpp:
 	tar -zvxf yaml-cpp-$(YAML_CPP).tar.gz
 	rm -rf yaml-cpp-$(YAML_CPP).tar.gz
 	rm -rf include/yaml-cpp
-	cd yaml-cpp-yaml-cpp-$(YAML_CPP) && mkdir -p build && cd build && \
+	+cd yaml-cpp-yaml-cpp-$(YAML_CPP) && mkdir -p build && cd build && \
 	cmake -DYAML_BUILD_SHARED_LIBS=ON -DYAML_CPP_BUILD_TESTS=OFF -DYAML_CPP_BUILD_TOOLS=OFF -DYAML_CPP_INSTALL=ON -DCMAKE_CXX_STANDARD=20 -DCMAKE_INSTALL_PREFIX=$(PROJ_PATH)/third_party/yaml-cpp-yaml-cpp-$(YAML_CPP)/install -DCMAKE_INSTALL_LIBDIR=lib .. && \
-	cmake --build . -j32 && cmake --install .
+	cmake --build . && cmake --install .
 	cp -rf yaml-cpp-yaml-cpp-$(YAML_CPP)/install/include/yaml-cpp include/
 	cp -rf yaml-cpp-yaml-cpp-$(YAML_CPP)/install/lib/libyaml-cpp.so* $(LIB_DIR)
 	rm -rf yaml-cpp-yaml-cpp-$(YAML_CPP)
@@ -50,9 +52,9 @@ abseil-cpp:
 	tar -zvxf $(ABSEIL_CPP).tar.gz
 	rm -rf $(ABSEIL_CPP).tar.gz
 	rm -rf include/absl
-	cd abseil-cpp-$(ABSEIL_CPP) && mkdir -p build && cd build && \
+	+cd abseil-cpp-$(ABSEIL_CPP) && mkdir -p build && cd build && \
 	cmake -DABSL_BUILD_TESTING=OFF -DABSL_ENABLE_INSTALL=ON -DABSL_PROPAGATE_CXX_STD=ON -DBUILD_SHARED_LIBS=ON -DABSL_BUILD_MONOLITHIC_SHARED_LIBS=ON -DCMAKE_CXX_STANDARD=20 -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(PROJ_PATH)/third_party/abseil-cpp-$(ABSEIL_CPP)/install .. && \
-	cmake --build . -j32 && cmake --install .
+	cmake --build . && cmake --install .
 	cp -rf abseil-cpp-$(ABSEIL_CPP)/install/include/absl include/
 	cp -rf abseil-cpp-$(ABSEIL_CPP)/install/lib/libabseil_dll.so* $(LIB_DIR)
 	rm -rf abseil-cpp-$(ABSEIL_CPP)
