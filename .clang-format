@@ -9,8 +9,8 @@ AccessModifierOffset: -4
 # 宏定义对齐
 AlignConsecutiveMacros: AcrossEmptyLinesAndComments
 
-# 每行限长130
-ColumnLimit: 130
+# 不限制每行长度
+ColumnLimit: 0
 
 # *和&声明靠左
 DerivePointerAlignment: false
