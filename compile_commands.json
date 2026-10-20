@@ -4,15 +4,6 @@
         "arguments": [
             "clang++",
             "-c",
-            "src/app/app.cpp"
-        ],
-        "file": "src/app/app.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
             "src/app/main.cpp"
         ],
         "file": "src/app/main.cpp"
@@ -22,53 +13,8 @@
         "arguments": [
             "clang++",
             "-c",
-            "src/app/server.cpp"
-        ],
-        "file": "src/app/server.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/base/epoll.cpp"
-        ],
-        "file": "src/base/epoll.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/base/epoll_event.cpp"
-        ],
-        "file": "src/base/epoll_event.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
             "src/base/log.cpp"
         ],
         "file": "src/base/log.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/base/net_util.cpp"
-        ],
-        "file": "src/base/net_util.cpp"
-    },
-    {
-        "directory": "/data/home/project/zcp_tool",
-        "arguments": [
-            "clang++",
-            "-c",
-            "src/base/socket.cpp"
-        ],
-        "file": "src/base/socket.cpp"
     }
 ]
