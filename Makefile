@@ -15,6 +15,9 @@ install:
 uninstall:
 	$(MAKE) -C third_party clean
 
+#串行
+.NOTPARALLEL:
+
 .PHONY: all clean format install uninstall
 
 .DEFAULT_GOAL := all
