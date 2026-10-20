@@ -1,6 +1,6 @@
 DIR_MODULES = base \
 			  app \
-              test
+              algorithm
 
 all:
 	@for dir in $(DIR_MODULES); \
