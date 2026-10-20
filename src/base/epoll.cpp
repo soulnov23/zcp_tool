@@ -44,10 +44,10 @@ int epoll::create(int event_num) {
     }
     wake_operator_ = new fd_operator(wake_fd_, this);
     if (control(wake_operator_, epoll_op::readable) == -1) {
-        LOG_ERROR("epoll_fd: {} control event_fd: {} error", epoll_fd_, wake_fd_);
+        LOG_ERROR("epoll_fd: {} control wake_fd: {} error", epoll_fd_, wake_fd_);
         return -1;
     }
-    LOG_INFO("new epoll epoll_fd: {} event_fd: {}", epoll_fd_, wake_fd_);
+    LOG_INFO("new epoll epoll_fd: {} wake_fd: {}", epoll_fd_, wake_fd_);
     return 0;
 }
 
@@ -117,7 +117,7 @@ int epoll::wait() {
     // 固定阻塞。netpoll 有事件后把超时改成 0 是为了让 Go 协程调度器切换，
     // C++ 里 msec = 0 只会变成忙转
     constexpr int timeout = -1;
-    LOG_INFO("wait epoll epoll_fd: {} event_fd: {}", epoll_fd_, wake_fd_);
+    LOG_INFO("wait epoll epoll_fd: {} wake_fd: {}", epoll_fd_, wake_fd_);
     while (true) {
         const int count = handle_eintr(::epoll_wait, epoll_fd_, events_.data(), static_cast<int>(events_.size()), timeout);
         if (count == -1) {
@@ -130,7 +130,7 @@ int epoll::wait() {
             // 和 netpoll 一样在这里收尾：Wait() 返回时 eventfd 和 epoll fd 都已经关掉，
             // 调用方不需要再管。放在这里而不是析构里，是为了让"退出"这件事有明确的完成点
             if (control(wake_operator_, epoll_op::detach) == -1) {
-                LOG_ERROR("epoll_fd: {} control event_fd: {} detach error", epoll_fd_, wake_fd_);
+                LOG_ERROR("epoll_fd: {} control wake_fd: {} detach error", epoll_fd_, wake_fd_);
             }
             const int epoll_fd = epoll_fd_;
             const int wake_fd = wake_fd_;
@@ -140,7 +140,7 @@ int epoll::wait() {
             static_cast<void>(ignore_eintr(::close, wake_fd));
             static_cast<void>(ignore_eintr(::close, epoll_fd));
             trigger_.store(0);
-            LOG_INFO("exit gracefully epoll_fd: {} event_fd: {}", epoll_fd, wake_fd);
+            LOG_INFO("exit gracefully epoll_fd: {} wake_fd: {}", epoll_fd, wake_fd);
             return 0;
         }
     }
@@ -196,7 +196,7 @@ bool epoll::handle_wake() {
     uint64_t value = 0;
     if (handle_eintr([&] { return ::read(wake_fd_, &value, sizeof(value)); }) == -1) {
         if (errno != EAGAIN) {
-            LOG_SYSTEM_ERROR("read event_fd: {}", wake_fd_);
+            LOG_SYSTEM_ERROR("read wake_fd: {}", wake_fd_);
         }
         return false;
     }
