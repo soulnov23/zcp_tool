@@ -84,15 +84,8 @@ int epoll::control(fd_operator* op, epoll_op op_type) {
             events = read_write_flags;
             break;
         case epoll_op::detach:
-            if (handle_eintr(::epoll_ctl, epoll_fd_, EPOLL_CTL_DEL, op->fd, nullptr) == -1) {
-                if (errno == ENOENT || errno == EBADF) {
-                    // fd 已经关掉，属于正常时序
-                    return 0;
-                }
-                LOG_SYSTEM_ERROR("epoll_ctl del fd: {}", op->fd);
-                return -1;
-            }
-            return 0;
+            operation = EPOLL_CTL_DEL;
+            break;
         default:
             LOG_ERROR("epoll_fd: {} control fd: {} op: {} not support", epoll_fd_, op->fd, static_cast<int>(op_type));
             return -1;
@@ -102,11 +95,16 @@ int epoll::control(fd_operator* op, epoll_op op_type) {
     // 编译器按 packed 生成存取，不需要也不能自己 memcpy 绕开
     event.data.ptr = op;
     event.events = events;
-    if (handle_eintr(::epoll_ctl, epoll_fd_, operation, op->fd, &event) == -1) {
+    struct epoll_event* event_ptr = operation == EPOLL_CTL_DEL ? nullptr : &event;
+    if (handle_eintr(::epoll_ctl, epoll_fd_, operation, op->fd, event_ptr) == -1) {
         if (operation == EPOLL_CTL_ADD && errno == EEXIST) {
             return 0;
         }
         if (operation == EPOLL_CTL_MOD && errno == ENOENT) {
+            return 0;
+        }
+        if (operation == EPOLL_CTL_DEL && (errno == ENOENT || errno == EBADF)) {
+            // fd 已经关掉或已从 epoll 中移除，属于正常时序
             return 0;
         }
         LOG_SYSTEM_ERROR("epoll_ctl fd: {} operation: {}", op->fd, operation);
