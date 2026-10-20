@@ -44,10 +44,10 @@ int epoll::create(int event_num) {
     }
     wake_operator_ = new fd_operator(wake_fd_, this);
     if (control(wake_operator_, epoll_op::readable) == -1) {
-        LOG_ERROR("epoll_fd: {} control wake_fd: {} error", epoll_fd_, wake_fd_);
+        LOG_ERROR("epoll_fd: {} control event_fd: {} error", epoll_fd_, wake_fd_);
         return -1;
     }
-    LOG_DEBUG("new epoll epoll_fd: {} wake_fd: {}", epoll_fd_, wake_fd_);
+    LOG_INFO("new epoll epoll_fd: {} event_fd: {}", epoll_fd_, wake_fd_);
     return 0;
 }
 
@@ -90,7 +90,7 @@ int epoll::control(fd_operator* op, epoll_op op_type) {
             LOG_ERROR("epoll_fd: {} control fd: {} op: {} not support", epoll_fd_, op->fd, static_cast<int>(op_type));
             return -1;
     }
-    struct epoll_event event {};
+    struct epoll_event event{};
     // data.ptr 直接存 operator 指针。epoll_event 是 packed 的，
     // 编译器按 packed 生成存取，不需要也不能自己 memcpy 绕开
     event.data.ptr = op;
@@ -107,7 +107,7 @@ int epoll::control(fd_operator* op, epoll_op op_type) {
             // fd 已经关掉或已从 epoll 中移除，属于正常时序
             return 0;
         }
-        LOG_SYSTEM_ERROR("epoll_ctl fd: {} operation: {}", op->fd, operation);
+        LOG_SYSTEM_ERROR("epoll_fd: {} epoll_ctl fd: {} operation: {}", epoll_fd_, op->fd, operation);
         return -1;
     }
     return 0;
@@ -117,6 +117,7 @@ int epoll::wait() {
     // 固定阻塞。netpoll 有事件后把超时改成 0 是为了让 Go 协程调度器切换，
     // C++ 里 msec = 0 只会变成忙转
     constexpr int timeout = -1;
+    LOG_INFO("wait epoll epoll_fd: {} event_fd: {}", epoll_fd_, wake_fd_);
     while (true) {
         const int count = handle_eintr(::epoll_wait, epoll_fd_, events_.data(), static_cast<int>(events_.size()), timeout);
         if (count == -1) {
@@ -128,7 +129,9 @@ int epoll::wait() {
         if (handle(count)) {
             // 和 netpoll 一样在这里收尾：Wait() 返回时 eventfd 和 epoll fd 都已经关掉，
             // 调用方不需要再管。放在这里而不是析构里，是为了让"退出"这件事有明确的完成点
-            control(wake_operator_, epoll_op::detach);
+            if (control(wake_operator_, epoll_op::detach) == -1) {
+                LOG_ERROR("epoll_fd: {} control event_fd: {} detach error", epoll_fd_, wake_fd_);
+            }
             const int epoll_fd = epoll_fd_;
             const int wake_fd = wake_fd_;
             // 先置 -1 再关，信号处理函数看到 -1 就不会往已被复用的 fd 号上写
@@ -137,7 +140,7 @@ int epoll::wait() {
             static_cast<void>(ignore_eintr(::close, wake_fd));
             static_cast<void>(ignore_eintr(::close, epoll_fd));
             trigger_.store(0);
-            LOG_DEBUG("exit gracefully epoll_fd: {} wake_fd: {}", epoll_fd, wake_fd);
+            LOG_INFO("exit gracefully epoll_fd: {} event_fd: {}", epoll_fd, wake_fd);
             return 0;
         }
     }
@@ -154,6 +157,8 @@ bool epoll::handle(int event_num) {
         if (op == nullptr) {
             continue;
         }
+        // 和 netpoll 一样放在唤醒判断之前，唤醒事件也打一条
+        LOG_INFO("wake epoll epoll_fd: {} client_fd: {} event: {}", epoll_fd_, op->fd, event_string(event.events));
         if (op == wake_operator_) {
             if (handle_wake()) {
                 // 只置标志不立刻返回：同一批 epoll_wait 返回的事件里，
@@ -162,7 +167,6 @@ bool epoll::handle(int event_num) {
             }
             continue;
         }
-        LOG_TRACE("wake epoll fd: {} event: {}", op->fd, event_string(event.events));
         if ((event.events & (EPOLLRDHUP | EPOLLHUP | EPOLLERR)) != 0 && op->on_hup != nullptr) {
             hups_.push_back(op);
         }
@@ -175,7 +179,9 @@ bool epoll::handle(int event_num) {
     }
     for (fd_operator* op : hups_) {
         // 先摘掉再回调：on_hup 里会 close(fd)，关掉之后内核自动把它从 epoll 摘除
-        control(op, epoll_op::detach);
+        if (control(op, epoll_op::detach) == -1) {
+            LOG_ERROR("epoll_fd: {} control client_fd: {} detach error", epoll_fd_, op->fd);
+        }
         if (op->on_hup != nullptr) {
             op->on_hup(this, op);
         }
@@ -190,7 +196,7 @@ bool epoll::handle_wake() {
     uint64_t value = 0;
     if (handle_eintr([&] { return ::read(wake_fd_, &value, sizeof(value)); }) == -1) {
         if (errno != EAGAIN) {
-            LOG_SYSTEM_ERROR("read wake_fd: {}", wake_fd_);
+            LOG_SYSTEM_ERROR("read event_fd: {}", wake_fd_);
         }
         return false;
     }
