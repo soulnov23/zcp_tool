@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curtime=`date "+%Y-%m-%d %H:%M:%S.%6N"`
+curtime=$(date "+%Y-%m-%d %H:%M:%S.%6N")
 echo "[$curtime] [echo] start..."
 
 source init.sh

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curtime=`date "+%Y-%m-%d %H:%M:%S.%6N"`
+curtime=$(date "+%Y-%m-%d %H:%M:%S.%6N")
 echo "[$curtime] [echo] init..."
 
 #LIB_PATH需要修改为对应的路径
