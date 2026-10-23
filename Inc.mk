@@ -25,7 +25,7 @@ PROJ_PATH := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 BIN_DIR = $(PROJ_PATH)/build/bin
 LIB_DIR = $(PROJ_PATH)/build/lib
 
-INCLUDE += -I$(PROJ_PATH) -I$(PROJ_PATH)/third_party/include
+INCLUDE += -I$(PROJ_PATH) -I$(PROJ_PATH)/third_party
 
 LDFLAGS += -Wl,-z,defs -L$(LIB_DIR) -Wl,-rpath=$(LIB_DIR)
 

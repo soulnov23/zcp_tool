@@ -3,7 +3,7 @@ CompileFlags:
         - -DDEBUG
         - -Wno-reserved-user-defined-literal
         - -I.
-        - -Ithird_party/include
+        - -Ithird_party
 ---
 If:
     PathMatch: [.*\.c]
